@@ -63,7 +63,7 @@ $frontendBase = $frontendBase ?? '/Afrisense/frontend';
             </ul>
         </section>
 
-        <section class="af-footer-section af-footer-newsletter" data-footer-section>
+        <section class="af-footer-section af-footer-newsletter is-open" data-footer-section>
             <button type="button" data-footer-toggle>
                 <span>Newsletter</span>
                 <i class="bi bi-chevron-down" aria-hidden="true"></i>

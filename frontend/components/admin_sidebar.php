@@ -15,7 +15,18 @@ $adminGroups = [
             ['key' => 'orders', 'label' => 'Orders', 'icon' => 'bi-box-seam', 'href' => $frontendBase . '/admin/orders.php', 'expandable' => true],
             ['key' => 'bookings', 'label' => 'Bookings', 'icon' => 'bi-calendar3', 'href' => $frontendBase . '/admin/booking.php', 'expandable' => true],
             ['key' => 'enquiries', 'label' => 'Enquiries', 'icon' => 'bi-chat-square-text', 'href' => $frontendBase . '/admin/enquiries.php', 'expandable' => true],
-            ['key' => 'menu', 'label' => 'Menu & Packages', 'icon' => 'bi-clipboard2', 'href' => $frontendBase . '/admin/foods.php', 'expandable' => true],
+            [
+                'key' => 'menu',
+                'label' => 'Menu & Packages',
+                'icon' => 'bi-clipboard2',
+                'href' => $frontendBase . '/admin/foods.php',
+                'expandable' => true,
+                'children' => [
+                    ['key' => 'menu_items', 'label' => 'Menu Items', 'href' => $frontendBase . '/admin/foods.php'],
+                    ['key' => 'categories', 'label' => 'Categories', 'href' => $frontendBase . '/admin/services.php'],
+                    ['key' => 'packages', 'label' => 'Packages', 'href' => $frontendBase . '/admin/services.php'],
+                ],
+            ],
             ['key' => 'customers', 'label' => 'Customers', 'icon' => 'bi-people', 'href' => $frontendBase . '/admin/customers.php', 'expandable' => true],
             ['key' => 'staff', 'label' => 'Staff Management', 'icon' => 'bi-person-badge', 'href' => $frontendBase . '/admin/users.php', 'expandable' => true],
         ],
@@ -69,13 +80,23 @@ $adminGroups = [
                 <p><?php echo htmlspecialchars($group['label'], ENT_QUOTES, 'UTF-8'); ?></p>
             <?php endif; ?>
             <?php foreach ($group['items'] as $item): ?>
-                <a class="<?php echo $activeAdminPage === $item['key'] ? 'is-active' : ''; ?>" href="<?php echo htmlspecialchars($item['href'], ENT_QUOTES, 'UTF-8'); ?>">
+                <?php $isActiveParent = $activeAdminPage === $item['key'] || (!empty($item['children']) && in_array($activeAdminPage, array_column($item['children'], 'key'), true)); ?>
+                <a class="<?php echo $isActiveParent ? 'is-active' : ''; ?>" href="<?php echo htmlspecialchars($item['href'], ENT_QUOTES, 'UTF-8'); ?>">
                     <i class="bi <?php echo htmlspecialchars($item['icon'], ENT_QUOTES, 'UTF-8'); ?>" aria-hidden="true"></i>
                     <span><?php echo htmlspecialchars($item['label'], ENT_QUOTES, 'UTF-8'); ?></span>
                     <?php if (!empty($item['expandable'])): ?>
                         <i class="bi bi-chevron-down af-nav-chevron" aria-hidden="true"></i>
                     <?php endif; ?>
                 </a>
+                <?php if (!empty($item['children']) && $isActiveParent): ?>
+                    <div class="af-subnav">
+                        <?php foreach ($item['children'] as $child): ?>
+                            <a class="<?php echo $activeAdminPage === $child['key'] ? 'is-active' : ''; ?>" href="<?php echo htmlspecialchars($child['href'], ENT_QUOTES, 'UTF-8'); ?>">
+                                <?php echo htmlspecialchars($child['label'], ENT_QUOTES, 'UTF-8'); ?>
+                            </a>
+                        <?php endforeach; ?>
+                    </div>
+                <?php endif; ?>
             <?php endforeach; ?>
         <?php endforeach; ?>
     </nav>

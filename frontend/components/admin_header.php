@@ -5,6 +5,14 @@ $adminRole = $adminRole ?? 'Super Admin';
 $frontendBase = $frontendBase ?? '/Afrisense/frontend';
 ?>
 <header class="af-dashboard-header af-admin-header">
+    <a class="af-header-brand" href="<?php echo htmlspecialchars($frontendBase . '/admin/dashboard.php', ENT_QUOTES, 'UTF-8'); ?>" aria-label="AfriSense admin dashboard">
+        <span class="af-brand-icon" aria-hidden="true"><i class="bi bi-cup-hot"></i></span>
+        <span>
+            <strong>AfriSense</strong>
+            <small>Food Services</small>
+        </span>
+    </a>
+
     <button class="af-sidebar-toggle" type="button" aria-label="Toggle sidebar" aria-expanded="false" data-sidebar-toggle>
         <i class="bi bi-list" aria-hidden="true"></i>
     </button>
@@ -18,13 +26,25 @@ $frontendBase = $frontendBase ?? '/Afrisense/frontend';
     </label>
 
     <div class="af-header-actions">
-        <button type="button" aria-label="Notifications">
-            <i class="bi bi-bell" aria-hidden="true"></i>
-            <span>8</span>
+        <button class="af-header-action" type="button" aria-label="Notifications">
+            <span class="af-action-icon">
+                <i class="bi bi-bell" aria-hidden="true"></i>
+                <em>8</em>
+            </span>
+            <small>Notifications</small>
         </button>
-        <button type="button" aria-label="Messages">
-            <i class="bi bi-envelope" aria-hidden="true"></i>
-            <span class="is-green">3</span>
+        <button class="af-header-action" type="button" aria-label="Messages">
+            <span class="af-action-icon">
+                <i class="bi bi-envelope" aria-hidden="true"></i>
+                <em class="is-green">5</em>
+            </span>
+            <small>Messages</small>
+        </button>
+        <button class="af-header-action" type="button" aria-label="Fullscreen">
+            <span class="af-action-icon">
+                <i class="bi bi-fullscreen" aria-hidden="true"></i>
+            </span>
+            <small>Fullscreen</small>
         </button>
         <button class="af-profile-menu" type="button" aria-label="Profile menu">
             <img src="<?php echo htmlspecialchars($frontendBase . '/assets/images/foodimage.jpeg', ENT_QUOTES, 'UTF-8'); ?>" alt="">

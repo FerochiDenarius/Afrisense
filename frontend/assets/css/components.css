@@ -2,27 +2,38 @@
     position: sticky;
     top: 0;
     z-index: 50;
-    background: var(--af-green);
-    box-shadow: 0 8px 24px rgba(13, 36, 30, 0.14);
+    background: #fff;
+    border-bottom: 2px solid var(--af-gold-2);
+    box-shadow: 0 8px 24px rgba(15, 23, 42, 0.08);
 }
 
 .af-navbar {
-    max-width: 1200px;
-    min-height: 76px;
-    margin: 0 auto;
-    padding: 0 24px;
+    min-height: 92px;
+    margin: 0;
+    padding: 0 24px 0 0;
     display: flex;
     align-items: center;
     justify-content: space-between;
     gap: 26px;
 }
 
-.af-brand {
+.af-brand,
+.af-header-brand {
     display: inline-flex;
     align-items: center;
     gap: 10px;
     color: #fff;
     text-decoration: none;
+}
+
+.af-header-brand {
+    align-self: stretch;
+    min-width: 260px;
+    background:
+        radial-gradient(circle at 92% 22%, rgba(204, 143, 37, 0.1), transparent 24%),
+        linear-gradient(150deg, var(--af-green), var(--af-green-2));
+    justify-content: center;
+    padding: 0 24px;
 }
 
 .af-brand-icon {
@@ -32,21 +43,26 @@
 }
 
 .af-brand strong,
-.af-brand small {
+.af-brand small,
+.af-header-brand strong,
+.af-header-brand small {
     display: block;
 }
 
-.af-brand strong {
+.af-brand strong,
+.af-header-brand strong {
     font-size: 30px;
     line-height: 1;
     letter-spacing: 0;
 }
 
-.af-brand strong::first-letter {
+.af-brand strong::first-letter,
+.af-header-brand strong::first-letter {
     color: var(--af-gold-2);
 }
 
-.af-brand small {
+.af-brand small,
+.af-header-brand small {
     color: rgba(255, 255, 255, 0.82);
     font-size: 10px;
     font-weight: 800;
@@ -65,8 +81,23 @@
 
 .af-nav-toggle {
     display: none;
-    color: #fff;
+    width: 54px;
+    height: 54px;
+    border-radius: 8px;
+    color: var(--af-green);
     font-size: 28px;
+}
+
+.af-public-phone-mobile {
+    display: none;
+    width: 52px;
+    height: 52px;
+    border: 0;
+    border-radius: 50%;
+    background: #f6f0e8;
+    color: var(--af-green);
+    font-size: 22px;
+    cursor: pointer;
 }
 
 .af-nav-menu,
@@ -88,10 +119,10 @@
 }
 
 .af-nav-links a {
-    color: #fff;
+    color: #050f0c;
     display: inline-flex;
     align-items: center;
-    min-height: 76px;
+    min-height: 92px;
     border-bottom: 2px solid transparent;
     font-size: 14px;
     font-weight: 750;
@@ -101,7 +132,7 @@
 
 .af-nav-links a:hover,
 .af-nav-links a.is-active {
-    color: var(--af-gold-2);
+    color: var(--af-gold);
     border-color: var(--af-gold-2);
 }
 
@@ -110,10 +141,14 @@
 }
 
 .af-phone-link {
-    color: #fff;
+    min-height: 50px;
+    border: 1px solid var(--af-line);
+    border-radius: 8px;
+    color: var(--af-text);
     display: inline-flex;
     align-items: center;
     gap: 9px;
+    padding: 0 16px;
     font-size: 14px;
     font-weight: 800;
     text-decoration: none;
@@ -122,17 +157,18 @@
 .af-phone-link i {
     width: 34px;
     height: 34px;
-    border: 1px solid rgba(204, 143, 37, 0.6);
+    border: 0;
+    background: #f6f0e8;
     border-radius: 50%;
-    color: var(--af-gold-2);
+    color: var(--af-green);
     display: grid;
     place-items: center;
 }
 
 .af-order-btn {
-    min-height: 42px;
+    min-height: 50px;
     border-radius: 6px;
-    background: var(--af-gold-2);
+    background: linear-gradient(135deg, var(--af-gold), var(--af-gold-2));
     color: #fff;
     display: inline-flex;
     align-items: center;
@@ -145,6 +181,49 @@
 .af-order-btn:hover {
     background: var(--af-gold);
     transform: translateY(-1px);
+}
+
+.af-cart-link {
+    color: #fff;
+    display: inline-grid;
+    place-items: center;
+    font-size: 28px;
+    position: relative;
+    text-decoration: none;
+}
+
+.af-cart-link span {
+    position: absolute;
+    top: -8px;
+    right: -10px;
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    background: var(--af-gold-2);
+    color: #fff;
+    display: grid;
+    place-items: center;
+    font-size: 11px;
+    font-weight: 900;
+}
+
+.af-public-profile {
+    border: 0;
+    background: transparent;
+    color: #fff;
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    font-weight: 800;
+    cursor: pointer;
+}
+
+.af-public-profile img {
+    width: 42px;
+    height: 42px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 2px solid rgba(255, 255, 255, 0.35);
 }
 
 .af-footer {
@@ -385,6 +464,39 @@
     font-size: 13px;
 }
 
+.af-subnav {
+    display: grid;
+    gap: 8px;
+    margin: -2px 0 8px 40px;
+}
+
+.af-subnav a {
+    color: rgba(255, 255, 255, 0.82);
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    min-height: 28px;
+    font-size: 13px;
+    font-weight: 750;
+    text-decoration: none;
+}
+
+.af-subnav a::before {
+    content: "";
+    width: 4px;
+    height: 4px;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.55);
+}
+
+.af-subnav a.is-active {
+    color: var(--af-gold-2);
+}
+
+.af-subnav a.is-active::before {
+    background: var(--af-gold-2);
+}
+
 .af-sidebar-profile {
     border: 1px solid rgba(255, 255, 255, 0.16);
     border-radius: 16px;
@@ -492,6 +604,7 @@ body.af-sidebar-collapsed .af-dashboard-sidebar .af-brand {
 body.af-sidebar-collapsed .af-dashboard-sidebar .af-brand span:last-child,
 body.af-sidebar-collapsed .af-sidebar-profile,
 body.af-sidebar-collapsed .af-sidebar-promo,
+body.af-sidebar-collapsed .af-subnav,
 body.af-sidebar-collapsed .af-side-nav p,
 body.af-sidebar-collapsed .af-side-nav a span,
 body.af-sidebar-collapsed .af-nav-chevron,
@@ -507,32 +620,47 @@ body.af-sidebar-collapsed .af-sidebar-logout {
 }
 
 .af-dashboard-header {
-    min-height: 70px;
+    min-height: 94px;
     background: #fff;
-    border-bottom: 1px solid var(--af-line);
+    border-bottom: 2px solid var(--af-gold-2);
+    border-radius: 0 0 8px 8px;
+    box-shadow: 0 8px 24px rgba(15, 23, 42, 0.08);
     display: grid;
-    grid-template-columns: 42px 150px minmax(280px, 470px) 1fr;
+    grid-template-columns: 260px 54px minmax(260px, 470px) 1fr;
     align-items: center;
-    gap: 18px;
-    padding: 0 28px;
+    gap: 26px;
+    padding: 0 24px 0 0;
     position: sticky;
     top: 0;
     z-index: 30;
 }
 
+.af-dashboard-page .af-dashboard-header {
+    grid-template-columns: 54px minmax(260px, 470px) 1fr;
+    padding-left: 24px;
+}
+
+.af-dashboard-page .af-dashboard-header .af-header-brand {
+    display: none;
+}
+
 .af-sidebar-toggle {
+    width: 54px;
+    height: 54px;
+    border: 1px solid var(--af-line);
+    border-radius: 8px;
     color: var(--af-text);
     font-size: 24px;
 }
 
 .af-header-title {
-    font-size: 17px;
+    display: none;
 }
 
 .af-header-search {
-    height: 38px;
+    height: 52px;
     border: 1px solid var(--af-line);
-    border-radius: 6px;
+    border-radius: 8px;
     display: flex;
     align-items: center;
     gap: 10px;
@@ -564,19 +692,38 @@ body.af-sidebar-collapsed .af-sidebar-logout {
     justify-self: end;
     display: flex;
     align-items: center;
-    gap: 20px;
+    gap: 22px;
 }
 
 .af-header-actions button {
     position: relative;
     color: var(--af-text);
+}
+
+.af-header-action {
+    min-width: 74px;
+    display: grid;
+    place-items: center;
+    gap: 4px;
     font-size: 20px;
 }
 
-.af-header-actions button span:not(.af-profile-menu span) {
+.af-header-action small {
+    color: var(--af-text);
+    font-size: 12px;
+}
+
+.af-action-icon {
+    position: relative;
+    display: inline-grid;
+    place-items: center;
+    font-size: 26px;
+}
+
+.af-action-icon em {
     position: absolute;
-    top: -8px;
-    right: -9px;
+    top: -10px;
+    right: -12px;
     min-width: 17px;
     height: 17px;
     border-radius: 999px;
@@ -586,10 +733,15 @@ body.af-sidebar-collapsed .af-sidebar-logout {
     place-items: center;
     font-size: 10px;
     font-weight: 800;
+    font-style: normal;
 }
 
-.af-header-actions button span.is-green {
+.af-action-icon em.is-green {
     background: #18a058;
+}
+
+.af-action-icon em.is-gold {
+    background: var(--af-gold-2);
 }
 
 .af-profile-menu {
@@ -597,6 +749,8 @@ body.af-sidebar-collapsed .af-sidebar-logout {
     grid-template-columns: 38px 1fr 16px;
     align-items: center;
     gap: 10px;
+    border-left: 1px solid var(--af-line) !important;
+    padding-left: 22px;
 }
 
 .af-profile-menu img {

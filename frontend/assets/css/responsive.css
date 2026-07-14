@@ -1,19 +1,42 @@
 @media (max-width: 1120px) {
     .af-navbar {
-        flex-wrap: wrap;
+        display: grid;
+        grid-template-columns: 1fr auto auto;
+        min-height: auto;
         padding-block: 16px;
+        padding-inline: 16px;
     }
 
     .af-nav-toggle {
-        display: inline-grid;
+        display: grid;
         place-items: center;
+        background: linear-gradient(135deg, var(--af-gold), var(--af-gold-2));
+        color: #fff;
+    }
+
+    .af-public-phone-mobile {
+        display: grid;
+        place-items: center;
+    }
+
+    .af-public-header .af-header-brand {
+        min-width: 0;
+        background: transparent;
+        color: var(--af-green);
+        justify-content: center;
+        padding: 0;
+    }
+
+    .af-public-header .af-header-brand strong {
+        color: var(--af-green);
+        font-size: 26px;
     }
 
     .af-nav-menu {
         width: 100%;
         max-height: 0;
         overflow: hidden;
-        flex-basis: 100%;
+        grid-column: 1 / -1;
         flex-direction: column;
         align-items: stretch;
         gap: 16px;
@@ -33,11 +56,18 @@
     .af-nav-links a {
         min-height: 42px;
         border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+        color: var(--af-text);
     }
 
     .af-nav-actions {
         align-items: stretch;
         flex-direction: column;
+    }
+
+    .af-cart-link,
+    .af-public-profile {
+        color: var(--af-green);
+        justify-content: center;
     }
 
     .af-order-btn {
@@ -65,28 +95,64 @@
     }
 
     .af-dashboard-header {
-        grid-template-columns: 40px 1fr;
+        min-height: auto;
+        grid-template-columns: 40px 1fr auto;
         padding: 16px;
+        gap: 14px;
     }
 
-    .af-header-search,
-    .af-header-actions {
+    .af-dashboard-header .af-header-brand {
+        display: inline-flex;
+        min-width: 0;
+        background: transparent;
+        color: var(--af-green);
+        justify-content: center;
+        padding: 0;
+    }
+
+    .af-dashboard-header .af-header-brand strong {
+        color: var(--af-green);
+        font-size: 24px;
+    }
+
+    .af-dashboard-header .af-header-brand small {
+        color: var(--af-green);
+        font-size: 8px;
+    }
+
+    .af-header-title {
+        display: none;
+    }
+
+    .af-header-search {
         grid-column: 1 / -1;
     }
 
     .af-header-actions {
-        justify-self: stretch;
-        justify-content: space-between;
+        grid-column: auto;
+        justify-self: end;
+        gap: 12px;
     }
 
     .af-profile-menu {
         grid-template-columns: 38px;
+        border-left: 0 !important;
+        padding-left: 0;
     }
 
     .af-profile-menu span,
     .af-profile-menu > i,
-    .af-header-search kbd {
+    .af-header-search kbd,
+    .af-header-action small {
         display: none;
+    }
+
+    .af-header-action {
+        min-width: auto;
+    }
+
+    .af-action-icon {
+        font-size: 23px;
     }
 
     .af-dashboard-content {
@@ -95,10 +161,6 @@
 }
 
 @media (max-width: 680px) {
-    .af-navbar {
-        padding-inline: 16px;
-    }
-
     .af-brand strong {
         font-size: 26px;
     }
@@ -172,6 +234,19 @@
     .af-footer-bottom nav {
         flex-wrap: wrap;
         gap: 14px;
+    }
+
+    .af-dashboard-header {
+        grid-template-columns: 36px 1fr auto;
+    }
+
+    .af-header-actions {
+        gap: 10px;
+    }
+
+    .af-customer-header .af-header-actions .af-header-action:nth-of-type(2),
+    .af-admin-header .af-header-actions .af-header-action:nth-of-type(3) {
+        display: none;
     }
 
     .af-modal-actions {

@@ -1,0 +1,694 @@
+.af-order-hero {
+    min-height: 270px;
+    background: linear-gradient(rgba(5, 20, 16, 0.78), rgba(5, 20, 16, 0.82)), url("../images/foodimage.jpeg") center / cover;
+    color: #fff;
+    display: grid;
+    place-items: center;
+    text-align: center;
+    padding: 42px 24px;
+}
+
+.af-order-hero nav,
+.af-order-hero nav a {
+    color: #fff;
+    text-decoration: none;
+}
+
+.af-order-hero h1 {
+    font-family: Georgia, "Times New Roman", serif;
+    font-size: clamp(38px, 5vw, 56px);
+    margin: 18px 0 8px;
+}
+
+.af-order-hero h1 span,
+.af-order-hero nav span {
+    color: var(--af-gold-2);
+}
+
+.af-order-benefits {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 20px;
+    margin-top: 26px;
+}
+
+.af-order-benefits article {
+    min-width: 210px;
+    background: rgba(0, 0, 0, 0.3);
+    border-right: 1px solid rgba(255, 255, 255, 0.18);
+    border-radius: 8px;
+    display: grid;
+    grid-template-columns: 48px 1fr;
+    text-align: left;
+    gap: 14px;
+    padding: 16px 20px;
+}
+
+.af-order-benefits i {
+    width: 42px;
+    height: 42px;
+    border-radius: 50%;
+    background: rgba(183, 123, 26, 0.18);
+    color: var(--af-gold-2);
+    display: grid;
+    place-items: center;
+}
+
+.af-order-benefits strong,
+.af-order-benefits span {
+    display: block;
+}
+
+.af-order-page {
+    background: #fafafa;
+    display: grid;
+    grid-template-columns: 250px minmax(0, 1fr) 330px;
+    gap: 28px;
+    padding: 34px 28px;
+}
+
+.af-order-panel,
+.af-help-box,
+.af-cart-panel,
+.af-delivery-info,
+.af-summary-card,
+.af-payment-card {
+    border: 1px solid #e5e7eb;
+    border-radius: 10px;
+    background: #fff;
+    box-shadow: 0 10px 28px rgba(15, 23, 42, 0.06);
+}
+
+.af-order-panel,
+.af-help-box {
+    padding: 22px;
+}
+
+.af-order-panel h2,
+.af-order-main h2,
+.af-cart-panel h2,
+.af-delivery-info h2,
+.af-summary-card h2,
+.af-payment-section h2 {
+    color: var(--af-green);
+    font-family: Georgia, "Times New Roman", serif;
+}
+
+.af-panel-line {
+    width: 34px;
+    height: 2px;
+    background: var(--af-gold-2);
+    display: block;
+    margin: 12px 0;
+}
+
+.af-category-menu {
+    display: grid;
+    gap: 8px;
+}
+
+.af-category-menu a {
+    min-height: 41px;
+    border-radius: 7px;
+    color: #344054;
+    display: flex;
+    align-items: center;
+    gap: 13px;
+    padding: 0 12px;
+    text-decoration: none;
+}
+
+.af-category-menu a.is-active,
+.af-category-menu a:hover {
+    background: #fff2df;
+    color: var(--af-green);
+}
+
+.af-category-menu i,
+.af-help-box > i {
+    color: var(--af-gold);
+}
+
+.af-help-box {
+    background: #fff8ef;
+    margin-top: 24px;
+}
+
+.af-help-box a {
+    min-height: 42px;
+    border: 1px solid #eadfd3;
+    border-radius: 7px;
+    color: var(--af-green);
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    justify-content: center;
+    text-decoration: none;
+    margin: 14px 0;
+}
+
+.af-order-main {
+    min-width: 0;
+}
+
+.af-order-toolbar {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) 180px;
+    gap: 26px;
+    margin-bottom: 24px;
+}
+
+.af-order-toolbar label {
+    height: 46px;
+    border: 1px solid #d9dee6;
+    border-radius: 7px;
+    background: #fff;
+    display: grid;
+    grid-template-columns: 44px 1fr 34px;
+    align-items: center;
+}
+
+.af-order-toolbar input,
+.af-order-toolbar select {
+    width: 100%;
+    border: 0;
+    outline: 0;
+    background: transparent;
+}
+
+.af-dish-grid {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 22px;
+}
+
+.af-dish-card {
+    border: 1px solid #e5e7eb;
+    border-radius: 10px;
+    background: #fff;
+    overflow: hidden;
+    box-shadow: 0 8px 22px rgba(15, 23, 42, 0.06);
+}
+
+.af-dish-image {
+    height: 170px;
+    position: relative;
+}
+
+.af-dish-image img,
+.af-cart-items img,
+.af-summary-card article img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.af-dish-image span {
+    position: absolute;
+    top: 12px;
+    left: 12px;
+    border-radius: 999px;
+    background: var(--af-gold-2);
+    color: #fff;
+    padding: 5px 10px;
+    font-size: 12px;
+    font-weight: 850;
+}
+
+.af-dish-image button {
+    position: absolute;
+    top: 12px;
+    right: 12px;
+    border: 0;
+    background: rgba(0, 0, 0, 0.32);
+    color: #fff;
+    font-size: 22px;
+}
+
+.af-dish-body {
+    padding: 16px;
+    display: grid;
+    gap: 10px;
+}
+
+.af-dish-body p,
+.af-help-box p,
+.af-delivery-info p,
+.af-summary-card p,
+.af-pay-reasons span {
+    color: #4b5563;
+    line-height: 1.55;
+}
+
+.af-dish-body button,
+.af-checkout-btn,
+.af-pay-now {
+    min-height: 42px;
+    border: 0;
+    border-radius: 6px;
+    background: var(--af-green);
+    color: #fff;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    font-weight: 850;
+    text-decoration: none;
+}
+
+.af-load-more {
+    width: 210px;
+    height: 42px;
+    border: 1px solid #d9dee6;
+    border-radius: 7px;
+    background: #fff;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    margin: 24px auto 0;
+}
+
+.af-cart-panel {
+    overflow: hidden;
+}
+
+.af-cart-panel header {
+    background: var(--af-green);
+    color: #fff;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 16px 18px;
+}
+
+.af-cart-panel header h2 {
+    color: #fff;
+    font-size: 17px;
+}
+
+.af-cart-panel header a {
+    color: #fff;
+    font-size: 12px;
+}
+
+.af-cart-items {
+    padding: 14px 18px 0;
+}
+
+.af-cart-items article {
+    border-bottom: 1px solid #edf0f3;
+    display: grid;
+    grid-template-columns: 58px 1fr 26px;
+    gap: 14px;
+    padding: 12px 0;
+}
+
+.af-cart-items img {
+    height: 58px;
+    border-radius: 6px;
+}
+
+.af-qty {
+    display: inline-grid;
+    grid-template-columns: 28px 32px 28px;
+    margin-top: 10px;
+}
+
+.af-qty button {
+    border: 1px solid #e5e7eb;
+    background: #fff;
+}
+
+.af-remove {
+    border: 0;
+    background: transparent;
+    color: #475467;
+}
+
+.af-note-btn {
+    width: calc(100% - 36px);
+    border: 0;
+    background: #fff;
+    display: flex;
+    justify-content: space-between;
+    margin: 12px 18px;
+}
+
+.af-order-total {
+    display: grid;
+    gap: 10px;
+    padding: 0 18px 18px;
+}
+
+.af-order-total div,
+.af-summary-card dl div {
+    display: flex;
+    justify-content: space-between;
+}
+
+.af-order-total div:last-child,
+.af-summary-card dl .total {
+    font-size: 20px;
+    font-weight: 900;
+}
+
+.af-order-total div:last-child dd,
+.af-summary-card dl .total dd {
+    color: var(--af-gold);
+}
+
+.af-checkout-btn {
+    background: linear-gradient(135deg, var(--af-gold), var(--af-gold-2));
+    margin: 0 18px;
+}
+
+.af-secure-note,
+.af-payment-alert {
+    background: #eef7ed;
+    color: var(--af-green);
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin: 14px 18px 18px;
+    padding: 14px;
+    border-radius: 7px;
+}
+
+.af-delivery-info {
+    display: grid;
+    grid-template-columns: 50px 1fr;
+    gap: 14px;
+    margin-top: 24px;
+    padding: 22px;
+    background: #f3faef;
+}
+
+.af-delivery-info > i {
+    color: var(--af-green);
+    font-size: 34px;
+}
+
+.af-delivery-info a {
+    color: var(--af-gold);
+    font-weight: 850;
+}
+
+.af-payment-page {
+    background: #fff;
+    padding: 44px 28px;
+}
+
+.af-checkout-steps {
+    width: min(900px, 100%);
+    margin: 0 auto 34px;
+    list-style: none;
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 24px;
+}
+
+.af-checkout-steps li {
+    color: #344054;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+}
+
+.af-checkout-steps span {
+    width: 58px;
+    height: 58px;
+    border-radius: 50%;
+    background: #f3f4f6;
+    display: grid;
+    place-items: center;
+    font-size: 25px;
+}
+
+.af-checkout-steps .done span { background: #eaf6e7; color: var(--af-green); }
+.af-checkout-steps .active { color: var(--af-gold); font-weight: 850; }
+.af-checkout-steps .active span { background: #fff0dc; }
+
+.af-payment-grid {
+    width: min(1180px, 100%);
+    margin: 0 auto;
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) 410px;
+    gap: 34px;
+}
+
+.af-payment-card {
+    overflow: hidden;
+}
+
+.af-payment-heading {
+    display: flex;
+    gap: 18px;
+    align-items: flex-start;
+    padding: 28px;
+}
+
+.af-payment-heading > i {
+    color: var(--af-gold);
+    font-size: 28px;
+}
+
+.af-payment-heading h1,
+.af-payment-section h2,
+.af-summary-card h2 {
+    font-family: Georgia, "Times New Roman", serif;
+    color: var(--af-green);
+}
+
+.af-payment-section {
+    border-top: 1px solid #edf0f3;
+    padding: 24px 28px;
+    display: grid;
+    gap: 16px;
+}
+
+.af-payment-method {
+    min-height: 78px;
+    border: 1px solid #e5e7eb;
+    border-radius: 8px;
+    display: grid;
+    grid-template-columns: 26px 42px 1fr auto auto auto;
+    align-items: center;
+    gap: 14px;
+    padding: 14px 18px;
+}
+
+.af-payment-method.is-active {
+    border-color: var(--af-gold);
+    background: #fffaf3;
+}
+
+.af-payment-method > i {
+    font-size: 25px;
+}
+
+.af-payment-method span small,
+.af-summary-card small {
+    color: #667085;
+    display: block;
+}
+
+.af-payment-method em {
+    border: 1px solid #e5e7eb;
+    border-radius: 4px;
+    padding: 5px 8px;
+    font-style: normal;
+    font-size: 11px;
+    font-weight: 900;
+}
+
+.af-payment-input,
+.af-billing-grid label {
+    display: grid;
+    gap: 8px;
+    font-weight: 800;
+}
+
+.af-payment-input span,
+.af-billing-grid input,
+.af-billing-grid select {
+    height: 48px;
+    border: 1px solid #d9dee6;
+    border-radius: 6px;
+    background: #fff;
+}
+
+.af-payment-input span {
+    display: grid;
+    grid-template-columns: 42px 1fr;
+    align-items: center;
+}
+
+.af-payment-input input,
+.af-billing-grid input,
+.af-billing-grid select,
+.af-promo input {
+    border: 0;
+    outline: 0;
+    padding: 0 12px;
+}
+
+.af-payment-warning {
+    background: #fff4df;
+    color: #4b5563;
+    display: flex;
+    gap: 12px;
+    padding: 14px;
+    border-radius: 7px;
+}
+
+.af-billing-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 20px;
+}
+
+.af-billing-grid.single {
+    grid-template-columns: 1fr;
+}
+
+.af-terms {
+    display: flex;
+    gap: 10px;
+    align-items: center;
+}
+
+.af-terms a,
+.af-back-delivery {
+    color: var(--af-gold);
+}
+
+.af-pay-now {
+    width: 100%;
+    min-height: 54px;
+    font-size: 17px;
+}
+
+.af-back-delivery {
+    text-decoration: none;
+    font-weight: 800;
+}
+
+.af-payment-side {
+    display: grid;
+    gap: 24px;
+}
+
+.af-summary-card {
+    padding: 24px;
+}
+
+.af-summary-card article {
+    border-bottom: 1px solid #edf0f3;
+    display: grid;
+    grid-template-columns: 64px 1fr auto;
+    gap: 16px;
+    padding: 14px 0;
+}
+
+.af-summary-card article img {
+    height: 64px;
+    border-radius: 7px;
+}
+
+.af-summary-card dl {
+    display: grid;
+    gap: 14px;
+    padding: 18px 0;
+}
+
+.af-promo {
+    background: #f6fbf2;
+    border: 1px solid #dcead8;
+    border-radius: 8px;
+    padding: 16px;
+}
+
+.af-promo div {
+    display: grid;
+    grid-template-columns: 1fr 74px;
+    gap: 12px;
+    margin-top: 14px;
+}
+
+.af-promo input,
+.af-promo button {
+    height: 46px;
+    border: 1px solid #d9dee6;
+    border-radius: 6px;
+    background: #fff;
+}
+
+.af-pay-reasons {
+    list-style: none;
+    display: grid;
+    gap: 20px;
+}
+
+.af-pay-reasons li,
+.af-payment-help {
+    display: grid;
+    grid-template-columns: 42px 1fr;
+    gap: 14px;
+}
+
+.af-pay-reasons i,
+.af-payment-help > i {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    background: #eaf6e7;
+    color: var(--af-green);
+    display: grid;
+    place-items: center;
+}
+
+.af-pay-reasons strong,
+.af-payment-help strong {
+    display: block;
+    margin-bottom: 4px;
+}
+
+@media (max-width: 1180px) {
+    .af-order-page,
+    .af-payment-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .af-order-left {
+        display: none;
+    }
+
+    .af-dish-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+}
+
+@media (max-width: 720px) {
+    .af-order-benefits,
+    .af-dish-grid,
+    .af-order-toolbar,
+    .af-checkout-steps,
+    .af-billing-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .af-order-page,
+    .af-payment-page {
+        padding: 24px 16px;
+    }
+
+    .af-payment-method {
+        grid-template-columns: 26px 36px 1fr;
+    }
+
+    .af-payment-method em {
+        display: none;
+    }
+}

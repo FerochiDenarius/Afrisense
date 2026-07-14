@@ -1,0 +1,441 @@
+.af-enquiry-hero {
+    min-height: 300px;
+    background:
+        linear-gradient(rgba(5, 28, 23, 0.86), rgba(5, 28, 23, 0.88)),
+        url("../images/foodimage.jpeg") center / cover;
+    color: #fff;
+    display: grid;
+    place-items: center;
+    padding: 46px 24px;
+    text-align: center;
+}
+
+.af-enquiry-hero-inner {
+    width: min(760px, 100%);
+}
+
+.af-breadcrumb {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 12px;
+    color: rgba(255, 255, 255, 0.9);
+    font-size: 14px;
+    margin-bottom: 20px;
+}
+
+.af-breadcrumb a {
+    color: #fff;
+    text-decoration: none;
+}
+
+.af-breadcrumb span,
+.af-breadcrumb i:last-of-type + span {
+    color: var(--af-gold-2);
+    font-weight: 800;
+}
+
+.af-enquiry-hero h1 {
+    font-family: Georgia, "Times New Roman", serif;
+    font-size: clamp(40px, 5vw, 58px);
+    line-height: 1.05;
+}
+
+.af-enquiry-hero h1 span {
+    color: var(--af-gold-2);
+}
+
+.af-title-divider {
+    display: inline-grid;
+    grid-template-columns: 72px 34px 72px;
+    align-items: center;
+    gap: 8px;
+    color: var(--af-gold-2);
+    margin: 18px 0;
+}
+
+.af-title-divider span {
+    height: 2px;
+    background: var(--af-gold-2);
+}
+
+.af-title-divider i {
+    font-size: 24px;
+}
+
+.af-enquiry-hero p {
+    font-size: 17px;
+    line-height: 1.65;
+}
+
+.af-enquiry-section {
+    background: #fafafa;
+    padding: 34px 24px 32px;
+}
+
+.af-enquiry-grid {
+    width: min(1240px, 100%);
+    margin: 0 auto;
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) 390px;
+    gap: 28px;
+    align-items: start;
+}
+
+.af-enquiry-card {
+    background: #fff;
+    border: 1px solid #e4e7ec;
+    border-radius: 10px;
+    box-shadow: 0 12px 32px rgba(15, 23, 42, 0.06);
+}
+
+.af-form-card {
+    padding: 30px 28px;
+}
+
+.af-section-heading {
+    display: flex;
+    align-items: flex-start;
+    gap: 16px;
+    margin-bottom: 30px;
+}
+
+.af-section-heading > span {
+    width: 38px;
+    height: 38px;
+    border-radius: 50%;
+    background: #fff4e4;
+    color: var(--af-gold);
+    display: grid;
+    place-items: center;
+}
+
+.af-section-heading h2,
+.af-help-card h2 {
+    color: var(--af-green);
+    font-family: Georgia, "Times New Roman", serif;
+    font-size: 27px;
+    line-height: 1.2;
+}
+
+.af-section-heading p,
+.af-help-intro,
+.af-help-list p,
+.af-response-card p,
+.af-privacy-line {
+    color: #4b5563;
+    font-size: 14px;
+    line-height: 1.65;
+}
+
+.af-enquiry-form {
+    display: grid;
+    gap: 24px;
+}
+
+.af-field-grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 22px 32px;
+}
+
+.af-form-group {
+    display: grid;
+    gap: 10px;
+}
+
+.af-form-group label,
+.af-enquiry-types legend {
+    color: #111827;
+    font-size: 14px;
+    font-weight: 800;
+}
+
+.af-form-group strong {
+    color: #d92d20;
+}
+
+.af-input-icon,
+.af-select-wrap,
+.af-textarea-wrap {
+    border: 1px solid #d9dee6;
+    border-radius: 6px;
+    background: #fff;
+    transition: border-color 160ms ease, box-shadow 160ms ease;
+}
+
+.af-input-icon,
+.af-select-wrap {
+    height: 54px;
+    display: grid;
+    align-items: center;
+}
+
+.af-input-icon {
+    grid-template-columns: 42px 1fr;
+}
+
+.af-input-icon:focus-within,
+.af-select-wrap:focus-within,
+.af-textarea-wrap:focus-within {
+    border-color: var(--af-gold-2);
+    box-shadow: 0 0 0 3px rgba(204, 143, 37, 0.12);
+}
+
+.af-input-icon i {
+    color: #747b86;
+    justify-self: center;
+}
+
+.af-input-icon input,
+.af-select-wrap select,
+.af-textarea-wrap textarea {
+    width: 100%;
+    min-width: 0;
+    border: 0;
+    outline: 0;
+    color: #111827;
+    font-size: 14px;
+}
+
+.af-select-wrap {
+    grid-template-columns: 1fr 42px;
+}
+
+.af-select-wrap select {
+    appearance: none;
+    background: transparent;
+    padding-left: 16px;
+}
+
+.af-select-wrap i {
+    color: #111827;
+    justify-self: center;
+}
+
+.af-enquiry-types {
+    border: 0;
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 18px;
+}
+
+.af-enquiry-types legend {
+    grid-column: 1 / -1;
+    margin-bottom: 2px;
+}
+
+.af-enquiry-types label {
+    min-height: 98px;
+    border: 1px solid #d9dee6;
+    border-radius: 7px;
+    display: grid;
+    place-items: center;
+    gap: 8px;
+    padding: 16px 10px;
+    position: relative;
+    text-align: center;
+    cursor: pointer;
+    transition: border-color 160ms ease, background 160ms ease, color 160ms ease;
+}
+
+.af-enquiry-types label > input {
+    position: absolute;
+    opacity: 0;
+    pointer-events: none;
+}
+
+.af-enquiry-types label > i {
+    color: #111827;
+    font-size: 28px;
+}
+
+.af-enquiry-types label strong {
+    font-size: 13px;
+}
+
+.af-type-check {
+    width: 22px;
+    height: 22px;
+    border-radius: 50%;
+    background: var(--af-gold);
+    color: #fff;
+    display: none;
+    place-items: center;
+    position: absolute;
+    top: -1px;
+    right: -1px;
+}
+
+.af-enquiry-types label.is-active {
+    border-color: var(--af-gold);
+    background: #fffaf3;
+    color: var(--af-gold);
+}
+
+.af-enquiry-types label.is-active > i {
+    color: var(--af-gold);
+}
+
+.af-enquiry-types label.is-active .af-type-check {
+    display: grid;
+}
+
+.af-message-group {
+    gap: 10px;
+}
+
+.af-textarea-wrap {
+    display: grid;
+    grid-template-columns: 1fr 42px;
+    align-items: end;
+}
+
+.af-textarea-wrap textarea {
+    min-height: 108px;
+    resize: vertical;
+    padding: 18px 0 18px 16px;
+}
+
+.af-textarea-wrap i {
+    color: #747b86;
+    padding-bottom: 18px;
+    justify-self: center;
+}
+
+.af-send-btn {
+    height: 54px;
+    border: 0;
+    border-radius: 6px;
+    background: linear-gradient(135deg, var(--af-green), #062f26);
+    color: #fff;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 14px;
+    font-size: 16px;
+    font-weight: 850;
+    cursor: pointer;
+    transition: background 180ms ease, transform 180ms ease;
+}
+
+.af-send-btn:hover {
+    background: linear-gradient(135deg, var(--af-gold), var(--af-gold-2));
+    transform: translateY(-1px);
+}
+
+.af-privacy-line {
+    text-align: center;
+}
+
+.af-privacy-line i {
+    color: #747b86;
+    margin-right: 8px;
+}
+
+.af-help-card {
+    padding: 34px 28px 28px;
+}
+
+.af-help-line {
+    width: 28px;
+    height: 2px;
+    background: var(--af-gold-2);
+    display: block;
+    margin: 14px 0 18px;
+}
+
+.af-help-intro {
+    margin-bottom: 30px;
+}
+
+.af-help-list {
+    display: grid;
+    gap: 24px;
+}
+
+.af-help-list article {
+    display: grid;
+    grid-template-columns: 54px 1fr;
+    gap: 16px;
+}
+
+.af-help-list article > span {
+    width: 54px;
+    height: 54px;
+    border-radius: 50%;
+    background: var(--af-green);
+    color: var(--af-gold-2);
+    display: grid;
+    place-items: center;
+    font-size: 23px;
+    box-shadow: 0 10px 20px rgba(13, 36, 30, 0.18);
+}
+
+.af-help-list h3,
+.af-response-card h3 {
+    color: #111827;
+    font-size: 15px;
+    margin-bottom: 4px;
+}
+
+.af-help-socials {
+    display: flex;
+    gap: 14px;
+    margin-top: 8px;
+}
+
+.af-help-socials a {
+    width: 28px;
+    height: 28px;
+    border-radius: 50%;
+    background: #f3f4f6;
+    color: var(--af-green);
+    display: grid;
+    place-items: center;
+    text-decoration: none;
+}
+
+.af-response-card {
+    background: linear-gradient(135deg, #fff8ee, #f6efe6);
+    border-radius: 8px;
+    display: grid;
+    grid-template-columns: 64px 1fr;
+    gap: 18px;
+    align-items: center;
+    padding: 24px 20px;
+    margin-top: 34px;
+}
+
+.af-response-card > span {
+    width: 58px;
+    height: 58px;
+    border: 2px solid rgba(183, 123, 26, 0.32);
+    border-radius: 50%;
+    color: var(--af-gold);
+    display: grid;
+    place-items: center;
+    font-size: 34px;
+}
+
+@media (max-width: 1080px) {
+    .af-enquiry-grid {
+        grid-template-columns: 1fr;
+    }
+}
+
+@media (max-width: 760px) {
+    .af-field-grid,
+    .af-enquiry-types {
+        grid-template-columns: 1fr;
+    }
+
+    .af-enquiry-hero {
+        min-height: 260px;
+    }
+
+    .af-form-card,
+    .af-help-card {
+        padding: 24px 18px;
+    }
+}

@@ -1,6 +1,8 @@
 <?php
 $frontendBase = $frontendBase ?? '/Afrisense/frontend';
 $activePage = $activePage ?? '';
+$publicHeaderMode = $publicHeaderMode ?? 'default';
+$customerName = $customerName ?? 'Jane Mensah';
 
 $navItems = [
     'home' => ['label' => 'Home', 'href' => $frontendBase . '/landing/index.php'],
@@ -13,13 +15,17 @@ $navItems = [
 ?>
 <header class="af-public-header" data-navbar>
     <nav class="af-navbar" aria-label="Primary navigation">
-        <a class="af-brand" href="<?php echo htmlspecialchars($frontendBase . '/landing/index.php', ENT_QUOTES, 'UTF-8'); ?>" aria-label="AfriSense home">
+        <a class="af-header-brand" href="<?php echo htmlspecialchars($frontendBase . '/landing/index.php', ENT_QUOTES, 'UTF-8'); ?>" aria-label="AfriSense home">
             <span class="af-brand-icon" aria-hidden="true"><i class="bi bi-cup-hot"></i></span>
             <span>
                 <strong>AfriSense</strong>
                 <small>Food Services</small>
             </span>
         </a>
+
+        <button class="af-public-phone-mobile" type="button" aria-label="Call AfriSense">
+            <i class="bi bi-telephone" aria-hidden="true"></i>
+        </button>
 
         <button class="af-nav-toggle" type="button" aria-label="Toggle navigation" aria-expanded="false" data-navbar-toggle>
             <i class="bi bi-list" aria-hidden="true"></i>
@@ -41,7 +47,19 @@ $navItems = [
                     <i class="bi bi-telephone" aria-hidden="true"></i>
                     <span>+233 24 123 4567</span>
                 </a>
-                <a class="af-order-btn" href="<?php echo htmlspecialchars($frontendBase . '/landing/order.php', ENT_QUOTES, 'UTF-8'); ?>">Order Now</a>
+                <?php if ($publicHeaderMode === 'shop'): ?>
+                    <a class="af-cart-link" href="<?php echo htmlspecialchars($frontendBase . '/landing/order.php', ENT_QUOTES, 'UTF-8'); ?>" aria-label="View cart">
+                        <i class="bi bi-cart3" aria-hidden="true"></i>
+                        <span>3</span>
+                    </a>
+                    <button class="af-public-profile" type="button" aria-label="Customer profile">
+                        <img src="<?php echo htmlspecialchars($frontendBase . '/assets/images/foodimage.jpeg', ENT_QUOTES, 'UTF-8'); ?>" alt="">
+                        <strong><?php echo htmlspecialchars($customerName, ENT_QUOTES, 'UTF-8'); ?></strong>
+                        <i class="bi bi-chevron-down" aria-hidden="true"></i>
+                    </button>
+                <?php else: ?>
+                    <a class="af-order-btn" href="<?php echo htmlspecialchars($frontendBase . '/landing/order.php', ENT_QUOTES, 'UTF-8'); ?>">Order Now</a>
+                <?php endif; ?>
             </div>
         </div>
     </nav>
