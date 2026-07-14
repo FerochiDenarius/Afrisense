@@ -1,0 +1,19 @@
+:root {
+    --af-green: #0d241e;
+    --af-green-2: #0c231d;
+    --af-gold: #b77b1a;
+    --af-gold-2: #cc8f25;
+    --af-text: #111827;
+    --af-muted: #6b7280;
+    --af-line: #e5e7eb;
+    --af-bg: #f7f8fa;
+    --af-card: #fff;
+    --af-success: #159447;
+    --af-error: #dc2626;
+    --af-warning: #d97706;
+    --af-info: #2563eb;
+    --af-shadow: 0 14px 34px rgba(15, 23, 42, 0.08);
+    --af-radius: 8px;
+    --af-transition: 180ms ease;
+    --af-font: "Poppins", Arial, sans-serif;
+}
