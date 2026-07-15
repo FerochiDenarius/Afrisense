@@ -93,6 +93,28 @@
     gap: 28px;
 }
 
+.auth-message {
+    width: min(470px, 100%);
+    border-radius: 8px;
+    font-size: 14px;
+    font-weight: 750;
+    line-height: 1.5;
+    margin-bottom: 20px;
+    padding: 12px 14px;
+}
+
+.auth-message.error {
+    background: #fff1f1;
+    border: 1px solid #ffd3d3;
+    color: #b42318;
+}
+
+.auth-message.success {
+    background: #edfdf3;
+    border: 1px solid #b7efc5;
+    color: #087443;
+}
+
 .af-form-group {
     display: grid;
     gap: 10px;

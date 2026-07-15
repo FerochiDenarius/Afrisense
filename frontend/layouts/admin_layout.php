@@ -1,8 +1,13 @@
 <?php
+require_once __DIR__ . '/../auth/auth_bootstrap.php';
+
+$authUser = afrisense_require_admin();
 $frontendBase = $frontendBase ?? '/Afrisense/frontend';
 $pageTitle = $pageTitle ?? 'Admin | AfriSense';
 $adminTitle = $adminTitle ?? 'Dashboard';
 $activeAdminPage = $activeAdminPage ?? '';
+$adminName = $adminName ?? (string) ($authUser['fullname'] ?? $authUser['email'] ?? 'Admin User');
+$adminRole = $adminRole ?? ucwords(afrisense_role_name($authUser) ?: 'Staff');
 $extraStyles = $extraStyles ?? [];
 $extraScripts = $extraScripts ?? [];
 ?>

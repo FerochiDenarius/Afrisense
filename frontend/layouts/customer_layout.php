@@ -1,8 +1,12 @@
 <?php
+require_once __DIR__ . '/../auth/auth_bootstrap.php';
+
+$authUser = afrisense_require_customer();
 $frontendBase = $frontendBase ?? '/Afrisense/frontend';
 $pageTitle = $pageTitle ?? 'Customer | AfriSense';
 $customerTitle = $customerTitle ?? 'Dashboard';
 $activeCustomerPage = $activeCustomerPage ?? '';
+$customerName = $customerName ?? (string) ($authUser['fullname'] ?? $authUser['email'] ?? 'Customer');
 $extraStyles = $extraStyles ?? [];
 $extraScripts = $extraScripts ?? [];
 ?>

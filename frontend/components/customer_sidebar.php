@@ -6,10 +6,10 @@ $customerItems = [
     ['key' => 'dashboard', 'label' => 'Dashboard', 'icon' => 'bi-house', 'href' => $frontendBase . '/customer/dashboard.php'],
     ['key' => 'orders', 'label' => 'My Orders', 'icon' => 'bi-bag-check', 'href' => $frontendBase . '/customer/my-orders.php'],
     ['key' => 'bookings', 'label' => 'My Bookings', 'icon' => 'bi-calendar-check', 'href' => $frontendBase . '/customer/my-bookings.php'],
-    ['key' => 'wishlist', 'label' => 'Wishlist', 'icon' => 'bi-heart', 'href' => '#'],
+    ['key' => 'wishlist', 'label' => 'Wishlist', 'icon' => 'bi-heart', 'href' => $frontendBase . '/landing/menu.php'],
     ['key' => 'notifications', 'label' => 'Notifications', 'icon' => 'bi-bell', 'href' => $frontendBase . '/customer/notifications.php'],
     ['key' => 'profile', 'label' => 'Profile', 'icon' => 'bi-person', 'href' => $frontendBase . '/customer/profile.php'],
-    ['key' => 'settings', 'label' => 'Settings', 'icon' => 'bi-gear', 'href' => '#'],
+    ['key' => 'settings', 'label' => 'Settings', 'icon' => 'bi-gear', 'href' => $frontendBase . '/customer/profile.php'],
 ];
 ?>
 <aside class="af-dashboard-sidebar af-customer-sidebar" data-sidebar>
@@ -31,7 +31,7 @@ $customerItems = [
         <?php endforeach; ?>
     </nav>
 
-    <a class="af-sidebar-logout" href="<?php echo htmlspecialchars($frontendBase . '/auth/login.php', ENT_QUOTES, 'UTF-8'); ?>">
+    <a class="af-sidebar-logout" href="<?php echo htmlspecialchars($frontendBase . '/auth/logout.php', ENT_QUOTES, 'UTF-8'); ?>">
         <i class="bi bi-box-arrow-left" aria-hidden="true"></i>
         <span>Logout</span>
     </a>

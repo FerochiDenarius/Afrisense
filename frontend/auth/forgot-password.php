@@ -1,9 +1,20 @@
 <?php
+require_once __DIR__ . '/auth_bootstrap.php';
+
 $frontendBase = '/Afrisense/frontend';
 $pageTitle = 'Forgot Password | AfriSense';
 $activePage = '';
 $extraStyles = [$frontendBase . '/assets/css/auth-recovery.css'];
 $extraScripts = [$frontendBase . '/assets/js/auth-recovery.js'];
+$authMessage = null;
+
+if (($_SERVER['REQUEST_METHOD'] ?? 'GET') === 'POST') {
+    $result = afrisense_request_password_reset((string) ($_POST['email'] ?? ''));
+    $authMessage = [
+        'type' => $result['success'] ? 'success' : 'error',
+        'message' => (string) $result['message'],
+    ];
+}
 
 ob_start();
 ?>
@@ -19,7 +30,13 @@ ob_start();
             <p class="af-recovery-subtitle">No worries! Enter your email address and we'll send you a link to reset your password.</p>
             <span class="af-gold-divider" aria-hidden="true"></span>
 
-            <form class="af-recovery-form" action="#" method="post">
+            <?php if ($authMessage !== null): ?>
+                <p class="auth-message <?php echo htmlspecialchars($authMessage['type'], ENT_QUOTES, 'UTF-8'); ?>">
+                    <?php echo htmlspecialchars($authMessage['message'], ENT_QUOTES, 'UTF-8'); ?>
+                </p>
+            <?php endif; ?>
+
+            <form class="af-recovery-form" action="forgot-password.php" method="post">
                 <div class="af-form-group">
                     <label for="forgot_email">Email Address</label>
                     <div class="af-input-icon">

@@ -8,6 +8,8 @@ use PDO;
 use PDOException;
 use RuntimeException;
 
+require_once __DIR__ . '/env.php';
+
 class Database
 {
     private string $host;

@@ -1,3 +1,27 @@
+<?php
+require_once __DIR__ . '/auth_bootstrap.php';
+
+$existingUser = afrisense_current_user();
+
+if ($existingUser !== null) {
+    header('Location: ' . afrisense_dashboard_url($existingUser));
+    exit;
+}
+
+$authMessage = afrisense_flash_get();
+
+if (($_SERVER['REQUEST_METHOD'] ?? 'GET') === 'POST') {
+    $response = afrisense_auth()->login((string) ($_POST['email'] ?? ''), (string) ($_POST['password'] ?? ''));
+
+    if (($response['success'] ?? false) === true) {
+        $user = afrisense_current_user();
+        header('Location: ' . afrisense_dashboard_url($user));
+        exit;
+    }
+
+    $authMessage = ['type' => 'error', 'message' => (string) ($response['message'] ?? 'Login failed.')];
+}
+?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -21,11 +45,11 @@
         <nav class="site-nav" aria-label="Primary navigation">
             <ul>
                 <li><a href="../landing/index.php">Home</a></li>
-                <li><a href="#">Menu</a></li>
-                <li><a href="#">Catering Packages</a></li>
-                <li><a href="#">Book a Service</a></li>
-                <li><a href="#">About Us</a></li>
-                <li><a href="#">Contact Us</a></li>
+                <li><a href="../landing/menu.php">Menu</a></li>
+                <li><a href="../landing/services.php">Catering Packages</a></li>
+                <li><a href="../landing/booking.php">Book a Service</a></li>
+                <li><a href="../landing/about.php">About Us</a></li>
+                <li><a href="../landing/contact.php">Contact Us</a></li>
             </ul>
         </nav>
 
@@ -34,7 +58,7 @@
                 <span aria-hidden="true"><i class="bi bi-telephone"></i></span>
                 +233 24 123 4567
             </a>
-            <button type="button">Order Now</button>
+            <a class="order-button-link" href="../landing/order.php">Order Now</a>
         </div>
     </header>
 
@@ -86,7 +110,13 @@
                         <span class="gold-line" aria-hidden="true"></span>
                     </div>
 
-                    <form class="login-form" action="" method="post">
+                    <?php if ($authMessage !== null): ?>
+                        <p class="auth-message <?php echo htmlspecialchars((string) $authMessage['type'], ENT_QUOTES, 'UTF-8'); ?>">
+                            <?php echo htmlspecialchars((string) $authMessage['message'], ENT_QUOTES, 'UTF-8'); ?>
+                        </p>
+                    <?php endif; ?>
+
+                    <form class="login-form" action="login.php" method="post">
                         <div class="form-group">
                             <label for="email">Email Address</label>
                             <div class="input-shell">

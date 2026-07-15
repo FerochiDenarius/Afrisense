@@ -1,3 +1,10 @@
+<?php
+require_once __DIR__ . '/../auth/auth_bootstrap.php';
+
+$authUser = afrisense_require_admin();
+$adminName = (string) ($authUser['fullname'] ?? $authUser['email'] ?? 'Admin User');
+$adminRole = ucwords(afrisense_role_name($authUser) ?: 'Staff');
+?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -40,7 +47,7 @@
             <a href="reports.php"><i class="bi bi-file-earmark-text" aria-hidden="true"></i> Reports <i class="bi bi-chevron-down nav-chevron" aria-hidden="true"></i></a>
         </nav>
 
-        <a class="logout-link" href="#"><i class="bi bi-box-arrow-left" aria-hidden="true"></i> Logout</a>
+        <a class="logout-link" href="../auth/logout.php"><i class="bi bi-box-arrow-left" aria-hidden="true"></i> Logout</a>
     </aside>
 
     <div class="dashboard-shell">
@@ -69,8 +76,8 @@
                 <div class="admin-profile">
                     <img src="../assets/images/foodimage.jpeg" alt="">
                     <span>
-                        <strong>Admin User</strong>
-                        <small>Super Admin</small>
+                        <strong><?php echo htmlspecialchars($adminName, ENT_QUOTES, 'UTF-8'); ?></strong>
+                        <small><?php echo htmlspecialchars($adminRole, ENT_QUOTES, 'UTF-8'); ?></small>
                     </span>
                     <i class="bi bi-chevron-down" aria-hidden="true"></i>
                 </div>
@@ -81,7 +88,7 @@
             <section class="page-heading">
                 <div>
                     <h1>Dashboard</h1>
-                    <p>Welcome back, Admin User! Here's today's business summary.</p>
+                    <p>Welcome back, <?php echo htmlspecialchars($adminName, ENT_QUOTES, 'UTF-8'); ?>! Here's today's business summary.</p>
                 </div>
                 <button type="button" class="date-filter">
                     <i class="bi bi-calendar4-week" aria-hidden="true"></i>

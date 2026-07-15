@@ -127,23 +127,51 @@ a {
     justify-content: center;
 }
 
-.header-actions button {
+.header-actions button,
+.order-button-link {
     min-width: 128px;
     height: 44px;
     border: 0;
     border-radius: 7px;
     background: var(--secondary-gold);
     color: #fff;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
     cursor: pointer;
     font-size: 15px;
     font-weight: 700;
+    text-decoration: none;
     transition: background 0.2s ease, transform 0.2s ease;
 }
 
 .header-actions button:hover,
-.header-actions button:focus-visible {
+.header-actions button:focus-visible,
+.order-button-link:hover,
+.order-button-link:focus-visible {
     background: var(--primary-gold);
     transform: translateY(-1px);
+}
+
+.auth-message {
+    border-radius: 8px;
+    font-size: 14px;
+    font-weight: 750;
+    line-height: 1.5;
+    margin-bottom: 18px;
+    padding: 12px 14px;
+}
+
+.auth-message.error {
+    background: #fff1f1;
+    border: 1px solid #ffd3d3;
+    color: #b42318;
+}
+
+.auth-message.success {
+    background: #edfdf3;
+    border: 1px solid #b7efc5;
+    color: #087443;
 }
 
 .login-hero {
@@ -714,7 +742,8 @@ a {
         width: 100%;
     }
 
-    .header-actions button {
+    .header-actions button,
+    .order-button-link {
         width: 100%;
         max-width: 100%;
     }
@@ -795,7 +824,8 @@ a {
 }
 
 @media (max-width: 430px) {
-    .header-actions button {
+    .header-actions button,
+    .order-button-link {
         min-width: 112px;
         max-width: 100%;
     }

@@ -101,7 +101,7 @@ $adminGroups = [
         <?php endforeach; ?>
     </nav>
 
-    <a class="af-sidebar-logout" href="<?php echo htmlspecialchars($frontendBase . '/auth/login.php', ENT_QUOTES, 'UTF-8'); ?>">
+    <a class="af-sidebar-logout" href="<?php echo htmlspecialchars($frontendBase . '/auth/logout.php', ENT_QUOTES, 'UTF-8'); ?>">
         <i class="bi bi-box-arrow-left" aria-hidden="true"></i>
         <span>Logout</span>
     </a>

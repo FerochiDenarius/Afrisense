@@ -13,10 +13,10 @@ $frontendBase = $frontendBase ?? '/Afrisense/frontend';
             </a>
             <p>Providing delicious meals and exceptional catering services for all occasions. Taste, quality and excellence you can trust.</p>
             <div class="af-social-links" aria-label="Social links">
-                <a href="#" aria-label="Facebook"><i class="bi bi-facebook" aria-hidden="true"></i></a>
-                <a href="#" aria-label="Instagram"><i class="bi bi-instagram" aria-hidden="true"></i></a>
-                <a href="#" aria-label="Twitter"><i class="bi bi-twitter-x" aria-hidden="true"></i></a>
-                <a href="#" aria-label="WhatsApp"><i class="bi bi-whatsapp" aria-hidden="true"></i></a>
+                <a href="https://www.facebook.com/" aria-label="Facebook"><i class="bi bi-facebook" aria-hidden="true"></i></a>
+                <a href="https://www.instagram.com/" aria-label="Instagram"><i class="bi bi-instagram" aria-hidden="true"></i></a>
+                <a href="https://twitter.com/" aria-label="Twitter"><i class="bi bi-twitter-x" aria-hidden="true"></i></a>
+                <a href="https://wa.me/233241234567" aria-label="WhatsApp"><i class="bi bi-whatsapp" aria-hidden="true"></i></a>
             </div>
         </section>
 
@@ -69,7 +69,7 @@ $frontendBase = $frontendBase ?? '/Afrisense/frontend';
                 <i class="bi bi-chevron-down" aria-hidden="true"></i>
             </button>
             <p>Subscribe to get the latest updates, offers and news.</p>
-            <form class="af-newsletter" action="#" method="post">
+            <form class="af-newsletter" action="<?php echo htmlspecialchars($frontendBase . '/landing/contact.php', ENT_QUOTES, 'UTF-8'); ?>" method="post">
                 <label class="sr-only" for="footer_newsletter_email">Email address</label>
                 <input type="email" id="footer_newsletter_email" name="email" placeholder="Enter your email">
                 <button type="submit" aria-label="Subscribe"><i class="bi bi-send-fill" aria-hidden="true"></i></button>
@@ -81,8 +81,8 @@ $frontendBase = $frontendBase ?? '/Afrisense/frontend';
     <div class="af-footer-bottom">
         <p>&copy; 2024 AfriSense Food Services. All Rights Reserved.</p>
         <nav aria-label="Footer links">
-            <a href="#">Privacy Policy</a>
-            <a href="#">Terms &amp; Conditions</a>
+            <a href="<?php echo htmlspecialchars($frontendBase . '/landing/privacy.php', ENT_QUOTES, 'UTF-8'); ?>">Privacy Policy</a>
+            <a href="<?php echo htmlspecialchars($frontendBase . '/landing/terms.php', ENT_QUOTES, 'UTF-8'); ?>">Terms &amp; Conditions</a>
         </nav>
     </div>
 </footer>

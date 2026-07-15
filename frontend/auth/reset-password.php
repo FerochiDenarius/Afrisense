@@ -1,9 +1,25 @@
 <?php
+require_once __DIR__ . '/auth_bootstrap.php';
+
 $frontendBase = '/Afrisense/frontend';
 $pageTitle = 'Reset Password | AfriSense';
 $activePage = '';
 $extraStyles = [$frontendBase . '/assets/css/auth-recovery.css'];
 $extraScripts = [$frontendBase . '/assets/js/auth-recovery.js'];
+$token = (string) ($_GET['token'] ?? $_POST['token'] ?? '');
+$authMessage = null;
+
+if (($_SERVER['REQUEST_METHOD'] ?? 'GET') === 'POST') {
+    $result = afrisense_reset_password(
+        $token,
+        (string) ($_POST['new_password'] ?? ''),
+        (string) ($_POST['confirm_password'] ?? '')
+    );
+    $authMessage = [
+        'type' => $result['success'] ? 'success' : 'error',
+        'message' => (string) $result['message'],
+    ];
+}
 
 ob_start();
 ?>
@@ -35,7 +51,14 @@ ob_start();
 
             <span class="af-gold-divider" aria-hidden="true"></span>
 
-            <form class="af-recovery-form" action="#" method="post">
+            <?php if ($authMessage !== null): ?>
+                <p class="auth-message <?php echo htmlspecialchars($authMessage['type'], ENT_QUOTES, 'UTF-8'); ?>">
+                    <?php echo htmlspecialchars($authMessage['message'], ENT_QUOTES, 'UTF-8'); ?>
+                </p>
+            <?php endif; ?>
+
+            <form class="af-recovery-form" action="reset-password.php" method="post">
+                <input type="hidden" name="token" value="<?php echo htmlspecialchars($token, ENT_QUOTES, 'UTF-8'); ?>">
                 <div class="af-form-group">
                     <label for="new_password">New Password</label>
                     <div class="af-input-icon af-password-field">

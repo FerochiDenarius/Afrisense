@@ -21,11 +21,11 @@
         <nav class="site-nav" aria-label="Primary navigation">
             <ul>
                 <li><a class="active" href="index.php">Home</a></li>
-                <li><a href="#">Menu</a></li>
-                <li><a href="#">Catering Packages</a></li>
-                <li><a href="#">Book a Service</a></li>
-                <li><a href="#">About Us</a></li>
-                <li><a href="#">Contact Us</a></li>
+                <li><a href="menu.php">Menu</a></li>
+                <li><a href="services.php">Catering Packages</a></li>
+                <li><a href="booking.php">Book a Service</a></li>
+                <li><a href="about.php">About Us</a></li>
+                <li><a href="contact.php">Contact Us</a></li>
             </ul>
         </nav>
 
@@ -34,7 +34,7 @@
                 <span aria-hidden="true"><i class="bi bi-telephone"></i></span>
                 +233 24 123 4567
             </a>
-            <a class="order-link" href="#booking">Order Now</a>
+            <a class="order-link" href="order.php">Order Now</a>
         </div>
     </header>
 
@@ -49,11 +49,11 @@
                 </p>
 
                 <div class="hero-actions">
-                    <a class="primary-action" href="#popular-meals">
+                    <a class="primary-action" href="order.php">
                         <i class="bi bi-basket2-fill" aria-hidden="true"></i>
                         Order Now
                     </a>
-                    <a class="secondary-action" href="#booking">
+                    <a class="secondary-action" href="booking.php">
                         <i class="bi bi-calendar3" aria-hidden="true"></i>
                         Book a Service
                     </a>
@@ -94,7 +94,7 @@
                 </div>
             </div>
 
-            <form class="booking-card" id="booking" action="" method="post">
+            <form class="booking-card" id="booking" action="booking.php" method="get">
                 <h2>Book Your Service</h2>
                 <span class="gold-line" aria-hidden="true"></span>
 
@@ -164,42 +164,42 @@
                     <span><i class="bi bi-bell" aria-hidden="true"></i></span>
                     <h3>Food Ordering</h3>
                     <p>Order delicious meals online with ease.</p>
-                    <a href="#" aria-label="View food ordering"><i class="bi bi-arrow-right" aria-hidden="true"></i></a>
+                    <a href="order.php" aria-label="View food ordering"><i class="bi bi-arrow-right" aria-hidden="true"></i></a>
                 </article>
 
                 <article class="service-card">
                     <span><i class="bi bi-calendar3" aria-hidden="true"></i></span>
                     <h3>Service Booking</h3>
                     <p>Book our catering services for any event.</p>
-                    <a href="#" aria-label="View service booking"><i class="bi bi-arrow-right" aria-hidden="true"></i></a>
+                    <a href="booking.php" aria-label="View service booking"><i class="bi bi-arrow-right" aria-hidden="true"></i></a>
                 </article>
 
                 <article class="service-card">
                     <span><i class="bi bi-gift" aria-hidden="true"></i></span>
                     <h3>Catering Packages</h3>
                     <p>Explore our affordable catering packages.</p>
-                    <a href="#" aria-label="View catering packages"><i class="bi bi-arrow-right" aria-hidden="true"></i></a>
+                    <a href="services.php" aria-label="View catering packages"><i class="bi bi-arrow-right" aria-hidden="true"></i></a>
                 </article>
 
                 <article class="service-card">
                     <span><i class="bi bi-cup-hot" aria-hidden="true"></i></span>
                     <h3>Custom Menus</h3>
                     <p>We customize menus to fit your occasion.</p>
-                    <a href="#" aria-label="View custom menus"><i class="bi bi-arrow-right" aria-hidden="true"></i></a>
+                    <a href="services.php" aria-label="View custom menus"><i class="bi bi-arrow-right" aria-hidden="true"></i></a>
                 </article>
 
                 <article class="service-card">
                     <span><i class="bi bi-truck" aria-hidden="true"></i></span>
                     <h3>Fast Delivery</h3>
                     <p>We deliver fresh and hot meals to you.</p>
-                    <a href="#" aria-label="View fast delivery"><i class="bi bi-arrow-right" aria-hidden="true"></i></a>
+                    <a href="order.php" aria-label="View fast delivery"><i class="bi bi-arrow-right" aria-hidden="true"></i></a>
                 </article>
 
                 <article class="service-card">
                     <span><i class="bi bi-headset" aria-hidden="true"></i></span>
                     <h3>24/7 Support</h3>
                     <p>Our team is always ready to assist.</p>
-                    <a href="#" aria-label="View support"><i class="bi bi-arrow-right" aria-hidden="true"></i></a>
+                    <a href="contact.php" aria-label="View support"><i class="bi bi-arrow-right" aria-hidden="true"></i></a>
                 </article>
             </div>
         </section>
@@ -245,7 +245,7 @@
                     <h2 id="popular-title">Popular Meals</h2>
                     <p>Check out some of our most loved meals.</p>
                 </div>
-                <a href="#">View Full Menu <i class="bi bi-arrow-right" aria-hidden="true"></i></a>
+                <a href="menu.php">View Full Menu <i class="bi bi-arrow-right" aria-hidden="true"></i></a>
             </div>
 
             <div class="meal-grid">
@@ -277,8 +277,8 @@
     <footer class="site-footer">
         <p>&copy; 2024 AfriSense Food Services. All Rights Reserved.</p>
         <nav aria-label="Footer links">
-            <a href="../auth/privacy.php">Privacy Policy</a>
-            <a href="../auth/terms.php">Terms &amp; Conditions</a>
+            <a href="privacy.php">Privacy Policy</a>
+            <a href="terms.php">Terms &amp; Conditions</a>
         </nav>
     </footer>
 

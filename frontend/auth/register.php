@@ -1,3 +1,25 @@
+<?php
+require_once __DIR__ . '/auth_bootstrap.php';
+
+$authMessage = null;
+
+if (afrisense_current_user() !== null) {
+    header('Location: ' . afrisense_dashboard_url(afrisense_current_user()));
+    exit;
+}
+
+if (($_SERVER['REQUEST_METHOD'] ?? 'GET') === 'POST') {
+    $response = afrisense_register_customer($_POST);
+
+    if (($response['success'] ?? false) === true) {
+        afrisense_flash_set('success', (string) $response['message']);
+        header('Location: /Afrisense/frontend/auth/login.php');
+        exit;
+    }
+
+    $authMessage = ['type' => 'error', 'message' => (string) ($response['message'] ?? 'Registration failed.')];
+}
+?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -21,11 +43,11 @@
         <nav class="main-nav" aria-label="Primary navigation">
             <ul>
                 <li><a href="../landing/index.php">Home</a></li>
-                <li><a href="#">Menu</a></li>
-                <li><a href="#">Catering Packages</a></li>
-                <li><a href="#">Book A Service</a></li>
-                <li><a href="#">About Us</a></li>
-                <li><a href="#">Contact Us</a></li>
+                <li><a href="../landing/menu.php">Menu</a></li>
+                <li><a href="../landing/services.php">Catering Packages</a></li>
+                <li><a href="../landing/booking.php">Book A Service</a></li>
+                <li><a href="../landing/about.php">About Us</a></li>
+                <li><a href="../landing/contact.php">Contact Us</a></li>
             </ul>
         </nav>
 
@@ -34,7 +56,7 @@
                 <span aria-hidden="true"><i class="bi bi-telephone"></i></span>
                 +233 24 123 4567
             </a>
-            <button type="button">Order Now</button>
+            <a class="order-button-link" href="../landing/order.php">Order Now</a>
         </div>
     </header>
 
@@ -98,7 +120,13 @@
                         <span class="gold-divider" aria-hidden="true"></span>
                     </div>
 
-                    <form class="register-form" action="" method="post">
+                    <?php if ($authMessage !== null): ?>
+                        <p class="auth-message <?php echo htmlspecialchars((string) $authMessage['type'], ENT_QUOTES, 'UTF-8'); ?>">
+                            <?php echo htmlspecialchars((string) $authMessage['message'], ENT_QUOTES, 'UTF-8'); ?>
+                        </p>
+                    <?php endif; ?>
+
+                    <form class="register-form" action="register.php" method="post">
                         <fieldset class="account-selection" aria-label="Account type">
                             <legend>Account Type</legend>
 
@@ -195,8 +223,8 @@
                         <div class="terms">
                             <input type="checkbox" id="agree" name="agree" value="1" required>
                             <label for="agree">
-                                I agree to the <a href="terms.php">Terms &amp; Conditions</a> and
-                                <a href="privacy.php">Privacy Policy</a>.
+                                I agree to the <a href="../landing/terms.php">Terms &amp; Conditions</a> and
+                                <a href="../landing/privacy.php">Privacy Policy</a>.
                             </label>
                         </div>
 
@@ -231,10 +259,10 @@
                     Taste, quality and excellence you can trust.
                 </p>
                 <div class="social-links" aria-label="Social media links">
-                    <a href="#" aria-label="Facebook"><i class="bi bi-facebook" aria-hidden="true"></i></a>
-                    <a href="#" aria-label="Instagram"><i class="bi bi-instagram" aria-hidden="true"></i></a>
-                    <a href="#" aria-label="Twitter"><i class="bi bi-twitter-x" aria-hidden="true"></i></a>
-                    <a href="#" aria-label="WhatsApp"><i class="bi bi-whatsapp" aria-hidden="true"></i></a>
+                    <a href="https://www.facebook.com/" aria-label="Facebook"><i class="bi bi-facebook" aria-hidden="true"></i></a>
+                    <a href="https://www.instagram.com/" aria-label="Instagram"><i class="bi bi-instagram" aria-hidden="true"></i></a>
+                    <a href="https://twitter.com/" aria-label="Twitter"><i class="bi bi-twitter-x" aria-hidden="true"></i></a>
+                    <a href="https://wa.me/233241234567" aria-label="WhatsApp"><i class="bi bi-whatsapp" aria-hidden="true"></i></a>
                 </div>
             </section>
 
@@ -242,22 +270,22 @@
                 <h2>Quick Links</h2>
                 <ul>
                     <li><a href="../landing/index.php">Home</a></li>
-                    <li><a href="#">Menu</a></li>
-                    <li><a href="#">Catering Packages</a></li>
-                    <li><a href="#">Book a Service</a></li>
-                    <li><a href="#">About Us</a></li>
-                    <li><a href="#">Contact Us</a></li>
+                    <li><a href="../landing/menu.php">Menu</a></li>
+                    <li><a href="../landing/services.php">Catering Packages</a></li>
+                    <li><a href="../landing/booking.php">Book a Service</a></li>
+                    <li><a href="../landing/about.php">About Us</a></li>
+                    <li><a href="../landing/contact.php">Contact Us</a></li>
                 </ul>
             </nav>
 
             <nav class="footer-column" aria-label="Services">
                 <h2>Services</h2>
                 <ul>
-                    <li><a href="#">Food Ordering</a></li>
-                    <li><a href="#">Service Booking</a></li>
-                    <li><a href="#">Catering Packages</a></li>
-                    <li><a href="#">Custom Menus</a></li>
-                    <li><a href="#">Fast Delivery</a></li>
+                    <li><a href="../landing/order.php">Food Ordering</a></li>
+                    <li><a href="../landing/booking.php">Service Booking</a></li>
+                    <li><a href="../landing/services.php">Catering Packages</a></li>
+                    <li><a href="../landing/services.php">Custom Menus</a></li>
+                    <li><a href="../landing/order.php">Fast Delivery</a></li>
                 </ul>
             </nav>
 
@@ -274,7 +302,7 @@
             <section class="footer-column newsletter">
                 <h2>Newsletter</h2>
                 <p>Subscribe to get the latest updates, offers and news.</p>
-                <form action="" method="post">
+                <form action="../landing/contact.php" method="post">
                     <label class="visually-hidden" for="newsletter_email">Email address</label>
                     <input type="email" id="newsletter_email" name="newsletter_email" placeholder="Enter your email">
                     <button type="submit" aria-label="Subscribe"><i class="bi bi-send" aria-hidden="true"></i></button>
@@ -285,8 +313,8 @@
         <div class="footer-bottom">
             <p>&copy; 2024 AfriSense Food Services. All Rights Reserved.</p>
             <nav aria-label="Legal links">
-                <a href="privacy.php">Privacy Policy</a>
-                <a href="terms.php">Terms &amp; Conditions</a>
+                <a href="../landing/privacy.php">Privacy Policy</a>
+                <a href="../landing/terms.php">Terms &amp; Conditions</a>
             </nav>
         </div>
     </footer>
