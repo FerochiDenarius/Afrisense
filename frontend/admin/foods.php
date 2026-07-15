@@ -1,190 +1,412 @@
 <?php
 $frontendBase = '/Afrisense/frontend';
-$pageTitle = 'Menu Items | AfriSense';
-$adminTitle = 'Menu';
-$activeAdminPage = 'menu_items';
-$extraStyles = [$frontendBase . '/assets/css/admin-menu.css'];
-
-$menuItems = [
-    ['name' => 'Jollof Rice', 'desc' => 'Spicy jollof rice served with grilled chicken and salad.', 'category' => 'Main Dishes', 'price' => 'GHc 45.00', 'status' => 'Active', 'tag' => 'main'],
-    ['name' => 'Fried Rice', 'desc' => 'Special fried rice with mixed vegetables and beef.', 'category' => 'Main Dishes', 'price' => 'GHc 42.00', 'status' => 'Active', 'tag' => 'main'],
-    ['name' => 'Banku & Tilapia', 'desc' => 'Traditional banku served with grilled tilapia and pepper.', 'category' => 'Local Dishes', 'price' => 'GHc 40.00', 'status' => 'Active', 'tag' => 'local'],
-    ['name' => 'Grilled Chicken', 'desc' => 'Well seasoned grilled chicken with chips and coleslaw.', 'category' => 'Grills', 'price' => 'GHc 38.00', 'status' => 'Active', 'tag' => 'grills'],
-    ['name' => 'Beef Waakye', 'desc' => 'Waakye with tender beef, gari and wele stew.', 'category' => 'Local Dishes', 'price' => 'GHc 30.00', 'status' => 'Active', 'tag' => 'local'],
-    ['name' => 'Chicken Wings', 'desc' => 'Crispy fried chicken wings with spicy sauce.', 'category' => 'Starters', 'price' => 'GHc 25.00', 'status' => 'Active', 'tag' => 'starters'],
-    ['name' => 'Fruit Salad', 'desc' => 'Fresh seasonal fruits with honey and yogurt.', 'category' => 'Salads', 'price' => 'GHc 20.00', 'status' => 'Active', 'tag' => 'salads'],
-    ['name' => 'Sobolo Drink', 'desc' => 'Refreshing hibiscus drink served chilled.', 'category' => 'Drinks', 'price' => 'GHc 10.00', 'status' => 'Active', 'tag' => 'drinks'],
-    ['name' => 'Zobo Drink', 'desc' => 'Sweet and refreshing zobo drink.', 'category' => 'Drinks', 'price' => 'GHc 10.00', 'status' => 'Out of Stock', 'tag' => 'drinks'],
-    ['name' => 'Grilled Tilapia', 'desc' => 'Fresh tilapia grilled to perfection with spices.', 'category' => 'Grills', 'price' => 'GHc 35.00', 'status' => 'Active', 'tag' => 'grills'],
+$pageTitle = 'Foods Sold | AfriSense';
+$adminTitle = 'Foods';
+$activeAdminPage = 'foods';
+$extraStyles = [
+    $frontendBase . '/assets/css/admin-menu.css',
+    $frontendBase . '/assets/css/admin-users-settings.css',
 ];
 
-$categories = [
-    ['name' => 'Main Dishes', 'count' => 28, 'icon' => 'bi-basket', 'class' => 'green'],
-    ['name' => 'Local Dishes', 'count' => 22, 'icon' => 'bi-bag-heart', 'class' => 'gold'],
-    ['name' => 'Grills', 'count' => 18, 'icon' => 'bi-scissors', 'class' => 'red'],
-    ['name' => 'Starters', 'count' => 16, 'icon' => 'bi-cup-straw', 'class' => 'purple'],
-    ['name' => 'Salads', 'count' => 12, 'icon' => 'bi-flower1', 'class' => 'green'],
-    ['name' => 'Drinks', 'count' => 20, 'icon' => 'bi-cup', 'class' => 'blue'],
-    ['name' => 'Soups', 'count' => 8, 'icon' => 'bi-cup-hot', 'class' => 'orange'],
-    ['name' => 'Desserts', 'count' => 4, 'icon' => 'bi-cake2', 'class' => 'red'],
-];
+require_once __DIR__ . '/../auth/auth_bootstrap.php';
+
+afrisense_require_admin();
+
+function afrisense_post_string(string $key, string $fallback = ''): string
+{
+    return trim((string) ($_POST[$key] ?? $fallback));
+}
+
+function afrisense_food_tag_class(string $category): string
+{
+    $category = strtolower($category);
+
+    return match (true) {
+        str_contains($category, 'main') => 'main',
+        str_contains($category, 'rice'), str_contains($category, 'local') => 'local',
+        str_contains($category, 'drink') => 'drinks',
+        str_contains($category, 'dessert') => 'starters',
+        default => 'salads',
+    };
+}
+
+function afrisense_food_image(string $frontendBase, ?string $image): string
+{
+    $image = trim((string) $image);
+
+    if ($image === '') {
+        return $frontendBase . '/assets/images/foods/jollof-rice.png';
+    }
+
+    $filename = basename($image);
+    $assetCandidate = __DIR__ . '/../assets/images/foods/' . $filename;
+    $uploadCandidate = __DIR__ . '/../uploads/' . $filename;
+
+    if (is_file($assetCandidate)) {
+        return $frontendBase . '/assets/images/foods/' . $filename;
+    }
+
+    if (is_file($uploadCandidate)) {
+        return $frontendBase . '/uploads/' . $filename;
+    }
+
+    return $frontendBase . '/assets/images/foods/jollof-rice.png';
+}
+
+$flashMessage = '';
+$flashType = 'success';
+
+try {
+    $pdo = afrisense_pdo();
+
+    if (($_SERVER['REQUEST_METHOD'] ?? 'GET') === 'POST') {
+        $action = afrisense_post_string('action');
+
+        if ($action === 'add_category') {
+            $categoryName = afrisense_post_string('category_name');
+            $categoryDescription = afrisense_post_string('category_description');
+
+            if ($categoryName === '') {
+                $flashType = 'error';
+                $flashMessage = 'Category name is required.';
+            } else {
+                $duplicate = $pdo->prepare(
+                    'SELECT COUNT(*) AS count_value
+                     FROM `food_categories`
+                     WHERE LOWER(`category_name`) = LOWER(:category_name)'
+                );
+                $duplicate->execute(['category_name' => $categoryName]);
+                $duplicateRow = $duplicate->fetch(PDO::FETCH_ASSOC);
+
+                if ((int) ($duplicateRow['count_value'] ?? 0) > 0) {
+                    $flashType = 'error';
+                    $flashMessage = 'This food category already exists.';
+                } else {
+                    $statement = $pdo->prepare(
+                        'INSERT INTO `food_categories` (`category_name`, `description`)
+                         VALUES (:category_name, :description)'
+                    );
+                    $statement->execute([
+                        'category_name' => $categoryName,
+                        'description' => $categoryDescription,
+                    ]);
+                    $flashMessage = 'Food category added.';
+                }
+            }
+        }
+
+        if ($action === 'add_food') {
+            $foodName = afrisense_post_string('food_name');
+            $categoryId = (int) ($_POST['category_id'] ?? 0);
+            $price = (float) ($_POST['price'] ?? 0);
+            $preparationTime = max(1, (int) ($_POST['preparation_time'] ?? 15));
+            $availability = afrisense_post_string('availability', 'Available');
+
+            if ($foodName === '' || $categoryId <= 0 || $price <= 0) {
+                $flashType = 'error';
+                $flashMessage = 'Food name, category and valid price are required.';
+            } else {
+                $statement = $pdo->prepare(
+                    'INSERT INTO `foods`
+                        (`category_id`, `food_name`, `description`, `price`, `preparation_time`, `availability`)
+                     VALUES
+                        (:category_id, :food_name, :description, :price, :preparation_time, :availability)'
+                );
+                $statement->execute([
+                    'category_id' => $categoryId,
+                    'food_name' => $foodName,
+                    'description' => afrisense_post_string('description'),
+                    'price' => $price,
+                    'preparation_time' => $preparationTime,
+                    'availability' => in_array($availability, ['Available', 'Unavailable'], true) ? $availability : 'Available',
+                ]);
+                $flashMessage = 'Food item added.';
+            }
+        }
+    }
+
+    $statement = $pdo->prepare(
+        'SELECT
+            f.`id`,
+            f.`food_name`,
+            f.`description`,
+            f.`price`,
+            f.`image`,
+            f.`preparation_time`,
+            f.`availability`,
+            COALESCE(c.`category_name`, \'Uncategorized\') AS category_name
+         FROM `foods` f
+         LEFT JOIN `food_categories` c ON c.`id` = f.`category_id`
+         ORDER BY f.`id` DESC
+         LIMIT 25'
+    );
+    $statement->execute();
+    $foods = $statement->fetchAll(PDO::FETCH_ASSOC);
+
+    $categoryStatement = $pdo->prepare(
+        'SELECT
+            c.`id`,
+            c.`category_name`,
+            c.`description`,
+            COUNT(f.`id`) AS food_count
+         FROM `food_categories` c
+         LEFT JOIN `foods` f ON f.`category_id` = c.`id`
+         GROUP BY c.`id`, c.`category_name`, c.`description`
+         ORDER BY c.`category_name` ASC'
+    );
+    $categoryStatement->execute();
+    $categories = $categoryStatement->fetchAll(PDO::FETCH_ASSOC);
+    $loadError = '';
+} catch (Throwable $exception) {
+    $foods = [];
+    $categories = [];
+    $loadError = 'Foods could not be loaded. Check that MySQL is running.';
+}
+
+$totalFoods = count($foods);
+$availableFoods = count(array_filter($foods, static fn (array $food): bool => (string) ($food['availability'] ?? '') === 'Available'));
+$unavailableFoods = count(array_filter($foods, static fn (array $food): bool => (string) ($food['availability'] ?? '') !== 'Available'));
+$fastPrepFoods = count(array_filter($foods, static fn (array $food): bool => (int) ($food['preparation_time'] ?? 0) <= 15));
+$longPrepFoods = count(array_filter($foods, static fn (array $food): bool => (int) ($food['preparation_time'] ?? 0) >= 25));
 
 ob_start();
 ?>
-<section class="af-admin-menu-page">
+<section class="af-admin-menu-page af-foods-page">
     <header class="af-admin-page-heading">
         <div>
-            <h1>Menu Items</h1>
-            <p>Manage all your food and drink items. Add, edit or remove items from your menu.</p>
+            <h1>Foods Sold</h1>
+            <p>Manage the food items sold by AfriSense, their categories, prices and availability.</p>
         </div>
-        <button class="af-add-menu-btn" type="button">
+        <button class="af-add-menu-btn" type="submit" form="add_food_form">
             <i class="bi bi-plus-lg" aria-hidden="true"></i>
-            Add New Menu Item
+            Add Food
         </button>
     </header>
 
-    <section class="af-menu-metrics" aria-label="Menu summary">
+    <?php if ($flashMessage !== ''): ?>
+        <div class="af-admin-alert <?php echo htmlspecialchars($flashType, ENT_QUOTES, 'UTF-8'); ?>">
+            <?php echo htmlspecialchars($flashMessage, ENT_QUOTES, 'UTF-8'); ?>
+        </div>
+    <?php endif; ?>
+
+    <?php if ($loadError !== ''): ?>
+        <div class="af-admin-alert error"><?php echo htmlspecialchars($loadError, ENT_QUOTES, 'UTF-8'); ?></div>
+    <?php endif; ?>
+
+    <section class="af-menu-metrics af-food-metrics" aria-label="Food summary">
         <article class="green">
-            <span><i class="bi bi-basket" aria-hidden="true"></i></span>
-            <div><small>Total Menu Items</small><strong>128</strong><p>+ 12 this week</p></div>
+            <span><i class="bi bi-fork-knife" aria-hidden="true"></i></span>
+            <div><small>Total Foods</small><strong><?php echo htmlspecialchars((string) $totalFoods, ENT_QUOTES, 'UTF-8'); ?></strong><p>All foods in menu</p></div>
         </article>
         <article class="gold">
-            <span><i class="bi bi-calendar-check" aria-hidden="true"></i></span>
-            <div><small>Active Items</small><strong>115</strong><p>89.8% of total</p></div>
+            <span><i class="bi bi-bell" aria-hidden="true"></i></span>
+            <div><small>Available</small><strong><?php echo htmlspecialchars((string) $availableFoods, ENT_QUOTES, 'UTF-8'); ?></strong><p>Ready for orders</p></div>
+        </article>
+        <article class="red">
+            <span><i class="bi bi-eye-slash" aria-hidden="true"></i></span>
+            <div><small>Unavailable</small><strong><?php echo htmlspecialchars((string) $unavailableFoods, ENT_QUOTES, 'UTF-8'); ?></strong><p>Hidden from ordering</p></div>
         </article>
         <article class="blue">
-            <span><i class="bi bi-people" aria-hidden="true"></i></span>
-            <div><small>Categories</small><strong>12</strong><p>+ 2 this week</p></div>
+            <span><i class="bi bi-stopwatch" aria-hidden="true"></i></span>
+            <div><small>Fast Prep</small><strong><?php echo htmlspecialchars((string) $fastPrepFoods, ENT_QUOTES, 'UTF-8'); ?></strong><p>15 minutes or less</p></div>
         </article>
         <article class="purple">
-            <span><i class="bi bi-bag-x" aria-hidden="true"></i></span>
-            <div><small>Out of Stock</small><strong>13</strong><p>10.2% of total</p></div>
+            <span><i class="bi bi-hourglass-split" aria-hidden="true"></i></span>
+            <div><small>Long Prep</small><strong><?php echo htmlspecialchars((string) $longPrepFoods, ENT_QUOTES, 'UTF-8'); ?></strong><p>25 minutes or more</p></div>
         </article>
     </section>
 
-    <section class="af-menu-workspace">
-        <div class="af-menu-main">
-            <form class="af-menu-filters" action="#" method="get">
-                <label class="af-menu-search" for="menu_search">
+    <section class="af-foods-workspace">
+        <section class="af-menu-table-card">
+            <form class="af-menu-filters af-foods-filters" action="#" method="get">
+                <label class="af-menu-search" for="food_search">
                     <i class="bi bi-search" aria-hidden="true"></i>
-                    <input type="search" id="menu_search" name="search" placeholder="Search menu items...">
+                    <input type="search" id="food_search" name="search" placeholder="Search foods...">
                 </label>
-                <label class="af-menu-select" for="category_filter">
-                    <select id="category_filter" name="category">
+                <label class="af-menu-select" for="food_category_filter">
+                    <select id="food_category_filter" name="category">
                         <option>All Categories</option>
-                        <option>Main Dishes</option>
-                        <option>Local Dishes</option>
-                        <option>Drinks</option>
+                        <?php foreach ($categories as $category): ?>
+                            <option><?php echo htmlspecialchars((string) $category['category_name'], ENT_QUOTES, 'UTF-8'); ?></option>
+                        <?php endforeach; ?>
                     </select>
                     <i class="bi bi-chevron-down" aria-hidden="true"></i>
                 </label>
-                <label class="af-menu-select" for="status_filter">
-                    <select id="status_filter" name="status">
+                <label class="af-menu-select" for="food_status_filter">
+                    <select id="food_status_filter" name="status">
                         <option>All Status</option>
-                        <option>Active</option>
-                        <option>Out of Stock</option>
+                        <option>Available</option>
+                        <option>Unavailable</option>
+                    </select>
+                    <i class="bi bi-chevron-down" aria-hidden="true"></i>
+                </label>
+                <label class="af-menu-select" for="food_time_filter">
+                    <select id="food_time_filter" name="prep">
+                        <option>All Prep Times</option>
+                        <option>Fast Prep</option>
+                        <option>Long Prep</option>
                     </select>
                     <i class="bi bi-chevron-down" aria-hidden="true"></i>
                 </label>
                 <button type="submit"><i class="bi bi-filter" aria-hidden="true"></i> Filter</button>
+                <button type="button"><i class="bi bi-download" aria-hidden="true"></i> Export</button>
             </form>
 
-            <section class="af-menu-table-card">
-                <div class="af-menu-table">
-                    <table>
-                        <thead>
+            <div class="af-menu-table af-foods-table">
+                <table>
+                    <thead>
+                        <tr>
+                            <th><input type="checkbox" aria-label="Select all foods"></th>
+                            <th>Food</th>
+                            <th>Category</th>
+                            <th>Price (GHS)</th>
+                            <th>Prep Time</th>
+                            <th>Status</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <?php if ($foods === []): ?>
                             <tr>
-                                <th>Item</th>
-                                <th>Category</th>
-                                <th>Price</th>
-                                <th>Status</th>
-                                <th>Actions</th>
+                                <td colspan="7"><div class="af-empty-state">No foods found yet.</div></td>
                             </tr>
-                        </thead>
-                        <tbody>
-                            <?php foreach ($menuItems as $item): ?>
-                                <tr>
-                                    <td>
-                                        <div class="af-menu-item-cell">
-                                            <img src="<?php echo htmlspecialchars($frontendBase . '/assets/images/foodimage.jpeg', ENT_QUOTES, 'UTF-8'); ?>" alt="">
-                                            <span>
-                                                <strong><?php echo htmlspecialchars($item['name'], ENT_QUOTES, 'UTF-8'); ?></strong>
-                                                <small><?php echo htmlspecialchars($item['desc'], ENT_QUOTES, 'UTF-8'); ?></small>
-                                            </span>
-                                        </div>
-                                    </td>
-                                    <td><span class="af-menu-tag <?php echo htmlspecialchars($item['tag'], ENT_QUOTES, 'UTF-8'); ?>"><?php echo htmlspecialchars($item['category'], ENT_QUOTES, 'UTF-8'); ?></span></td>
-                                    <td><?php echo htmlspecialchars($item['price'], ENT_QUOTES, 'UTF-8'); ?></td>
-                                    <td><span class="af-status <?php echo $item['status'] === 'Out of Stock' ? 'out' : 'active'; ?>"><?php echo htmlspecialchars($item['status'], ENT_QUOTES, 'UTF-8'); ?></span></td>
-                                    <td>
-                                        <div class="af-row-actions">
-                                            <button type="button" aria-label="Edit <?php echo htmlspecialchars($item['name'], ENT_QUOTES, 'UTF-8'); ?>"><i class="bi bi-pencil" aria-hidden="true"></i></button>
-                                            <button class="danger" type="button" aria-label="Delete <?php echo htmlspecialchars($item['name'], ENT_QUOTES, 'UTF-8'); ?>"><i class="bi bi-trash" aria-hidden="true"></i></button>
-                                        </div>
-                                    </td>
-                                </tr>
-                            <?php endforeach; ?>
-                        </tbody>
-                    </table>
+                        <?php endif; ?>
+                        <?php foreach ($foods as $food): ?>
+                            <?php
+                            $foodName = (string) ($food['food_name'] ?? 'Food item');
+                            $categoryName = (string) ($food['category_name'] ?? 'Uncategorized');
+                            $isAvailable = (string) ($food['availability'] ?? '') === 'Available';
+                            ?>
+                            <tr>
+                                <td><input type="checkbox" aria-label="Select <?php echo htmlspecialchars($foodName, ENT_QUOTES, 'UTF-8'); ?>"></td>
+                                <td>
+                                    <div class="af-food-cell">
+                                        <img src="<?php echo htmlspecialchars(afrisense_food_image($frontendBase, (string) ($food['image'] ?? '')), ENT_QUOTES, 'UTF-8'); ?>" alt="">
+                                        <span>
+                                            <strong><?php echo htmlspecialchars($foodName, ENT_QUOTES, 'UTF-8'); ?></strong>
+                                            <small><?php echo htmlspecialchars((string) ($food['description'] ?? ''), ENT_QUOTES, 'UTF-8'); ?></small>
+                                        </span>
+                                    </div>
+                                </td>
+                                <td><span class="af-menu-tag <?php echo htmlspecialchars(afrisense_food_tag_class($categoryName), ENT_QUOTES, 'UTF-8'); ?>"><?php echo htmlspecialchars($categoryName, ENT_QUOTES, 'UTF-8'); ?></span></td>
+                                <td><?php echo htmlspecialchars(number_format((float) ($food['price'] ?? 0), 2), ENT_QUOTES, 'UTF-8'); ?></td>
+                                <td><?php echo htmlspecialchars((string) ((int) ($food['preparation_time'] ?? 0)), ENT_QUOTES, 'UTF-8'); ?> min</td>
+                                <td><span class="af-status <?php echo $isAvailable ? 'active' : 'out'; ?>"><?php echo htmlspecialchars((string) ($food['availability'] ?? 'Unavailable'), ENT_QUOTES, 'UTF-8'); ?></span></td>
+                                <td>
+                                    <div class="af-row-actions">
+                                        <button type="button" aria-label="Edit <?php echo htmlspecialchars($foodName, ENT_QUOTES, 'UTF-8'); ?>"><i class="bi bi-pencil-square" aria-hidden="true"></i></button>
+                                        <button type="button" aria-label="Disable <?php echo htmlspecialchars($foodName, ENT_QUOTES, 'UTF-8'); ?>"><i class="bi bi-slash-circle" aria-hidden="true"></i></button>
+                                        <button class="danger" type="button" aria-label="Delete <?php echo htmlspecialchars($foodName, ENT_QUOTES, 'UTF-8'); ?>"><i class="bi bi-trash" aria-hidden="true"></i></button>
+                                    </div>
+                                </td>
+                            </tr>
+                        <?php endforeach; ?>
+                    </tbody>
+                </table>
+            </div>
+
+            <footer class="af-menu-pagination">
+                <p>Showing 1 to <?php echo htmlspecialchars((string) count($foods), ENT_QUOTES, 'UTF-8'); ?> of <?php echo htmlspecialchars((string) $totalFoods, ENT_QUOTES, 'UTF-8'); ?> foods</p>
+                <nav aria-label="Food pagination">
+                    <a href="#" aria-label="Previous page"><i class="bi bi-chevron-left" aria-hidden="true"></i></a>
+                    <a class="active" href="#">1</a>
+                    <a href="#">2</a>
+                    <a href="#">3</a>
+                    <span>...</span>
+                    <a href="#" aria-label="Next page"><i class="bi bi-chevron-right" aria-hidden="true"></i></a>
+                </nav>
+            </footer>
+        </section>
+
+        <aside class="af-foods-side">
+            <section class="af-menu-panel af-stock-panel">
+                <h2>Availability Overview</h2>
+                <div class="af-stock-donut">
+                    <strong><?php echo htmlspecialchars((string) $totalFoods, ENT_QUOTES, 'UTF-8'); ?></strong>
+                    <span>Total</span>
                 </div>
-
-                <footer class="af-menu-pagination">
-                    <p>Showing 1 to 10 of 128 items</p>
-                    <nav aria-label="Menu pagination">
-                        <a href="#" aria-label="Previous page"><i class="bi bi-chevron-left" aria-hidden="true"></i></a>
-                        <a class="active" href="#">1</a>
-                        <a href="#">2</a>
-                        <a href="#">3</a>
-                        <span>...</span>
-                        <a href="#">13</a>
-                        <a href="#" aria-label="Next page"><i class="bi bi-chevron-right" aria-hidden="true"></i></a>
-                    </nav>
-                </footer>
+                <ul class="af-overview-list">
+                    <li><i class="main"></i>Available <span><?php echo htmlspecialchars((string) $availableFoods, ENT_QUOTES, 'UTF-8'); ?></span></li>
+                    <li><i class="grills"></i>Unavailable <span><?php echo htmlspecialchars((string) $unavailableFoods, ENT_QUOTES, 'UTF-8'); ?></span></li>
+                    <li><i class="local"></i>Fast Prep <span><?php echo htmlspecialchars((string) $fastPrepFoods, ENT_QUOTES, 'UTF-8'); ?></span></li>
+                    <li><i class="starters"></i>Long Prep <span><?php echo htmlspecialchars((string) $longPrepFoods, ENT_QUOTES, 'UTF-8'); ?></span></li>
+                </ul>
             </section>
-        </div>
 
-        <aside class="af-menu-side">
             <section class="af-menu-panel">
-                <h2>Categories</h2>
-                <ul class="af-category-list">
+                <h2>Add Food</h2>
+                <form id="add_food_form" class="af-food-management-form" action="foods.php" method="post">
+                    <input type="hidden" name="action" value="add_food">
+                    <label>
+                        <span>Food Name</span>
+                        <input type="text" name="food_name" placeholder="e.g. Jollof Rice" required>
+                    </label>
+                    <label>
+                        <span>Category</span>
+                        <select name="category_id" required>
+                            <option value="">Select category</option>
+                            <?php foreach ($categories as $category): ?>
+                                <option value="<?php echo htmlspecialchars((string) ($category['id'] ?? ''), ENT_QUOTES, 'UTF-8'); ?>">
+                                    <?php echo htmlspecialchars((string) $category['category_name'], ENT_QUOTES, 'UTF-8'); ?>
+                                </option>
+                            <?php endforeach; ?>
+                        </select>
+                    </label>
+                    <label>
+                        <span>Price (GHS)</span>
+                        <input type="number" name="price" min="0.01" step="0.01" placeholder="35.00" required>
+                    </label>
+                    <label>
+                        <span>Preparation Time</span>
+                        <input type="number" name="preparation_time" min="1" step="1" value="15" required>
+                    </label>
+                    <label>
+                        <span>Availability</span>
+                        <select name="availability">
+                            <option value="Available">Available</option>
+                            <option value="Unavailable">Unavailable</option>
+                        </select>
+                    </label>
+                    <label>
+                        <span>Description</span>
+                        <textarea name="description" rows="3" placeholder="Short menu description"></textarea>
+                    </label>
+                    <button type="submit"><i class="bi bi-plus-lg" aria-hidden="true"></i> Save Food</button>
+                </form>
+            </section>
+
+            <section class="af-menu-panel">
+                <h2>Food Categories</h2>
+                <ul class="af-food-category-list">
                     <?php foreach ($categories as $category): ?>
                         <li>
-                            <i class="bi <?php echo htmlspecialchars($category['icon'], ENT_QUOTES, 'UTF-8'); ?> <?php echo htmlspecialchars($category['class'], ENT_QUOTES, 'UTF-8'); ?>" aria-hidden="true"></i>
-                            <span><?php echo htmlspecialchars($category['name'], ENT_QUOTES, 'UTF-8'); ?></span>
-                            <strong><?php echo htmlspecialchars((string) $category['count'], ENT_QUOTES, 'UTF-8'); ?></strong>
+                            <span>
+                                <strong><?php echo htmlspecialchars((string) $category['category_name'], ENT_QUOTES, 'UTF-8'); ?></strong>
+                                <small><?php echo htmlspecialchars((string) ($category['description'] ?? ''), ENT_QUOTES, 'UTF-8'); ?></small>
+                            </span>
+                            <em><?php echo htmlspecialchars((string) ($category['food_count'] ?? 0), ENT_QUOTES, 'UTF-8'); ?></em>
                         </li>
                     <?php endforeach; ?>
                 </ul>
-                <button class="af-manage-categories" type="button"><i class="bi bi-gear" aria-hidden="true"></i> Manage Categories</button>
+
+                <form class="af-food-management-form compact" action="foods.php" method="post">
+                    <input type="hidden" name="action" value="add_category">
+                    <label>
+                        <span>New Category</span>
+                        <input type="text" name="category_name" placeholder="Category name" required>
+                    </label>
+                    <label>
+                        <span>Description</span>
+                        <textarea name="category_description" rows="2" placeholder="What this category contains"></textarea>
+                    </label>
+                    <button type="submit"><i class="bi bi-folder-plus" aria-hidden="true"></i> Save Category</button>
+                </form>
             </section>
 
-            <section class="af-menu-panel">
-                <h2>Quick Actions</h2>
-                <div class="af-menu-actions">
-                    <button type="button"><i class="bi bi-plus-lg green" aria-hidden="true"></i> Add New Menu Item</button>
-                    <button type="button"><i class="bi bi-upload green" aria-hidden="true"></i> Import Menu Items</button>
-                    <button type="button"><i class="bi bi-download gold" aria-hidden="true"></i> Export Menu Items</button>
-                    <button type="button"><i class="bi bi-arrow-repeat blue" aria-hidden="true"></i> Bulk Update Prices</button>
-                    <button type="button"><i class="bi bi-list-ol green" aria-hidden="true"></i> Reorder Items</button>
-                </div>
-            </section>
-
-            <section class="af-menu-panel">
-                <h2>Menu Overview</h2>
-                <div class="af-menu-donut">
-                    <strong>128</strong>
-                    <span>Total Items</span>
-                </div>
-                <ul class="af-overview-list">
-                    <li><i class="main"></i>Main Dishes <span>28 (21.9%)</span></li>
-                    <li><i class="local"></i>Local Dishes <span>22 (17.2%)</span></li>
-                    <li><i class="grills"></i>Grills <span>18 (14.1%)</span></li>
-                    <li><i class="starters"></i>Starters <span>16 (12.5%)</span></li>
-                    <li><i class="salads"></i>Salads <span>12 (9.4%)</span></li>
-                    <li><i class="drinks"></i>Drinks <span>20 (15.6%)</span></li>
-                    <li><i class="soups"></i>Soups <span>8 (6.2%)</span></li>
-                    <li><i class="desserts"></i>Desserts <span>4 (3.1%)</span></li>
-                </ul>
+            <section class="af-menu-panel af-food-help">
+                <h2><i class="bi bi-question-circle" aria-hidden="true"></i> Help</h2>
+                <p>This is now the single admin page for foods sold by AfriSense and their categories.</p>
+                <a href="#">View Help Center <i class="bi bi-arrow-right" aria-hidden="true"></i></a>
             </section>
         </aside>
     </section>

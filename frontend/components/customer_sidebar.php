@@ -4,7 +4,7 @@ $activeCustomerPage = $activeCustomerPage ?? '';
 
 $customerItems = [
     ['key' => 'dashboard', 'label' => 'Dashboard', 'icon' => 'bi-house', 'href' => $frontendBase . '/customer/dashboard.php'],
-    ['key' => 'orders', 'label' => 'My Orders', 'icon' => 'bi-bag-check', 'href' => $frontendBase . '/customer/my-orders.php'],
+    ['key' => 'orders', 'label' => 'My Orders', 'icon' => 'bi-bag-check', 'href' => $frontendBase . '/customer/orders.php'],
     ['key' => 'bookings', 'label' => 'My Bookings', 'icon' => 'bi-calendar-check', 'href' => $frontendBase . '/customer/my-bookings.php'],
     ['key' => 'wishlist', 'label' => 'Wishlist', 'icon' => 'bi-heart', 'href' => $frontendBase . '/landing/menu.php'],
     ['key' => 'notifications', 'label' => 'Notifications', 'icon' => 'bi-bell', 'href' => $frontendBase . '/customer/notifications.php'],

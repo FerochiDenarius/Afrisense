@@ -1,0 +1,642 @@
+:root {
+    --af-order-gold: #b77b1a;
+    --af-order-gold-2: #cc8f25;
+    --af-order-green: #0d241e;
+    --af-order-green-2: #0c231d;
+    --af-order-line: #e6e8ec;
+    --af-order-muted: #667085;
+    --af-order-bg: #fbfbfa;
+}
+
+.af-dashboard-content {
+    padding: 0;
+    background: var(--af-order-bg);
+}
+
+.af-customer-order-page {
+    color: #101828;
+}
+
+.af-order-hero {
+    min-height: 255px;
+    background:
+        linear-gradient(90deg, rgba(13, 36, 30, 0.88), rgba(13, 36, 30, 0.48), rgba(13, 36, 30, 0.82)),
+        url("../images/foods/jollof-rice.png") center 54% / cover;
+    display: grid;
+    place-items: center;
+    text-align: center;
+}
+
+.af-order-hero-overlay {
+    width: min(920px, calc(100% - 40px));
+    display: grid;
+    justify-items: center;
+    gap: 12px;
+    color: #fff;
+    padding: 30px 0;
+}
+
+.af-order-hero nav,
+.af-order-hero nav a {
+    color: rgba(255, 255, 255, 0.86);
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    text-decoration: none;
+}
+
+.af-order-hero h1 {
+    color: #fff;
+    font-family: Georgia, "Times New Roman", serif;
+    font-size: clamp(36px, 4.5vw, 56px);
+    line-height: 1.05;
+}
+
+.af-order-hero h1 span {
+    color: var(--af-order-gold-2);
+}
+
+.af-order-hero > p,
+.af-order-hero-overlay > p {
+    color: rgba(255, 255, 255, 0.92);
+    font-size: 17px;
+}
+
+.af-order-features {
+    width: min(720px, 100%);
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 16px;
+    margin-top: 16px;
+}
+
+.af-order-features article {
+    min-height: 70px;
+    background: rgba(12, 35, 29, 0.74);
+    border: 1px solid rgba(255, 255, 255, 0.14);
+    border-radius: 4px;
+    display: grid;
+    grid-template-columns: 44px 1fr;
+    align-items: center;
+    column-gap: 12px;
+    padding: 13px 16px;
+    text-align: left;
+}
+
+.af-order-features i {
+    width: 42px;
+    height: 42px;
+    border-radius: 999px;
+    background: rgba(183, 123, 26, 0.18);
+    color: var(--af-order-gold-2);
+    display: grid;
+    place-items: center;
+    font-size: 20px;
+    grid-row: span 2;
+}
+
+.af-order-features strong {
+    color: #fff;
+    font-size: 14px;
+}
+
+.af-order-features span {
+    color: rgba(255, 255, 255, 0.78);
+    font-size: 13px;
+}
+
+.af-order-flash {
+    width: min(1180px, calc(100% - 40px));
+    margin: 22px auto 0;
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding: 14px 16px;
+    font-weight: 800;
+}
+
+.af-order-flash.success {
+    background: #eef8ef;
+    color: #137333;
+}
+
+.af-order-flash.error {
+    background: #fff1f1;
+    color: #b42318;
+}
+
+.af-order-layout {
+    width: min(1180px, calc(100% - 40px));
+    margin: 28px auto 38px;
+    display: grid;
+    grid-template-columns: 220px minmax(0, 1fr) 310px;
+    gap: 26px;
+    align-items: start;
+}
+
+.af-order-panel,
+.af-help-card,
+.af-cart-card,
+.af-delivery-card {
+    background: #fff;
+    border: 1px solid var(--af-order-line);
+    border-radius: 8px;
+    box-shadow: 0 12px 30px rgba(15, 23, 42, 0.06);
+}
+
+.af-order-panel,
+.af-help-card {
+    padding: 18px;
+}
+
+.af-order-panel h2,
+.af-help-card h2,
+.af-order-center h2,
+.af-delivery-card h2 {
+    font-family: Georgia, "Times New Roman", serif;
+    color: #101828;
+}
+
+.af-panel-rule {
+    width: 34px;
+    height: 2px;
+    background: var(--af-order-gold-2);
+    display: block;
+    margin: 10px 0 14px;
+}
+
+.af-category-list {
+    display: grid;
+    gap: 7px;
+}
+
+.af-category-list a {
+    min-height: 42px;
+    border-radius: 7px;
+    color: #344054;
+    display: grid;
+    grid-template-columns: 22px 1fr;
+    align-items: center;
+    gap: 10px;
+    padding: 0 12px;
+    text-decoration: none;
+    font-weight: 700;
+    transition: background 160ms ease, color 160ms ease, transform 160ms ease;
+}
+
+.af-category-list a:hover,
+.af-category-list a.is-active {
+    background: #f9eddd;
+    color: var(--af-order-green);
+    transform: translateX(2px);
+}
+
+.af-category-list i {
+    color: var(--af-order-gold-2);
+}
+
+.af-help-card {
+    margin-top: 22px;
+    background: linear-gradient(180deg, #fff, #fff8ef);
+}
+
+.af-help-card > i {
+    color: var(--af-order-gold-2);
+    font-size: 28px;
+}
+
+.af-help-card p,
+.af-help-card small,
+.af-delivery-card p {
+    color: var(--af-order-muted);
+    line-height: 1.55;
+}
+
+.af-help-card a {
+    min-height: 40px;
+    border: 1px solid #eadac5;
+    border-radius: 6px;
+    color: var(--af-order-green);
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 0 12px;
+    margin: 14px 0 10px;
+    text-decoration: none;
+    font-weight: 850;
+}
+
+.af-order-toolbar {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) 190px;
+    gap: 22px;
+    margin-bottom: 24px;
+}
+
+.af-order-toolbar label {
+    height: 46px;
+    border: 1px solid var(--af-order-line);
+    border-radius: 7px;
+    background: #fff;
+    display: grid;
+    grid-template-columns: 42px 1fr 34px;
+    align-items: center;
+    box-shadow: 0 8px 18px rgba(15, 23, 42, 0.04);
+}
+
+.af-order-toolbar i {
+    color: var(--af-order-muted);
+    justify-self: center;
+}
+
+.af-order-toolbar input,
+.af-order-toolbar select {
+    width: 100%;
+    border: 0;
+    outline: 0;
+    background: transparent;
+    color: #344054;
+}
+
+.af-order-center > h2 {
+    font-size: 22px;
+    margin-bottom: 16px;
+}
+
+.af-food-grid {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 22px;
+}
+
+.af-food-card {
+    background: #fff;
+    border: 1px solid var(--af-order-line);
+    border-radius: 8px;
+    overflow: hidden;
+    box-shadow: 0 12px 26px rgba(15, 23, 42, 0.07);
+    transition: transform 180ms ease, box-shadow 180ms ease;
+}
+
+.af-food-card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 18px 36px rgba(15, 23, 42, 0.12);
+}
+
+.af-food-image {
+    height: 170px;
+    position: relative;
+}
+
+.af-food-image img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.af-favorite-btn {
+    position: absolute;
+    top: 12px;
+    right: 12px;
+    width: 34px;
+    height: 34px;
+    border: 1px solid rgba(255, 255, 255, 0.55);
+    border-radius: 999px;
+    background: rgba(0, 0, 0, 0.25);
+    color: #fff;
+    display: grid;
+    place-items: center;
+}
+
+.af-favorite-btn.is-active {
+    background: #fff;
+    color: #d33b32;
+}
+
+.af-food-body {
+    display: grid;
+    gap: 10px;
+    padding: 14px;
+}
+
+.af-food-body h3 {
+    color: #111827;
+    font-size: 18px;
+}
+
+.af-food-body p {
+    min-height: 48px;
+    color: #667085;
+    font-size: 13px;
+    line-height: 1.55;
+}
+
+.af-food-body strong {
+    color: var(--af-order-green);
+}
+
+.af-food-body form button {
+    width: 100%;
+    min-height: 38px;
+    border: 0;
+    border-radius: 6px;
+    background: var(--af-order-green);
+    color: #fff;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    font-weight: 850;
+}
+
+.af-cart-card {
+    position: sticky;
+    top: 88px;
+    overflow: hidden;
+}
+
+.af-cart-card header {
+    min-height: 48px;
+    background: var(--af-order-green);
+    color: #fff;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 16px;
+}
+
+.af-cart-card header h2 {
+    color: #fff;
+    font-size: 16px;
+    display: inline-flex;
+    align-items: center;
+    gap: 9px;
+}
+
+.af-cart-card header button {
+    border: 0;
+    background: transparent;
+    color: #fff;
+    text-decoration: underline;
+    font-size: 12px;
+}
+
+.af-cart-items {
+    padding: 10px 16px 0;
+}
+
+.af-empty-cart {
+    color: var(--af-order-muted);
+    line-height: 1.5;
+    padding: 14px 0;
+}
+
+.af-cart-items article {
+    display: grid;
+    grid-template-columns: 56px minmax(0, 1fr) 22px;
+    gap: 12px;
+    border-bottom: 1px solid #edf0f3;
+    padding: 13px 0;
+}
+
+.af-cart-items img {
+    width: 56px;
+    height: 56px;
+    border-radius: 6px;
+    object-fit: cover;
+}
+
+.af-cart-items h3 {
+    font-size: 14px;
+    color: #111827;
+}
+
+.af-cart-items strong {
+    display: block;
+    color: #344054;
+    font-size: 13px;
+    margin: 4px 0 8px;
+}
+
+.af-cart-controls {
+    display: inline-grid;
+    grid-template-columns: 28px 34px 28px;
+    align-items: center;
+}
+
+.af-cart-controls button {
+    width: 28px;
+    height: 26px;
+    border: 1px solid var(--af-order-line);
+    background: #fff;
+    color: #344054;
+}
+
+.af-cart-controls span {
+    height: 26px;
+    display: grid;
+    place-items: center;
+    border-top: 1px solid var(--af-order-line);
+    border-bottom: 1px solid var(--af-order-line);
+    font-size: 13px;
+}
+
+.af-remove-item {
+    border: 0;
+    background: transparent;
+    color: #344054;
+}
+
+.af-note-form,
+.af-checkout-form {
+    display: grid;
+    gap: 10px;
+    padding: 12px 16px;
+}
+
+.af-note-form > button:first-of-type {
+    border: 0;
+    background: #fff;
+    color: #344054;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0;
+    font-weight: 750;
+}
+
+.af-note-form textarea {
+    display: none;
+}
+
+.af-note-form.is-open textarea {
+    display: block;
+}
+
+.af-note-form textarea,
+.af-checkout-form textarea,
+.af-checkout-form select {
+    width: 100%;
+    border: 1px solid var(--af-order-line);
+    border-radius: 6px;
+    background: #fbfcfd;
+    color: #344054;
+    font: inherit;
+    min-height: 38px;
+    padding: 9px 10px;
+}
+
+.af-note-form > button:last-child {
+    border: 1px solid #eadac5;
+    border-radius: 6px;
+    background: #fff8ef;
+    color: var(--af-order-gold);
+    min-height: 34px;
+    font-weight: 850;
+}
+
+.af-checkout-form label {
+    color: #344054;
+    font-size: 12px;
+    font-weight: 850;
+}
+
+.af-cart-summary {
+    display: grid;
+    gap: 9px;
+    border-top: 1px solid #edf0f3;
+    padding-top: 12px;
+}
+
+.af-cart-summary div {
+    display: flex;
+    justify-content: space-between;
+    color: #344054;
+}
+
+.af-cart-summary div:last-child {
+    color: #111827;
+    font-size: 18px;
+    font-weight: 900;
+}
+
+.af-cart-summary div:last-child dd {
+    color: var(--af-order-green);
+}
+
+.af-checkout-btn {
+    min-height: 43px;
+    border: 0;
+    border-radius: 6px;
+    background: linear-gradient(135deg, var(--af-order-gold), var(--af-order-gold-2));
+    color: #fff;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 9px;
+    font-weight: 900;
+}
+
+.af-checkout-btn:disabled {
+    opacity: 0.58;
+}
+
+.af-secure-note {
+    background: #eef7ed;
+    color: var(--af-order-green);
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin: 0 16px 16px;
+    padding: 13px;
+    border-radius: 7px;
+    line-height: 1.45;
+    font-size: 12px;
+}
+
+.af-delivery-card {
+    display: grid;
+    grid-template-columns: 48px 1fr;
+    gap: 12px;
+    margin-top: 22px;
+    padding: 18px;
+    background: #f4f9f1;
+}
+
+.af-delivery-card > i {
+    color: var(--af-order-green);
+    font-size: 30px;
+}
+
+.af-delivery-card a {
+    color: var(--af-order-gold);
+    font-weight: 850;
+}
+
+.af-empty-foods {
+    grid-column: 1 / -1;
+    border: 1px dashed var(--af-order-line);
+    border-radius: 8px;
+    display: grid;
+    justify-items: center;
+    gap: 10px;
+    padding: 40px 20px;
+    text-align: center;
+    color: var(--af-order-muted);
+}
+
+.af-empty-foods i {
+    color: var(--af-order-gold);
+    font-size: 34px;
+}
+
+.af-customer-order-page + .af-footer,
+.af-dashboard-content .af-footer {
+    margin-top: 0;
+}
+
+@media (max-width: 1180px) {
+    .af-order-layout {
+        grid-template-columns: 210px minmax(0, 1fr);
+    }
+
+    .af-order-right {
+        grid-column: 1 / -1;
+    }
+
+    .af-cart-card {
+        position: static;
+    }
+}
+
+@media (max-width: 900px) {
+    .af-order-layout,
+    .af-order-features,
+    .af-order-toolbar {
+        grid-template-columns: 1fr;
+    }
+
+    .af-food-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+}
+
+@media (max-width: 620px) {
+    .af-order-layout,
+    .af-order-flash {
+        width: calc(100% - 24px);
+    }
+
+    .af-food-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .af-order-hero {
+        min-height: 310px;
+    }
+
+    .af-cart-items article {
+        grid-template-columns: 52px minmax(0, 1fr) 22px;
+    }
+}

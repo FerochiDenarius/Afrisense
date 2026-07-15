@@ -1,6 +1,8 @@
 <?php
 $frontendBase = $frontendBase ?? '/Afrisense/frontend';
 $activeAdminPage = $activeAdminPage ?? '';
+$adminName = $adminName ?? 'Admin User';
+$adminRole = $adminRole ?? 'Super Admin';
 
 $adminGroups = [
     [
@@ -12,23 +14,31 @@ $adminGroups = [
     [
         'label' => 'Management',
         'items' => [
-            ['key' => 'orders', 'label' => 'Orders', 'icon' => 'bi-box-seam', 'href' => $frontendBase . '/admin/orders.php', 'expandable' => true],
-            ['key' => 'bookings', 'label' => 'Bookings', 'icon' => 'bi-calendar3', 'href' => $frontendBase . '/admin/booking.php', 'expandable' => true],
-            ['key' => 'enquiries', 'label' => 'Enquiries', 'icon' => 'bi-chat-square-text', 'href' => $frontendBase . '/admin/enquiries.php', 'expandable' => true],
             [
-                'key' => 'menu',
-                'label' => 'Menu & Packages',
-                'icon' => 'bi-clipboard2',
-                'href' => $frontendBase . '/admin/foods.php',
+                'key' => 'orders',
+                'label' => 'Orders',
+                'icon' => 'bi-cart3',
+                'href' => $frontendBase . '/admin/orders.php',
                 'expandable' => true,
                 'children' => [
-                    ['key' => 'menu_items', 'label' => 'Menu Items', 'href' => $frontendBase . '/admin/foods.php'],
-                    ['key' => 'categories', 'label' => 'Categories', 'href' => $frontendBase . '/admin/services.php'],
-                    ['key' => 'packages', 'label' => 'Packages', 'href' => $frontendBase . '/admin/services.php'],
+                    ['key' => 'orders_all', 'label' => 'All Orders', 'href' => $frontendBase . '/admin/orders.php'],
+                    ['key' => 'orders_pending', 'label' => 'Pending Orders', 'href' => $frontendBase . '/admin/orders.php?status=Pending'],
+                    ['key' => 'orders_confirmed', 'label' => 'Confirmed Orders', 'href' => $frontendBase . '/admin/orders.php?status=Confirmed'],
+                    ['key' => 'orders_preparing', 'label' => 'Preparing Orders', 'href' => $frontendBase . '/admin/orders.php?status=Preparing'],
+                    ['key' => 'orders_delivered', 'label' => 'Delivered Orders', 'href' => $frontendBase . '/admin/orders.php?status=Delivered'],
+                    ['key' => 'orders_cancelled', 'label' => 'Cancelled Orders', 'href' => $frontendBase . '/admin/orders.php?status=Cancelled'],
                 ],
             ],
+            ['key' => 'bookings', 'label' => 'Bookings', 'icon' => 'bi-calendar3', 'href' => $frontendBase . '/admin/bookings.php', 'expandable' => true],
+            ['key' => 'enquiries', 'label' => 'Enquiries', 'icon' => 'bi-chat-square-text', 'href' => $frontendBase . '/admin/enquiries.php', 'expandable' => true],
             ['key' => 'customers', 'label' => 'Customers', 'icon' => 'bi-people', 'href' => $frontendBase . '/admin/customers.php', 'expandable' => true],
-            ['key' => 'staff', 'label' => 'Staff Management', 'icon' => 'bi-person-badge', 'href' => $frontendBase . '/admin/users.php', 'expandable' => true],
+            ['key' => 'users', 'label' => 'Users', 'icon' => 'bi-person-badge', 'href' => $frontendBase . '/admin/users.php', 'expandable' => true],
+        ],
+    ],
+    [
+        'label' => 'Food Management',
+        'items' => [
+            ['key' => 'foods', 'label' => 'Foods Sold', 'icon' => 'bi-clipboard2-data', 'href' => $frontendBase . '/admin/foods.php'],
         ],
     ],
     [
@@ -37,7 +47,7 @@ $adminGroups = [
             ['key' => 'roles', 'label' => 'Roles', 'icon' => 'bi-person-gear', 'href' => $frontendBase . '/admin/roles.php', 'expandable' => true],
             ['key' => 'permissions', 'label' => 'Permissions', 'icon' => 'bi-shield-check', 'href' => $frontendBase . '/admin/roles.php', 'expandable' => true],
             ['key' => 'settings', 'label' => 'Settings', 'icon' => 'bi-gear', 'href' => $frontendBase . '/admin/settings.php'],
-            ['key' => 'emails', 'label' => 'Email Templates', 'icon' => 'bi-envelope', 'href' => $frontendBase . '/admin/notifications.php'],
+            ['key' => 'notifications', 'label' => 'Notifications', 'icon' => 'bi-bell', 'href' => $frontendBase . '/admin/notifications.php'],
         ],
     ],
     [
@@ -65,8 +75,8 @@ $adminGroups = [
     <section class="af-sidebar-profile" aria-label="Signed in user">
         <img src="<?php echo htmlspecialchars($frontendBase . '/assets/images/foodimage.jpeg', ENT_QUOTES, 'UTF-8'); ?>" alt="">
         <div>
-            <strong>Admin User</strong>
-            <small>Super Admin</small>
+            <strong><?php echo htmlspecialchars($adminName, ENT_QUOTES, 'UTF-8'); ?></strong>
+            <small><?php echo htmlspecialchars($adminRole, ENT_QUOTES, 'UTF-8'); ?></small>
             <span><i aria-hidden="true"></i> Online</span>
         </div>
         <button type="button" aria-label="Profile options">

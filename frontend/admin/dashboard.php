@@ -4,6 +4,138 @@ require_once __DIR__ . '/../auth/auth_bootstrap.php';
 $authUser = afrisense_require_admin();
 $adminName = (string) ($authUser['fullname'] ?? $authUser['email'] ?? 'Admin User');
 $adminRole = ucwords(afrisense_role_name($authUser) ?: 'Staff');
+
+function afrisense_dashboard_count(PDO $pdo, string $table): int
+{
+    $allowedTables = [
+        'orders',
+        'bookings',
+        'customers',
+        'enquiries',
+        'notifications',
+        'foods',
+        'services',
+    ];
+
+    if (!in_array($table, $allowedTables, true)) {
+        return 0;
+    }
+
+    $statement = $pdo->prepare(sprintf('SELECT COUNT(*) AS count_value FROM `%s`', $table));
+    $statement->execute();
+    $row = $statement->fetch(PDO::FETCH_ASSOC);
+
+    return (int) ($row['count_value'] ?? 0);
+}
+
+function afrisense_dashboard_order_status_count(PDO $pdo, string $status): int
+{
+    $statement = $pdo->prepare('SELECT COUNT(*) AS count_value FROM `orders` WHERE `order_status` = :status');
+    $statement->execute(['status' => $status]);
+    $row = $statement->fetch(PDO::FETCH_ASSOC);
+
+    return (int) ($row['count_value'] ?? 0);
+}
+
+function afrisense_dashboard_percent(int $value, int $total): string
+{
+    if ($total <= 0) {
+        return '0%';
+    }
+
+    return number_format(($value / $total) * 100, 1) . '%';
+}
+
+function afrisense_dashboard_food_image(?string $image): string
+{
+    $image = trim((string) $image);
+    $filename = basename($image);
+
+    if ($image !== '' && is_file(__DIR__ . '/../assets/images/foods/' . $filename)) {
+        return '../assets/images/foods/' . $filename;
+    }
+
+    return '../assets/images/foods/jollof-rice.png';
+}
+
+try {
+    $pdo = afrisense_pdo();
+    $dashboardError = '';
+
+    $totalOrders = afrisense_dashboard_count($pdo, 'orders');
+    $totalBookings = afrisense_dashboard_count($pdo, 'bookings');
+    $totalCustomers = afrisense_dashboard_count($pdo, 'customers');
+    $totalEnquiries = afrisense_dashboard_count($pdo, 'enquiries');
+    $unreadNotifications = 0;
+
+    $notificationStatement = $pdo->prepare(
+        'SELECT COUNT(*) AS count_value
+         FROM `notifications`
+         WHERE `user_id` = :user_id AND `is_read` = 0'
+    );
+    $notificationStatement->execute(['user_id' => (int) ($authUser['id'] ?? 0)]);
+    $unreadNotifications = (int) ($notificationStatement->fetch(PDO::FETCH_ASSOC)['count_value'] ?? 0);
+
+    $pendingEnquiriesStatement = $pdo->prepare(
+        'SELECT COUNT(*) AS count_value
+         FROM `enquiries`
+         WHERE `status` = :status'
+    );
+    $pendingEnquiriesStatement->execute(['status' => 'Pending']);
+    $pendingEnquiries = (int) ($pendingEnquiriesStatement->fetch(PDO::FETCH_ASSOC)['count_value'] ?? 0);
+
+    $revenueStatement = $pdo->prepare('SELECT COALESCE(SUM(`total_price`), 0) AS total_value FROM `orders`');
+    $revenueStatement->execute();
+    $totalRevenue = (float) ($revenueStatement->fetch(PDO::FETCH_ASSOC)['total_value'] ?? 0);
+
+    $orderStatusCounts = [
+        'Pending' => afrisense_dashboard_order_status_count($pdo, 'Pending'),
+        'Confirmed' => afrisense_dashboard_order_status_count($pdo, 'Confirmed'),
+        'Preparing' => afrisense_dashboard_order_status_count($pdo, 'Preparing'),
+        'Delivered' => afrisense_dashboard_order_status_count($pdo, 'Delivered'),
+        'Cancelled' => afrisense_dashboard_order_status_count($pdo, 'Cancelled'),
+    ];
+
+    $recentOrdersStatement = $pdo->prepare(
+        'SELECT
+            o.`id`,
+            o.`total_price`,
+            o.`order_status`,
+            o.`ordered_at`,
+            c.`fullname`,
+            f.`image`
+         FROM `orders` o
+         INNER JOIN `customers` c ON c.`id` = o.`customer_id`
+         LEFT JOIN `foods` f ON f.`id` = o.`food_id`
+         ORDER BY o.`ordered_at` DESC, o.`id` DESC
+         LIMIT 5'
+    );
+    $recentOrdersStatement->execute();
+    $recentOrders = $recentOrdersStatement->fetchAll(PDO::FETCH_ASSOC);
+
+    $servicesStatement = $pdo->prepare(
+        'SELECT `service_name`, `price`, `availability`
+         FROM `services`
+         ORDER BY `price` DESC, `id` ASC
+         LIMIT 5'
+    );
+    $servicesStatement->execute();
+    $topServices = $servicesStatement->fetchAll(PDO::FETCH_ASSOC);
+} catch (Throwable $exception) {
+    $dashboardError = 'Dashboard figures could not be loaded. Check that MySQL is running.';
+    $totalOrders = 0;
+    $totalBookings = 0;
+    $totalCustomers = 0;
+    $totalEnquiries = 0;
+    $pendingEnquiries = 0;
+    $unreadNotifications = 0;
+    $totalRevenue = 0.0;
+    $orderStatusCounts = ['Pending' => 0, 'Confirmed' => 0, 'Preparing' => 0, 'Delivered' => 0, 'Cancelled' => 0];
+    $recentOrders = [];
+    $topServices = [];
+}
+
+$dateLabel = date('M j, Y');
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -67,11 +199,11 @@ $adminRole = ucwords(afrisense_role_name($authUser) ?: 'Staff');
             <div class="top-actions">
                 <button type="button" aria-label="Notifications">
                     <i class="bi bi-bell" aria-hidden="true"></i>
-                    <span>8</span>
+                    <span><?php echo htmlspecialchars((string) $unreadNotifications, ENT_QUOTES, 'UTF-8'); ?></span>
                 </button>
                 <button type="button" aria-label="Messages">
                     <i class="bi bi-envelope" aria-hidden="true"></i>
-                    <span class="green">3</span>
+                    <span class="green"><?php echo htmlspecialchars((string) $pendingEnquiries, ENT_QUOTES, 'UTF-8'); ?></span>
                 </button>
                 <div class="admin-profile">
                     <img src="../assets/images/foodimage.jpeg" alt="">
@@ -92,19 +224,23 @@ $adminRole = ucwords(afrisense_role_name($authUser) ?: 'Staff');
                 </div>
                 <button type="button" class="date-filter">
                     <i class="bi bi-calendar4-week" aria-hidden="true"></i>
-                    May 18 - May 24, 2025
+                    <?php echo htmlspecialchars($dateLabel, ENT_QUOTES, 'UTF-8'); ?>
                     <i class="bi bi-chevron-down" aria-hidden="true"></i>
                 </button>
             </section>
+
+            <?php if ($dashboardError !== ''): ?>
+                <p class="dashboard-alert"><?php echo htmlspecialchars($dashboardError, ENT_QUOTES, 'UTF-8'); ?></p>
+            <?php endif; ?>
 
             <section class="metric-grid" aria-label="Business summary">
                 <article class="metric-card green">
                     <span><i class="bi bi-cart-check" aria-hidden="true"></i></span>
                     <div>
                         <small>Total Orders</small>
-                        <strong>248</strong>
-                        <p><i class="bi bi-arrow-up" aria-hidden="true"></i> 18.6%</p>
-                        <em>vs last week</em>
+                        <strong><?php echo htmlspecialchars((string) $totalOrders, ENT_QUOTES, 'UTF-8'); ?></strong>
+                        <p><i class="bi bi-cart3" aria-hidden="true"></i> Live</p>
+                        <em>from orders table</em>
                     </div>
                 </article>
 
@@ -112,9 +248,9 @@ $adminRole = ucwords(afrisense_role_name($authUser) ?: 'Staff');
                     <span><i class="bi bi-calendar-event" aria-hidden="true"></i></span>
                     <div>
                         <small>Total Bookings</small>
-                        <strong>67</strong>
-                        <p><i class="bi bi-arrow-up" aria-hidden="true"></i> 12.4%</p>
-                        <em>vs last week</em>
+                        <strong><?php echo htmlspecialchars((string) $totalBookings, ENT_QUOTES, 'UTF-8'); ?></strong>
+                        <p><i class="bi bi-calendar3" aria-hidden="true"></i> Live</p>
+                        <em>from bookings table</em>
                     </div>
                 </article>
 
@@ -122,9 +258,9 @@ $adminRole = ucwords(afrisense_role_name($authUser) ?: 'Staff');
                     <span><i class="bi bi-people" aria-hidden="true"></i></span>
                     <div>
                         <small>Total Customers</small>
-                        <strong>532</strong>
-                        <p><i class="bi bi-arrow-up" aria-hidden="true"></i> 14.2%</p>
-                        <em>vs last week</em>
+                        <strong><?php echo htmlspecialchars((string) $totalCustomers, ENT_QUOTES, 'UTF-8'); ?></strong>
+                        <p><i class="bi bi-people" aria-hidden="true"></i> Live</p>
+                        <em>from customers table</em>
                     </div>
                 </article>
 
@@ -132,9 +268,9 @@ $adminRole = ucwords(afrisense_role_name($authUser) ?: 'Staff');
                     <span><i class="bi bi-currency-dollar" aria-hidden="true"></i></span>
                     <div>
                         <small>Total Revenue</small>
-                        <strong>GH₵ 24,560</strong>
-                        <p><i class="bi bi-arrow-up" aria-hidden="true"></i> 23.7%</p>
-                        <em>vs last week</em>
+                        <strong>GH₵ <?php echo htmlspecialchars(number_format($totalRevenue, 2), ENT_QUOTES, 'UTF-8'); ?></strong>
+                        <p><i class="bi bi-cash-stack" aria-hidden="true"></i> Live</p>
+                        <em>sum of orders</em>
                     </div>
                 </article>
             </section>
@@ -188,19 +324,21 @@ $adminRole = ucwords(afrisense_role_name($authUser) ?: 'Staff');
                         <h2>Orders by Status</h2>
                     </header>
                     <div class="status-content">
-                        <div class="donut-chart" role="img" aria-label="248 total orders by status">
-                            <strong>248</strong>
+                        <div class="donut-chart" role="img" aria-label="<?php echo htmlspecialchars((string) $totalOrders, ENT_QUOTES, 'UTF-8'); ?> total orders by status">
+                            <strong><?php echo htmlspecialchars((string) $totalOrders, ENT_QUOTES, 'UTF-8'); ?></strong>
                             <span>Total</span>
                         </div>
                         <ul class="status-list">
-                            <li><i class="pending"></i><span>Pending</span><strong>38 (15.3%)</strong></li>
-                            <li><i class="confirmed"></i><span>Confirmed</span><strong>112 (45.2%)</strong></li>
-                            <li><i class="preparing"></i><span>Preparing</span><strong>58 (23.4%)</strong></li>
-                            <li><i class="delivered"></i><span>Delivered</span><strong>32 (12.9%)</strong></li>
-                            <li><i class="cancelled"></i><span>Cancelled</span><strong>8 (3.2%)</strong></li>
+                            <?php foreach ($orderStatusCounts as $status => $count): ?>
+                                <li>
+                                    <i class="<?php echo htmlspecialchars(strtolower($status), ENT_QUOTES, 'UTF-8'); ?>"></i>
+                                    <span><?php echo htmlspecialchars($status, ENT_QUOTES, 'UTF-8'); ?></span>
+                                    <strong><?php echo htmlspecialchars((string) $count, ENT_QUOTES, 'UTF-8'); ?> (<?php echo htmlspecialchars(afrisense_dashboard_percent($count, $totalOrders), ENT_QUOTES, 'UTF-8'); ?>)</strong>
+                                </li>
+                            <?php endforeach; ?>
                         </ul>
                     </div>
-                    <a class="panel-link" href="#">View all orders <i class="bi bi-arrow-right" aria-hidden="true"></i></a>
+                    <a class="panel-link" href="orders.php">View all orders <i class="bi bi-arrow-right" aria-hidden="true"></i></a>
                 </article>
             </section>
 
@@ -208,7 +346,7 @@ $adminRole = ucwords(afrisense_role_name($authUser) ?: 'Staff');
                 <article class="panel table-panel">
                     <header class="panel-header">
                         <h2>Recent Orders</h2>
-                        <a href="#">View All</a>
+                        <a href="orders.php">View All</a>
                     </header>
                     <div class="table-wrap">
                         <table>
@@ -222,41 +360,21 @@ $adminRole = ucwords(afrisense_role_name($authUser) ?: 'Staff');
                                 </tr>
                             </thead>
                             <tbody>
-                                <tr>
-                                    <td>#ORD-000248</td>
-                                    <td><img src="../assets/images/foodimage.jpeg" alt=""> Kwame Mensah</td>
-                                    <td>May 24, 2025</td>
-                                    <td>GH₵ 850</td>
-                                    <td><span class="badge delivered">Delivered</span></td>
-                                </tr>
-                                <tr>
-                                    <td>#ORD-000247</td>
-                                    <td><img src="../assets/images/foodimage.jpeg" alt=""> Ama Serwaa</td>
-                                    <td>May 24, 2025</td>
-                                    <td>GH₵ 450</td>
-                                    <td><span class="badge preparing">Preparing</span></td>
-                                </tr>
-                                <tr>
-                                    <td>#ORD-000246</td>
-                                    <td><img src="../assets/images/foodimage.jpeg" alt=""> Kofi Boateng</td>
-                                    <td>May 23, 2025</td>
-                                    <td>GH₵ 670</td>
-                                    <td><span class="badge delivered">Delivered</span></td>
-                                </tr>
-                                <tr>
-                                    <td>#ORD-000245</td>
-                                    <td><img src="../assets/images/foodimage.jpeg" alt=""> Akosua Adom</td>
-                                    <td>May 23, 2025</td>
-                                    <td>GH₵ 930</td>
-                                    <td><span class="badge pending">Pending</span></td>
-                                </tr>
-                                <tr>
-                                    <td>#ORD-000244</td>
-                                    <td><img src="../assets/images/foodimage.jpeg" alt=""> Yaw Baffour</td>
-                                    <td>May 23, 2025</td>
-                                    <td>GH₵ 360</td>
-                                    <td><span class="badge preparing">Preparing</span></td>
-                                </tr>
+                                <?php if ($recentOrders === []): ?>
+                                    <tr>
+                                        <td colspan="5">No recent orders yet.</td>
+                                    </tr>
+                                <?php endif; ?>
+                                <?php foreach ($recentOrders as $order): ?>
+                                    <?php $orderedAt = strtotime((string) ($order['ordered_at'] ?? '')) ?: time(); ?>
+                                    <tr>
+                                        <td>#ORD-<?php echo htmlspecialchars(str_pad((string) ($order['id'] ?? 0), 6, '0', STR_PAD_LEFT), ENT_QUOTES, 'UTF-8'); ?></td>
+                                        <td><img src="<?php echo htmlspecialchars(afrisense_dashboard_food_image((string) ($order['image'] ?? '')), ENT_QUOTES, 'UTF-8'); ?>" alt=""> <?php echo htmlspecialchars((string) ($order['fullname'] ?? 'Customer'), ENT_QUOTES, 'UTF-8'); ?></td>
+                                        <td><?php echo htmlspecialchars(date('M j, Y', $orderedAt), ENT_QUOTES, 'UTF-8'); ?></td>
+                                        <td>GH₵ <?php echo htmlspecialchars(number_format((float) ($order['total_price'] ?? 0), 2), ENT_QUOTES, 'UTF-8'); ?></td>
+                                        <td><span class="badge <?php echo htmlspecialchars(strtolower(str_replace(' ', '-', (string) ($order['order_status'] ?? 'Pending'))), ENT_QUOTES, 'UTF-8'); ?>"><?php echo htmlspecialchars((string) ($order['order_status'] ?? 'Pending'), ENT_QUOTES, 'UTF-8'); ?></span></td>
+                                    </tr>
+                                <?php endforeach; ?>
                             </tbody>
                         </table>
                     </div>
@@ -264,44 +382,31 @@ $adminRole = ucwords(afrisense_role_name($authUser) ?: 'Staff');
 
                 <article class="panel package-panel">
                     <header class="panel-header">
-                        <h2>Top Catering Packages</h2>
-                        <a href="#">View All</a>
+                        <h2>Available Services</h2>
+                        <a href="services.php">View All</a>
                     </header>
                     <div class="table-wrap">
                         <table>
                             <thead>
                                 <tr>
-                                    <th>Package</th>
-                                    <th>Orders</th>
-                                    <th>Revenue</th>
+                                    <th>Service</th>
+                                    <th>Status</th>
+                                    <th>Price</th>
                                 </tr>
                             </thead>
                             <tbody>
-                                <tr>
-                                    <td><img src="../assets/images/foodimage.jpeg" alt=""> Wedding Package</td>
-                                    <td>45</td>
-                                    <td>GH₵ 8,550</td>
-                                </tr>
-                                <tr>
-                                    <td><img src="../assets/images/foodimage.jpeg" alt=""> Corporate Package</td>
-                                    <td>38</td>
-                                    <td>GH₵ 6,840</td>
-                                </tr>
-                                <tr>
-                                    <td><img src="../assets/images/foodimage.jpeg" alt=""> Birthday Package</td>
-                                    <td>29</td>
-                                    <td>GH₵ 4,350</td>
-                                </tr>
-                                <tr>
-                                    <td><img src="../assets/images/foodimage.jpeg" alt=""> Small Event Package</td>
-                                    <td>21</td>
-                                    <td>GH₵ 2,940</td>
-                                </tr>
-                                <tr>
-                                    <td><img src="../assets/images/foodimage.jpeg" alt=""> Funeral Package</td>
-                                    <td>15</td>
-                                    <td>GH₵ 1,880</td>
-                                </tr>
+                                <?php if ($topServices === []): ?>
+                                    <tr>
+                                        <td colspan="3">No services found.</td>
+                                    </tr>
+                                <?php endif; ?>
+                                <?php foreach ($topServices as $service): ?>
+                                    <tr>
+                                        <td><img src="../assets/images/foods/grilled-chicken.png" alt=""> <?php echo htmlspecialchars((string) ($service['service_name'] ?? 'Service'), ENT_QUOTES, 'UTF-8'); ?></td>
+                                        <td><?php echo htmlspecialchars((string) ($service['availability'] ?? 'Unavailable'), ENT_QUOTES, 'UTF-8'); ?></td>
+                                        <td>GH₵ <?php echo htmlspecialchars(number_format((float) ($service['price'] ?? 0), 2), ENT_QUOTES, 'UTF-8'); ?></td>
+                                    </tr>
+                                <?php endforeach; ?>
                             </tbody>
                         </table>
                     </div>
@@ -312,12 +417,12 @@ $adminRole = ucwords(afrisense_role_name($authUser) ?: 'Staff');
                         <h2>Quick Actions</h2>
                     </header>
                     <div class="quick-actions">
-                        <a href="#"><i class="bi bi-plus-circle-fill green-action" aria-hidden="true"></i> Create New Order</a>
-                        <a href="#"><i class="bi bi-calendar-plus-fill gold-action" aria-hidden="true"></i> Add New Booking</a>
-                        <a href="#"><i class="bi bi-fork-knife green-light-action" aria-hidden="true"></i> Add New Menu Item</a>
-                        <a href="#"><i class="bi bi-bag-plus-fill blue-action" aria-hidden="true"></i> Add New Package</a>
-                        <a href="#"><i class="bi bi-person-plus-fill purple-action" aria-hidden="true"></i> Add New User</a>
-                        <a href="#"><i class="bi bi-send-fill orange-action" aria-hidden="true"></i> Send Notification</a>
+                        <a href="orders.php"><i class="bi bi-plus-circle-fill green-action" aria-hidden="true"></i> Manage Orders</a>
+                        <a href="booking.php"><i class="bi bi-calendar-plus-fill gold-action" aria-hidden="true"></i> Manage Bookings</a>
+                        <a href="foods.php"><i class="bi bi-fork-knife green-light-action" aria-hidden="true"></i> Manage Foods Sold</a>
+                        <a href="services.php"><i class="bi bi-bag-plus-fill blue-action" aria-hidden="true"></i> Manage Services</a>
+                        <a href="users.php"><i class="bi bi-person-plus-fill purple-action" aria-hidden="true"></i> Manage Users</a>
+                        <a href="notifications.php"><i class="bi bi-send-fill orange-action" aria-hidden="true"></i> View Notifications</a>
                     </div>
                 </article>
             </section>

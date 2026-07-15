@@ -40,8 +40,8 @@
         if (!form) return;
         var selected = form.querySelector("[data-service-option].is-active input");
         var selectedLabel = selected ? selected.closest("[data-service-option]") : null;
-        var serviceName = selected ? selected.value : "Table Booking";
-        var basePrice = selectedLabel ? parseInt(selectedLabel.dataset.price || "120", 10) : 120;
+        var serviceName = selected ? (selected.dataset.serviceName || selected.value) : "Selected Service";
+        var basePrice = selectedLabel ? parseFloat(selectedLabel.dataset.price || "0") : 0;
         var guestField = form.querySelector("[data-booking-guests]");
         var dateField = form.querySelector("[data-booking-date]");
         var timeField = form.querySelector("[data-booking-time]");

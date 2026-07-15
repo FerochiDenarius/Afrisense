@@ -12,7 +12,7 @@ ob_start();
             <h1>Customer Dashboard</h1>
             <p>Manage your orders, bookings, notifications, and AfriSense profile.</p>
         </div>
-        <a class="af-add-menu-btn" href="<?php echo htmlspecialchars($frontendBase . '/landing/order.php', ENT_QUOTES, 'UTF-8'); ?>">
+        <a class="af-add-menu-btn" href="<?php echo htmlspecialchars($frontendBase . '/customer/orders.php', ENT_QUOTES, 'UTF-8'); ?>">
             <i class="bi bi-bag-plus" aria-hidden="true"></i>
             Order Food
         </a>

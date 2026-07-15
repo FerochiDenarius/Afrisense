@@ -5,6 +5,12 @@ $activePage = 'menu';
 $publicHeaderMode = 'shop';
 $customerName = 'Kofi Mensah';
 $extraStyles = [$frontendBase . '/assets/css/order-payment.css'];
+$foodImageBase = $frontendBase . '/assets/images/foods';
+$summaryItems = [
+    ['name' => 'Jollof Rice', 'price' => 'GHc 60.00', 'image' => 'jollof-rice.png'],
+    ['name' => 'Grilled Chicken', 'price' => 'GHc 70.00', 'image' => 'grilled-chicken.png'],
+    ['name' => 'Cola Soft Drink', 'price' => 'GHc 10.00', 'image' => 'cola.png'],
+];
 
 ob_start();
 ?>
@@ -51,8 +57,8 @@ ob_start();
         <aside class="af-payment-side">
             <section class="af-summary-card">
                 <h2>Order Summary</h2>
-                <?php foreach ([['Jollof Rice', 'GHc 60.00'], ['Grilled Chicken', 'GHc 70.00'], ['Coca Cola (50cl)', 'GHc 10.00']] as $item): ?>
-                    <article><img src="<?php echo htmlspecialchars($frontendBase . '/assets/images/foodimage.jpeg', ENT_QUOTES, 'UTF-8'); ?>" alt=""><span><strong><?php echo htmlspecialchars($item[0], ENT_QUOTES, 'UTF-8'); ?></strong><small>Qty: 1</small></span><b><?php echo htmlspecialchars($item[1], ENT_QUOTES, 'UTF-8'); ?></b></article>
+                <?php foreach ($summaryItems as $item): ?>
+                    <article><img src="<?php echo htmlspecialchars($foodImageBase . '/' . $item['image'], ENT_QUOTES, 'UTF-8'); ?>" alt="<?php echo htmlspecialchars($item['name'], ENT_QUOTES, 'UTF-8'); ?>"><span><strong><?php echo htmlspecialchars($item['name'], ENT_QUOTES, 'UTF-8'); ?></strong><small>Qty: 1</small></span><b><?php echo htmlspecialchars($item['price'], ENT_QUOTES, 'UTF-8'); ?></b></article>
                 <?php endforeach; ?>
                 <dl><div><dt>Subtotal</dt><dd>GHc 140.00</dd></div><div><dt>Delivery Fee</dt><dd>GHc 10.00</dd></div><div class="total"><dt>Total Amount</dt><dd>GHc 150.00</dd></div></dl>
                 <div class="af-promo"><p><i class="bi bi-tag"></i><strong>Have a promo code?</strong><br><small>Enter code at checkout to apply discount</small></p><div><input type="text" placeholder="Enter promo code"><button>Apply</button></div></div>

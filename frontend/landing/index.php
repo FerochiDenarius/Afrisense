@@ -250,21 +250,21 @@
 
             <div class="meal-grid">
                 <article class="meal-card">
-                    <img src="../assets/images/foodimage.jpeg" alt="Jollof rice with grilled chicken and salad">
+                    <img src="../assets/images/foods/jollof-rice.png" alt="Jollof rice with grilled chicken and salad">
                     <div>
                         <h3>Jollof Rice &amp; Grilled Chicken</h3>
                         <p>Freshly prepared with salad and signature spices.</p>
                     </div>
                 </article>
                 <article class="meal-card">
-                    <img src="../assets/images/foodimage.jpeg" alt="AfriSense catering plate">
+                    <img src="../assets/images/foods/grilled-chicken.png" alt="AfriSense grilled chicken catering plate">
                     <div>
                         <h3>Family Catering Plate</h3>
                         <p>Balanced portions for small groups and events.</p>
                     </div>
                 </article>
                 <article class="meal-card">
-                    <img src="../assets/images/foodimage.jpeg" alt="AfriSense meal package">
+                    <img src="../assets/images/foods/waakye.png" alt="AfriSense waakye meal package">
                     <div>
                         <h3>Corporate Lunch Package</h3>
                         <p>Reliable meal options for meetings and teams.</p>

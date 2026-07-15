@@ -3,11 +3,12 @@ $frontendBase = '/Afrisense/frontend';
 $pageTitle = 'About Us | AfriSense';
 $activePage = 'about';
 $extraStyles = [$frontendBase . '/assets/css/menu-services.css'];
+$foodImageBase = $frontendBase . '/assets/images/foods';
 
 $values = [
-    ['title' => 'Quality Food', 'desc' => 'Fresh ingredients and careful preparation guide every meal we serve.', 'icon' => 'bi-award'],
-    ['title' => 'Reliable Service', 'desc' => 'Our team supports dine-in guests, delivery customers, and event clients with care.', 'icon' => 'bi-people'],
-    ['title' => 'Memorable Moments', 'desc' => 'We design food experiences for everyday meals and special occasions.', 'icon' => 'bi-heart'],
+    ['title' => 'Quality Food', 'desc' => 'Fresh ingredients and careful preparation guide every meal we serve.', 'icon' => 'bi-award', 'image' => 'jollof-rice.png'],
+    ['title' => 'Reliable Service', 'desc' => 'Our team supports dine-in guests, delivery customers, and event clients with care.', 'icon' => 'bi-people', 'image' => 'grilled-chicken.png'],
+    ['title' => 'Memorable Moments', 'desc' => 'We design food experiences for everyday meals and special occasions.', 'icon' => 'bi-heart', 'image' => 'fruit-drink.png'],
 ];
 
 ob_start();
@@ -36,7 +37,7 @@ ob_start();
         <?php foreach ($values as $value): ?>
             <article class="af-public-service-card">
                 <div class="af-service-image">
-                    <img src="<?php echo htmlspecialchars($frontendBase . '/assets/images/foodimage.jpeg', ENT_QUOTES, 'UTF-8'); ?>" alt="<?php echo htmlspecialchars($value['title'], ENT_QUOTES, 'UTF-8'); ?>">
+                    <img src="<?php echo htmlspecialchars($foodImageBase . '/' . $value['image'], ENT_QUOTES, 'UTF-8'); ?>" alt="<?php echo htmlspecialchars($value['title'], ENT_QUOTES, 'UTF-8'); ?>">
                     <span class="af-service-icon"><i class="bi <?php echo htmlspecialchars($value['icon'], ENT_QUOTES, 'UTF-8'); ?>" aria-hidden="true"></i></span>
                 </div>
                 <div class="af-public-service-card-body">

@@ -59,11 +59,16 @@ function afrisense_is_customer(?array $user): bool
     return afrisense_role_name($user) === 'customer';
 }
 
+function afrisense_is_administrator(?array $user): bool
+{
+    return in_array(afrisense_role_name($user), ['administrator', 'admin', 'super admin'], true);
+}
+
 function afrisense_dashboard_url(?array $user): string
 {
-    return afrisense_is_customer($user)
-        ? '/Afrisense/frontend/customer/dashboard.php'
-        : '/Afrisense/frontend/admin/dashboard.php';
+    return afrisense_is_administrator($user)
+        ? '/Afrisense/frontend/admin/dashboard.php'
+        : '/Afrisense/frontend/customer/dashboard.php';
 }
 
 function afrisense_require_user(): array
@@ -83,7 +88,7 @@ function afrisense_require_customer(): array
     $user = afrisense_require_user();
 
     if (!afrisense_is_customer($user)) {
-        header('Location: /Afrisense/frontend/admin/dashboard.php');
+        header('Location: ' . afrisense_dashboard_url($user));
         exit;
     }
 
@@ -94,7 +99,7 @@ function afrisense_require_admin(): array
 {
     $user = afrisense_require_user();
 
-    if (afrisense_is_customer($user)) {
+    if (!afrisense_is_administrator($user)) {
         header('Location: /Afrisense/frontend/customer/dashboard.php');
         exit;
     }

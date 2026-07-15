@@ -176,62 +176,62 @@
 
             <section class="gallery-grid" aria-label="Gallery images">
                 <article class="gallery-card">
-                    <div class="image-frame"><img src="../assets/images/foodimage.jpeg" alt="Jollof rice and chicken"><input type="checkbox" aria-label="Select Jollof Rice and Chicken"><button type="button" aria-label="More options"><i class="bi bi-three-dots-vertical"></i></button></div>
+                    <div class="image-frame"><img src="../assets/images/foods/jollof-rice.png" alt="Jollof rice and chicken"><input type="checkbox" aria-label="Select Jollof Rice and Chicken"><button type="button" aria-label="More options"><i class="bi bi-three-dots-vertical"></i></button></div>
                     <div class="card-body"><h2>Jollof Rice &amp; Chicken</h2><p>May 24, 2025 &bull; 1.2 MB</p><span class="tag meals">Meals</span></div>
                 </article>
 
                 <article class="gallery-card">
-                    <div class="image-frame"><img src="../assets/images/foodimage.jpeg" alt="Grilled Tilapia"><input type="checkbox" aria-label="Select Grilled Tilapia"><button type="button" aria-label="More options"><i class="bi bi-three-dots-vertical"></i></button></div>
-                    <div class="card-body"><h2>Grilled Tilapia</h2><p>May 23, 2025 &bull; 1.1 MB</p><span class="tag meals">Meals</span></div>
+                    <div class="image-frame"><img src="../assets/images/foods/grilled-chicken.png" alt="Grilled chicken platter"><input type="checkbox" aria-label="Select Grilled Chicken Platter"><button type="button" aria-label="More options"><i class="bi bi-three-dots-vertical"></i></button></div>
+                    <div class="card-body"><h2>Grilled Chicken Platter</h2><p>May 23, 2025 &bull; 1.1 MB</p><span class="tag meals">Meals</span></div>
                 </article>
 
                 <article class="gallery-card">
-                    <div class="image-frame"><img src="../assets/images/foodimage.jpeg" alt="Banku with Tilapia"><input type="checkbox" aria-label="Select Banku with Tilapia"><button type="button" aria-label="More options"><i class="bi bi-three-dots-vertical"></i></button></div>
-                    <div class="card-body"><h2>Banku with Tilapia</h2><p>May 22, 2025 &bull; 900 KB</p><span class="tag meals">Meals</span></div>
+                    <div class="image-frame"><img src="../assets/images/foods/light-soup.png" alt="Light soup bowl"><input type="checkbox" aria-label="Select Light Soup Bowl"><button type="button" aria-label="More options"><i class="bi bi-three-dots-vertical"></i></button></div>
+                    <div class="card-body"><h2>Light Soup Bowl</h2><p>May 22, 2025 &bull; 900 KB</p><span class="tag meals">Meals</span></div>
                 </article>
 
                 <article class="gallery-card">
-                    <div class="image-frame"><img src="../assets/images/foodimage.jpeg" alt="Waakye Special"><input type="checkbox" aria-label="Select Waakye Special"><button type="button" aria-label="More options"><i class="bi bi-three-dots-vertical"></i></button></div>
+                    <div class="image-frame"><img src="../assets/images/foods/waakye.png" alt="Waakye Special"><input type="checkbox" aria-label="Select Waakye Special"><button type="button" aria-label="More options"><i class="bi bi-three-dots-vertical"></i></button></div>
                     <div class="card-body"><h2>Waakye Special</h2><p>May 22, 2025 &bull; 1.3 MB</p><span class="tag meals">Meals</span></div>
                 </article>
 
                 <article class="gallery-card">
-                    <div class="image-frame"><img src="../assets/images/foodimage.jpeg" alt="Chicken Salad"><input type="checkbox" aria-label="Select Chicken Salad"><button type="button" aria-label="More options"><i class="bi bi-three-dots-vertical"></i></button></div>
-                    <div class="card-body"><h2>Chicken Salad</h2><p>May 21, 2025 &bull; 980 KB</p><span class="tag salads">Salads</span></div>
+                    <div class="image-frame"><img src="../assets/images/foods/grilled-chicken.png" alt="Grilled chicken salad"><input type="checkbox" aria-label="Select Grilled Chicken Salad"><button type="button" aria-label="More options"><i class="bi bi-three-dots-vertical"></i></button></div>
+                    <div class="card-body"><h2>Grilled Chicken Salad</h2><p>May 21, 2025 &bull; 980 KB</p><span class="tag salads">Salads</span></div>
                 </article>
 
                 <article class="gallery-card">
-                    <div class="image-frame"><img src="../assets/images/foodimage.jpeg" alt="Groundnut Soup"><input type="checkbox" aria-label="Select Groundnut Soup"><button type="button" aria-label="More options"><i class="bi bi-three-dots-vertical"></i></button></div>
+                    <div class="image-frame"><img src="../assets/images/foods/light-soup.png" alt="Groundnut Soup"><input type="checkbox" aria-label="Select Groundnut Soup"><button type="button" aria-label="More options"><i class="bi bi-three-dots-vertical"></i></button></div>
                     <div class="card-body"><h2>Groundnut Soup</h2><p>May 21, 2025 &bull; 870 KB</p><span class="tag soups">Soups</span></div>
                 </article>
 
                 <article class="gallery-card">
-                    <div class="image-frame"><img src="../assets/images/foodimage.jpeg" alt="Fried Rice with Beef"><input type="checkbox" aria-label="Select Fried Rice with Beef"><button type="button" aria-label="More options"><i class="bi bi-three-dots-vertical"></i></button></div>
+                    <div class="image-frame"><img src="../assets/images/foods/fried-rice.png" alt="Fried Rice with Beef"><input type="checkbox" aria-label="Select Fried Rice with Beef"><button type="button" aria-label="More options"><i class="bi bi-three-dots-vertical"></i></button></div>
                     <div class="card-body"><h2>Fried Rice with Beef</h2><p>May 20, 2025 &bull; 1.0 MB</p><span class="tag meals">Meals</span></div>
                 </article>
 
                 <article class="gallery-card">
-                    <div class="image-frame"><img src="../assets/images/foodimage.jpeg" alt="Okro Soup"><input type="checkbox" aria-label="Select Okro Soup"><button type="button" aria-label="More options"><i class="bi bi-three-dots-vertical"></i></button></div>
+                    <div class="image-frame"><img src="../assets/images/foods/light-soup.png" alt="Okro Soup"><input type="checkbox" aria-label="Select Okro Soup"><button type="button" aria-label="More options"><i class="bi bi-three-dots-vertical"></i></button></div>
                     <div class="card-body"><h2>Okro Soup</h2><p>May 20, 2025 &bull; 950 KB</p><span class="tag soups">Soups</span></div>
                 </article>
 
                 <article class="gallery-card">
-                    <div class="image-frame"><img src="../assets/images/foodimage.jpeg" alt="Fresh Fruit Juice"><input type="checkbox" aria-label="Select Fresh Fruit Juice"><button type="button" aria-label="More options"><i class="bi bi-three-dots-vertical"></i></button></div>
+                    <div class="image-frame"><img src="../assets/images/foods/fruit-drink.png" alt="Fresh Fruit Juice"><input type="checkbox" aria-label="Select Fresh Fruit Juice"><button type="button" aria-label="More options"><i class="bi bi-three-dots-vertical"></i></button></div>
                     <div class="card-body"><h2>Fresh Fruit Juice</h2><p>May 19, 2025 &bull; 780 KB</p><span class="tag drinks">Drinks</span></div>
                 </article>
 
                 <article class="gallery-card">
-                    <div class="image-frame"><img src="../assets/images/foodimage.jpeg" alt="Event Catering"><input type="checkbox" aria-label="Select Event Catering"><button type="button" aria-label="More options"><i class="bi bi-three-dots-vertical"></i></button></div>
+                    <div class="image-frame"><img src="../assets/images/foods/grilled-chicken.png" alt="Event Catering"><input type="checkbox" aria-label="Select Event Catering"><button type="button" aria-label="More options"><i class="bi bi-three-dots-vertical"></i></button></div>
                     <div class="card-body"><h2>Event Catering</h2><p>May 19, 2025 &bull; 1.6 MB</p><span class="tag catering">Catering</span></div>
                 </article>
 
                 <article class="gallery-card">
-                    <div class="image-frame"><img src="../assets/images/foodimage.jpeg" alt="Wedding Setup"><input type="checkbox" aria-label="Select Wedding Setup"><button type="button" aria-label="More options"><i class="bi bi-three-dots-vertical"></i></button></div>
-                    <div class="card-body"><h2>Wedding Setup</h2><p>May 18, 2025 &bull; 1.4 MB</p><span class="tag events">Events</span></div>
+                    <div class="image-frame"><img src="../assets/images/foods/stout.png" alt="Wedding beverage service"><input type="checkbox" aria-label="Select Wedding Beverage Service"><button type="button" aria-label="More options"><i class="bi bi-three-dots-vertical"></i></button></div>
+                    <div class="card-body"><h2>Event Beverage Service</h2><p>May 18, 2025 &bull; 1.4 MB</p><span class="tag events">Events</span></div>
                 </article>
 
                 <article class="gallery-card">
-                    <div class="image-frame"><img src="../assets/images/foodimage.jpeg" alt="Meal Packages"><input type="checkbox" aria-label="Select Meal Packages"><button type="button" aria-label="More options"><i class="bi bi-three-dots-vertical"></i></button></div>
+                    <div class="image-frame"><img src="../assets/images/foods/waakye.png" alt="Meal Packages"><input type="checkbox" aria-label="Select Meal Packages"><button type="button" aria-label="More options"><i class="bi bi-three-dots-vertical"></i></button></div>
                     <div class="card-body"><h2>Meal Packages</h2><p>May 18, 2025 &bull; 1.1 MB</p><span class="tag packages">Packages</span></div>
                 </article>
             </section>

@@ -3,14 +3,15 @@ $frontendBase = '/Afrisense/frontend';
 $pageTitle = 'Services | AfriSense';
 $activePage = 'catering';
 $extraStyles = [$frontendBase . '/assets/css/menu-services.css'];
+$foodImageBase = $frontendBase . '/assets/images/foods';
 
 $services = [
-    ['title' => 'Dine-In Experience', 'desc' => 'Enjoy a luxurious and comfortable dining experience in our warm and elegant restaurant.', 'icon' => 'bi-shop'],
-    ['title' => 'Food Delivery', 'desc' => 'Order your favourite meals and enjoy fast, reliable delivery right to your doorstep.', 'icon' => 'bi-truck'],
-    ['title' => 'Event Catering', 'desc' => 'Make your events unforgettable with professional catering for all occasions.', 'icon' => 'bi-bell'],
-    ['title' => 'Private Dining', 'desc' => 'Host private gatherings in exclusive rooms with personalized service.', 'icon' => 'bi-people'],
-    ['title' => 'Personal Chef', 'desc' => 'Enjoy restaurant-quality meals at home with chef service tailored to your taste.', 'icon' => 'bi-cup-hot'],
-    ['title' => 'Corporate Meal Plans', 'desc' => 'Healthy and delicious office meal plans delivered on schedule for teams.', 'icon' => 'bi-calendar-check'],
+    ['title' => 'Dine-In Experience', 'desc' => 'Enjoy a luxurious and comfortable dining experience in our warm and elegant restaurant.', 'icon' => 'bi-shop', 'image' => 'jollof-rice.png'],
+    ['title' => 'Food Delivery', 'desc' => 'Order your favourite meals and enjoy fast, reliable delivery right to your doorstep.', 'icon' => 'bi-truck', 'image' => 'fried-rice.png'],
+    ['title' => 'Event Catering', 'desc' => 'Make your events unforgettable with professional catering for all occasions.', 'icon' => 'bi-bell', 'image' => 'grilled-chicken.png'],
+    ['title' => 'Private Dining', 'desc' => 'Host private gatherings in exclusive rooms with personalized service.', 'icon' => 'bi-people', 'image' => 'waakye.png'],
+    ['title' => 'Personal Chef', 'desc' => 'Enjoy restaurant-quality meals at home with chef service tailored to your taste.', 'icon' => 'bi-cup-hot', 'image' => 'light-soup.png'],
+    ['title' => 'Corporate Meal Plans', 'desc' => 'Healthy and delicious office meal plans delivered on schedule for teams.', 'icon' => 'bi-calendar-check', 'image' => 'fruit-drink.png'],
 ];
 
 $reasons = [
@@ -47,7 +48,7 @@ ob_start();
         <?php foreach ($services as $service): ?>
             <article class="af-public-service-card">
                 <div class="af-service-image">
-                    <img src="<?php echo htmlspecialchars($frontendBase . '/assets/images/foodimage.jpeg', ENT_QUOTES, 'UTF-8'); ?>" alt="<?php echo htmlspecialchars($service['title'], ENT_QUOTES, 'UTF-8'); ?>">
+                    <img src="<?php echo htmlspecialchars($foodImageBase . '/' . $service['image'], ENT_QUOTES, 'UTF-8'); ?>" alt="<?php echo htmlspecialchars($service['title'], ENT_QUOTES, 'UTF-8'); ?>">
                     <span class="af-service-icon"><i class="bi <?php echo htmlspecialchars($service['icon'], ENT_QUOTES, 'UTF-8'); ?>" aria-hidden="true"></i></span>
                 </div>
                 <div class="af-public-service-card-body">

@@ -5,12 +5,127 @@ $activePage = 'booking';
 $extraStyles = [$frontendBase . '/assets/css/booking-contact.css'];
 $extraScripts = [$frontendBase . '/assets/js/booking-contact.js'];
 
-$serviceTypes = [
-    ['name' => 'Table Booking', 'desc' => 'Reserve a table at our restaurant', 'icon' => 'bi-calendar3', 'price' => 120],
-    ['name' => 'Event Catering', 'desc' => 'Catering for events and parties', 'icon' => 'bi-gift', 'price' => 450],
-    ['name' => 'Private Dining', 'desc' => 'Private room reservations', 'icon' => 'bi-people', 'price' => 300],
-    ['name' => 'Custom Request', 'desc' => 'Special requests and arrangements', 'icon' => 'bi-heart', 'price' => 200],
-];
+require_once __DIR__ . '/../auth/auth_bootstrap.php';
+
+function afrisense_booking_post(string $key, string $fallback = ''): string
+{
+    return trim((string) ($_POST[$key] ?? $fallback));
+}
+
+function afrisense_booking_customer_id(PDO $pdo, string $fullname, string $email, string $phone): int
+{
+    $statement = $pdo->prepare(
+        'SELECT `id`
+         FROM `customers`
+         WHERE `email` = :email OR `phone_number` = :phone
+         ORDER BY `id` ASC
+         LIMIT 1'
+    );
+    $statement->execute(['email' => $email, 'phone' => $phone]);
+    $customerId = $statement->fetchColumn();
+
+    if ($customerId !== false) {
+        $update = $pdo->prepare(
+            'UPDATE `customers`
+             SET `fullname` = :fullname,
+                 `email` = :email,
+                 `phone_number` = :phone,
+                 `updated_at` = NOW()
+             WHERE `id` = :id'
+        );
+        $update->execute([
+            'fullname' => $fullname,
+            'email' => $email,
+            'phone' => $phone,
+            'id' => (int) $customerId,
+        ]);
+
+        return (int) $customerId;
+    }
+
+    $insert = $pdo->prepare(
+        'INSERT INTO `customers` (`fullname`, `email`, `phone_number`, `address`)
+         VALUES (:fullname, :email, :phone, :address)'
+    );
+    $insert->execute([
+        'fullname' => $fullname,
+        'email' => $email,
+        'phone' => $phone,
+        'address' => 'Provided during booking',
+    ]);
+
+    return (int) $pdo->lastInsertId();
+}
+
+$bookingMessage = null;
+$services = [];
+
+try {
+    $pdo = afrisense_pdo();
+    $serviceStatement = $pdo->prepare(
+        'SELECT `id`, `service_name`, `description`, `price`, `availability`
+         FROM `services`
+         WHERE `availability` = :availability
+         ORDER BY `id` ASC'
+    );
+    $serviceStatement->execute(['availability' => 'Available']);
+    $services = $serviceStatement->fetchAll(PDO::FETCH_ASSOC);
+
+    if (($_SERVER['REQUEST_METHOD'] ?? 'GET') === 'POST') {
+        $fullname = afrisense_booking_post('full_name');
+        $email = afrisense_booking_post('email');
+        $phone = preg_replace('/\s+/', '', afrisense_booking_post('phone'));
+        $serviceId = (int) ($_POST['service_id'] ?? 0);
+        $eventDate = afrisense_booking_post('booking_date');
+        $eventTime = afrisense_booking_post('booking_time');
+        $guestText = afrisense_booking_post('guests');
+        $guests = max(1, (int) preg_replace('/\D+/', '', $guestText));
+        $location = afrisense_booking_post('event_location', 'AfriSense Restaurant');
+        $specialRequests = afrisense_booking_post('special_requests');
+
+        $serviceCheck = $pdo->prepare('SELECT `id` FROM `services` WHERE `id` = :id LIMIT 1');
+        $serviceCheck->execute(['id' => $serviceId]);
+
+        if ($fullname === '' || !filter_var($email, FILTER_VALIDATE_EMAIL) || $phone === '' || $serviceCheck->fetchColumn() === false || $eventDate === '' || $eventTime === '') {
+            $bookingMessage = ['type' => 'error', 'text' => 'Please complete all required booking fields.'];
+        } else {
+            $pdo->beginTransaction();
+            $customerId = afrisense_booking_customer_id($pdo, $fullname, $email, $phone);
+            $insert = $pdo->prepare(
+                'INSERT INTO `bookings`
+                    (`customer_id`, `service_id`, `event_date`, `event_time`, `event_location`, `number_of_guests`, `special_requests`, `booking_status`)
+                 VALUES
+                    (:customer_id, :service_id, :event_date, :event_time, :event_location, :number_of_guests, :special_requests, :booking_status)'
+            );
+            $insert->execute([
+                'customer_id' => $customerId,
+                'service_id' => $serviceId,
+                'event_date' => $eventDate,
+                'event_time' => $eventTime,
+                'event_location' => $location,
+                'number_of_guests' => $guests,
+                'special_requests' => $specialRequests,
+                'booking_status' => 'Pending',
+            ]);
+            $pdo->commit();
+            $bookingMessage = ['type' => 'success', 'text' => 'Booking submitted. Our team will confirm it shortly.'];
+        }
+    }
+} catch (Throwable $exception) {
+    if (isset($pdo) && $pdo->inTransaction()) {
+        $pdo->rollBack();
+    }
+
+    $bookingMessage = ['type' => 'error', 'text' => 'Booking could not be submitted. Please try again.'];
+}
+
+if ($services === []) {
+    $services = [
+        ['id' => 0, 'service_name' => 'Service Unavailable', 'description' => 'Please contact AfriSense to book manually.', 'price' => 0],
+    ];
+}
+
+$serviceIcons = ['bi-calendar3', 'bi-gift', 'bi-people', 'bi-heart'];
 
 $benefits = [
     ['title' => 'Easy Booking', 'desc' => 'Quick and simple booking process', 'icon' => 'bi-calendar-check'],
@@ -56,16 +171,17 @@ ob_start();
                 </div>
             </header>
 
-            <form class="af-service-form" action="#" method="post" data-booking-form data-enhanced-form>
+            <form class="af-service-form" action="booking.php" method="post" data-booking-form data-enhanced-form>
                 <fieldset class="af-service-types">
-                    <legend>Select Service Type</legend>
-                    <?php foreach ($serviceTypes as $index => $service): ?>
-                        <label class="<?php echo $index === 0 ? 'is-active' : ''; ?>" data-service-option data-price="<?php echo (int) $service['price']; ?>">
-                            <input type="radio" name="service_type" value="<?php echo htmlspecialchars($service['name'], ENT_QUOTES, 'UTF-8'); ?>" <?php echo $index === 0 ? 'checked' : ''; ?>>
+                    <legend>Select Service</legend>
+                    <?php foreach ($services as $index => $service): ?>
+                        <?php $serviceName = (string) ($service['service_name'] ?? 'Service'); ?>
+                        <label class="<?php echo $index === 0 ? 'is-active' : ''; ?>" data-service-option data-price="<?php echo (float) ($service['price'] ?? 0); ?>">
+                            <input type="radio" name="service_id" value="<?php echo htmlspecialchars((string) ($service['id'] ?? 0), ENT_QUOTES, 'UTF-8'); ?>" data-service-name="<?php echo htmlspecialchars($serviceName, ENT_QUOTES, 'UTF-8'); ?>" <?php echo $index === 0 ? 'checked' : ''; ?> required>
                             <span class="af-type-check"><i class="bi bi-check" aria-hidden="true"></i></span>
-                            <i class="bi <?php echo htmlspecialchars($service['icon'], ENT_QUOTES, 'UTF-8'); ?>" aria-hidden="true"></i>
-                            <strong><?php echo htmlspecialchars($service['name'], ENT_QUOTES, 'UTF-8'); ?></strong>
-                            <small><?php echo htmlspecialchars($service['desc'], ENT_QUOTES, 'UTF-8'); ?></small>
+                            <i class="bi <?php echo htmlspecialchars($serviceIcons[$index % count($serviceIcons)], ENT_QUOTES, 'UTF-8'); ?>" aria-hidden="true"></i>
+                            <strong><?php echo htmlspecialchars($serviceName, ENT_QUOTES, 'UTF-8'); ?></strong>
+                            <small><?php echo htmlspecialchars((string) ($service['description'] ?? ''), ENT_QUOTES, 'UTF-8'); ?></small>
                         </label>
                     <?php endforeach; ?>
                 </fieldset>
@@ -134,17 +250,12 @@ ob_start();
                     </div>
 
                     <div class="af-form-group af-full-field">
-                        <label for="booking_package">Service / Package (Optional)</label>
-                        <div class="af-select-wrap">
-                            <select id="booking_package" name="package">
-                                <option value="">Select a package or service</option>
-                                <option>Classic Ghanaian Buffet</option>
-                                <option>Executive Lunch Service</option>
-                                <option>Wedding Catering Package</option>
-                                <option>Corporate Event Package</option>
-                            </select>
-                            <i class="bi bi-chevron-down" aria-hidden="true"></i>
+                        <label for="booking_location">Event / Reservation Location <strong>*</strong></label>
+                        <div class="af-input-icon">
+                            <i class="bi bi-geo-alt" aria-hidden="true"></i>
+                            <input type="text" id="booking_location" name="event_location" placeholder="AfriSense Restaurant, Oyarifa, Accra..." autocomplete="street-address" required>
                         </div>
+                        <small class="af-field-error">Please enter the reservation or event location.</small>
                     </div>
 
                     <div class="af-form-group af-full-field">
@@ -182,7 +293,9 @@ ob_start();
                     <span>Confirm Booking</span>
                     <i class="bi bi-arrow-right" aria-hidden="true"></i>
                 </button>
-                <p class="af-form-status" data-form-status aria-live="polite"></p>
+                <p class="af-form-status <?php echo $bookingMessage !== null ? 'is-' . htmlspecialchars($bookingMessage['type'], ENT_QUOTES, 'UTF-8') : ''; ?>" data-form-status aria-live="polite">
+                    <?php echo $bookingMessage !== null ? htmlspecialchars($bookingMessage['text'], ENT_QUOTES, 'UTF-8') : ''; ?>
+                </p>
                 <p class="af-privacy-line"><i class="bi bi-lock-fill" aria-hidden="true"></i> Your information is secure and will only be used for booking purposes.</p>
             </form>
         </section>
