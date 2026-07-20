@@ -3,14 +3,156 @@ $frontendBase = '/Afrisense/frontend';
 $pageTitle = 'Payment | AfriSense';
 $activePage = 'menu';
 $publicHeaderMode = 'shop';
-$customerName = 'Kofi Mensah';
 $extraStyles = [$frontendBase . '/assets/css/order-payment.css'];
-$foodImageBase = $frontendBase . '/assets/images/foods';
-$summaryItems = [
-    ['name' => 'Jollof Rice', 'price' => 'GHc 60.00', 'image' => 'jollof-rice.png'],
-    ['name' => 'Grilled Chicken', 'price' => 'GHc 70.00', 'image' => 'grilled-chicken.png'],
-    ['name' => 'Cola Soft Drink', 'price' => 'GHc 10.00', 'image' => 'cola.png'],
-];
+
+require_once __DIR__ . '/../auth/auth_bootstrap.php';
+require_once __DIR__ . '/../includes/public_settings.php';
+
+\AfriSense\Backend\Helpers\Session::start();
+
+function afrisense_guest_payment_image(string $frontendBase, ?string $image): string
+{
+    $filename = basename(trim((string) $image));
+
+    if ($filename !== '' && is_file(__DIR__ . '/../assets/images/foods/' . $filename)) {
+        return $frontendBase . '/assets/images/foods/' . $filename;
+    }
+
+    return $frontendBase . '/assets/images/foods/jollof-rice.png';
+}
+
+function afrisense_guest_payment_customer_id(PDO $pdo, array $details): int
+{
+    $statement = $pdo->prepare('SELECT `id` FROM `customers` WHERE `email` = :email OR `phone_number` = :phone ORDER BY `id` ASC LIMIT 1');
+    $statement->execute(['email' => $details['email'], 'phone' => $details['phone']]);
+    $customerId = $statement->fetchColumn();
+
+    if ($customerId !== false) {
+        $update = $pdo->prepare('UPDATE `customers` SET `fullname` = :fullname, `email` = :email, `phone_number` = :phone, `address` = :address, `updated_at` = NOW() WHERE `id` = :id');
+        $update->execute(['fullname' => $details['fullname'], 'email' => $details['email'], 'phone' => $details['phone'], 'address' => $details['delivery_address'], 'id' => (int) $customerId]);
+        return (int) $customerId;
+    }
+
+    $insert = $pdo->prepare('INSERT INTO `customers` (`fullname`, `email`, `phone_number`, `address`) VALUES (:fullname, :email, :phone, :address)');
+    $insert->execute(['fullname' => $details['fullname'], 'email' => $details['email'], 'phone' => $details['phone'], 'address' => $details['delivery_address']]);
+    return (int) $pdo->lastInsertId();
+}
+
+function afrisense_guest_payment_notify_admins(PDO $pdo, array $orderIds, string $customerName): void
+{
+    if ($orderIds === []) {
+        return;
+    }
+
+    $admins = $pdo->prepare("SELECT u.`id` FROM `users` u INNER JOIN `roles` r ON r.`id` = u.`role_id` WHERE LOWER(COALESCE(r.`rolename`, '')) IN ('administrator', 'admin', 'super admin')");
+    $admins->execute();
+    $notification = $pdo->prepare('INSERT INTO `notifications` (`user_id`, `title`, `message`, `notification_type`, `action_url`, `created_by`) VALUES (:user_id, :title, :message, :notification_type, :action_url, :created_by)');
+
+    foreach ($admins->fetchAll(PDO::FETCH_COLUMN) as $adminId) {
+        $notification->execute([
+            'user_id' => (int) $adminId,
+            'title' => 'New Order Received',
+            'message' => count($orderIds) . ' order item(s) have been placed by ' . $customerName . '.',
+            'notification_type' => 'Order',
+            'action_url' => '/Afrisense/frontend/admin/orders.php?view=' . (int) $orderIds[0] . '#order-row-' . (int) $orderIds[0],
+            'created_by' => null,
+        ]);
+    }
+}
+
+$cart = $_SESSION['afrisense_guest_cart'] ?? [];
+$cart = is_array($cart) ? $cart : [];
+$details = $_SESSION['afrisense_guest_checkout'] ?? [];
+$details = is_array($details) ? $details : [];
+$message = null;
+
+try {
+    $pdo = afrisense_pdo();
+
+    if (($_SERVER['REQUEST_METHOD'] ?? 'GET') === 'POST' && ($_POST['action'] ?? '') === 'pay_now') {
+        $paymentMethod = (string) ($_POST['payment_method'] ?? 'Mobile Money');
+        $details['payment_method'] = $paymentMethod;
+
+        if ($cart === [] || empty($details['fullname']) || !filter_var((string) ($details['email'] ?? ''), FILTER_VALIDATE_EMAIL) || empty($details['phone']) || empty($details['delivery_address']) || !in_array($paymentMethod, ['Mobile Money', 'Card', 'Cash'], true)) {
+            $message = ['type' => 'error', 'text' => 'Complete your cart and delivery details before payment.'];
+        } else {
+            $ids = array_keys($cart);
+            $placeholders = implode(',', array_fill(0, count($ids), '?'));
+            $foodLookup = $pdo->prepare('SELECT `id`, `price` FROM `foods` WHERE `availability` = "Available" AND `id` IN (' . $placeholders . ')');
+            $foodLookup->execute(array_map('intval', $ids));
+            $prices = [];
+            foreach ($foodLookup->fetchAll(PDO::FETCH_ASSOC) as $food) {
+                $prices[(int) $food['id']] = (float) $food['price'];
+            }
+
+            $pdo->beginTransaction();
+            $customerId = afrisense_guest_payment_customer_id($pdo, $details);
+            $insert = $pdo->prepare('INSERT INTO `orders` (`customer_id`, `food_id`, `quantity`, `total_price`, `delivery_address`, `special_instructions`, `payment_method`, `payment_status`, `order_status`) VALUES (:customer_id, :food_id, :quantity, :total_price, :delivery_address, :special_instructions, :payment_method, :payment_status, :order_status)');
+            $orderIds = [];
+            $deliveryFeeApplied = false;
+
+            foreach ($cart as $foodId => $quantity) {
+                if (!isset($prices[(int) $foodId])) {
+                    continue;
+                }
+
+                $quantity = max(1, min(20, (int) $quantity));
+                $lineTotal = $prices[(int) $foodId] * $quantity;
+                if (!$deliveryFeeApplied) {
+                    $lineTotal += 10.00;
+                    $deliveryFeeApplied = true;
+                }
+
+                $insert->execute([
+                    'customer_id' => $customerId,
+                    'food_id' => (int) $foodId,
+                    'quantity' => $quantity,
+                    'total_price' => $lineTotal,
+                    'delivery_address' => (string) $details['delivery_address'],
+                    'special_instructions' => (string) ($details['cart_note'] ?? ''),
+                    'payment_method' => $paymentMethod === 'Card' ? 'Card' : ($paymentMethod === 'Mobile Money' ? 'Mobile Money' : 'Cash'),
+                    'payment_status' => $paymentMethod === 'Cash' ? 'Pending' : 'Paid',
+                    'order_status' => 'Pending',
+                ]);
+                $orderIds[] = (int) $pdo->lastInsertId();
+            }
+
+            afrisense_guest_payment_notify_admins($pdo, $orderIds, (string) $details['fullname']);
+            $pdo->commit();
+            $_SESSION['afrisense_guest_cart'] = [];
+            $_SESSION['afrisense_guest_cart_note'] = '';
+            $_SESSION['afrisense_guest_checkout'] = [];
+            $cart = [];
+            $message = ['type' => 'success', 'text' => 'Your order has been placed successfully.'];
+        }
+    }
+
+    $cartFoods = [];
+    if ($cart !== []) {
+        $ids = array_keys($cart);
+        $placeholders = implode(',', array_fill(0, count($ids), '?'));
+        $statement = $pdo->prepare('SELECT `id`, `food_name`, `price`, `image` FROM `foods` WHERE `id` IN (' . $placeholders . ')');
+        $statement->execute(array_map('intval', $ids));
+        foreach ($statement->fetchAll(PDO::FETCH_ASSOC) as $food) {
+            $food['quantity'] = max(1, (int) ($cart[(int) $food['id']] ?? 1));
+            $cartFoods[] = $food;
+        }
+    }
+    $loadError = '';
+} catch (Throwable $exception) {
+    if (isset($pdo) && $pdo->inTransaction()) {
+        $pdo->rollBack();
+    }
+    $cartFoods = [];
+    $loadError = 'Payment could not be loaded. Check that MySQL is running.';
+}
+
+$subtotal = array_reduce($cartFoods, static fn (float $total, array $food): float => $total + ((float) $food['price'] * (int) $food['quantity']), 0.00);
+$deliveryFee = $cartFoods === [] ? 0.00 : 10.00;
+$total = $subtotal + $deliveryFee;
+$publicSettings = afrisense_public_settings();
+$supportPhone = (string) ($publicSettings['company']['phone_number_1'] ?? '+233 24 123 4567');
+$supportEmail = (string) ($publicSettings['company']['support_email'] ?? 'support@afrisense.com');
 
 ob_start();
 ?>
@@ -21,63 +163,20 @@ ob_start();
         <li class="active"><span><i class="bi bi-credit-card"></i></span>3. Payment</li>
         <li><span><i class="bi bi-check-lg"></i></span>4. Confirmation</li>
     </ol>
-
+    <?php if ($loadError !== ''): ?><div class="af-admin-alert error"><?php echo htmlspecialchars($loadError, ENT_QUOTES, 'UTF-8'); ?></div><?php endif; ?>
+    <?php if ($message !== null): ?><div class="af-admin-alert <?php echo htmlspecialchars($message['type'], ENT_QUOTES, 'UTF-8'); ?>"><?php echo htmlspecialchars($message['text'], ENT_QUOTES, 'UTF-8'); ?></div><?php endif; ?>
     <div class="af-payment-grid">
         <main class="af-payment-card">
             <header class="af-payment-heading"><i class="bi bi-lock"></i><div><h1>Secure Payment</h1><p>Complete your payment to confirm your order.</p></div></header>
             <p class="af-payment-alert"><i class="bi bi-shield-check"></i> Your payment is 100% secure and encrypted.</p>
-
-            <section class="af-payment-section">
-                <h2>Choose Payment Method</h2>
-                <label class="af-payment-method is-active"><input type="radio" name="method" checked><i class="bi bi-phone"></i><span><strong>Mobile Money</strong><small>Pay using MTN Mobile Money, Vodafone Cash or AirtelTigo Money</small></span><em>MTN</em><em>Vodafone</em><em>airteltigo</em></label>
-                <label class="af-payment-method"><input type="radio" name="method"><i class="bi bi-credit-card"></i><span><strong>Card Payment</strong><small>Pay securely using your debit or credit card</small></span><em>VISA</em><em>Mastercard</em></label>
-                <label class="af-payment-method"><input type="radio" name="method"><i class="bi bi-bank"></i><span><strong>Bank Transfer</strong><small>Make payment directly to our bank account</small></span><i class="bi bi-bank"></i></label>
-            </section>
-
-            <section class="af-payment-section">
-                <h2>Pay with Mobile Money</h2>
-                <div class="af-billing-grid single"><label>Select Network<select><option>MTN Mobile Money</option><option>Vodafone Cash</option><option>AirtelTigo Money</option></select></label></div>
-                <label class="af-payment-input">Mobile Money Number<span><i class="bi bi-telephone"></i><input type="tel" placeholder="Enter mobile money number"></span></label>
-                <p class="af-payment-warning"><i class="bi bi-info-circle"></i> You will receive a prompt on your phone to complete the payment. Please enter the Mobile Money number registered in your name.</p>
-            </section>
-
-            <section class="af-payment-section">
-                <h2>Billing Information</h2>
-                <div class="af-billing-grid">
-                    <label>Full Name<input type="text" value="Kofi Mensah"></label>
-                    <label>Email Address<input type="email" value="kofi.mensah@email.com"></label>
-                    <label>Phone Number<input type="tel" value="+233 24 123 4567"></label>
-                </div>
-                <label class="af-terms"><input type="checkbox" checked> I have read and agree to the <a href="#">Terms &amp; Conditions</a></label>
-                <button class="af-pay-now" type="button"><i class="bi bi-lock"></i> Pay Now</button>
-                <a class="af-back-delivery" href="order.php"><i class="bi bi-arrow-left"></i> Back to Delivery</a>
-            </section>
+            <form method="post">
+                <input type="hidden" name="action" value="pay_now">
+                <section class="af-payment-section"><h2>Choose Payment Method</h2><label class="af-payment-method is-active"><input type="radio" name="payment_method" value="Mobile Money" checked><i class="bi bi-phone"></i><span><strong>Mobile Money</strong><small>Pay using MTN Mobile Money, Vodafone Cash or AirtelTigo Money</small></span><em>MTN</em><em>Vodafone</em><em>airteltigo</em></label><label class="af-payment-method"><input type="radio" name="payment_method" value="Card"><i class="bi bi-credit-card"></i><span><strong>Card Payment</strong><small>Pay securely using your debit or credit card</small></span><em>VISA</em><em>Mastercard</em></label><label class="af-payment-method"><input type="radio" name="payment_method" value="Cash"><i class="bi bi-cash-coin"></i><span><strong>Cash on Delivery</strong><small>Pay when your food arrives</small></span><i class="bi bi-cash"></i></label></section>
+                <section class="af-payment-section"><h2>Pay with Mobile Money</h2><div class="af-billing-grid single"><label>Select Network<select name="network"><option>MTN Mobile Money</option><option>Vodafone Cash</option><option>AirtelTigo Money</option></select></label></div><label class="af-payment-input">Mobile Money Number<span><i class="bi bi-telephone"></i><input type="tel" name="momo_number" placeholder="Enter mobile money number"></span></label><p class="af-payment-warning"><i class="bi bi-info-circle"></i> You will receive a prompt on your phone to complete the payment.</p></section>
+                <section class="af-payment-section"><h2>Billing Information</h2><div class="af-billing-grid"><label>Full Name<input type="text" value="<?php echo htmlspecialchars((string) ($details['fullname'] ?? ''), ENT_QUOTES, 'UTF-8'); ?>" readonly></label><label>Email Address<input type="email" value="<?php echo htmlspecialchars((string) ($details['email'] ?? ''), ENT_QUOTES, 'UTF-8'); ?>" readonly></label><label>Phone Number<input type="tel" value="<?php echo htmlspecialchars((string) ($details['phone'] ?? ''), ENT_QUOTES, 'UTF-8'); ?>" readonly></label></div><label class="af-terms"><input type="checkbox" required> I have read and agree to the <a href="terms.php">Terms &amp; Conditions</a></label><button class="af-pay-now" type="submit" <?php echo $cartFoods === [] ? 'disabled' : ''; ?>><i class="bi bi-lock"></i> Pay Now</button><a class="af-back-delivery" href="cart.php"><i class="bi bi-arrow-left"></i> Back to Cart</a></section>
+            </form>
         </main>
-
-        <aside class="af-payment-side">
-            <section class="af-summary-card">
-                <h2>Order Summary</h2>
-                <?php foreach ($summaryItems as $item): ?>
-                    <article><img src="<?php echo htmlspecialchars($foodImageBase . '/' . $item['image'], ENT_QUOTES, 'UTF-8'); ?>" alt="<?php echo htmlspecialchars($item['name'], ENT_QUOTES, 'UTF-8'); ?>"><span><strong><?php echo htmlspecialchars($item['name'], ENT_QUOTES, 'UTF-8'); ?></strong><small>Qty: 1</small></span><b><?php echo htmlspecialchars($item['price'], ENT_QUOTES, 'UTF-8'); ?></b></article>
-                <?php endforeach; ?>
-                <dl><div><dt>Subtotal</dt><dd>GHc 140.00</dd></div><div><dt>Delivery Fee</dt><dd>GHc 10.00</dd></div><div class="total"><dt>Total Amount</dt><dd>GHc 150.00</dd></div></dl>
-                <div class="af-promo"><p><i class="bi bi-tag"></i><strong>Have a promo code?</strong><br><small>Enter code at checkout to apply discount</small></p><div><input type="text" placeholder="Enter promo code"><button>Apply</button></div></div>
-            </section>
-
-            <section class="af-summary-card">
-                <h2>Why Pay with AfriSense?</h2>
-                <ul class="af-pay-reasons">
-                    <li><i class="bi bi-shield-check"></i><span><strong>100% Secure Payments</strong>Your payment details are safe with us.</span></li>
-                    <li><i class="bi bi-hand-thumbs-up"></i><span><strong>Fast &amp; Reliable</strong>Quick payment confirmation and order processing.</span></li>
-                    <li><i class="bi bi-credit-card"></i><span><strong>Multiple Payment Options</strong>Choose the payment method that works for you.</span></li>
-                    <li><i class="bi bi-shield-check"></i><span><strong>Money Back Guarantee</strong>Get a full refund if your order is not delivered.</span></li>
-                </ul>
-            </section>
-
-            <section class="af-summary-card af-payment-help">
-                <i class="bi bi-headset"></i><div><h2>Need Help?</h2><p>Our support team is here to assist you.</p><strong>Call / WhatsApp: +233 24 123 4567</strong><strong>Email: support@afrisense.com</strong><strong>Mon - Sun: 8:00 AM - 10:00 PM</strong></div>
-            </section>
-        </aside>
+        <aside class="af-payment-side"><section class="af-summary-card"><h2>Order Summary</h2><?php foreach ($cartFoods as $item): ?><article><img src="<?php echo htmlspecialchars(afrisense_guest_payment_image($frontendBase, (string) ($item['image'] ?? '')), ENT_QUOTES, 'UTF-8'); ?>" alt=""><span><strong><?php echo htmlspecialchars((string) $item['food_name'], ENT_QUOTES, 'UTF-8'); ?></strong><small>Qty: <?php echo (int) $item['quantity']; ?></small></span><b><?php echo htmlspecialchars(afrisense_public_money((float) $item['price'] * (int) $item['quantity']), ENT_QUOTES, 'UTF-8'); ?></b></article><?php endforeach; ?><dl><div><dt>Subtotal</dt><dd><?php echo htmlspecialchars(afrisense_public_money($subtotal), ENT_QUOTES, 'UTF-8'); ?></dd></div><div><dt>Delivery Fee</dt><dd><?php echo htmlspecialchars(afrisense_public_money($deliveryFee), ENT_QUOTES, 'UTF-8'); ?></dd></div><div class="total"><dt>Total Amount</dt><dd><?php echo htmlspecialchars(afrisense_public_money($total), ENT_QUOTES, 'UTF-8'); ?></dd></div></dl></section><section class="af-summary-card"><h2>Why Pay with AfriSense?</h2><ul class="af-pay-reasons"><li><i class="bi bi-shield-check"></i><span><strong>100% Secure Payments</strong>Your payment details are safe with us.</span></li><li><i class="bi bi-hand-thumbs-up"></i><span><strong>Fast &amp; Reliable</strong>Quick payment confirmation and order processing.</span></li><li><i class="bi bi-credit-card"></i><span><strong>Multiple Payment Options</strong>Choose the payment method that works for you.</span></li></ul></section><section class="af-summary-card af-payment-help"><i class="bi bi-headset"></i><div><h2>Need Help?</h2><p>Our support team is here to assist you.</p><strong>Call / WhatsApp: <?php echo htmlspecialchars($supportPhone, ENT_QUOTES, 'UTF-8'); ?></strong><strong>Email: <?php echo htmlspecialchars($supportEmail, ENT_QUOTES, 'UTF-8'); ?></strong></div></section></aside>
     </div>
 </section>
 <?php

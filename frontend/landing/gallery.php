@@ -1,264 +1,210 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Gallery | AfriSense</title>
+<?php
 
-    <link rel="stylesheet" href="../assets/css/gallery.css">
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
-</head>
-<body>
-    <aside class="sidebar" aria-label="Admin navigation">
-        <a class="brand" href="index.php" aria-label="AfriSense home">
-            <span class="brand-icon" aria-hidden="true"><i class="bi bi-cup-hot"></i></span>
-            <span>
-                <strong>AfriSense</strong>
-                <small>Food Services</small>
-            </span>
-        </a>
+declare(strict_types=1);
 
-        <nav class="side-nav">
-            <p>Main</p>
-            <a href="#"><i class="bi bi-house" aria-hidden="true"></i> Dashboard</a>
-            <a href="#"><i class="bi bi-cart" aria-hidden="true"></i> Orders</a>
-            <a href="#"><i class="bi bi-calendar3" aria-hidden="true"></i> Bookings</a>
-            <a href="#"><i class="bi bi-people" aria-hidden="true"></i> Customers</a>
-            <a href="#"><i class="bi bi-card-list" aria-hidden="true"></i> Menu &amp; Packages</a>
-            <a class="active" href="gallery.php"><i class="bi bi-image" aria-hidden="true"></i> Gallery</a>
-            <a href="#"><i class="bi bi-megaphone" aria-hidden="true"></i> Promotions</a>
-            <a href="#"><i class="bi bi-chat-left-text" aria-hidden="true"></i> Enquiries</a>
-            <a href="#"><i class="bi bi-bar-chart" aria-hidden="true"></i> Reports</a>
+$frontendBase = '/Afrisense/frontend';
+$pageTitle = 'Gallery | AfriSense';
+$activePage = 'gallery';
+$extraStyles = [$frontendBase . '/assets/css/public-gallery.css'];
 
-            <p>Management</p>
-            <a href="#"><i class="bi bi-person-gear" aria-hidden="true"></i> Staff Management</a>
-            <a href="#"><i class="bi bi-box" aria-hidden="true"></i> Categories</a>
-            <a href="#"><i class="bi bi-tags" aria-hidden="true"></i> Tags</a>
+require_once __DIR__ . '/../auth/auth_bootstrap.php';
 
-            <p>Settings</p>
-            <a href="#"><i class="bi bi-gear" aria-hidden="true"></i> Settings</a>
-            <a href="#"><i class="bi bi-shield-lock" aria-hidden="true"></i> Roles &amp; Permissions</a>
+function afrisense_public_gallery_image(string $frontendBase, ?string $image): string
+{
+    $image = trim((string) $image);
+    $relativeImage = ltrim(str_replace('\\', '/', $image), '/');
+    $filename = basename($relativeImage);
+
+    if ($filename !== '' && is_file(__DIR__ . '/../assets/images/foods/' . $filename)) {
+        return $frontendBase . '/assets/images/foods/' . $filename;
+    }
+
+    if ($relativeImage !== '' && is_file(__DIR__ . '/../uploads/' . $relativeImage)) {
+        return $frontendBase . '/uploads/' . $relativeImage;
+    }
+
+    if ($filename !== '' && is_file(__DIR__ . '/../uploads/' . $filename)) {
+        return $frontendBase . '/uploads/' . $filename;
+    }
+
+    return $frontendBase . '/assets/images/foods/jollof-rice.png';
+}
+
+function afrisense_public_gallery_tag_class(string $category): string
+{
+    $category = strtolower($category);
+
+    return match (true) {
+        str_contains($category, 'drink') => 'drinks',
+        str_contains($category, 'soup') => 'soups',
+        str_contains($category, 'event'), str_contains($category, 'cater') => 'events',
+        str_contains($category, 'package') => 'packages',
+        default => 'food',
+    };
+}
+
+$search = trim((string) ($_GET['search'] ?? ''));
+$categoryFilter = trim((string) ($_GET['category'] ?? ''));
+$galleryItems = [];
+$categories = [];
+$galleryMessage = '';
+
+try {
+    $pdo = afrisense_pdo();
+
+    $categoryStatement = $pdo->prepare(
+        'SELECT category_name, SUM(item_count) AS item_count
+         FROM (
+            SELECT COALESCE(c.`category_name`, "Food") AS category_name, COUNT(f.`id`) AS item_count
+            FROM `foods` f
+            LEFT JOIN `food_categories` c ON c.`id` = f.`category_id`
+            WHERE f.`availability` = :availability
+            GROUP BY COALESCE(c.`category_name`, "Food")
+            UNION ALL
+            SELECT g.`category` AS category_name, COUNT(g.`id`) AS item_count
+            FROM `gallery` g
+            GROUP BY g.`category`
+         ) grouped_categories
+         GROUP BY category_name
+         ORDER BY category_name ASC'
+    );
+    $categoryStatement->execute(['availability' => 'Available']);
+    $categories = $categoryStatement->fetchAll(PDO::FETCH_ASSOC);
+
+    $foodWhere = ['f.`availability` = :availability'];
+    $foodParams = ['availability' => 'Available'];
+
+    if ($search !== '') {
+        $foodWhere[] = '(f.`food_name` LIKE :food_search OR f.`description` LIKE :food_search OR COALESCE(c.`category_name`, "") LIKE :food_search)';
+        $foodParams['food_search'] = '%' . $search . '%';
+    }
+
+    if ($categoryFilter !== '') {
+        $foodWhere[] = 'COALESCE(c.`category_name`, "") = :food_category';
+        $foodParams['food_category'] = $categoryFilter;
+    }
+
+    $foodStatement = $pdo->prepare(
+        'SELECT
+            f.`food_name` AS title,
+            f.`description`,
+            COALESCE(c.`category_name`, "Food") AS category,
+            f.`image`,
+            f.`created_at` AS created_at,
+            "Menu" AS source
+         FROM `foods` f
+         LEFT JOIN `food_categories` c ON c.`id` = f.`category_id`
+         WHERE ' . implode(' AND ', $foodWhere) . '
+         ORDER BY f.`created_at` DESC, f.`id` DESC
+         LIMIT 80'
+    );
+    $foodStatement->execute($foodParams);
+    $galleryItems = $foodStatement->fetchAll(PDO::FETCH_ASSOC);
+
+    if ($categoryFilter === '' || in_array($categoryFilter, ['Food', 'Events', 'Services', 'Team'], true)) {
+        $galleryWhere = [];
+        $galleryParams = [];
+
+        if ($search !== '') {
+            $galleryWhere[] = '(g.`title` LIKE :gallery_search OR g.`description` LIKE :gallery_search OR g.`category` LIKE :gallery_search)';
+            $galleryParams['gallery_search'] = '%' . $search . '%';
+        }
+
+        if ($categoryFilter !== '') {
+            $galleryWhere[] = 'g.`category` = :gallery_category';
+            $galleryParams['gallery_category'] = $categoryFilter;
+        }
+
+        $galleryWhereSql = $galleryWhere !== [] ? 'WHERE ' . implode(' AND ', $galleryWhere) : '';
+        $extraStatement = $pdo->prepare(
+            'SELECT
+                g.`title`,
+                g.`description`,
+                g.`category`,
+                g.`image`,
+                g.`uploaded_at` AS created_at,
+                "Gallery" AS source
+             FROM `gallery` g
+             ' . $galleryWhereSql . '
+             ORDER BY g.`uploaded_at` DESC, g.`id` DESC
+             LIMIT 80'
+        );
+        $extraStatement->execute($galleryParams);
+        $galleryItems = array_merge($extraStatement->fetchAll(PDO::FETCH_ASSOC), $galleryItems);
+    }
+
+    $galleryItems = array_slice($galleryItems, 0, 80);
+} catch (Throwable $exception) {
+    $galleryMessage = 'Gallery could not be loaded. Check that MySQL is running.';
+}
+
+ob_start();
+?>
+<section class="af-public-gallery-hero">
+    <div>
+        <nav aria-label="Breadcrumb">
+            <a href="index.php">Home</a>
+            <i class="bi bi-chevron-right" aria-hidden="true"></i>
+            <span>Gallery</span>
         </nav>
-
-        <div class="sidebar-user">
-            <img src="../assets/images/foodimage.jpeg" alt="">
-            <span>
-                <strong>Admin User</strong>
-                <small>Super Administrator</small>
-            </span>
-            <i class="bi bi-chevron-down" aria-hidden="true"></i>
-        </div>
-
-        <a class="logout-link" href="#"><i class="bi bi-box-arrow-left" aria-hidden="true"></i> Logout</a>
-    </aside>
-
-    <div class="dashboard-shell">
-        <header class="topbar">
-            <button class="menu-toggle" type="button" aria-label="Open navigation">
-                <i class="bi bi-list" aria-hidden="true"></i>
-            </button>
-
-            <label class="top-search" for="global_search">
-                <input type="search" id="global_search" name="global_search" placeholder="Search meals, images, albums...">
-                <i class="bi bi-search" aria-hidden="true"></i>
-            </label>
-
-            <div class="top-actions">
-                <button type="button" aria-label="Notifications">
-                    <i class="bi bi-bell" aria-hidden="true"></i>
-                    <span>6</span>
-                </button>
-                <button type="button" aria-label="Messages">
-                    <i class="bi bi-envelope" aria-hidden="true"></i>
-                    <span class="green">3</span>
-                </button>
-                <div class="admin-profile">
-                    <img src="../assets/images/foodimage.jpeg" alt="">
-                    <span>
-                        <strong>Admin User</strong>
-                        <small>Super Admin</small>
-                    </span>
-                    <i class="bi bi-chevron-down" aria-hidden="true"></i>
-                </div>
-            </div>
-        </header>
-
-        <main class="content">
-            <section class="page-heading">
-                <div>
-                    <h1>Gallery</h1>
-                    <p>Dashboard <i class="bi bi-chevron-right" aria-hidden="true"></i> Gallery</p>
-                </div>
-                <div class="heading-actions">
-                    <button type="button" class="outline-btn"><i class="bi bi-folder" aria-hidden="true"></i> Create Album</button>
-                    <button type="button" class="solid-btn"><i class="bi bi-cloud-arrow-up" aria-hidden="true"></i> Upload Images</button>
-                </div>
-            </section>
-
-            <section class="metric-grid" aria-label="Gallery summary">
-                <article class="metric-card green">
-                    <span><i class="bi bi-image" aria-hidden="true"></i></span>
-                    <div>
-                        <small>Total Images</small>
-                        <strong>428</strong>
-                        <p>All images</p>
-                    </div>
-                </article>
-
-                <article class="metric-card gold">
-                    <span><i class="bi bi-folder" aria-hidden="true"></i></span>
-                    <div>
-                        <small>Albums</small>
-                        <strong>18</strong>
-                        <p>Total albums</p>
-                    </div>
-                </article>
-
-                <article class="metric-card blue">
-                    <span><i class="bi bi-tag" aria-hidden="true"></i></span>
-                    <div>
-                        <small>Tags</small>
-                        <strong>24</strong>
-                        <p>Total tags</p>
-                    </div>
-                </article>
-
-                <article class="metric-card purple">
-                    <span><i class="bi bi-images" aria-hidden="true"></i></span>
-                    <div>
-                        <small>Storage Used</small>
-                        <strong>2.45 GB</strong>
-                        <p>of 10 GB Used (24.5%)</p>
-                        <span class="progress"><span></span></span>
-                    </div>
-                </article>
-            </section>
-
-            <section class="filter-panel" aria-label="Gallery filters">
-                <label class="gallery-search" for="gallery_search">
-                    <i class="bi bi-search" aria-hidden="true"></i>
-                    <input type="search" id="gallery_search" name="gallery_search" placeholder="Search images...">
-                </label>
-
-                <label>
-                    <span>Album</span>
-                    <select name="album">
-                        <option>All Albums</option>
-                        <option>Meals</option>
-                        <option>Events</option>
-                    </select>
-                </label>
-
-                <label>
-                    <span>Category</span>
-                    <select name="category">
-                        <option>All Categories</option>
-                        <option>Meals</option>
-                        <option>Soups</option>
-                        <option>Catering</option>
-                    </select>
-                </label>
-
-                <label>
-                    <span>Tag</span>
-                    <select name="tag">
-                        <option>All Tags</option>
-                        <option>Meals</option>
-                        <option>Events</option>
-                    </select>
-                </label>
-
-                <div class="filter-actions">
-                    <button type="button"><i class="bi bi-filter" aria-hidden="true"></i> Filter</button>
-                    <button type="button"><i class="bi bi-arrow-down-up" aria-hidden="true"></i> Sort</button>
-                </div>
-            </section>
-
-            <section class="gallery-grid" aria-label="Gallery images">
-                <article class="gallery-card">
-                    <div class="image-frame"><img src="../assets/images/foods/jollof-rice.png" alt="Jollof rice and chicken"><input type="checkbox" aria-label="Select Jollof Rice and Chicken"><button type="button" aria-label="More options"><i class="bi bi-three-dots-vertical"></i></button></div>
-                    <div class="card-body"><h2>Jollof Rice &amp; Chicken</h2><p>May 24, 2025 &bull; 1.2 MB</p><span class="tag meals">Meals</span></div>
-                </article>
-
-                <article class="gallery-card">
-                    <div class="image-frame"><img src="../assets/images/foods/grilled-chicken.png" alt="Grilled chicken platter"><input type="checkbox" aria-label="Select Grilled Chicken Platter"><button type="button" aria-label="More options"><i class="bi bi-three-dots-vertical"></i></button></div>
-                    <div class="card-body"><h2>Grilled Chicken Platter</h2><p>May 23, 2025 &bull; 1.1 MB</p><span class="tag meals">Meals</span></div>
-                </article>
-
-                <article class="gallery-card">
-                    <div class="image-frame"><img src="../assets/images/foods/light-soup.png" alt="Light soup bowl"><input type="checkbox" aria-label="Select Light Soup Bowl"><button type="button" aria-label="More options"><i class="bi bi-three-dots-vertical"></i></button></div>
-                    <div class="card-body"><h2>Light Soup Bowl</h2><p>May 22, 2025 &bull; 900 KB</p><span class="tag meals">Meals</span></div>
-                </article>
-
-                <article class="gallery-card">
-                    <div class="image-frame"><img src="../assets/images/foods/waakye.png" alt="Waakye Special"><input type="checkbox" aria-label="Select Waakye Special"><button type="button" aria-label="More options"><i class="bi bi-three-dots-vertical"></i></button></div>
-                    <div class="card-body"><h2>Waakye Special</h2><p>May 22, 2025 &bull; 1.3 MB</p><span class="tag meals">Meals</span></div>
-                </article>
-
-                <article class="gallery-card">
-                    <div class="image-frame"><img src="../assets/images/foods/grilled-chicken.png" alt="Grilled chicken salad"><input type="checkbox" aria-label="Select Grilled Chicken Salad"><button type="button" aria-label="More options"><i class="bi bi-three-dots-vertical"></i></button></div>
-                    <div class="card-body"><h2>Grilled Chicken Salad</h2><p>May 21, 2025 &bull; 980 KB</p><span class="tag salads">Salads</span></div>
-                </article>
-
-                <article class="gallery-card">
-                    <div class="image-frame"><img src="../assets/images/foods/light-soup.png" alt="Groundnut Soup"><input type="checkbox" aria-label="Select Groundnut Soup"><button type="button" aria-label="More options"><i class="bi bi-three-dots-vertical"></i></button></div>
-                    <div class="card-body"><h2>Groundnut Soup</h2><p>May 21, 2025 &bull; 870 KB</p><span class="tag soups">Soups</span></div>
-                </article>
-
-                <article class="gallery-card">
-                    <div class="image-frame"><img src="../assets/images/foods/fried-rice.png" alt="Fried Rice with Beef"><input type="checkbox" aria-label="Select Fried Rice with Beef"><button type="button" aria-label="More options"><i class="bi bi-three-dots-vertical"></i></button></div>
-                    <div class="card-body"><h2>Fried Rice with Beef</h2><p>May 20, 2025 &bull; 1.0 MB</p><span class="tag meals">Meals</span></div>
-                </article>
-
-                <article class="gallery-card">
-                    <div class="image-frame"><img src="../assets/images/foods/light-soup.png" alt="Okro Soup"><input type="checkbox" aria-label="Select Okro Soup"><button type="button" aria-label="More options"><i class="bi bi-three-dots-vertical"></i></button></div>
-                    <div class="card-body"><h2>Okro Soup</h2><p>May 20, 2025 &bull; 950 KB</p><span class="tag soups">Soups</span></div>
-                </article>
-
-                <article class="gallery-card">
-                    <div class="image-frame"><img src="../assets/images/foods/fruit-drink.png" alt="Fresh Fruit Juice"><input type="checkbox" aria-label="Select Fresh Fruit Juice"><button type="button" aria-label="More options"><i class="bi bi-three-dots-vertical"></i></button></div>
-                    <div class="card-body"><h2>Fresh Fruit Juice</h2><p>May 19, 2025 &bull; 780 KB</p><span class="tag drinks">Drinks</span></div>
-                </article>
-
-                <article class="gallery-card">
-                    <div class="image-frame"><img src="../assets/images/foods/grilled-chicken.png" alt="Event Catering"><input type="checkbox" aria-label="Select Event Catering"><button type="button" aria-label="More options"><i class="bi bi-three-dots-vertical"></i></button></div>
-                    <div class="card-body"><h2>Event Catering</h2><p>May 19, 2025 &bull; 1.6 MB</p><span class="tag catering">Catering</span></div>
-                </article>
-
-                <article class="gallery-card">
-                    <div class="image-frame"><img src="../assets/images/foods/stout.png" alt="Wedding beverage service"><input type="checkbox" aria-label="Select Wedding Beverage Service"><button type="button" aria-label="More options"><i class="bi bi-three-dots-vertical"></i></button></div>
-                    <div class="card-body"><h2>Event Beverage Service</h2><p>May 18, 2025 &bull; 1.4 MB</p><span class="tag events">Events</span></div>
-                </article>
-
-                <article class="gallery-card">
-                    <div class="image-frame"><img src="../assets/images/foods/waakye.png" alt="Meal Packages"><input type="checkbox" aria-label="Select Meal Packages"><button type="button" aria-label="More options"><i class="bi bi-three-dots-vertical"></i></button></div>
-                    <div class="card-body"><h2>Meal Packages</h2><p>May 18, 2025 &bull; 1.1 MB</p><span class="tag packages">Packages</span></div>
-                </article>
-            </section>
-
-            <footer class="gallery-footer">
-                <div class="bulk-actions">
-                    <label><input type="checkbox" aria-label="Select all images"> <span>0 selected</span></label>
-                    <select aria-label="Bulk actions"><option>Bulk Actions</option><option>Move to Album</option><option>Delete</option></select>
-                    <button type="button">Delete</button>
-                </div>
-
-                <p>Showing 1 to 12 of 428 images</p>
-
-                <nav class="pagination" aria-label="Pagination">
-                    <a href="#" aria-label="Previous page"><i class="bi bi-chevron-left"></i></a>
-                    <a class="active" href="#">1</a>
-                    <a href="#">2</a>
-                    <a href="#">3</a>
-                    <span>...</span>
-                    <a href="#">36</a>
-                    <a href="#" aria-label="Next page"><i class="bi bi-chevron-right"></i></a>
-                    <select aria-label="Items per page"><option>12 / page</option><option>24 / page</option></select>
-                </nav>
-            </footer>
-        </main>
+        <p>AfriSense Moments</p>
+        <h1>Food, Drinks &amp; Event Gallery</h1>
+        <span>See the meals, drinks, packages, and services available from AfriSense.</span>
     </div>
+</section>
 
-    <script src="../assets/js/gallery.js" defer></script>
-</body>
-</html>
+<section class="af-public-gallery-page">
+    <header class="af-public-gallery-heading">
+        <p>Browse Gallery</p>
+        <h2>Freshly Prepared, Beautifully Served</h2>
+        <small>Food Sold items and admin gallery uploads are shown from the same database-backed image source.</small>
+    </header>
+
+    <form class="af-public-gallery-toolbar" action="gallery.php" method="get">
+        <label>
+            <i class="bi bi-search" aria-hidden="true"></i>
+            <input type="search" name="search" value="<?php echo htmlspecialchars($search, ENT_QUOTES, 'UTF-8'); ?>" placeholder="Search gallery...">
+        </label>
+        <select name="category">
+            <option value="">All Categories</option>
+            <?php foreach ($categories as $category): ?>
+                <?php $categoryName = (string) ($category['category_name'] ?? 'Food'); ?>
+                <option value="<?php echo htmlspecialchars($categoryName, ENT_QUOTES, 'UTF-8'); ?>" <?php echo $categoryFilter === $categoryName ? 'selected' : ''; ?>>
+                    <?php echo htmlspecialchars($categoryName, ENT_QUOTES, 'UTF-8'); ?>
+                </option>
+            <?php endforeach; ?>
+        </select>
+        <button type="submit"><i class="bi bi-filter" aria-hidden="true"></i> Filter</button>
+        <a href="gallery.php">Reset</a>
+    </form>
+
+    <?php if ($galleryMessage !== ''): ?>
+        <div class="af-public-gallery-empty"><?php echo htmlspecialchars($galleryMessage, ENT_QUOTES, 'UTF-8'); ?></div>
+    <?php endif; ?>
+
+    <div class="af-public-gallery-grid">
+        <?php if ($galleryItems === [] && $galleryMessage === ''): ?>
+            <div class="af-public-gallery-empty">No gallery items match your filters.</div>
+        <?php endif; ?>
+
+        <?php foreach ($galleryItems as $item): ?>
+            <?php
+            $category = (string) ($item['category'] ?? 'Food');
+            $createdAt = strtotime((string) ($item['created_at'] ?? '')) ?: time();
+            ?>
+            <article class="af-public-gallery-card">
+                <img src="<?php echo htmlspecialchars(afrisense_public_gallery_image($frontendBase, (string) ($item['image'] ?? '')), ENT_QUOTES, 'UTF-8'); ?>" alt="<?php echo htmlspecialchars((string) ($item['title'] ?? 'Gallery item'), ENT_QUOTES, 'UTF-8'); ?>">
+                <div>
+                    <span class="<?php echo htmlspecialchars(afrisense_public_gallery_tag_class($category), ENT_QUOTES, 'UTF-8'); ?>"><?php echo htmlspecialchars($category, ENT_QUOTES, 'UTF-8'); ?></span>
+                    <h3><?php echo htmlspecialchars((string) ($item['title'] ?? 'Gallery item'), ENT_QUOTES, 'UTF-8'); ?></h3>
+                    <p><?php echo htmlspecialchars((string) ($item['description'] ?? 'AfriSense food service gallery image.'), ENT_QUOTES, 'UTF-8'); ?></p>
+                    <small><?php echo htmlspecialchars((string) ($item['source'] ?? 'Gallery'), ENT_QUOTES, 'UTF-8'); ?> • <?php echo htmlspecialchars(date('M j, Y', $createdAt), ENT_QUOTES, 'UTF-8'); ?></small>
+                </div>
+            </article>
+        <?php endforeach; ?>
+    </div>
+</section>
+<?php
+$content = ob_get_clean();
+require __DIR__ . '/../layouts/public_layout.php';
+?>

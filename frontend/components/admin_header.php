@@ -3,6 +3,31 @@ $adminTitle = $adminTitle ?? 'Dashboard';
 $adminName = $adminName ?? 'Admin User';
 $adminRole = $adminRole ?? 'Super Admin';
 $frontendBase = $frontendBase ?? '/Afrisense/frontend';
+$adminUnreadNotifications = 0;
+$adminUnreadEnquiries = 0;
+
+try {
+    if (isset($authUser['id'])) {
+        $notificationStatement = afrisense_pdo()->prepare(
+            'SELECT COUNT(*) AS count_value
+             FROM `notifications`
+             WHERE `user_id` = :user_id AND `is_read` = 0'
+        );
+        $notificationStatement->execute(['user_id' => (int) $authUser['id']]);
+        $adminUnreadNotifications = (int) ($notificationStatement->fetch(PDO::FETCH_ASSOC)['count_value'] ?? 0);
+    }
+
+    $enquiryStatement = afrisense_pdo()->prepare(
+        'SELECT COUNT(*) AS count_value
+         FROM `enquiries`
+         WHERE `status` = :status'
+    );
+    $enquiryStatement->execute(['status' => 'Pending']);
+    $adminUnreadEnquiries = (int) ($enquiryStatement->fetch(PDO::FETCH_ASSOC)['count_value'] ?? 0);
+} catch (Throwable $exception) {
+    $adminUnreadNotifications = 0;
+    $adminUnreadEnquiries = 0;
+}
 ?>
 <header class="af-dashboard-header af-admin-header">
     <a class="af-header-brand" href="<?php echo htmlspecialchars($frontendBase . '/admin/dashboard.php', ENT_QUOTES, 'UTF-8'); ?>" aria-label="AfriSense admin dashboard">
@@ -26,20 +51,20 @@ $frontendBase = $frontendBase ?? '/Afrisense/frontend';
     </label>
 
     <div class="af-header-actions">
-        <button class="af-header-action" type="button" aria-label="Notifications">
+        <a class="af-header-action" href="<?php echo htmlspecialchars($frontendBase . '/admin/notifications.php', ENT_QUOTES, 'UTF-8'); ?>" aria-label="Notifications">
             <span class="af-action-icon">
                 <i class="bi bi-bell" aria-hidden="true"></i>
-                <em>8</em>
+                <?php if ($adminUnreadNotifications > 0): ?><em><?php echo htmlspecialchars((string) min(99, $adminUnreadNotifications), ENT_QUOTES, 'UTF-8'); ?></em><?php endif; ?>
             </span>
             <small>Notifications</small>
-        </button>
-        <button class="af-header-action" type="button" aria-label="Messages">
+        </a>
+        <a class="af-header-action" href="<?php echo htmlspecialchars($frontendBase . '/admin/enquiries.php?status=Pending', ENT_QUOTES, 'UTF-8'); ?>" aria-label="Unread enquiries">
             <span class="af-action-icon">
                 <i class="bi bi-envelope" aria-hidden="true"></i>
-                <em class="is-green">5</em>
+                <?php if ($adminUnreadEnquiries > 0): ?><em class="is-green"><?php echo htmlspecialchars((string) min(99, $adminUnreadEnquiries), ENT_QUOTES, 'UTF-8'); ?></em><?php endif; ?>
             </span>
-            <small>Messages</small>
-        </button>
+            <small>Enquiries</small>
+        </a>
         <button class="af-header-action" type="button" aria-label="Fullscreen">
             <span class="af-action-icon">
                 <i class="bi bi-fullscreen" aria-hidden="true"></i>

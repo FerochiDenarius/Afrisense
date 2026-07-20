@@ -213,13 +213,18 @@ input {
     gap: 20px;
 }
 
-.top-actions button {
+.top-actions button,
+.top-actions a {
     position: relative;
     color: var(--text);
+    display: inline-grid;
+    place-items: center;
     font-size: 20px;
+    text-decoration: none;
 }
 
-.top-actions button span {
+.top-actions button span,
+.top-actions a span {
     position: absolute;
     top: -8px;
     right: -9px;
@@ -234,7 +239,8 @@ input {
     font-weight: 800;
 }
 
-.top-actions button span.green {
+.top-actions button span.green,
+.top-actions a span.green {
     background: #18a058;
 }
 

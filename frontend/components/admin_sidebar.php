@@ -39,6 +39,7 @@ $adminGroups = [
         'label' => 'Food Management',
         'items' => [
             ['key' => 'foods', 'label' => 'Foods Sold', 'icon' => 'bi-clipboard2-data', 'href' => $frontendBase . '/admin/foods.php'],
+            ['key' => 'gallery', 'label' => 'Gallery', 'icon' => 'bi-images', 'href' => $frontendBase . '/admin/gallery.php'],
         ],
     ],
     [

@@ -10,7 +10,8 @@ $extraStyles = [
 
 require_once __DIR__ . '/../auth/auth_bootstrap.php';
 
-afrisense_require_admin();
+$adminUser = afrisense_require_admin();
+$adminUserId = (int) ($adminUser['id'] ?? 0);
 
 function afrisense_booking_status_class(string $status): string
 {
@@ -35,6 +36,49 @@ function afrisense_count_bookings(PDO $pdo, ?string $status = null): int
     $row = $statement->fetch(PDO::FETCH_ASSOC);
 
     return (int) ($row['count_value'] ?? 0);
+}
+
+function afrisense_booking_customer_user_id(PDO $pdo, int $bookingId): ?int
+{
+    $statement = $pdo->prepare(
+        'SELECT u.`id`
+         FROM `bookings` b
+         INNER JOIN `customers` c ON c.`id` = b.`customer_id`
+         INNER JOIN `users` u
+            ON u.`email` = c.`email`
+            OR REPLACE(u.`phonenumber`, " ", "") = REPLACE(c.`phone_number`, " ", "")
+         WHERE b.`id` = :booking_id
+         ORDER BY u.`id` ASC
+         LIMIT 1'
+    );
+    $statement->execute(['booking_id' => $bookingId]);
+    $userId = $statement->fetchColumn();
+
+    return $userId !== false ? (int) $userId : null;
+}
+
+function afrisense_booking_notify_customer(PDO $pdo, int $bookingId, string $status, int $createdBy): void
+{
+    $userId = afrisense_booking_customer_user_id($pdo, $bookingId);
+
+    if ($userId === null || $userId <= 0) {
+        return;
+    }
+
+    $statement = $pdo->prepare(
+        'INSERT INTO `notifications`
+            (`user_id`, `title`, `message`, `notification_type`, `action_url`, `created_by`)
+         VALUES
+            (:user_id, :title, :message, :notification_type, :action_url, :created_by)'
+    );
+    $statement->execute([
+        'user_id' => $userId,
+        'title' => 'Booking Status Updated',
+        'message' => 'Your booking #' . str_pad((string) $bookingId, 6, '0', STR_PAD_LEFT) . ' is now ' . $status . '.',
+        'notification_type' => 'Booking',
+        'action_url' => '/Afrisense/frontend/customer/my-bookings.php',
+        'created_by' => $createdBy > 0 ? $createdBy : null,
+    ]);
 }
 
 $validStatuses = ['Pending', 'Confirmed', 'Completed', 'Cancelled'];
@@ -68,6 +112,10 @@ try {
             ]);
 
             $flashMessage = 'Booking status updated to ' . $nextStatus . '.';
+
+            if ($update->rowCount() > 0) {
+                afrisense_booking_notify_customer($pdo, $bookingId, $nextStatus, $adminUserId);
+            }
         }
     }
 

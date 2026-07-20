@@ -1,0 +1,463 @@
+.af-my-orders-page {
+    display: grid;
+    gap: 24px;
+}
+
+.af-my-orders-heading {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+}
+
+.af-my-orders-heading h1 {
+    margin: 0;
+    color: #0d241e;
+    font-family: Georgia, "Times New Roman", serif;
+    font-size: 34px;
+}
+
+.af-my-orders-heading p {
+    margin: 6px 0 0;
+    color: #5f6865;
+}
+
+.af-my-orders-heading a,
+.af-my-order-empty a,
+.af-my-order-details form button {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    min-height: 44px;
+    padding: 0 18px;
+    border: 0;
+    border-radius: 7px;
+    background: linear-gradient(135deg, #b77b1a, #cc8f25);
+    color: #fff;
+    font-weight: 800;
+    text-decoration: none;
+    cursor: pointer;
+}
+
+.af-my-order-metrics {
+    display: grid;
+    grid-template-columns: repeat(6, minmax(0, 1fr));
+    gap: 14px;
+}
+
+.af-my-order-metrics article {
+    display: flex;
+    gap: 12px;
+    min-height: 110px;
+    padding: 18px;
+    background: #fff;
+    border: 1px solid rgba(12, 35, 29, 0.1);
+    border-radius: 8px;
+    box-shadow: 0 10px 28px rgba(13, 36, 30, 0.07);
+}
+
+.af-my-order-metrics span {
+    display: inline-grid;
+    place-items: center;
+    flex: 0 0 42px;
+    width: 42px;
+    height: 42px;
+    border-radius: 50%;
+    background: rgba(183, 123, 26, 0.14);
+    color: #b77b1a;
+}
+
+.af-my-order-metrics small {
+    color: #0d241e;
+    font-weight: 800;
+}
+
+.af-my-order-metrics strong {
+    display: block;
+    margin-top: 8px;
+    color: #0d241e;
+    font-size: 25px;
+    line-height: 1;
+}
+
+.af-my-order-metrics p {
+    margin: 6px 0 0;
+    color: #69736f;
+    font-size: 12px;
+}
+
+.af-my-orders-layout {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) 360px;
+    gap: 22px;
+    align-items: start;
+}
+
+.af-my-orders-main,
+.af-my-order-details {
+    background: #fff;
+    border: 1px solid rgba(12, 35, 29, 0.1);
+    border-radius: 8px;
+    box-shadow: 0 12px 34px rgba(13, 36, 30, 0.08);
+}
+
+.af-my-orders-filters {
+    display: grid;
+    grid-template-columns: minmax(220px, 1fr) 180px 210px 110px;
+    gap: 12px;
+    padding: 18px;
+    border-bottom: 1px solid rgba(12, 35, 29, 0.08);
+}
+
+.af-my-orders-filters label {
+    position: relative;
+    display: flex;
+    align-items: center;
+    min-height: 44px;
+    border: 1px solid #dfe6e2;
+    border-radius: 7px;
+    background: #fff;
+}
+
+.af-my-orders-filters i {
+    margin-left: 13px;
+    color: #6d7773;
+}
+
+.af-my-orders-filters input,
+.af-my-orders-filters select {
+    width: 100%;
+    min-width: 0;
+    border: 0;
+    outline: 0;
+    background: transparent;
+    padding: 0 12px;
+    color: #0d241e;
+}
+
+.af-my-orders-filters select {
+    appearance: none;
+}
+
+.af-my-orders-filters label > .bi-chevron-down {
+    margin: 0 12px 0 0;
+}
+
+.af-my-orders-filters button {
+    border: 1px solid #dfe6e2;
+    border-radius: 7px;
+    background: #fff;
+    color: #0d241e;
+    font-weight: 800;
+}
+
+.af-my-orders-list {
+    display: grid;
+}
+
+.af-my-order-row {
+    display: grid;
+    grid-template-columns: 138px minmax(0, 1fr) 120px 145px;
+    gap: 16px;
+    align-items: center;
+    padding: 18px;
+    border-bottom: 1px solid rgba(12, 35, 29, 0.08);
+}
+
+.af-my-order-row:last-child {
+    border-bottom: 0;
+}
+
+.af-my-order-row.is-active {
+    background: linear-gradient(90deg, rgba(183, 123, 26, 0.08), transparent);
+}
+
+.af-my-order-row > img {
+    width: 126px;
+    height: 86px;
+    object-fit: cover;
+    border-radius: 7px;
+}
+
+.af-my-order-info h2 {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    align-items: center;
+    margin: 0 0 7px;
+    color: #0d241e;
+    font-size: 15px;
+}
+
+.af-my-order-info p,
+.af-my-order-info small {
+    display: block;
+    margin: 4px 0 0;
+    color: #56615d;
+}
+
+.af-my-order-price strong {
+    display: block;
+    color: #0d241e;
+    font-size: 16px;
+}
+
+.af-my-order-price span,
+.af-my-order-info h2 span,
+.af-my-order-details header span,
+.af-detail-payment span {
+    display: inline-flex;
+    margin-top: 8px;
+    padding: 5px 9px;
+    border-radius: 6px;
+    font-size: 12px;
+    font-weight: 800;
+}
+
+.pending {
+    background: #fff2dc;
+    color: #b66b00;
+}
+
+.confirmed,
+.delivered,
+.paid {
+    background: #e7f6e9;
+    color: #0a7a22;
+}
+
+.preparing,
+.way {
+    background: #e7f0ff;
+    color: #1d65c1;
+}
+
+.cancelled,
+.failed,
+.refunded {
+    background: #ffe7e7;
+    color: #c72222;
+}
+
+.af-my-order-actions {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.af-my-order-actions a {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 42px;
+    min-width: 112px;
+    border: 1px solid #dfe6e2;
+    border-radius: 7px;
+    color: #0d241e;
+    font-weight: 800;
+    text-decoration: none;
+}
+
+.af-my-order-actions i {
+    display: inline-grid;
+    place-items: center;
+    width: 42px;
+    height: 42px;
+    border: 1px solid #dfe6e2;
+    border-radius: 7px;
+}
+
+.af-my-order-empty {
+    display: grid;
+    place-items: center;
+    padding: 56px 24px;
+    text-align: center;
+}
+
+.af-my-order-empty i {
+    color: #b77b1a;
+    font-size: 36px;
+}
+
+.af-my-order-empty h2 {
+    margin: 12px 0 4px;
+    color: #0d241e;
+}
+
+.af-my-order-empty p,
+.af-my-order-empty-side {
+    color: #69736f;
+}
+
+.af-my-order-details {
+    position: sticky;
+    top: 96px;
+    padding: 20px;
+}
+
+.af-my-order-details header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+}
+
+.af-my-order-details h2,
+.af-my-order-details h3 {
+    margin: 0;
+    color: #0d241e;
+}
+
+.af-detail-highlight {
+    display: flex;
+    gap: 14px;
+    margin-top: 18px;
+    padding: 16px;
+    border-radius: 8px;
+    background: #fff4e4;
+}
+
+.af-detail-highlight i {
+    color: #b77b1a;
+    font-size: 24px;
+}
+
+.af-detail-highlight p,
+.af-detail-section p,
+.af-detail-payment p {
+    margin: 5px 0 0;
+    color: #5b6662;
+}
+
+.af-detail-section,
+.af-detail-items,
+.af-detail-payment {
+    margin-top: 22px;
+    padding-top: 20px;
+    border-top: 1px solid rgba(12, 35, 29, 0.1);
+}
+
+.af-detail-items {
+    display: grid;
+    gap: 14px;
+}
+
+.af-detail-items article {
+    display: grid;
+    grid-template-columns: 52px minmax(0, 1fr) auto;
+    gap: 12px;
+    align-items: center;
+}
+
+.af-detail-items img {
+    width: 52px;
+    height: 52px;
+    object-fit: cover;
+    border-radius: 7px;
+}
+
+.af-detail-items strong,
+.af-detail-items span {
+    color: #0d241e;
+}
+
+.af-detail-items span {
+    text-align: right;
+    font-weight: 800;
+}
+
+.af-detail-items small {
+    display: block;
+    margin-top: 4px;
+    color: #68736f;
+}
+
+.af-detail-total {
+    display: grid;
+    gap: 10px;
+    margin: 20px 0 0;
+    padding-top: 18px;
+    border-top: 1px solid rgba(12, 35, 29, 0.1);
+}
+
+.af-detail-total div {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+}
+
+.af-detail-total dt {
+    color: #69736f;
+}
+
+.af-detail-total dd {
+    margin: 0;
+    color: #0d241e;
+    font-weight: 800;
+}
+
+.af-detail-total div:last-child {
+    margin-top: 6px;
+    padding-top: 10px;
+    border-top: 1px solid rgba(12, 35, 29, 0.1);
+}
+
+.af-detail-total div:last-child dd {
+    font-size: 18px;
+}
+
+.af-my-order-details form {
+    margin-top: 20px;
+}
+
+.af-my-order-details form button {
+    width: 100%;
+    background: #0d241e;
+}
+
+@media (max-width: 1320px) {
+    .af-my-order-metrics {
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+    }
+
+    .af-my-orders-layout {
+        grid-template-columns: 1fr;
+    }
+
+    .af-my-order-details {
+        position: static;
+    }
+}
+
+@media (max-width: 900px) {
+    .af-my-orders-filters,
+    .af-my-order-row {
+        grid-template-columns: 1fr;
+    }
+
+    .af-my-order-row > img {
+        width: 100%;
+        height: 180px;
+    }
+
+    .af-my-order-actions {
+        justify-content: stretch;
+    }
+
+    .af-my-order-actions a {
+        flex: 1;
+    }
+}
+
+@media (max-width: 700px) {
+    .af-my-orders-heading {
+        align-items: stretch;
+        flex-direction: column;
+    }
+
+    .af-my-order-metrics {
+        grid-template-columns: 1fr;
+    }
+}

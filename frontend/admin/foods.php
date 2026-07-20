@@ -38,19 +38,82 @@ function afrisense_food_image(string $frontendBase, ?string $image): string
         return $frontendBase . '/assets/images/foods/jollof-rice.png';
     }
 
-    $filename = basename($image);
+    $relativeImage = ltrim(str_replace('\\', '/', $image), '/');
+    $filename = basename($relativeImage);
     $assetCandidate = __DIR__ . '/../assets/images/foods/' . $filename;
-    $uploadCandidate = __DIR__ . '/../uploads/' . $filename;
+    $uploadCandidate = __DIR__ . '/../uploads/' . $relativeImage;
+    $legacyUploadCandidate = __DIR__ . '/../uploads/' . $filename;
 
     if (is_file($assetCandidate)) {
         return $frontendBase . '/assets/images/foods/' . $filename;
     }
 
     if (is_file($uploadCandidate)) {
+        return $frontendBase . '/uploads/' . $relativeImage;
+    }
+
+    if (is_file($legacyUploadCandidate)) {
         return $frontendBase . '/uploads/' . $filename;
     }
 
     return $frontendBase . '/assets/images/foods/jollof-rice.png';
+}
+
+function afrisense_food_upload_image(): ?string
+{
+    $file = $_FILES['food_image'] ?? null;
+
+    if (!is_array($file) || (int) ($file['error'] ?? UPLOAD_ERR_NO_FILE) === UPLOAD_ERR_NO_FILE) {
+        return null;
+    }
+
+    if ((int) ($file['error'] ?? UPLOAD_ERR_OK) !== UPLOAD_ERR_OK) {
+        throw new RuntimeException('Food image could not be uploaded.');
+    }
+
+    if ((int) ($file['size'] ?? 0) > 5 * 1024 * 1024) {
+        throw new RuntimeException('Food image must be 5MB or smaller.');
+    }
+
+    $temporaryName = (string) ($file['tmp_name'] ?? '');
+    $finfo = finfo_open(FILEINFO_MIME_TYPE);
+    $mimeType = $finfo !== false ? (string) finfo_file($finfo, $temporaryName) : '';
+
+    if ($finfo !== false) {
+        finfo_close($finfo);
+    }
+    $allowedMimeTypes = [
+        'image/jpeg' => 'jpg',
+        'image/png' => 'png',
+        'image/webp' => 'webp',
+        'image/gif' => 'gif',
+    ];
+
+    if (!isset($allowedMimeTypes[$mimeType])) {
+        throw new RuntimeException('Food image must be JPG, PNG, WebP or GIF.');
+    }
+
+    $uploadRoot = __DIR__ . '/../uploads';
+    $uploadDirectory = $uploadRoot . '/foods';
+
+    foreach ([$uploadRoot, $uploadDirectory] as $directory) {
+        if (!is_dir($directory) && !mkdir($directory, 0775, true)) {
+            throw new RuntimeException('Food image upload folder could not be created.');
+        }
+
+        if (!is_writable($directory)) {
+            throw new RuntimeException('Food image upload folder is not writable by XAMPP.');
+        }
+    }
+
+    $filename = 'food-' . bin2hex(random_bytes(12)) . '.' . $allowedMimeTypes[$mimeType];
+    $destination = $uploadDirectory . DIRECTORY_SEPARATOR . $filename;
+
+    if (!move_uploaded_file($temporaryName, $destination)) {
+        throw new RuntimeException('Food image could not be saved.');
+    }
+
+    return 'foods/' . $filename;
 }
 
 $flashMessage = '';
@@ -58,6 +121,7 @@ $flashType = 'success';
 
 try {
     $pdo = afrisense_pdo();
+    $editFoodId = max(0, (int) ($_GET['edit'] ?? 0));
 
     if (($_SERVER['REQUEST_METHOD'] ?? 'GET') === 'POST') {
         $action = afrisense_post_string('action');
@@ -106,21 +170,126 @@ try {
                 $flashType = 'error';
                 $flashMessage = 'Food name, category and valid price are required.';
             } else {
+                try {
+                    $imagePath = afrisense_food_upload_image();
+                    $statement = $pdo->prepare(
+                        'INSERT INTO `foods`
+                            (`category_id`, `food_name`, `description`, `price`, `image`, `preparation_time`, `availability`)
+                         VALUES
+                            (:category_id, :food_name, :description, :price, :image, :preparation_time, :availability)'
+                    );
+                    $statement->execute([
+                        'category_id' => $categoryId,
+                        'food_name' => $foodName,
+                        'description' => afrisense_post_string('description'),
+                        'price' => $price,
+                        'image' => $imagePath,
+                        'preparation_time' => $preparationTime,
+                        'availability' => in_array($availability, ['Available', 'Unavailable'], true) ? $availability : 'Available',
+                    ]);
+                    $flashMessage = 'Food item added.';
+                } catch (RuntimeException $exception) {
+                    $flashType = 'error';
+                    $flashMessage = $exception->getMessage();
+                }
+            }
+        }
+
+        if ($action === 'update_food') {
+            $foodId = (int) ($_POST['food_id'] ?? 0);
+            $foodName = afrisense_post_string('food_name');
+            $categoryId = (int) ($_POST['category_id'] ?? 0);
+            $price = (float) ($_POST['price'] ?? 0);
+            $preparationTime = max(1, (int) ($_POST['preparation_time'] ?? 15));
+            $availability = afrisense_post_string('availability', 'Available');
+
+            if ($foodId <= 0 || $foodName === '' || $categoryId <= 0 || $price <= 0) {
+                $flashType = 'error';
+                $flashMessage = 'Food name, category and valid price are required.';
+                $editFoodId = $foodId;
+            } else {
+                try {
+                    $imagePath = afrisense_food_upload_image();
+
+                    if ($imagePath !== null) {
+                        $statement = $pdo->prepare(
+                            'UPDATE `foods`
+                             SET `category_id` = :category_id,
+                                 `food_name` = :food_name,
+                                 `description` = :description,
+                                 `price` = :price,
+                                 `image` = :image,
+                                 `preparation_time` = :preparation_time,
+                                 `availability` = :availability,
+                                 `updated_at` = NOW()
+                             WHERE `id` = :id'
+                        );
+                        $statement->execute([
+                            'category_id' => $categoryId,
+                            'food_name' => $foodName,
+                            'description' => afrisense_post_string('description'),
+                            'price' => $price,
+                            'image' => $imagePath,
+                            'preparation_time' => $preparationTime,
+                            'availability' => in_array($availability, ['Available', 'Unavailable'], true) ? $availability : 'Available',
+                            'id' => $foodId,
+                        ]);
+                    } else {
+                        $statement = $pdo->prepare(
+                            'UPDATE `foods`
+                             SET `category_id` = :category_id,
+                                 `food_name` = :food_name,
+                                 `description` = :description,
+                                 `price` = :price,
+                                 `preparation_time` = :preparation_time,
+                                 `availability` = :availability,
+                                 `updated_at` = NOW()
+                             WHERE `id` = :id'
+                        );
+                        $statement->execute([
+                            'category_id' => $categoryId,
+                            'food_name' => $foodName,
+                            'description' => afrisense_post_string('description'),
+                            'price' => $price,
+                            'preparation_time' => $preparationTime,
+                            'availability' => in_array($availability, ['Available', 'Unavailable'], true) ? $availability : 'Available',
+                            'id' => $foodId,
+                        ]);
+                    }
+
+                    $flashMessage = 'Food item updated.';
+                    $editFoodId = $foodId;
+                } catch (RuntimeException $exception) {
+                    $flashType = 'error';
+                    $flashMessage = $exception->getMessage();
+                    $editFoodId = $foodId;
+                }
+            }
+        }
+
+        if ($action === 'toggle_availability') {
+            $foodId = (int) ($_POST['food_id'] ?? 0);
+
+            if ($foodId > 0) {
                 $statement = $pdo->prepare(
-                    'INSERT INTO `foods`
-                        (`category_id`, `food_name`, `description`, `price`, `preparation_time`, `availability`)
-                     VALUES
-                        (:category_id, :food_name, :description, :price, :preparation_time, :availability)'
+                    'UPDATE `foods`
+                     SET `availability` = CASE WHEN `availability` = "Available" THEN "Unavailable" ELSE "Available" END,
+                         `updated_at` = NOW()
+                     WHERE `id` = :id'
                 );
-                $statement->execute([
-                    'category_id' => $categoryId,
-                    'food_name' => $foodName,
-                    'description' => afrisense_post_string('description'),
-                    'price' => $price,
-                    'preparation_time' => $preparationTime,
-                    'availability' => in_array($availability, ['Available', 'Unavailable'], true) ? $availability : 'Available',
-                ]);
-                $flashMessage = 'Food item added.';
+                $statement->execute(['id' => $foodId]);
+                $flashMessage = 'Food availability updated.';
+            }
+        }
+
+        if ($action === 'delete_food') {
+            $foodId = (int) ($_POST['food_id'] ?? 0);
+
+            if ($foodId > 0) {
+                $statement = $pdo->prepare('DELETE FROM `foods` WHERE `id` = :id');
+                $statement->execute(['id' => $foodId]);
+                $flashMessage = 'Food item deleted.';
+                $editFoodId = 0;
             }
         }
     }
@@ -156,10 +325,36 @@ try {
     );
     $categoryStatement->execute();
     $categories = $categoryStatement->fetchAll(PDO::FETCH_ASSOC);
+
+    $selectedFood = null;
+
+    if ($editFoodId > 0) {
+        $editStatement = $pdo->prepare(
+            'SELECT
+                f.`id`,
+                f.`category_id`,
+                f.`food_name`,
+                f.`description`,
+                f.`price`,
+                f.`image`,
+                f.`preparation_time`,
+                f.`availability`,
+                COALESCE(c.`category_name`, "Uncategorized") AS category_name
+             FROM `foods` f
+             LEFT JOIN `food_categories` c ON c.`id` = f.`category_id`
+             WHERE f.`id` = :id
+             LIMIT 1'
+        );
+        $editStatement->execute(['id' => $editFoodId]);
+        $selectedFood = $editStatement->fetch(PDO::FETCH_ASSOC) ?: null;
+    }
+
     $loadError = '';
 } catch (Throwable $exception) {
     $foods = [];
     $categories = [];
+    $selectedFood = null;
+    $editFoodId = 0;
     $loadError = 'Foods could not be loaded. Check that MySQL is running.';
 }
 
@@ -294,9 +489,19 @@ ob_start();
                                 <td><span class="af-status <?php echo $isAvailable ? 'active' : 'out'; ?>"><?php echo htmlspecialchars((string) ($food['availability'] ?? 'Unavailable'), ENT_QUOTES, 'UTF-8'); ?></span></td>
                                 <td>
                                     <div class="af-row-actions">
-                                        <button type="button" aria-label="Edit <?php echo htmlspecialchars($foodName, ENT_QUOTES, 'UTF-8'); ?>"><i class="bi bi-pencil-square" aria-hidden="true"></i></button>
-                                        <button type="button" aria-label="Disable <?php echo htmlspecialchars($foodName, ENT_QUOTES, 'UTF-8'); ?>"><i class="bi bi-slash-circle" aria-hidden="true"></i></button>
-                                        <button class="danger" type="button" aria-label="Delete <?php echo htmlspecialchars($foodName, ENT_QUOTES, 'UTF-8'); ?>"><i class="bi bi-trash" aria-hidden="true"></i></button>
+                                        <a href="foods.php?edit=<?php echo htmlspecialchars((string) ($food['id'] ?? 0), ENT_QUOTES, 'UTF-8'); ?>#edit_food_form" aria-label="Edit <?php echo htmlspecialchars($foodName, ENT_QUOTES, 'UTF-8'); ?>"><i class="bi bi-pencil-square" aria-hidden="true"></i></a>
+                                        <form action="foods.php" method="post">
+                                            <input type="hidden" name="action" value="toggle_availability">
+                                            <input type="hidden" name="food_id" value="<?php echo htmlspecialchars((string) ($food['id'] ?? 0), ENT_QUOTES, 'UTF-8'); ?>">
+                                            <button class="<?php echo $isAvailable ? 'warning' : 'success'; ?>" type="submit" aria-label="<?php echo $isAvailable ? 'Disable' : 'Enable'; ?> <?php echo htmlspecialchars($foodName, ENT_QUOTES, 'UTF-8'); ?>">
+                                                <i class="bi <?php echo $isAvailable ? 'bi-slash-circle' : 'bi-check2-circle'; ?>" aria-hidden="true"></i>
+                                            </button>
+                                        </form>
+                                        <form action="foods.php" method="post">
+                                            <input type="hidden" name="action" value="delete_food">
+                                            <input type="hidden" name="food_id" value="<?php echo htmlspecialchars((string) ($food['id'] ?? 0), ENT_QUOTES, 'UTF-8'); ?>">
+                                            <button class="danger" type="submit" aria-label="Delete <?php echo htmlspecialchars($foodName, ENT_QUOTES, 'UTF-8'); ?>"><i class="bi bi-trash" aria-hidden="true"></i></button>
+                                        </form>
                                     </div>
                                 </td>
                             </tr>
@@ -333,10 +538,73 @@ ob_start();
                 </ul>
             </section>
 
+            <?php if ($selectedFood !== null): ?>
+                <section class="af-menu-panel af-food-edit-panel" id="edit_food_form">
+                    <h2>Edit Food / Drink</h2>
+                    <div class="af-food-edit-preview">
+                        <img src="<?php echo htmlspecialchars(afrisense_food_image($frontendBase, (string) ($selectedFood['image'] ?? '')), ENT_QUOTES, 'UTF-8'); ?>" alt="">
+                        <span>
+                            <strong><?php echo htmlspecialchars((string) ($selectedFood['food_name'] ?? 'Food item'), ENT_QUOTES, 'UTF-8'); ?></strong>
+                            <small><?php echo htmlspecialchars((string) ($selectedFood['category_name'] ?? 'Category'), ENT_QUOTES, 'UTF-8'); ?></small>
+                        </span>
+                    </div>
+                    <form class="af-food-management-form" action="foods.php?edit=<?php echo htmlspecialchars((string) ($selectedFood['id'] ?? 0), ENT_QUOTES, 'UTF-8'); ?>#edit_food_form" method="post" enctype="multipart/form-data">
+                        <input type="hidden" name="action" value="update_food">
+                        <input type="hidden" name="food_id" value="<?php echo htmlspecialchars((string) ($selectedFood['id'] ?? 0), ENT_QUOTES, 'UTF-8'); ?>">
+                        <label class="af-food-image-upload">
+                            <span>Replace Image</span>
+                            <input type="file" name="food_image" accept="image/jpeg,image/png,image/webp,image/gif">
+                            <strong><i class="bi bi-image" aria-hidden="true"></i> Choose new image</strong>
+                            <small>Leave empty to keep the current image.</small>
+                        </label>
+                        <label>
+                            <span>Food Name</span>
+                            <input type="text" name="food_name" value="<?php echo htmlspecialchars((string) ($selectedFood['food_name'] ?? ''), ENT_QUOTES, 'UTF-8'); ?>" required>
+                        </label>
+                        <label>
+                            <span>Category</span>
+                            <select name="category_id" required>
+                                <?php foreach ($categories as $category): ?>
+                                    <option value="<?php echo htmlspecialchars((string) ($category['id'] ?? ''), ENT_QUOTES, 'UTF-8'); ?>" <?php echo (int) ($selectedFood['category_id'] ?? 0) === (int) ($category['id'] ?? 0) ? 'selected' : ''; ?>>
+                                        <?php echo htmlspecialchars((string) $category['category_name'], ENT_QUOTES, 'UTF-8'); ?>
+                                    </option>
+                                <?php endforeach; ?>
+                            </select>
+                        </label>
+                        <label>
+                            <span>Price (GHS)</span>
+                            <input type="number" name="price" min="0.01" step="0.01" value="<?php echo htmlspecialchars((string) ($selectedFood['price'] ?? '0.00'), ENT_QUOTES, 'UTF-8'); ?>" required>
+                        </label>
+                        <label>
+                            <span>Preparation Time</span>
+                            <input type="number" name="preparation_time" min="1" step="1" value="<?php echo htmlspecialchars((string) ((int) ($selectedFood['preparation_time'] ?? 15)), ENT_QUOTES, 'UTF-8'); ?>" required>
+                        </label>
+                        <label>
+                            <span>Availability</span>
+                            <select name="availability">
+                                <option value="Available" <?php echo (string) ($selectedFood['availability'] ?? '') === 'Available' ? 'selected' : ''; ?>>Available</option>
+                                <option value="Unavailable" <?php echo (string) ($selectedFood['availability'] ?? '') === 'Unavailable' ? 'selected' : ''; ?>>Unavailable</option>
+                            </select>
+                        </label>
+                        <label>
+                            <span>Description</span>
+                            <textarea name="description" rows="3"><?php echo htmlspecialchars((string) ($selectedFood['description'] ?? ''), ENT_QUOTES, 'UTF-8'); ?></textarea>
+                        </label>
+                        <button type="submit"><i class="bi bi-save" aria-hidden="true"></i> Update Food</button>
+                    </form>
+                </section>
+            <?php endif; ?>
+
             <section class="af-menu-panel">
                 <h2>Add Food</h2>
-                <form id="add_food_form" class="af-food-management-form" action="foods.php" method="post">
+                <form id="add_food_form" class="af-food-management-form" action="foods.php" method="post" enctype="multipart/form-data">
                     <input type="hidden" name="action" value="add_food">
+                    <label class="af-food-image-upload">
+                        <span>Food / Drink Image</span>
+                        <input type="file" name="food_image" accept="image/jpeg,image/png,image/webp,image/gif">
+                        <strong><i class="bi bi-image" aria-hidden="true"></i> Choose image</strong>
+                        <small>JPG, PNG, WebP or GIF. Max 5MB.</small>
+                    </label>
                     <label>
                         <span>Food Name</span>
                         <input type="text" name="food_name" placeholder="e.g. Jollof Rice" required>

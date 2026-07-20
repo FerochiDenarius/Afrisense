@@ -5,6 +5,14 @@ $activePage = 'contact';
 $extraStyles = [$frontendBase . '/assets/css/enquiries.css'];
 $extraScripts = [$frontendBase . '/assets/js/enquiries.js'];
 
+require_once __DIR__ . '/enquiry_helpers.php';
+
+$enquiryMessage = null;
+
+if (($_SERVER['REQUEST_METHOD'] ?? 'GET') === 'POST') {
+    $enquiryMessage = afrisense_submit_public_enquiry($_POST, 'General Enquiry');
+}
+
 ob_start();
 ?>
 <section class="af-enquiry-hero">
@@ -38,13 +46,18 @@ ob_start();
                 </div>
             </header>
 
-            <form class="af-enquiry-form" action="#" method="post">
+            <form class="af-enquiry-form" action="enquiries.php" method="post">
+                <?php if ($enquiryMessage !== null): ?>
+                    <p class="af-form-status <?php echo $enquiryMessage['success'] ? 'is-success' : 'is-error'; ?>" aria-live="polite">
+                        <?php echo htmlspecialchars((string) $enquiryMessage['message'], ENT_QUOTES, 'UTF-8'); ?>
+                    </p>
+                <?php endif; ?>
                 <div class="af-field-grid">
                     <div class="af-form-group">
                         <label for="full_name">Full Name <strong>*</strong></label>
                         <div class="af-input-icon">
                             <i class="bi bi-person" aria-hidden="true"></i>
-                            <input type="text" id="full_name" name="full_name" placeholder="Enter your full name" required>
+                            <input type="text" id="full_name" name="full_name" value="<?php echo htmlspecialchars((string) ($_POST['full_name'] ?? ''), ENT_QUOTES, 'UTF-8'); ?>" placeholder="Enter your full name" required>
                         </div>
                     </div>
 
@@ -52,7 +65,7 @@ ob_start();
                         <label for="email">Email Address <strong>*</strong></label>
                         <div class="af-input-icon">
                             <i class="bi bi-envelope" aria-hidden="true"></i>
-                            <input type="email" id="email" name="email" placeholder="Enter your email address" required>
+                            <input type="email" id="email" name="email" value="<?php echo htmlspecialchars((string) ($_POST['email'] ?? ''), ENT_QUOTES, 'UTF-8'); ?>" placeholder="Enter your email address" required>
                         </div>
                     </div>
 
@@ -60,7 +73,7 @@ ob_start();
                         <label for="phone">Phone Number <strong>*</strong></label>
                         <div class="af-input-icon">
                             <i class="bi bi-telephone" aria-hidden="true"></i>
-                            <input type="tel" id="phone" name="phone" placeholder="Enter your phone number" required>
+                            <input type="tel" id="phone" name="phone" value="<?php echo htmlspecialchars((string) ($_POST['phone'] ?? ''), ENT_QUOTES, 'UTF-8'); ?>" placeholder="Enter your phone number" required>
                         </div>
                     </div>
 
@@ -69,10 +82,19 @@ ob_start();
                         <div class="af-select-wrap">
                             <select id="subject" name="subject" required>
                                 <option value="">Select enquiry subject</option>
-                                <option value="general">General Enquiry</option>
-                                <option value="catering">Catering &amp; Events</option>
-                                <option value="orders">Orders &amp; Delivery</option>
-                                <option value="support">Customer Support</option>
+                                <?php
+                                $subjectOptions = [
+                                    'General Enquiry',
+                                    'Catering & Events',
+                                    'Orders & Delivery',
+                                    'Customer Support',
+                                ];
+                                ?>
+                                <?php foreach ($subjectOptions as $subjectOption): ?>
+                                    <option value="<?php echo htmlspecialchars($subjectOption, ENT_QUOTES, 'UTF-8'); ?>" <?php echo (string) ($_POST['subject'] ?? '') === $subjectOption ? 'selected' : ''; ?>>
+                                        <?php echo htmlspecialchars($subjectOption, ENT_QUOTES, 'UTF-8'); ?>
+                                    </option>
+                                <?php endforeach; ?>
                             </select>
                             <i class="bi bi-chevron-down" aria-hidden="true"></i>
                         </div>
@@ -82,29 +104,29 @@ ob_start();
                 <fieldset class="af-enquiry-types">
                     <legend>Enquiry Type</legend>
 
-                    <label class="is-active">
-                        <input type="radio" name="enquiry_type" value="general" checked>
+                    <label class="<?php echo (string) ($_POST['enquiry_type'] ?? 'general') === 'general' ? 'is-active' : ''; ?>">
+                        <input type="radio" name="enquiry_type" value="general" <?php echo (string) ($_POST['enquiry_type'] ?? 'general') === 'general' ? 'checked' : ''; ?>>
                         <span class="af-type-check"><i class="bi bi-check" aria-hidden="true"></i></span>
                         <i class="bi bi-question-circle" aria-hidden="true"></i>
                         <strong>General Enquiry</strong>
                     </label>
 
-                    <label>
-                        <input type="radio" name="enquiry_type" value="catering">
+                    <label class="<?php echo (string) ($_POST['enquiry_type'] ?? '') === 'catering' ? 'is-active' : ''; ?>">
+                        <input type="radio" name="enquiry_type" value="catering" <?php echo (string) ($_POST['enquiry_type'] ?? '') === 'catering' ? 'checked' : ''; ?>>
                         <span class="af-type-check"><i class="bi bi-check" aria-hidden="true"></i></span>
                         <i class="bi bi-bell" aria-hidden="true"></i>
                         <strong>Catering &amp; Events</strong>
                     </label>
 
-                    <label>
-                        <input type="radio" name="enquiry_type" value="orders">
+                    <label class="<?php echo (string) ($_POST['enquiry_type'] ?? '') === 'orders' ? 'is-active' : ''; ?>">
+                        <input type="radio" name="enquiry_type" value="orders" <?php echo (string) ($_POST['enquiry_type'] ?? '') === 'orders' ? 'checked' : ''; ?>>
                         <span class="af-type-check"><i class="bi bi-truck" aria-hidden="true"></i></span>
                         <i class="bi bi-scooter" aria-hidden="true"></i>
                         <strong>Orders &amp; Delivery</strong>
                     </label>
 
-                    <label>
-                        <input type="radio" name="enquiry_type" value="other">
+                    <label class="<?php echo (string) ($_POST['enquiry_type'] ?? '') === 'other' ? 'is-active' : ''; ?>">
+                        <input type="radio" name="enquiry_type" value="other" <?php echo (string) ($_POST['enquiry_type'] ?? '') === 'other' ? 'checked' : ''; ?>>
                         <span class="af-type-check"><i class="bi bi-check" aria-hidden="true"></i></span>
                         <i class="bi bi-three-dots" aria-hidden="true"></i>
                         <strong>Other</strong>
@@ -114,7 +136,7 @@ ob_start();
                 <div class="af-form-group af-message-group">
                     <label for="message">Message <strong>*</strong></label>
                     <div class="af-textarea-wrap">
-                        <textarea id="message" name="message" placeholder="Type your message here..." required></textarea>
+                        <textarea id="message" name="message" placeholder="Type your message here..." required><?php echo htmlspecialchars((string) ($_POST['message'] ?? ''), ENT_QUOTES, 'UTF-8'); ?></textarea>
                         <i class="bi bi-pencil" aria-hidden="true"></i>
                     </div>
                 </div>

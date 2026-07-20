@@ -311,15 +311,34 @@ function afrisense_send_email(string $toEmail, string $toName, string $subject, 
     $error = curl_error($curl);
     curl_close($curl);
 
+    $decodedBody = [];
+
+    if (is_string($body) && $body !== '') {
+        $decoded = json_decode($body, true);
+        $decodedBody = is_array($decoded) ? $decoded : [];
+    }
+
     if ($body === false || $statusCode < 200 || $statusCode >= 300) {
+        $providerMessage = (string) (
+            $decodedBody['message']
+            ?? $decodedBody['error']
+            ?? $decodedBody['name']
+            ?? ''
+        );
+
         return [
             'success' => false,
-            'message' => $error !== '' ? $error : 'Resend rejected the email request.',
+            'message' => $error !== '' ? $error : ($providerMessage !== '' ? $providerMessage : 'Resend rejected the email request.'),
             'status_code' => $statusCode,
         ];
     }
 
-    return ['success' => true, 'message' => 'Email sent.'];
+    return [
+        'success' => true,
+        'message' => 'Email sent.',
+        'provider_id' => (string) ($decodedBody['id'] ?? ''),
+        'status_code' => $statusCode,
+    ];
 }
 
 function afrisense_send_verification_email(string $email, string $fullname, string $token): array

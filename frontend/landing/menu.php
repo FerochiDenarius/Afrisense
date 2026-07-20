@@ -10,10 +10,19 @@ require_once __DIR__ . '/../auth/auth_bootstrap.php';
 function afrisense_menu_food_image(string $frontendBase, ?string $image): string
 {
     $image = trim((string) $image);
-    $filename = basename($image);
+    $relativeImage = ltrim(str_replace('\\', '/', $image), '/');
+    $filename = basename($relativeImage);
 
     if ($image !== '' && is_file(__DIR__ . '/../assets/images/foods/' . $filename)) {
         return $frontendBase . '/assets/images/foods/' . $filename;
+    }
+
+    if ($relativeImage !== '' && is_file(__DIR__ . '/../uploads/' . $relativeImage)) {
+        return $frontendBase . '/uploads/' . $relativeImage;
+    }
+
+    if ($filename !== '' && is_file(__DIR__ . '/../uploads/' . $filename)) {
+        return $frontendBase . '/uploads/' . $filename;
     }
 
     return $frontendBase . '/assets/images/foods/jollof-rice.png';

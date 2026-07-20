@@ -1,5 +1,18 @@
 <?php
+require_once __DIR__ . '/../includes/public_settings.php';
+
 $frontendBase = $frontendBase ?? '/Afrisense/frontend';
+$publicSettings = afrisense_public_settings();
+$websiteSettings = $publicSettings['website'];
+$companySettings = $publicSettings['company'];
+$siteName = (string) ($websiteSettings['site_name'] ?? 'AfriSense Food Services');
+$siteTagline = (string) ($websiteSettings['site_tagline'] ?? 'Delicious meals, delivered with love.');
+$footerText = (string) ($websiteSettings['footer_text'] ?? '(c) 2026 AfriSense Food Services. All rights reserved.');
+$primaryPhone = (string) ($companySettings['phone_number_1'] ?? '+233 24 123 4567');
+$secondaryPhone = (string) ($companySettings['phone_number_2'] ?? '');
+$companyEmail = (string) ($companySettings['company_email'] ?? 'info@afrisense.com');
+$companyAddress = (string) ($companySettings['address'] ?? 'Accra, Ghana');
+$businessHours = (string) ($companySettings['business_hours'] ?? 'Mon - Sun: 8:00 AM - 10:00 PM');
 ?>
 <footer class="af-footer">
     <div class="af-footer-grid">
@@ -7,16 +20,16 @@ $frontendBase = $frontendBase ?? '/Afrisense/frontend';
             <a class="af-brand" href="<?php echo htmlspecialchars($frontendBase . '/landing/index.php', ENT_QUOTES, 'UTF-8'); ?>" aria-label="AfriSense home">
                 <span class="af-brand-icon" aria-hidden="true"><i class="bi bi-cup-hot"></i></span>
                 <span>
-                    <strong>AfriSense</strong>
+                    <strong><?php echo htmlspecialchars(str_replace(' Food Services', '', $siteName), ENT_QUOTES, 'UTF-8'); ?></strong>
                     <small>Food Services</small>
                 </span>
             </a>
-            <p>Providing delicious meals and exceptional catering services for all occasions. Taste, quality and excellence you can trust.</p>
+            <p><?php echo htmlspecialchars($siteTagline, ENT_QUOTES, 'UTF-8'); ?></p>
             <div class="af-social-links" aria-label="Social links">
-                <a href="https://www.facebook.com/" aria-label="Facebook"><i class="bi bi-facebook" aria-hidden="true"></i></a>
-                <a href="https://www.instagram.com/" aria-label="Instagram"><i class="bi bi-instagram" aria-hidden="true"></i></a>
-                <a href="https://twitter.com/" aria-label="Twitter"><i class="bi bi-twitter-x" aria-hidden="true"></i></a>
-                <a href="https://wa.me/233241234567" aria-label="WhatsApp"><i class="bi bi-whatsapp" aria-hidden="true"></i></a>
+                <?php foreach (afrisense_public_social_links() as $social): ?>
+                    <a href="<?php echo htmlspecialchars($social['url'], ENT_QUOTES, 'UTF-8'); ?>" aria-label="<?php echo htmlspecialchars($social['label'], ENT_QUOTES, 'UTF-8'); ?>"><i class="bi <?php echo htmlspecialchars($social['icon'], ENT_QUOTES, 'UTF-8'); ?>" aria-hidden="true"></i></a>
+                <?php endforeach; ?>
+                <a href="https://wa.me/<?php echo htmlspecialchars(preg_replace('/\D+/', '', $primaryPhone), ENT_QUOTES, 'UTF-8'); ?>" aria-label="WhatsApp"><i class="bi bi-whatsapp" aria-hidden="true"></i></a>
             </div>
         </section>
 
@@ -29,6 +42,7 @@ $frontendBase = $frontendBase ?? '/Afrisense/frontend';
                 <li><a href="<?php echo htmlspecialchars($frontendBase . '/landing/index.php', ENT_QUOTES, 'UTF-8'); ?>">Home</a></li>
                 <li><a href="<?php echo htmlspecialchars($frontendBase . '/landing/about.php', ENT_QUOTES, 'UTF-8'); ?>">About Us</a></li>
                 <li><a href="<?php echo htmlspecialchars($frontendBase . '/landing/menu.php', ENT_QUOTES, 'UTF-8'); ?>">Our Menu</a></li>
+                <li><a href="<?php echo htmlspecialchars($frontendBase . '/landing/gallery.php', ENT_QUOTES, 'UTF-8'); ?>">Gallery</a></li>
                 <li><a href="<?php echo htmlspecialchars($frontendBase . '/landing/services.php', ENT_QUOTES, 'UTF-8'); ?>">Catering Packages</a></li>
                 <li><a href="<?php echo htmlspecialchars($frontendBase . '/landing/booking.php', ENT_QUOTES, 'UTF-8'); ?>">Book a Service</a></li>
                 <li><a href="<?php echo htmlspecialchars($frontendBase . '/landing/contact.php', ENT_QUOTES, 'UTF-8'); ?>">Contact Us</a></li>
@@ -56,10 +70,10 @@ $frontendBase = $frontendBase ?? '/Afrisense/frontend';
                 <i class="bi bi-chevron-down" aria-hidden="true"></i>
             </button>
             <ul class="af-contact-list">
-                <li><i class="bi bi-telephone" aria-hidden="true"></i> <span>+233 24 123 4567<br>+233 20 987 6543</span></li>
-                <li><i class="bi bi-envelope" aria-hidden="true"></i> info@afrisense.com</li>
-                <li><i class="bi bi-geo-alt" aria-hidden="true"></i> <span>15 Senchi Street,<br>Airport Residential Area<br>Accra, Ghana</span></li>
-                <li><i class="bi bi-clock" aria-hidden="true"></i> Mon - Sun: 8:00 AM - 10:00 PM</li>
+                <li><i class="bi bi-telephone" aria-hidden="true"></i> <span><?php echo htmlspecialchars($primaryPhone, ENT_QUOTES, 'UTF-8'); ?><?php echo $secondaryPhone !== '' ? '<br>' . htmlspecialchars($secondaryPhone, ENT_QUOTES, 'UTF-8') : ''; ?></span></li>
+                <li><i class="bi bi-envelope" aria-hidden="true"></i> <?php echo htmlspecialchars($companyEmail, ENT_QUOTES, 'UTF-8'); ?></li>
+                <li><i class="bi bi-geo-alt" aria-hidden="true"></i> <span><?php echo nl2br(htmlspecialchars($companyAddress, ENT_QUOTES, 'UTF-8')); ?></span></li>
+                <li><i class="bi bi-clock" aria-hidden="true"></i> <?php echo nl2br(htmlspecialchars($businessHours, ENT_QUOTES, 'UTF-8')); ?></li>
             </ul>
         </section>
 
@@ -79,7 +93,7 @@ $frontendBase = $frontendBase ?? '/Afrisense/frontend';
     </div>
 
     <div class="af-footer-bottom">
-        <p>&copy; 2024 AfriSense Food Services. All Rights Reserved.</p>
+        <p><?php echo htmlspecialchars($footerText, ENT_QUOTES, 'UTF-8'); ?></p>
         <nav aria-label="Footer links">
             <a href="<?php echo htmlspecialchars($frontendBase . '/landing/privacy.php', ENT_QUOTES, 'UTF-8'); ?>">Privacy Policy</a>
             <a href="<?php echo htmlspecialchars($frontendBase . '/landing/terms.php', ENT_QUOTES, 'UTF-8'); ?>">Terms &amp; Conditions</a>

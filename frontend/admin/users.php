@@ -38,14 +38,117 @@ function afrisense_user_role_class(string $role): string
     };
 }
 
+function afrisense_admin_user_form_value(string $key): string
+{
+    return trim((string) ($_POST[$key] ?? ''));
+}
+
 try {
     $pdo = afrisense_pdo();
+    $search = trim((string) ($_GET['search'] ?? ''));
+    $roleFilter = (int) ($_GET['role'] ?? 0);
+    $verifiedFilter = trim((string) ($_GET['verified'] ?? ''));
+    $flashMessage = '';
+    $flashType = 'success';
+
+    $rolesStatement = $pdo->prepare('SELECT `id`, `rolename` FROM `roles` ORDER BY `rolename` ASC');
+    $rolesStatement->execute();
+    $roles = $rolesStatement->fetchAll(PDO::FETCH_ASSOC);
+
+    if (($_SERVER['REQUEST_METHOD'] ?? 'GET') === 'POST' && ($_POST['action'] ?? '') === 'create_user') {
+        $fullname = afrisense_admin_user_form_value('fullname');
+        $username = afrisense_admin_user_form_value('username');
+        $email = strtolower(afrisense_admin_user_form_value('email'));
+        $phone = preg_replace('/\s+/', '', afrisense_admin_user_form_value('phonenumber'));
+        $password = (string) ($_POST['password'] ?? '');
+        $roleId = (int) ($_POST['role_id'] ?? 0);
+        $emailVerified = isset($_POST['email_verified']) ? 1 : 0;
+
+        if ($fullname === '' || $email === '' || $phone === '' || $password === '' || $roleId <= 0) {
+            $flashType = 'error';
+            $flashMessage = 'Full name, email, phone, password and role are required.';
+        } elseif (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
+            $flashType = 'error';
+            $flashMessage = 'Enter a valid email address.';
+        } elseif (strlen($phone) < 10 || strlen($phone) > 13) {
+            $flashType = 'error';
+            $flashMessage = 'Phone number must be between 10 and 13 digits.';
+        } elseif (strlen($password) < 8) {
+            $flashType = 'error';
+            $flashMessage = 'Password must be at least 8 characters.';
+        } else {
+            $roleCheck = $pdo->prepare('SELECT COUNT(*) AS count_value FROM `roles` WHERE `id` = :id');
+            $roleCheck->execute(['id' => $roleId]);
+            $roleExists = ((int) ($roleCheck->fetch(PDO::FETCH_ASSOC)['count_value'] ?? 0)) > 0;
+
+            $duplicate = $pdo->prepare(
+                'SELECT COUNT(*) AS count_value
+                 FROM `users`
+                 WHERE `email` = :email OR `username` = :username OR `phonenumber` = :phone'
+            );
+            $username = $username !== '' ? $username : afrisense_unique_username($pdo, $email, $fullname);
+            $duplicate->execute([
+                'email' => $email,
+                'username' => $username,
+                'phone' => $phone,
+            ]);
+
+            if (!$roleExists) {
+                $flashType = 'error';
+                $flashMessage = 'Selected role does not exist.';
+            } elseif (((int) ($duplicate->fetch(PDO::FETCH_ASSOC)['count_value'] ?? 0)) > 0) {
+                $flashType = 'error';
+                $flashMessage = 'A user with that email, username or phone already exists.';
+            } else {
+                $insert = $pdo->prepare(
+                    'INSERT INTO `users`
+                        (`fullname`, `username`, `email`, `phonenumber`, `password`, `role_id`, `email_verified`)
+                     VALUES
+                        (:fullname, :username, :email, :phone, :password, :role_id, :email_verified)'
+                );
+                $insert->execute([
+                    'fullname' => $fullname,
+                    'username' => $username,
+                    'email' => $email,
+                    'phone' => $phone,
+                    'password' => password_hash($password, PASSWORD_DEFAULT),
+                    'role_id' => $roleId,
+                    'email_verified' => $emailVerified,
+                ]);
+
+                $flashMessage = 'User "' . $fullname . '" created successfully.';
+            }
+        }
+    }
+
     $totalUsers = afrisense_count_users($pdo);
     $customerUsers = afrisense_count_users($pdo, 'LOWER(COALESCE(r.`rolename`, \'\')) = :role', ['role' => 'customer']);
     $adminUsers = afrisense_count_users($pdo, 'LOWER(COALESCE(r.`rolename`, \'\')) IN (\'administrator\', \'admin\', \'super admin\')');
     $riderUsers = afrisense_count_users($pdo, 'LOWER(COALESCE(r.`rolename`, \'\')) LIKE :role', ['role' => '%rider%']);
     $staffUsers = max(0, $totalUsers - $customerUsers - $adminUsers - $riderUsers);
 
+    $where = [];
+    $params = [];
+
+    if ($search !== '') {
+        $where[] = '(u.`fullname` LIKE :search OR u.`username` LIKE :search OR u.`email` LIKE :search OR u.`phonenumber` LIKE :search)';
+        $params['search'] = '%' . $search . '%';
+    }
+
+    if ($roleFilter > 0) {
+        $where[] = 'u.`role_id` = :role_id';
+        $params['role_id'] = $roleFilter;
+    }
+
+    if ($verifiedFilter === 'verified') {
+        $where[] = 'u.`email_verified` = 1';
+    }
+
+    if ($verifiedFilter === 'pending') {
+        $where[] = 'COALESCE(u.`email_verified`, 0) = 0';
+    }
+
+    $whereSql = $where !== [] ? 'WHERE ' . implode(' AND ', $where) : '';
     $statement = $pdo->prepare(
         'SELECT
             u.`id`,
@@ -58,10 +161,11 @@ try {
             COALESCE(r.`rolename`, \'Unassigned\') AS role_name
          FROM `users` u
          LEFT JOIN `roles` r ON r.`id` = u.`role_id`
+         ' . $whereSql . '
          ORDER BY u.`id` DESC
          LIMIT 25'
     );
-    $statement->execute();
+    $statement->execute($params);
     $users = $statement->fetchAll(PDO::FETCH_ASSOC);
     $loadError = '';
 } catch (Throwable $exception) {
@@ -71,6 +175,12 @@ try {
     $riderUsers = 0;
     $adminUsers = 0;
     $users = [];
+    $roles = [];
+    $search = '';
+    $roleFilter = 0;
+    $verifiedFilter = '';
+    $flashMessage = '';
+    $flashType = 'error';
     $loadError = 'Users could not be loaded. Check that MySQL is running.';
 }
 
@@ -82,14 +192,17 @@ ob_start();
             <h1>Users</h1>
             <p>Manage all users in the system. View, edit and manage accounts and their roles.</p>
         </div>
-        <button class="af-add-menu-btn" type="button">
+        <a class="af-add-menu-btn" href="#add_user_form">
             <i class="bi bi-person-plus" aria-hidden="true"></i>
             Add New User
-        </button>
+        </a>
     </header>
 
     <?php if ($loadError !== ''): ?>
         <div class="af-admin-alert error"><?php echo htmlspecialchars($loadError, ENT_QUOTES, 'UTF-8'); ?></div>
+    <?php endif; ?>
+    <?php if ($flashMessage !== ''): ?>
+        <div class="af-admin-alert <?php echo htmlspecialchars($flashType, ENT_QUOTES, 'UTF-8'); ?>"><?php echo htmlspecialchars($flashMessage, ENT_QUOTES, 'UTF-8'); ?></div>
     <?php endif; ?>
 
     <section class="af-menu-metrics af-user-metrics" aria-label="User summary">
@@ -115,18 +228,66 @@ ob_start();
         </article>
     </section>
 
+    <section class="af-menu-table-card af-user-create-card">
+        <header class="af-table-toolbar">
+            <h2>Add User / Staff</h2>
+            <p>Create a staff, rider, customer or admin account using the roles already in the system.</p>
+        </header>
+        <form id="add_user_form" class="af-food-management-form af-user-create-form" action="users.php#add_user_form" method="post">
+            <input type="hidden" name="action" value="create_user">
+            <label>
+                <span>Full Name</span>
+                <input type="text" name="fullname" value="<?php echo htmlspecialchars(afrisense_admin_user_form_value('fullname'), ENT_QUOTES, 'UTF-8'); ?>" placeholder="Enter full name" required>
+            </label>
+            <label>
+                <span>Username</span>
+                <input type="text" name="username" value="<?php echo htmlspecialchars(afrisense_admin_user_form_value('username'), ENT_QUOTES, 'UTF-8'); ?>" placeholder="Auto from email if blank">
+            </label>
+            <label>
+                <span>Email</span>
+                <input type="email" name="email" value="<?php echo htmlspecialchars(afrisense_admin_user_form_value('email'), ENT_QUOTES, 'UTF-8'); ?>" placeholder="name@example.com" required>
+            </label>
+            <label>
+                <span>Phone</span>
+                <input type="tel" name="phonenumber" value="<?php echo htmlspecialchars(afrisense_admin_user_form_value('phonenumber'), ENT_QUOTES, 'UTF-8'); ?>" placeholder="0240000000" required>
+            </label>
+            <label>
+                <span>Role</span>
+                <select name="role_id" required>
+                    <option value="">Select role</option>
+                    <?php foreach ($roles as $role): ?>
+                        <option value="<?php echo htmlspecialchars((string) ($role['id'] ?? 0), ENT_QUOTES, 'UTF-8'); ?>" <?php echo (int) ($_POST['role_id'] ?? 0) === (int) ($role['id'] ?? 0) ? 'selected' : ''; ?>>
+                            <?php echo htmlspecialchars((string) ($role['rolename'] ?? 'Role'), ENT_QUOTES, 'UTF-8'); ?>
+                        </option>
+                    <?php endforeach; ?>
+                </select>
+            </label>
+            <label>
+                <span>Password</span>
+                <input type="password" name="password" placeholder="At least 8 characters" required>
+            </label>
+            <label class="af-user-verify-check">
+                <input type="checkbox" name="email_verified" value="1" checked>
+                <span>Email verified</span>
+            </label>
+            <button type="submit"><i class="bi bi-person-plus" aria-hidden="true"></i> Create User</button>
+        </form>
+    </section>
+
     <section class="af-menu-table-card">
-        <form class="af-menu-filters af-users-filters" action="#" method="get">
+        <form class="af-menu-filters af-users-filters" action="users.php" method="get">
             <label class="af-menu-search" for="user_search">
                 <i class="bi bi-search" aria-hidden="true"></i>
-                <input type="search" id="user_search" name="search" placeholder="Search by name, email or phone...">
+                <input type="search" id="user_search" name="search" value="<?php echo htmlspecialchars($search, ENT_QUOTES, 'UTF-8'); ?>" placeholder="Search by name, email or phone...">
             </label>
             <label class="af-menu-select" for="role_filter">
                 <select id="role_filter" name="role">
-                    <option>All Roles</option>
-                    <option>Administrator</option>
-                    <option>Customer</option>
-                    <option>Staff</option>
+                    <option value="">All Roles</option>
+                    <?php foreach ($roles as $role): ?>
+                        <option value="<?php echo htmlspecialchars((string) ($role['id'] ?? 0), ENT_QUOTES, 'UTF-8'); ?>" <?php echo $roleFilter === (int) ($role['id'] ?? 0) ? 'selected' : ''; ?>>
+                            <?php echo htmlspecialchars((string) ($role['rolename'] ?? 'Role'), ENT_QUOTES, 'UTF-8'); ?>
+                        </option>
+                    <?php endforeach; ?>
                 </select>
                 <i class="bi bi-chevron-down" aria-hidden="true"></i>
             </label>
@@ -140,9 +301,9 @@ ob_start();
             </label>
             <label class="af-menu-select" for="verified_filter">
                 <select id="verified_filter" name="verified">
-                    <option>All Verified</option>
-                    <option>Email Verified</option>
-                    <option>Pending Verification</option>
+                    <option value="">All Verified</option>
+                    <option value="verified" <?php echo $verifiedFilter === 'verified' ? 'selected' : ''; ?>>Email Verified</option>
+                    <option value="pending" <?php echo $verifiedFilter === 'pending' ? 'selected' : ''; ?>>Pending Verification</option>
                 </select>
                 <i class="bi bi-chevron-down" aria-hidden="true"></i>
             </label>

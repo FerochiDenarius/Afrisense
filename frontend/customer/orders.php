@@ -2,7 +2,7 @@
 $frontendBase = '/Afrisense/frontend';
 $pageTitle = 'Order Food | AfriSense';
 $customerTitle = 'Order Food';
-$activeCustomerPage = 'orders';
+$activeCustomerPage = 'place_order';
 $extraStyles = [$frontendBase . '/assets/css/orders.css'];
 $extraScripts = [$frontendBase . '/assets/js/orders.js'];
 
@@ -12,10 +12,19 @@ require_once __DIR__ . '/../auth/auth_bootstrap.php';
 
 function afrisense_customer_order_image(string $frontendBase, ?string $image): string
 {
-    $filename = basename(trim((string) $image));
+    $relativeImage = ltrim(str_replace('\\', '/', trim((string) $image)), '/');
+    $filename = basename($relativeImage);
 
     if ($filename !== '' && is_file(__DIR__ . '/../assets/images/foods/' . $filename)) {
         return $frontendBase . '/assets/images/foods/' . $filename;
+    }
+
+    if ($relativeImage !== '' && is_file(__DIR__ . '/../uploads/' . $relativeImage)) {
+        return $frontendBase . '/uploads/' . $relativeImage;
+    }
+
+    if ($filename !== '' && is_file(__DIR__ . '/../uploads/' . $filename)) {
+        return $frontendBase . '/uploads/' . $filename;
     }
 
     return $frontendBase . '/assets/images/foods/jollof-rice.png';
@@ -137,7 +146,7 @@ function afrisense_customer_admin_notifications(PDO $pdo, array $orderIds, strin
             'title' => 'New Order Received',
             'message' => count($orderIds) . ' order item(s) have been placed by ' . $customerName . '.',
             'notification_type' => 'Order',
-            'action_url' => '/Afrisense/frontend/admin/orders.php',
+            'action_url' => '/Afrisense/frontend/admin/orders.php?view=' . (int) $orderIds[0] . '#order-row-' . (int) $orderIds[0],
             'created_by' => (int) ($_SESSION['user_id'] ?? 0) ?: null,
         ]);
     }
@@ -213,6 +222,7 @@ try {
                         (:customer_id, :food_id, :quantity, :total_price, :delivery_address, :special_instructions, :payment_method, :payment_status, :order_status)'
                 );
                 $orderIds = [];
+                $deliveryFeeApplied = false;
 
                 foreach ($cart as $cartFoodId => $quantity) {
                     if (!isset($prices[(int) $cartFoodId])) {
@@ -220,11 +230,18 @@ try {
                     }
 
                     $quantity = max(1, min(20, (int) $quantity));
+                    $lineTotal = ($prices[(int) $cartFoodId] * $quantity);
+
+                    if (!$deliveryFeeApplied) {
+                        $lineTotal += 10.00;
+                        $deliveryFeeApplied = true;
+                    }
+
                     $insert->execute([
                         'customer_id' => $customerId,
                         'food_id' => (int) $cartFoodId,
                         'quantity' => $quantity,
-                        'total_price' => ($prices[(int) $cartFoodId] * $quantity),
+                        'total_price' => $lineTotal,
                         'delivery_address' => $deliveryAddress,
                         'special_instructions' => $cartNote,
                         'payment_method' => $paymentMethod,
@@ -486,8 +503,7 @@ ob_start();
                     <button type="submit">Save Note</button>
                 </form>
 
-                <form class="af-checkout-form" action="orders.php" method="post">
-                    <input type="hidden" name="action" value="checkout">
+                <form class="af-checkout-form" action="cart.php" method="get">
                     <label for="delivery_address">Delivery Address</label>
                     <textarea id="delivery_address" name="delivery_address" rows="2" placeholder="Enter delivery address" required><?php echo htmlspecialchars($defaultAddress, ENT_QUOTES, 'UTF-8'); ?></textarea>
                     <label for="payment_method">Payment Method</label>
@@ -501,7 +517,7 @@ ob_start();
                         <div><dt>Delivery Fee</dt><dd>GH₵ <?php echo htmlspecialchars(number_format($deliveryFee, 2), ENT_QUOTES, 'UTF-8'); ?></dd></div>
                         <div><dt>Total</dt><dd>GH₵ <?php echo htmlspecialchars(number_format($total, 2), ENT_QUOTES, 'UTF-8'); ?></dd></div>
                     </dl>
-                    <button class="af-checkout-btn" type="submit" <?php echo $cartFoods === [] ? 'disabled' : ''; ?>><i class="bi bi-bag-check" aria-hidden="true"></i> Proceed to Checkout</button>
+                    <button class="af-checkout-btn" type="submit" <?php echo $cartFoods === [] ? 'disabled' : ''; ?>><i class="bi bi-bag-check" aria-hidden="true"></i> View Cart &amp; Checkout</button>
                 </form>
 
                 <p class="af-secure-note"><i class="bi bi-lock" aria-hidden="true"></i> Your payment information is secure and encrypted.</p>

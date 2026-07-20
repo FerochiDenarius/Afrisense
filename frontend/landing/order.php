@@ -5,28 +5,67 @@ $activePage = 'menu';
 $publicHeaderMode = 'shop';
 $extraStyles = [$frontendBase . '/assets/css/order-payment.css'];
 $extraScripts = [$frontendBase . '/assets/js/order.js'];
-$foodImageBase = $frontendBase . '/assets/images/foods';
 
 require_once __DIR__ . '/../auth/auth_bootstrap.php';
 
-function afrisense_order_post(string $key, string $fallback = ''): string
-{
-    return trim((string) ($_POST[$key] ?? $fallback));
-}
+\AfriSense\Backend\Helpers\Session::start();
 
-function afrisense_public_food_image(string $frontendBase, ?string $image): string
+function afrisense_guest_food_image(string $frontendBase, ?string $image): string
 {
-    $image = trim((string) $image);
-    $filename = basename($image);
+    $relativeImage = ltrim(str_replace('\\', '/', trim((string) $image)), '/');
+    $filename = basename($relativeImage);
 
-    if ($image !== '' && is_file(__DIR__ . '/../assets/images/foods/' . $filename)) {
+    if ($filename !== '' && is_file(__DIR__ . '/../assets/images/foods/' . $filename)) {
         return $frontendBase . '/assets/images/foods/' . $filename;
+    }
+
+    if ($relativeImage !== '' && is_file(__DIR__ . '/../uploads/' . $relativeImage)) {
+        return $frontendBase . '/uploads/' . $relativeImage;
+    }
+
+    if ($filename !== '' && is_file(__DIR__ . '/../uploads/' . $filename)) {
+        return $frontendBase . '/uploads/' . $filename;
     }
 
     return $frontendBase . '/assets/images/foods/jollof-rice.png';
 }
 
-function afrisense_order_customer_id(PDO $pdo, string $fullname, string $email, string $phone, string $address): int
+function afrisense_guest_cart(): array
+{
+    $cart = $_SESSION['afrisense_guest_cart'] ?? [];
+
+    return is_array($cart) ? $cart : [];
+}
+
+function afrisense_save_guest_cart(array $cart): void
+{
+    $_SESSION['afrisense_guest_cart'] = array_filter($cart, static fn (int $quantity): bool => $quantity > 0);
+}
+
+function afrisense_guest_cart_count(array $cart): int
+{
+    return array_sum(array_map('intval', $cart));
+}
+
+function afrisense_guest_post(string $key, string $fallback = ''): string
+{
+    return trim((string) ($_POST[$key] ?? $fallback));
+}
+
+function afrisense_guest_category_filter(string $category): array
+{
+    return match ($category) {
+        'main' => ['c.`category_name` IN (\'Main Course\', \'Main Dishes\')', []],
+        'rice' => ['f.`food_name` LIKE :rice_name', ['rice_name' => '%Rice%']],
+        'soups' => ['f.`food_name` LIKE :soup_name', ['soup_name' => '%Soup%']],
+        'snacks' => ['c.`category_name` IN (\'Fast Food\', \'Snacks & Sides\')', []],
+        'drinks' => ['c.`category_name` = :drink_category', ['drink_category' => 'Drinks']],
+        'desserts' => ['c.`category_name` = :dessert_category', ['dessert_category' => 'Desserts']],
+        default => ['', []],
+    };
+}
+
+function afrisense_guest_customer_id(PDO $pdo, string $fullname, string $email, string $phone, string $address): int
 {
     $statement = $pdo->prepare(
         'SELECT `id`
@@ -73,16 +112,20 @@ function afrisense_order_customer_id(PDO $pdo, string $fullname, string $email, 
     return (int) $pdo->lastInsertId();
 }
 
-function afrisense_create_order_notification(PDO $pdo, int $orderId, string $customerName): void
+function afrisense_guest_order_notifications(PDO $pdo, array $orderIds, string $customerName): void
 {
-    $adminStatement = $pdo->prepare(
+    if ($orderIds === []) {
+        return;
+    }
+
+    $admins = $pdo->prepare(
         "SELECT u.`id`
          FROM `users` u
          INNER JOIN `roles` r ON r.`id` = u.`role_id`
          WHERE LOWER(COALESCE(r.`rolename`, '')) IN ('administrator', 'admin', 'super admin')"
     );
-    $adminStatement->execute();
-    $adminIds = $adminStatement->fetchAll(PDO::FETCH_COLUMN);
+    $admins->execute();
+    $adminIds = $admins->fetchAll(PDO::FETCH_COLUMN);
 
     if ($adminIds === []) {
         return;
@@ -99,138 +142,182 @@ function afrisense_create_order_notification(PDO $pdo, int $orderId, string $cus
         $notification->execute([
             'user_id' => (int) $adminId,
             'title' => 'New Order Received',
-            'message' => 'Order #ORD-' . str_pad((string) $orderId, 6, '0', STR_PAD_LEFT) . ' has been placed by ' . $customerName . '.',
+            'message' => count($orderIds) . ' order item(s) have been placed by ' . $customerName . '.',
             'notification_type' => 'Order',
-            'action_url' => '/Afrisense/frontend/admin/orders.php',
+            'action_url' => '/Afrisense/frontend/admin/orders.php?view=' . (int) $orderIds[0] . '#order-row-' . (int) $orderIds[0],
             'created_by' => null,
         ]);
     }
 }
 
-$orderMessage = null;
-$foods = [];
-$categories = [];
-$selectedFoodId = (int) ($_POST['food_id'] ?? $_GET['food_id'] ?? 0);
-$quantity = max(1, min(20, (int) ($_POST['quantity'] ?? 1)));
+$cart = afrisense_guest_cart();
+$note = (string) ($_SESSION['afrisense_guest_cart_note'] ?? '');
+$message = null;
 $search = trim((string) ($_GET['search'] ?? ''));
-$categoryFilter = trim((string) ($_GET['category'] ?? ''));
-$sort = trim((string) ($_GET['sort'] ?? ''));
-$currentUser = afrisense_current_user();
-$defaultName = (string) ($currentUser['fullname'] ?? '');
-$defaultEmail = (string) ($currentUser['email'] ?? '');
-$defaultPhone = (string) ($currentUser['phonenumber'] ?? $currentUser['phone'] ?? '');
+$category = trim((string) ($_GET['category'] ?? 'all'));
+$sort = trim((string) ($_GET['sort'] ?? 'popular'));
 
 try {
     $pdo = afrisense_pdo();
 
-    $categoryStatement = $pdo->prepare(
-        'SELECT c.`id`, c.`category_name`, COUNT(f.`id`) AS food_count
-         FROM `food_categories` c
-         INNER JOIN `foods` f ON f.`category_id` = c.`id` AND f.`availability` = :availability
-         GROUP BY c.`id`, c.`category_name`
-         ORDER BY c.`category_name` ASC'
-    );
-    $categoryStatement->execute(['availability' => 'Available']);
-    $categories = $categoryStatement->fetchAll(PDO::FETCH_ASSOC);
+    if (($_SERVER['REQUEST_METHOD'] ?? 'GET') === 'POST') {
+        $action = afrisense_guest_post('action');
+        $foodId = (int) ($_POST['food_id'] ?? 0);
+
+        if ($action === 'add_to_cart' && $foodId > 0) {
+            $cart[$foodId] = min(20, ((int) ($cart[$foodId] ?? 0)) + 1);
+            $message = ['type' => 'success', 'text' => 'Item added to your order.'];
+        }
+
+        if ($action === 'increase' && isset($cart[$foodId])) {
+            $cart[$foodId] = min(20, (int) $cart[$foodId] + 1);
+        }
+
+        if ($action === 'decrease' && isset($cart[$foodId])) {
+            $cart[$foodId] = (int) $cart[$foodId] - 1;
+        }
+
+        if ($action === 'remove') {
+            unset($cart[$foodId]);
+        }
+
+        if ($action === 'clear_cart') {
+            $cart = [];
+            $_SESSION['afrisense_guest_cart_note'] = '';
+        }
+
+        if ($action === 'save_note') {
+            $_SESSION['afrisense_guest_cart_note'] = afrisense_guest_post('cart_note');
+            $note = (string) $_SESSION['afrisense_guest_cart_note'];
+        }
+
+        if ($action === 'checkout') {
+            $fullname = afrisense_guest_post('fullname');
+            $email = afrisense_guest_post('email');
+            $phone = preg_replace('/\s+/', '', afrisense_guest_post('phone'));
+            $address = afrisense_guest_post('delivery_address');
+            $paymentMethod = afrisense_guest_post('payment_method', 'Cash');
+            $note = afrisense_guest_post('cart_note', $note);
+
+            if ($cart === [] || $fullname === '' || !filter_var($email, FILTER_VALIDATE_EMAIL) || $phone === '' || $address === '' || !in_array($paymentMethod, ['Cash', 'Mobile Money', 'Card'], true)) {
+                $message = ['type' => 'error', 'text' => 'Complete your contact, delivery and payment details before checkout.'];
+            } else {
+                $foodIds = array_keys($cart);
+                $placeholders = implode(',', array_fill(0, count($foodIds), '?'));
+                $foodLookup = $pdo->prepare(
+                    'SELECT `id`, `price`
+                     FROM `foods`
+                     WHERE `availability` = \'Available\' AND `id` IN (' . $placeholders . ')'
+                );
+                $foodLookup->execute(array_map('intval', $foodIds));
+                $prices = [];
+
+                foreach ($foodLookup->fetchAll(PDO::FETCH_ASSOC) as $food) {
+                    $prices[(int) $food['id']] = (float) $food['price'];
+                }
+
+                $pdo->beginTransaction();
+                $customerId = afrisense_guest_customer_id($pdo, $fullname, $email, $phone, $address);
+                $insert = $pdo->prepare(
+                    'INSERT INTO `orders`
+                        (`customer_id`, `food_id`, `quantity`, `total_price`, `delivery_address`, `special_instructions`, `payment_method`, `payment_status`, `order_status`)
+                     VALUES
+                        (:customer_id, :food_id, :quantity, :total_price, :delivery_address, :special_instructions, :payment_method, :payment_status, :order_status)'
+                );
+                $createdOrderIds = [];
+                $deliveryFeeApplied = false;
+
+                foreach ($cart as $cartFoodId => $quantity) {
+                    if (!isset($prices[(int) $cartFoodId])) {
+                        continue;
+                    }
+
+                    $quantity = max(1, min(20, (int) $quantity));
+                    $lineTotal = $prices[(int) $cartFoodId] * $quantity;
+
+                    if (!$deliveryFeeApplied) {
+                        $lineTotal += 10.00;
+                        $deliveryFeeApplied = true;
+                    }
+
+                    $insert->execute([
+                        'customer_id' => $customerId,
+                        'food_id' => (int) $cartFoodId,
+                        'quantity' => $quantity,
+                        'total_price' => $lineTotal,
+                        'delivery_address' => $address,
+                        'special_instructions' => $note,
+                        'payment_method' => $paymentMethod,
+                        'payment_status' => 'Pending',
+                        'order_status' => 'Pending',
+                    ]);
+                    $createdOrderIds[] = (int) $pdo->lastInsertId();
+                }
+
+                afrisense_guest_order_notifications($pdo, $createdOrderIds, $fullname);
+                $pdo->commit();
+                $cart = [];
+                $_SESSION['afrisense_guest_cart_note'] = '';
+                $note = '';
+                $message = ['type' => 'success', 'text' => 'Your order has been placed successfully.'];
+            }
+        }
+
+        afrisense_save_guest_cart($cart);
+    }
 
     $where = ['f.`availability` = :availability'];
     $params = ['availability' => 'Available'];
+    [$categorySql, $categoryParams] = afrisense_guest_category_filter($category);
+
+    if ($categorySql !== '') {
+        $where[] = $categorySql;
+        $params = array_merge($params, $categoryParams);
+    }
 
     if ($search !== '') {
         $where[] = '(f.`food_name` LIKE :search OR f.`description` LIKE :search OR c.`category_name` LIKE :search)';
         $params['search'] = '%' . $search . '%';
     }
 
-    if ($categoryFilter !== '') {
-        $where[] = 'c.`category_name` = :category';
-        $params['category'] = $categoryFilter;
-    }
-
     $orderBy = match ($sort) {
+        'newest' => 'f.`created_at` DESC, f.`id` DESC',
         'price_asc' => 'f.`price` ASC, f.`food_name` ASC',
         'price_desc' => 'f.`price` DESC, f.`food_name` ASC',
-        'newest' => 'f.`created_at` DESC, f.`id` DESC',
+        'best' => 'f.`id` ASC',
         default => 'f.`id` ASC',
     };
 
-    $foodStatement = $pdo->prepare(
+    $foodsStatement = $pdo->prepare(
         'SELECT
             f.`id`,
             f.`food_name`,
             f.`description`,
             f.`price`,
             f.`image`,
-            f.`preparation_time`,
             c.`category_name`
          FROM `foods` f
          INNER JOIN `food_categories` c ON c.`id` = f.`category_id`
          WHERE ' . implode(' AND ', $where) . '
          ORDER BY ' . $orderBy
     );
-    $foodStatement->execute($params);
-    $foods = $foodStatement->fetchAll(PDO::FETCH_ASSOC);
+    $foodsStatement->execute($params);
+    $foods = $foodsStatement->fetchAll(PDO::FETCH_ASSOC);
 
-    if ($selectedFoodId <= 0 && $foods !== []) {
-        $selectedFoodId = (int) ($foods[0]['id'] ?? 0);
-    }
-
-    if (($_SERVER['REQUEST_METHOD'] ?? 'GET') === 'POST') {
-        $fullname = afrisense_order_post('fullname', $defaultName);
-        $email = afrisense_order_post('email', $defaultEmail);
-        $phone = preg_replace('/\s+/', '', afrisense_order_post('phone', $defaultPhone));
-        $deliveryAddress = afrisense_order_post('delivery_address');
-        $specialInstructions = afrisense_order_post('special_instructions');
-        $paymentMethod = afrisense_order_post('payment_method', 'Cash');
-        $selectedFoodId = (int) ($_POST['food_id'] ?? 0);
-        $quantity = max(1, min(20, (int) ($_POST['quantity'] ?? 1)));
-
-        $foodCheck = $pdo->prepare(
-            'SELECT `id`, `food_name`, `price`
+    $cartFoods = [];
+    if ($cart !== []) {
+        $cartIds = array_keys($cart);
+        $cartPlaceholders = implode(',', array_fill(0, count($cartIds), '?'));
+        $cartStatement = $pdo->prepare(
+            'SELECT `id`, `food_name`, `price`, `image`
              FROM `foods`
-             WHERE `id` = :id AND `availability` = :availability
-             LIMIT 1'
+             WHERE `id` IN (' . $cartPlaceholders . ')'
         );
-        $foodCheck->execute(['id' => $selectedFoodId, 'availability' => 'Available']);
-        $selectedFood = $foodCheck->fetch(PDO::FETCH_ASSOC);
+        $cartStatement->execute(array_map('intval', $cartIds));
 
-        if (
-            $selectedFood === false
-            || $fullname === ''
-            || !filter_var($email, FILTER_VALIDATE_EMAIL)
-            || $phone === ''
-            || $deliveryAddress === ''
-            || !in_array($paymentMethod, ['Cash', 'Mobile Money', 'Card'], true)
-        ) {
-            $orderMessage = ['type' => 'error', 'text' => 'Please complete the food, contact, delivery and payment fields.'];
-        } else {
-            $totalPrice = ((float) $selectedFood['price'] * $quantity) + 10.00;
-            $pdo->beginTransaction();
-            $customerId = afrisense_order_customer_id($pdo, $fullname, $email, $phone, $deliveryAddress);
-            $insert = $pdo->prepare(
-                'INSERT INTO `orders`
-                    (`customer_id`, `food_id`, `quantity`, `total_price`, `delivery_address`, `special_instructions`, `payment_method`, `payment_status`, `order_status`)
-                 VALUES
-                    (:customer_id, :food_id, :quantity, :total_price, :delivery_address, :special_instructions, :payment_method, :payment_status, :order_status)'
-            );
-            $insert->execute([
-                'customer_id' => $customerId,
-                'food_id' => (int) $selectedFood['id'],
-                'quantity' => $quantity,
-                'total_price' => $totalPrice,
-                'delivery_address' => $deliveryAddress,
-                'special_instructions' => $specialInstructions,
-                'payment_method' => $paymentMethod,
-                'payment_status' => 'Pending',
-                'order_status' => 'Pending',
-            ]);
-            $orderId = (int) $pdo->lastInsertId();
-            afrisense_create_order_notification($pdo, $orderId, $fullname);
-            $pdo->commit();
-
-            $orderMessage = [
-                'type' => 'success',
-                'text' => 'Order #ORD-' . str_pad((string) $orderId, 6, '0', STR_PAD_LEFT) . ' submitted. Our team will confirm it shortly.',
-            ];
+        foreach ($cartStatement->fetchAll(PDO::FETCH_ASSOC) as $food) {
+            $food['quantity'] = max(1, (int) ($cart[(int) $food['id']] ?? 1));
+            $cartFoods[] = $food;
         }
     }
 } catch (Throwable $exception) {
@@ -238,20 +325,29 @@ try {
         $pdo->rollBack();
     }
 
-    $orderMessage = ['type' => 'error', 'text' => 'Order could not be submitted. Check that MySQL is running and try again.'];
+    $foods = [];
+    $cartFoods = [];
+    $message = ['type' => 'error', 'text' => 'Order page could not load. Check that MySQL is running.'];
 }
 
-$selectedFood = null;
-foreach ($foods as $food) {
-    if ((int) ($food['id'] ?? 0) === $selectedFoodId) {
-        $selectedFood = $food;
-        break;
-    }
-}
-
-$selectedPrice = (float) ($selectedFood['price'] ?? 0);
-$deliveryFee = $selectedFood !== null ? 10.00 : 0.00;
-$orderTotal = ($selectedPrice * $quantity) + $deliveryFee;
+$subtotal = array_reduce(
+    $cartFoods,
+    static fn (float $total, array $food): float => $total + ((float) $food['price'] * (int) $food['quantity']),
+    0.00
+);
+$deliveryFee = $cartFoods === [] ? 0.00 : 10.00;
+$total = $subtotal + $deliveryFee;
+$cartCount = afrisense_guest_cart_count($cart);
+$categoryItems = [
+    ['key' => 'all', 'label' => 'All Categories', 'icon' => 'bi-grid'],
+    ['key' => 'popular', 'label' => 'Popular', 'icon' => 'bi-star'],
+    ['key' => 'main', 'label' => 'Main Dishes', 'icon' => 'bi-egg-fried'],
+    ['key' => 'rice', 'label' => 'Rice Dishes', 'icon' => 'bi-basket'],
+    ['key' => 'soups', 'label' => 'Soups', 'icon' => 'bi-cup-hot'],
+    ['key' => 'snacks', 'label' => 'Snacks & Sides', 'icon' => 'bi-cookie'],
+    ['key' => 'drinks', 'label' => 'Drinks', 'icon' => 'bi-cup-straw'],
+    ['key' => 'desserts', 'label' => 'Desserts', 'icon' => 'bi-cake2'],
+];
 
 ob_start();
 ?>
@@ -268,19 +364,16 @@ ob_start();
     </div>
 </section>
 
-<section class="af-order-page">
+<section class="af-order-page af-public-order-page">
     <aside class="af-order-left">
         <section class="af-order-panel">
             <h2>Categories</h2>
             <span class="af-panel-line"></span>
             <nav class="af-category-menu" aria-label="Food categories">
-                <a class="<?php echo $categoryFilter === '' ? 'is-active' : ''; ?>" href="order.php"><i class="bi bi-grid"></i> All Categories</a>
-                <?php foreach ($categories as $category): ?>
-                    <?php $categoryName = (string) $category['category_name']; ?>
-                    <a class="<?php echo $categoryFilter === $categoryName ? 'is-active' : ''; ?>" href="order.php?category=<?php echo urlencode($categoryName); ?>">
-                        <i class="bi bi-basket"></i>
-                        <?php echo htmlspecialchars($categoryName, ENT_QUOTES, 'UTF-8'); ?>
-                        <small><?php echo htmlspecialchars((string) $category['food_count'], ENT_QUOTES, 'UTF-8'); ?></small>
+                <?php foreach ($categoryItems as $item): ?>
+                    <a class="<?php echo $category === $item['key'] || ($category === '' && $item['key'] === 'all') ? 'is-active' : ''; ?>" href="order.php?category=<?php echo urlencode($item['key']); ?>">
+                        <i class="bi <?php echo htmlspecialchars($item['icon'], ENT_QUOTES, 'UTF-8'); ?>"></i>
+                        <?php echo htmlspecialchars($item['label'], ENT_QUOTES, 'UTF-8'); ?>
                     </a>
                 <?php endforeach; ?>
             </nav>
@@ -296,64 +389,48 @@ ob_start();
     </aside>
 
     <main class="af-order-main">
-        <?php if ($orderMessage !== null): ?>
-            <div class="af-order-alert <?php echo htmlspecialchars($orderMessage['type'], ENT_QUOTES, 'UTF-8'); ?>">
-                <i class="bi <?php echo $orderMessage['type'] === 'success' ? 'bi-check-circle' : 'bi-exclamation-triangle'; ?>"></i>
-                <?php echo htmlspecialchars($orderMessage['text'], ENT_QUOTES, 'UTF-8'); ?>
+        <?php if ($message !== null): ?>
+            <div class="af-order-alert <?php echo htmlspecialchars($message['type'], ENT_QUOTES, 'UTF-8'); ?>">
+                <i class="bi <?php echo $message['type'] === 'success' ? 'bi-check-circle' : 'bi-exclamation-triangle'; ?>"></i>
+                <?php echo htmlspecialchars($message['text'], ENT_QUOTES, 'UTF-8'); ?>
             </div>
         <?php endif; ?>
 
         <form class="af-order-toolbar" action="order.php" method="get">
             <label><i class="bi bi-search"></i><input type="search" name="search" value="<?php echo htmlspecialchars($search, ENT_QUOTES, 'UTF-8'); ?>" placeholder="Search for food..."></label>
-            <?php if ($categoryFilter !== ''): ?>
-                <input type="hidden" name="category" value="<?php echo htmlspecialchars($categoryFilter, ENT_QUOTES, 'UTF-8'); ?>">
-            <?php endif; ?>
+            <input type="hidden" name="category" value="<?php echo htmlspecialchars($category, ENT_QUOTES, 'UTF-8'); ?>">
             <label>
-                <select name="sort">
-                    <option value="" <?php echo $sort === '' ? 'selected' : ''; ?>>Sort by: Available</option>
-                    <option value="price_asc" <?php echo $sort === 'price_asc' ? 'selected' : ''; ?>>Price: Low to High</option>
-                    <option value="price_desc" <?php echo $sort === 'price_desc' ? 'selected' : ''; ?>>Price: High to Low</option>
+                <select name="sort" data-auto-submit>
+                    <option value="popular" <?php echo $sort === 'popular' ? 'selected' : ''; ?>>Sort by: Popular</option>
                     <option value="newest" <?php echo $sort === 'newest' ? 'selected' : ''; ?>>Newest</option>
+                    <option value="price_asc" <?php echo $sort === 'price_asc' ? 'selected' : ''; ?>>Price Low to High</option>
+                    <option value="price_desc" <?php echo $sort === 'price_desc' ? 'selected' : ''; ?>>Price High to Low</option>
+                    <option value="best" <?php echo $sort === 'best' ? 'selected' : ''; ?>>Best Selling</option>
                 </select>
                 <i class="bi bi-chevron-down"></i>
             </label>
         </form>
 
-        <h2>Available Meals</h2>
+        <h2>Popular Dishes</h2>
         <div class="af-dish-grid">
             <?php if ($foods === []): ?>
-                <article class="af-order-empty">
-                    <i class="bi bi-basket"></i>
-                    <h3>No foods available</h3>
-                    <p>Add foods from the admin Foods page to start accepting orders.</p>
-                </article>
+                <article class="af-order-empty"><i class="bi bi-basket"></i><h3>No foods found</h3><p>Try another category or search term.</p></article>
             <?php endif; ?>
             <?php foreach ($foods as $food): ?>
-                <?php
-                $foodId = (int) ($food['id'] ?? 0);
-                $isSelected = $foodId === $selectedFoodId;
-                ?>
-                <article class="af-dish-card <?php echo $isSelected ? 'is-selected' : ''; ?>">
+                <article class="af-dish-card">
                     <div class="af-dish-image">
-                        <img src="<?php echo htmlspecialchars(afrisense_public_food_image($frontendBase, (string) ($food['image'] ?? '')), ENT_QUOTES, 'UTF-8'); ?>" alt="<?php echo htmlspecialchars((string) ($food['food_name'] ?? 'Food'), ENT_QUOTES, 'UTF-8'); ?>">
-                        <span><?php echo htmlspecialchars((string) ($food['category_name'] ?? 'Food'), ENT_QUOTES, 'UTF-8'); ?></span>
-                        <button type="button" aria-label="Add to wishlist"><i class="bi bi-heart"></i></button>
+                        <img src="<?php echo htmlspecialchars(afrisense_guest_food_image($frontendBase, (string) ($food['image'] ?? '')), ENT_QUOTES, 'UTF-8'); ?>" alt="<?php echo htmlspecialchars((string) ($food['food_name'] ?? 'Food'), ENT_QUOTES, 'UTF-8'); ?>">
+                        <button type="button" aria-label="Add to wishlist" data-favorite><i class="bi bi-heart"></i></button>
                     </div>
                     <div class="af-dish-body">
                         <h3><?php echo htmlspecialchars((string) ($food['food_name'] ?? 'Food'), ENT_QUOTES, 'UTF-8'); ?></h3>
                         <p><?php echo htmlspecialchars((string) ($food['description'] ?? 'Freshly prepared AfriSense meal.'), ENT_QUOTES, 'UTF-8'); ?></p>
-                        <small><i class="bi bi-clock"></i> <?php echo htmlspecialchars((string) ($food['preparation_time'] ?? 15), ENT_QUOTES, 'UTF-8'); ?> mins</small>
-                        <strong>GHc <?php echo htmlspecialchars(number_format((float) ($food['price'] ?? 0), 2), ENT_QUOTES, 'UTF-8'); ?></strong>
-                        <button
-                            type="button"
-                            data-order-select
-                            data-food-id="<?php echo htmlspecialchars((string) $foodId, ENT_QUOTES, 'UTF-8'); ?>"
-                            data-food-name="<?php echo htmlspecialchars((string) ($food['food_name'] ?? 'Food'), ENT_QUOTES, 'UTF-8'); ?>"
-                            data-food-price="<?php echo htmlspecialchars((string) ($food['price'] ?? 0), ENT_QUOTES, 'UTF-8'); ?>"
-                            data-food-image="<?php echo htmlspecialchars(afrisense_public_food_image($frontendBase, (string) ($food['image'] ?? '')), ENT_QUOTES, 'UTF-8'); ?>"
-                        >
-                            <i class="bi bi-plus-lg"></i> <?php echo $isSelected ? 'Selected' : 'Order This'; ?>
-                        </button>
+                        <strong>GH₵ <?php echo htmlspecialchars(number_format((float) ($food['price'] ?? 0), 2), ENT_QUOTES, 'UTF-8'); ?></strong>
+                        <form action="order.php?category=<?php echo urlencode($category); ?>&sort=<?php echo urlencode($sort); ?>" method="post">
+                            <input type="hidden" name="action" value="add_to_cart">
+                            <input type="hidden" name="food_id" value="<?php echo htmlspecialchars((string) ($food['id'] ?? 0), ENT_QUOTES, 'UTF-8'); ?>">
+                            <button type="submit"><i class="bi bi-plus-lg"></i> Add to Order</button>
+                        </form>
                     </div>
                 </article>
             <?php endforeach; ?>
@@ -361,80 +438,57 @@ ob_start();
     </main>
 
     <aside class="af-order-right">
-        <form class="af-cart-panel af-order-submit-panel" action="order.php" method="post" data-order-form>
-            <header><h2><i class="bi bi-cart3"></i> Order Details</h2><a href="order.php">Reset</a></header>
-            <div class="af-selected-order">
-                <small>Selected item</small>
-                <strong data-order-name><?php echo htmlspecialchars((string) ($selectedFood['food_name'] ?? 'Select a food item'), ENT_QUOTES, 'UTF-8'); ?></strong>
-                <div>
-                    <span data-order-price>GHc <?php echo htmlspecialchars(number_format($selectedPrice, 2), ENT_QUOTES, 'UTF-8'); ?></span>
-                    <em data-order-summary><?php echo htmlspecialchars((string) $quantity, ENT_QUOTES, 'UTF-8'); ?> item<?php echo $quantity === 1 ? '' : 's'; ?> selected</em>
-                </div>
+        <section class="af-cart-panel af-public-cart-panel">
+            <header>
+                <h2><i class="bi bi-cart3"></i> Your Order (<?php echo htmlspecialchars((string) $cartCount, ENT_QUOTES, 'UTF-8'); ?>)</h2>
+                <form action="order.php" method="post">
+                    <input type="hidden" name="action" value="clear_cart">
+                    <button type="submit">Clear All</button>
+                </form>
+            </header>
+
+            <div class="af-cart-items">
+                <?php if ($cartFoods === []): ?>
+                    <p class="af-empty-cart">Your cart is empty. Add a meal to start your order.</p>
+                <?php endif; ?>
+                <?php foreach ($cartFoods as $cartFood): ?>
+                    <article>
+                        <img src="<?php echo htmlspecialchars(afrisense_guest_food_image($frontendBase, (string) ($cartFood['image'] ?? '')), ENT_QUOTES, 'UTF-8'); ?>" alt="<?php echo htmlspecialchars((string) $cartFood['food_name'], ENT_QUOTES, 'UTF-8'); ?>">
+                        <div>
+                            <h3><?php echo htmlspecialchars((string) $cartFood['food_name'], ENT_QUOTES, 'UTF-8'); ?></h3>
+                            <strong>GH₵ <?php echo htmlspecialchars(number_format((float) $cartFood['price'], 2), ENT_QUOTES, 'UTF-8'); ?></strong>
+                            <div class="af-qty">
+                                <form action="order.php" method="post"><input type="hidden" name="action" value="decrease"><input type="hidden" name="food_id" value="<?php echo htmlspecialchars((string) $cartFood['id'], ENT_QUOTES, 'UTF-8'); ?>"><button type="submit">−</button></form>
+                                <span><?php echo htmlspecialchars((string) $cartFood['quantity'], ENT_QUOTES, 'UTF-8'); ?></span>
+                                <form action="order.php" method="post"><input type="hidden" name="action" value="increase"><input type="hidden" name="food_id" value="<?php echo htmlspecialchars((string) $cartFood['id'], ENT_QUOTES, 'UTF-8'); ?>"><button type="submit">+</button></form>
+                            </div>
+                        </div>
+                        <form action="order.php" method="post">
+                            <input type="hidden" name="action" value="remove">
+                            <input type="hidden" name="food_id" value="<?php echo htmlspecialchars((string) $cartFood['id'], ENT_QUOTES, 'UTF-8'); ?>">
+                            <button class="af-remove" type="submit" aria-label="Remove item"><i class="bi bi-trash"></i></button>
+                        </form>
+                    </article>
+                <?php endforeach; ?>
             </div>
 
-            <label class="af-order-field" for="order_food_id">
-                <span>Food Item</span>
-                <select id="order_food_id" name="food_id" required data-order-food-select>
-                    <?php foreach ($foods as $food): ?>
-                        <option value="<?php echo htmlspecialchars((string) ($food['id'] ?? 0), ENT_QUOTES, 'UTF-8'); ?>" data-price="<?php echo htmlspecialchars((string) ($food['price'] ?? 0), ENT_QUOTES, 'UTF-8'); ?>" data-image="<?php echo htmlspecialchars(afrisense_public_food_image($frontendBase, (string) ($food['image'] ?? '')), ENT_QUOTES, 'UTF-8'); ?>" <?php echo (int) ($food['id'] ?? 0) === $selectedFoodId ? 'selected' : ''; ?>>
-                            <?php echo htmlspecialchars((string) ($food['food_name'] ?? 'Food'), ENT_QUOTES, 'UTF-8'); ?>
-                        </option>
-                    <?php endforeach; ?>
-                </select>
-            </label>
+            <form class="af-public-cart-note" action="order.php" method="post">
+                <input type="hidden" name="action" value="save_note">
+                <button type="button" data-note-toggle><i class="bi bi-journal-text"></i> Add a note (optional) <i class="bi bi-chevron-down"></i></button>
+                <textarea name="cart_note" rows="3" placeholder="Add kitchen or delivery notes..."><?php echo htmlspecialchars($note, ENT_QUOTES, 'UTF-8'); ?></textarea>
+                <button type="submit">Save Note</button>
+            </form>
 
-            <label class="af-order-field" for="quantity">
-                <span>Quantity</span>
-                <input type="number" id="quantity" name="quantity" min="1" max="20" value="<?php echo htmlspecialchars((string) $quantity, ENT_QUOTES, 'UTF-8'); ?>" required data-order-quantity>
-            </label>
-
-            <label class="af-order-field" for="fullname">
-                <span>Full Name</span>
-                <input type="text" id="fullname" name="fullname" value="<?php echo htmlspecialchars(afrisense_order_post('fullname', $defaultName), ENT_QUOTES, 'UTF-8'); ?>" placeholder="Enter your full name" required>
-            </label>
-
-            <label class="af-order-field" for="email">
-                <span>Email Address</span>
-                <input type="email" id="email" name="email" value="<?php echo htmlspecialchars(afrisense_order_post('email', $defaultEmail), ENT_QUOTES, 'UTF-8'); ?>" placeholder="Enter your email" required>
-            </label>
-
-            <label class="af-order-field" for="phone">
-                <span>Phone Number</span>
-                <input type="tel" id="phone" name="phone" value="<?php echo htmlspecialchars(afrisense_order_post('phone', $defaultPhone), ENT_QUOTES, 'UTF-8'); ?>" placeholder="+233 24 123 4567" required>
-            </label>
-
-            <label class="af-order-field" for="delivery_address">
-                <span>Delivery Address</span>
-                <textarea id="delivery_address" name="delivery_address" rows="3" placeholder="Enter your delivery address" required><?php echo htmlspecialchars(afrisense_order_post('delivery_address'), ENT_QUOTES, 'UTF-8'); ?></textarea>
-            </label>
-
-            <label class="af-order-field" for="payment_method">
-                <span>Payment Method</span>
-                <select id="payment_method" name="payment_method" required>
-                    <?php foreach (['Cash', 'Mobile Money', 'Card'] as $method): ?>
-                        <option value="<?php echo htmlspecialchars($method, ENT_QUOTES, 'UTF-8'); ?>" <?php echo afrisense_order_post('payment_method', 'Cash') === $method ? 'selected' : ''; ?>>
-                            <?php echo htmlspecialchars($method, ENT_QUOTES, 'UTF-8'); ?>
-                        </option>
-                    <?php endforeach; ?>
-                </select>
-            </label>
-
-            <label class="af-order-field" for="special_instructions">
-                <span>Special Instructions</span>
-                <textarea id="special_instructions" name="special_instructions" rows="2" placeholder="Optional notes for the kitchen or rider"><?php echo htmlspecialchars(afrisense_order_post('special_instructions'), ENT_QUOTES, 'UTF-8'); ?></textarea>
-            </label>
-
-            <dl class="af-order-total">
-                <div><dt>Item Total</dt><dd data-order-subtotal>GHc <?php echo htmlspecialchars(number_format($selectedPrice * $quantity, 2), ENT_QUOTES, 'UTF-8'); ?></dd></div>
-                <div><dt>Delivery Fee</dt><dd>GHc <?php echo htmlspecialchars(number_format($deliveryFee, 2), ENT_QUOTES, 'UTF-8'); ?></dd></div>
-                <div><dt>Total</dt><dd data-order-total>GHc <?php echo htmlspecialchars(number_format($orderTotal, 2), ENT_QUOTES, 'UTF-8'); ?></dd></div>
-            </dl>
-
-            <button class="af-checkout-btn" type="submit" <?php echo $foods === [] ? 'disabled' : ''; ?>>
-                <i class="bi bi-bag-check"></i> Place Order
-            </button>
-            <p class="af-secure-note"><i class="bi bi-lock"></i> Your order is saved securely and will appear in the admin orders page.</p>
-        </form>
+            <form class="af-public-checkout-form" action="cart.php" method="get">
+                <dl class="af-order-total">
+                    <div><dt>Subtotal</dt><dd>GH₵ <?php echo htmlspecialchars(number_format($subtotal, 2), ENT_QUOTES, 'UTF-8'); ?></dd></div>
+                    <div><dt>Delivery Fee</dt><dd>GH₵ <?php echo htmlspecialchars(number_format($deliveryFee, 2), ENT_QUOTES, 'UTF-8'); ?></dd></div>
+                    <div><dt>Total</dt><dd>GH₵ <?php echo htmlspecialchars(number_format($total, 2), ENT_QUOTES, 'UTF-8'); ?></dd></div>
+                </dl>
+                <button class="af-checkout-btn" type="submit" <?php echo $cartFoods === [] ? 'disabled' : ''; ?>><i class="bi bi-bag-check"></i> View Cart &amp; Checkout</button>
+            </form>
+            <p class="af-secure-note"><i class="bi bi-lock"></i> Your payment information is secure and encrypted.</p>
+        </section>
 
         <section class="af-delivery-info">
             <i class="bi bi-scooter"></i>

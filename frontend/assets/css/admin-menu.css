@@ -35,6 +35,7 @@
     font-size: 14px;
     font-weight: 850;
     cursor: pointer;
+    text-decoration: none;
 }
 
 .af-menu-metrics {
@@ -310,7 +311,8 @@
     gap: 10px;
 }
 
-.af-row-actions button {
+.af-row-actions button,
+.af-row-actions a {
     width: 34px;
     height: 34px;
     border: 1px solid #d9dee6;
@@ -318,6 +320,9 @@
     background: #fff;
     color: #475467;
     cursor: pointer;
+    display: inline-grid;
+    place-items: center;
+    text-decoration: none;
 }
 
 .af-row-actions .danger {

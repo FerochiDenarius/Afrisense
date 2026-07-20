@@ -718,6 +718,30 @@ a {
     gap: 22px;
 }
 
+.site-footer-social {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.site-footer-social a {
+    width: 34px;
+    height: 34px;
+    border: 1px solid rgba(204, 143, 37, 0.62);
+    border-radius: 50%;
+    color: var(--secondary-gold);
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 15px;
+}
+
+.site-footer-social a:hover,
+.site-footer-social a:focus-visible {
+    background: var(--secondary-gold);
+    color: #fff;
+}
+
 @media (max-width: 1180px) {
     .site-header,
     .hero-section,

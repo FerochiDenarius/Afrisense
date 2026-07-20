@@ -197,14 +197,18 @@ $dateLabel = date('M j, Y');
             </label>
 
             <div class="top-actions">
-                <button type="button" aria-label="Notifications">
+                <a href="notifications.php" aria-label="Notifications">
                     <i class="bi bi-bell" aria-hidden="true"></i>
-                    <span><?php echo htmlspecialchars((string) $unreadNotifications, ENT_QUOTES, 'UTF-8'); ?></span>
-                </button>
-                <button type="button" aria-label="Messages">
+                    <?php if ($unreadNotifications > 0): ?>
+                        <span><?php echo htmlspecialchars((string) min(99, $unreadNotifications), ENT_QUOTES, 'UTF-8'); ?></span>
+                    <?php endif; ?>
+                </a>
+                <a href="enquiries.php?status=Pending" aria-label="Unread enquiries">
                     <i class="bi bi-envelope" aria-hidden="true"></i>
-                    <span class="green"><?php echo htmlspecialchars((string) $pendingEnquiries, ENT_QUOTES, 'UTF-8'); ?></span>
-                </button>
+                    <?php if ($pendingEnquiries > 0): ?>
+                        <span class="green"><?php echo htmlspecialchars((string) min(99, $pendingEnquiries), ENT_QUOTES, 'UTF-8'); ?></span>
+                    <?php endif; ?>
+                </a>
                 <div class="admin-profile">
                     <img src="../assets/images/foodimage.jpeg" alt="">
                     <span>

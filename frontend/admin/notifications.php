@@ -86,6 +86,84 @@ function afrisense_count_notifications(PDO $pdo, int $userId, ?string $type = nu
     return (int) ($row['count_value'] ?? 0);
 }
 
+function afrisense_admin_notification_url(string $url): string
+{
+    $url = trim($url);
+
+    if ($url === '') {
+        return '#';
+    }
+
+    if (preg_match('/\\/admin\\/orders\\.php\\?view=(\\d+)/', $url, $matches) === 1 && !str_contains($url, '#')) {
+        $url .= '#order-row-' . $matches[1];
+    }
+
+    if (str_starts_with($url, '/Afrisense/frontend/')) {
+        return $url;
+    }
+
+    if (
+        str_starts_with($url, 'admin/')
+        || str_starts_with($url, 'customer/')
+        || str_starts_with($url, 'landing/')
+    ) {
+        $url = '/Afrisense/frontend/' . $url;
+
+        if (preg_match('/\\/admin\\/orders\\.php\\?view=(\\d+)/', $url, $matches) === 1 && !str_contains($url, '#')) {
+            $url .= '#order-row-' . $matches[1];
+        }
+
+        return $url;
+    }
+
+    return '#';
+}
+
+function afrisense_admin_notification_open_url(PDO $pdo, array $notification): string
+{
+    $url = afrisense_admin_notification_url((string) ($notification['action_url'] ?? ''));
+    $type = (string) ($notification['notification_type'] ?? '');
+
+    if (
+        strtolower($type) !== 'order'
+        || !in_array($url, ['/Afrisense/frontend/admin/orders.php', '/Afrisense/frontend/admin/orders.php#'], true)
+    ) {
+        return $url;
+    }
+
+    $statement = $pdo->prepare(
+        'SELECT `id`
+         FROM `orders`
+         WHERE `ordered_at` <= DATE_ADD(:created_at, INTERVAL 10 MINUTE)
+         ORDER BY `ordered_at` DESC, `id` DESC
+         LIMIT 1'
+    );
+    $statement->execute(['created_at' => (string) ($notification['created_at'] ?? date('Y-m-d H:i:s'))]);
+    $orderId = (int) $statement->fetchColumn();
+
+    if ($orderId <= 0) {
+        return $url;
+    }
+
+    return '/Afrisense/frontend/admin/orders.php?view=' . $orderId . '#order-row-' . $orderId;
+}
+
+function afrisense_redirect_admin_notifications(string $typeFilter, string $statusFilter): never
+{
+    $params = [];
+
+    if ($typeFilter !== '') {
+        $params['type'] = $typeFilter;
+    }
+
+    if ($statusFilter !== '') {
+        $params['status'] = $statusFilter;
+    }
+
+    header('Location: notifications.php' . ($params !== [] ? '?' . http_build_query($params) : ''));
+    exit;
+}
+
 $validTypes = ['Order', 'Booking', 'Enquiry', 'System', 'Security'];
 $typeFilter = (string) ($_GET['type'] ?? '');
 $statusFilter = (string) ($_GET['status'] ?? '');
@@ -95,15 +173,79 @@ $flashType = 'success';
 try {
     $pdo = afrisense_pdo();
 
-    if (($_SERVER['REQUEST_METHOD'] ?? 'GET') === 'POST' && ($_POST['action'] ?? '') === 'mark_all_read') {
-        $statement = $pdo->prepare(
-            'UPDATE `notifications`
-             SET `is_read` = 1
-             WHERE `user_id` = :user_id'
-        );
-        $statement->execute(['user_id' => $authUserId]);
-        $flashMessage = 'Notifications marked as read.';
+    if (($_SERVER['REQUEST_METHOD'] ?? 'GET') === 'POST') {
+        $action = (string) ($_POST['action'] ?? '');
+        $notificationId = (int) ($_POST['notification_id'] ?? 0);
+
+        if ($action === 'mark_all_read') {
+            $statement = $pdo->prepare(
+                'UPDATE `notifications`
+                 SET `is_read` = 1
+                 WHERE `user_id` = :user_id'
+            );
+            $statement->execute(['user_id' => $authUserId]);
+            afrisense_flash_set('success', 'Notifications marked as read.');
+            afrisense_redirect_admin_notifications($typeFilter, $statusFilter);
+        }
+
+        if ($notificationId > 0 && in_array($action, ['mark_read', 'delete', 'open'], true)) {
+            $notificationStatement = $pdo->prepare(
+                'SELECT `action_url`, `notification_type`, `created_at`
+                 FROM `notifications`
+                 WHERE `id` = :id AND `user_id` = :user_id
+                 LIMIT 1'
+            );
+            $notificationStatement->execute([
+                'id' => $notificationId,
+                'user_id' => $authUserId,
+            ]);
+            $notification = $notificationStatement->fetch(PDO::FETCH_ASSOC);
+
+            if ($notification === false) {
+                afrisense_flash_set('error', 'Notification could not be found.');
+                afrisense_redirect_admin_notifications($typeFilter, $statusFilter);
+            }
+
+            if ($action === 'delete') {
+                $delete = $pdo->prepare(
+                    'DELETE FROM `notifications`
+                     WHERE `id` = :id AND `user_id` = :user_id'
+                );
+                $delete->execute([
+                    'id' => $notificationId,
+                    'user_id' => $authUserId,
+                ]);
+                afrisense_flash_set('success', 'Notification deleted.');
+                afrisense_redirect_admin_notifications($typeFilter, $statusFilter);
+            }
+
+            $statement = $pdo->prepare(
+                'UPDATE `notifications`
+                 SET `is_read` = 1
+                 WHERE `id` = :id AND `user_id` = :user_id'
+            );
+            $statement->execute([
+                'id' => $notificationId,
+                'user_id' => $authUserId,
+            ]);
+
+            if ($action === 'open') {
+                $actionUrl = afrisense_admin_notification_open_url($pdo, $notification);
+
+                if ($actionUrl !== '#') {
+                    header('Location: ' . $actionUrl);
+                    exit;
+                }
+            }
+
+            afrisense_flash_set('success', 'Notification marked as read.');
+            afrisense_redirect_admin_notifications($typeFilter, $statusFilter);
+        }
     }
+
+    $flash = afrisense_flash_get();
+    $flashMessage = (string) ($flash['message'] ?? '');
+    $flashType = (string) ($flash['type'] ?? 'success');
 
     $where = ['n.`user_id` = :user_id'];
     $params = ['user_id' => $authUserId];
@@ -205,6 +347,7 @@ ob_start();
                     <?php
                     $type = (string) ($notification['notification_type'] ?? 'System');
                     $isUnread = (int) ($notification['is_read'] ?? 0) === 0;
+                    $actionUrl = afrisense_admin_notification_url((string) ($notification['action_url'] ?? ''));
                     ?>
                     <article class="af-notification-item <?php echo $isUnread ? 'unread' : ''; ?>">
                         <span class="af-notification-icon <?php echo htmlspecialchars(afrisense_notification_tone($type), ENT_QUOTES, 'UTF-8'); ?>">
@@ -221,9 +364,27 @@ ob_start();
                         <time datetime="<?php echo htmlspecialchars((string) ($notification['created_at'] ?? ''), ENT_QUOTES, 'UTF-8'); ?>">
                             <?php echo htmlspecialchars(afrisense_time_ago((string) ($notification['created_at'] ?? '')), ENT_QUOTES, 'UTF-8'); ?>
                         </time>
-                        <button type="button" aria-label="Notification actions">
-                            <i class="bi bi-three-dots-vertical" aria-hidden="true"></i>
-                        </button>
+                        <div class="af-notification-actions">
+                            <?php if ($actionUrl !== '#'): ?>
+                                <form action="notifications.php" method="post">
+                                    <input type="hidden" name="action" value="open">
+                                    <input type="hidden" name="notification_id" value="<?php echo htmlspecialchars((string) ($notification['id'] ?? 0), ENT_QUOTES, 'UTF-8'); ?>">
+                                    <button type="submit" title="Open notification" aria-label="Open notification"><i class="bi bi-arrow-up-right" aria-hidden="true"></i></button>
+                                </form>
+                            <?php endif; ?>
+                            <?php if ($isUnread): ?>
+                                <form action="notifications.php" method="post">
+                                    <input type="hidden" name="action" value="mark_read">
+                                    <input type="hidden" name="notification_id" value="<?php echo htmlspecialchars((string) ($notification['id'] ?? 0), ENT_QUOTES, 'UTF-8'); ?>">
+                                    <button type="submit" title="Mark as read" aria-label="Mark as read"><i class="bi bi-check2" aria-hidden="true"></i></button>
+                                </form>
+                            <?php endif; ?>
+                            <form action="notifications.php" method="post">
+                                <input type="hidden" name="action" value="delete">
+                                <input type="hidden" name="notification_id" value="<?php echo htmlspecialchars((string) ($notification['id'] ?? 0), ENT_QUOTES, 'UTF-8'); ?>">
+                                <button type="submit" class="danger" title="Delete notification" aria-label="Delete notification"><i class="bi bi-trash" aria-hidden="true"></i></button>
+                            </form>
+                        </div>
                     </article>
                 <?php endforeach; ?>
             </div>

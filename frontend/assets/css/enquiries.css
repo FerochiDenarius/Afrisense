@@ -133,6 +133,30 @@
     gap: 24px;
 }
 
+.af-form-status {
+    border-radius: 7px;
+    display: block;
+    font-size: 13px;
+    font-weight: 800;
+    line-height: 1.45;
+    margin: 0;
+    padding: 12px 14px;
+}
+
+.af-form-status:empty {
+    display: none;
+}
+
+.af-form-status.is-error {
+    background: #fff1f1;
+    color: #b42318;
+}
+
+.af-form-status.is-success {
+    background: #eef8f0;
+    color: #137333;
+}
+
 .af-field-grid {
     display: grid;
     grid-template-columns: repeat(2, minmax(0, 1fr));

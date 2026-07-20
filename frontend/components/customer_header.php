@@ -2,6 +2,25 @@
 $customerTitle = $customerTitle ?? 'Dashboard';
 $customerName = $customerName ?? 'Customer';
 $frontendBase = $frontendBase ?? '/Afrisense/frontend';
+$customerUnreadNotifications = 0;
+$customerCartCount = 0;
+
+try {
+    if (isset($authUser['id'])) {
+        $notificationStatement = afrisense_pdo()->prepare(
+            'SELECT COUNT(*) AS count_value
+             FROM `notifications`
+             WHERE `user_id` = :user_id AND `is_read` = 0'
+        );
+        $notificationStatement->execute(['user_id' => (int) $authUser['id']]);
+        $customerUnreadNotifications = (int) ($notificationStatement->fetch(PDO::FETCH_ASSOC)['count_value'] ?? 0);
+    }
+} catch (Throwable $exception) {
+    $customerUnreadNotifications = 0;
+}
+
+$customerCart = $_SESSION['afrisense_customer_cart'] ?? [];
+$customerCartCount = is_array($customerCart) ? array_sum(array_map('intval', $customerCart)) : 0;
 ?>
 <header class="af-dashboard-header af-customer-header">
     <a class="af-header-brand" href="<?php echo htmlspecialchars($frontendBase . '/customer/dashboard.php', ENT_QUOTES, 'UTF-8'); ?>" aria-label="AfriSense customer dashboard">
@@ -25,13 +44,13 @@ $frontendBase = $frontendBase ?? '/Afrisense/frontend';
     </label>
 
     <div class="af-header-actions">
-        <button class="af-header-action" type="button" aria-label="Notifications">
+        <a class="af-header-action" href="<?php echo htmlspecialchars($frontendBase . '/customer/notifications.php', ENT_QUOTES, 'UTF-8'); ?>" aria-label="Notifications">
             <span class="af-action-icon">
                 <i class="bi bi-bell" aria-hidden="true"></i>
-                <em>3</em>
+                <?php if ($customerUnreadNotifications > 0): ?><em><?php echo htmlspecialchars((string) min(99, $customerUnreadNotifications), ENT_QUOTES, 'UTF-8'); ?></em><?php endif; ?>
             </span>
             <small>Notifications</small>
-        </button>
+        </a>
         <button class="af-header-action" type="button" aria-label="Wishlist">
             <span class="af-action-icon">
                 <i class="bi bi-heart" aria-hidden="true"></i>
@@ -39,13 +58,13 @@ $frontendBase = $frontendBase ?? '/Afrisense/frontend';
             </span>
             <small>Wishlist</small>
         </button>
-        <button class="af-header-action" type="button" aria-label="Cart">
+        <a class="af-header-action" href="<?php echo htmlspecialchars($frontendBase . '/customer/cart.php', ENT_QUOTES, 'UTF-8'); ?>" aria-label="Cart">
             <span class="af-action-icon">
                 <i class="bi bi-cart3" aria-hidden="true"></i>
-                <em class="is-green">1</em>
+                <?php if ($customerCartCount > 0): ?><em class="is-green"><?php echo htmlspecialchars((string) min(99, $customerCartCount), ENT_QUOTES, 'UTF-8'); ?></em><?php endif; ?>
             </span>
             <small>Cart</small>
-        </button>
+        </a>
         <button class="af-profile-menu" type="button" aria-label="Profile menu">
             <img src="<?php echo htmlspecialchars($frontendBase . '/assets/images/foodimage.jpeg', ENT_QUOTES, 'UTF-8'); ?>" alt="">
             <span>

@@ -10,6 +10,7 @@ $adminName = $adminName ?? (string) ($authUser['fullname'] ?? $authUser['email']
 $adminRole = $adminRole ?? ucwords(afrisense_role_name($authUser) ?: 'Staff');
 $extraStyles = $extraStyles ?? [];
 $extraScripts = $extraScripts ?? [];
+$mainScriptVersion = filemtime(__DIR__ . '/../assets/js/main.js') ?: time();
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -47,7 +48,7 @@ $extraScripts = $extraScripts ?? [];
     <script src="<?php echo htmlspecialchars($frontendBase . '/assets/js/sidebar.js', ENT_QUOTES, 'UTF-8'); ?>" defer></script>
     <script src="<?php echo htmlspecialchars($frontendBase . '/assets/js/alerts.js', ENT_QUOTES, 'UTF-8'); ?>" defer></script>
     <script src="<?php echo htmlspecialchars($frontendBase . '/assets/js/modal.js', ENT_QUOTES, 'UTF-8'); ?>" defer></script>
-    <script src="<?php echo htmlspecialchars($frontendBase . '/assets/js/main.js', ENT_QUOTES, 'UTF-8'); ?>" defer></script>
+    <script src="<?php echo htmlspecialchars($frontendBase . '/assets/js/main.js?v=' . $mainScriptVersion, ENT_QUOTES, 'UTF-8'); ?>" defer></script>
     <?php foreach ($extraScripts as $script): ?>
         <script src="<?php echo htmlspecialchars($script, ENT_QUOTES, 'UTF-8'); ?>" defer></script>
     <?php endforeach; ?>

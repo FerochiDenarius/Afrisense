@@ -87,6 +87,51 @@ function afrisense_role_description(string $roleName, string $description): stri
 
 try {
     $pdo = afrisense_pdo();
+    $roleSearch = trim((string) ($_GET['search'] ?? ''));
+    $flashMessage = '';
+    $flashType = 'success';
+
+    if (($_SERVER['REQUEST_METHOD'] ?? 'GET') === 'POST' && ($_POST['action'] ?? '') === 'create_role') {
+        $roleName = trim((string) ($_POST['rolename'] ?? ''));
+        $roleDescription = trim((string) ($_POST['description'] ?? ''));
+
+        if ($roleName === '' || strlen($roleName) < 2 || strlen($roleName) > 50) {
+            $flashType = 'error';
+            $flashMessage = 'Role name must be between 2 and 50 characters.';
+        } elseif (strlen($roleDescription) > 500) {
+            $flashType = 'error';
+            $flashMessage = 'Role description must be 500 characters or less.';
+        } else {
+            $duplicate = $pdo->prepare('SELECT COUNT(*) AS count_value FROM `roles` WHERE LOWER(`rolename`) = LOWER(:rolename)');
+            $duplicate->execute(['rolename' => $roleName]);
+            $duplicateRow = $duplicate->fetch(PDO::FETCH_ASSOC);
+
+            if (((int) ($duplicateRow['count_value'] ?? 0)) > 0) {
+                $flashType = 'error';
+                $flashMessage = 'A role with that name already exists.';
+            } else {
+                $insert = $pdo->prepare(
+                    'INSERT INTO `roles` (`rolename`, `description`)
+                     VALUES (:rolename, :description)'
+                );
+                $insert->execute([
+                    'rolename' => $roleName,
+                    'description' => $roleDescription !== '' ? $roleDescription : null,
+                ]);
+
+                $flashMessage = 'Role "' . $roleName . '" created successfully.';
+            }
+        }
+    }
+
+    $roleWhere = '';
+    $roleParams = [];
+
+    if ($roleSearch !== '') {
+        $roleWhere = 'WHERE r.`rolename` LIKE :search OR r.`description` LIKE :search';
+        $roleParams['search'] = '%' . $roleSearch . '%';
+    }
+
     $statement = $pdo->prepare(
         'SELECT
             r.`id`,
@@ -96,10 +141,11 @@ try {
             COUNT(u.`id`) AS user_count
          FROM `roles` r
          LEFT JOIN `users` u ON u.`role_id` = r.`id`
+         ' . $roleWhere . '
          GROUP BY r.`id`, r.`rolename`, r.`description`, r.`created_at`
          ORDER BY r.`id` ASC'
     );
-    $statement->execute();
+    $statement->execute($roleParams);
     $roles = $statement->fetchAll(PDO::FETCH_ASSOC);
 
     $userCountStatement = $pdo->prepare('SELECT COUNT(*) AS count_value FROM `users`');
@@ -109,6 +155,9 @@ try {
 } catch (Throwable $exception) {
     $roles = [];
     $totalAssignedUsers = 0;
+    $roleSearch = '';
+    $flashMessage = '';
+    $flashType = 'error';
     $loadError = 'Roles could not be loaded. Check that MySQL is running.';
 }
 
@@ -129,14 +178,17 @@ ob_start();
             <h1>Roles &amp; Permissions</h1>
             <p>Manage user roles and their access permissions across the system.</p>
         </div>
-        <button class="af-add-menu-btn" type="button">
+        <a class="af-add-menu-btn" href="#add_role_form">
             <i class="bi bi-plus-lg" aria-hidden="true"></i>
             Add New Role
-        </button>
+        </a>
     </header>
 
     <?php if ($loadError !== ''): ?>
         <div class="af-admin-alert error"><?php echo htmlspecialchars($loadError, ENT_QUOTES, 'UTF-8'); ?></div>
+    <?php endif; ?>
+    <?php if ($flashMessage !== ''): ?>
+        <div class="af-admin-alert <?php echo htmlspecialchars($flashType, ENT_QUOTES, 'UTF-8'); ?>"><?php echo htmlspecialchars($flashMessage, ENT_QUOTES, 'UTF-8'); ?></div>
     <?php endif; ?>
 
     <section class="af-menu-metrics" aria-label="Role summary">
@@ -158,14 +210,33 @@ ob_start();
         </article>
     </section>
 
+    <section class="af-menu-table-card af-role-create-card">
+        <header class="af-table-toolbar">
+            <h2>Create Role</h2>
+            <p>Add a role that can be assigned to users from the Users page.</p>
+        </header>
+        <form id="add_role_form" class="af-food-management-form af-role-create-form" action="roles.php#add_role_form" method="post">
+            <input type="hidden" name="action" value="create_role">
+            <label>
+                <span>Role Name</span>
+                <input type="text" name="rolename" maxlength="50" placeholder="Example: Supervisor" required>
+            </label>
+            <label>
+                <span>Description</span>
+                <textarea name="description" rows="3" maxlength="500" placeholder="Describe what this role can manage"></textarea>
+            </label>
+            <button type="submit"><i class="bi bi-plus-lg" aria-hidden="true"></i> Create Role</button>
+        </form>
+    </section>
+
     <section class="af-roles-workspace">
         <section class="af-menu-table-card">
             <header class="af-table-toolbar">
                 <h2>All Roles</h2>
-                <form class="af-role-search" action="#" method="get">
+                <form class="af-role-search" action="roles.php" method="get">
                     <label class="af-menu-search" for="role_search">
                         <i class="bi bi-search" aria-hidden="true"></i>
-                        <input type="search" id="role_search" name="search" placeholder="Search roles...">
+                        <input type="search" id="role_search" name="search" value="<?php echo htmlspecialchars($roleSearch, ENT_QUOTES, 'UTF-8'); ?>" placeholder="Search roles...">
                     </label>
                     <button type="submit"><i class="bi bi-filter" aria-hidden="true"></i> Filter</button>
                 </form>

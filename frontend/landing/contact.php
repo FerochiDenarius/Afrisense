@@ -5,6 +5,8 @@ $activePage = 'contact';
 $extraStyles = [$frontendBase . '/assets/css/booking-contact.css'];
 $extraScripts = [$frontendBase . '/assets/js/booking-contact.js'];
 
+require_once __DIR__ . '/enquiry_helpers.php';
+
 $contactItems = [
     ['title' => 'Phone', 'icon' => 'bi-telephone', 'lines' => ['+233 24 123 4567', '+233 20 987 6543']],
     ['title' => 'Email', 'icon' => 'bi-envelope', 'lines' => ['info@afrisense.com', 'support@afrisense.com']],
@@ -19,6 +21,12 @@ $faqs = [
     ['question' => 'What payment methods do you accept?', 'answer' => 'We accept cash, card payments, and mobile money.'],
     ['question' => 'Do you cater for special events?', 'answer' => 'Yes, our catering team handles private, corporate, wedding, and custom events.'],
 ];
+
+$contactMessage = null;
+
+if (($_SERVER['REQUEST_METHOD'] ?? 'GET') === 'POST') {
+    $contactMessage = afrisense_submit_public_enquiry($_POST, 'Contact');
+}
 
 ob_start();
 ?>
@@ -50,13 +58,13 @@ ob_start();
                 </div>
             </header>
 
-            <form class="af-service-form" action="#" method="post" data-enhanced-form>
+            <form class="af-service-form" action="contact.php#contact_form" method="post" data-enhanced-form>
                 <div class="af-field-grid">
                     <div class="af-form-group">
                         <label for="contact_full_name">Full Name <strong>*</strong></label>
                         <div class="af-input-icon">
                             <i class="bi bi-person" aria-hidden="true"></i>
-                            <input type="text" id="contact_full_name" name="full_name" placeholder="Enter your full name" autocomplete="name" minlength="2" required>
+                            <input type="text" id="contact_full_name" name="full_name" value="<?php echo htmlspecialchars((string) ($_POST['full_name'] ?? ''), ENT_QUOTES, 'UTF-8'); ?>" placeholder="Enter your full name" autocomplete="name" minlength="2" required>
                         </div>
                         <small class="af-field-error">Please enter your full name.</small>
                     </div>
@@ -65,7 +73,7 @@ ob_start();
                         <label for="contact_email">Email Address <strong>*</strong></label>
                         <div class="af-input-icon">
                             <i class="bi bi-envelope" aria-hidden="true"></i>
-                            <input type="email" id="contact_email" name="email" placeholder="Enter your email address" autocomplete="email" required>
+                            <input type="email" id="contact_email" name="email" value="<?php echo htmlspecialchars((string) ($_POST['email'] ?? ''), ENT_QUOTES, 'UTF-8'); ?>" placeholder="Enter your email address" autocomplete="email" required>
                         </div>
                         <small class="af-field-error">Please enter a valid email address.</small>
                     </div>
@@ -74,7 +82,7 @@ ob_start();
                         <label for="contact_phone">Phone Number</label>
                         <div class="af-phone-field">
                             <span class="af-country-code"><span class="af-gh-flag" aria-hidden="true"></span> +233</span>
-                            <input type="tel" id="contact_phone" name="phone" placeholder="24 123 4567" autocomplete="tel-national" inputmode="tel" pattern="[0-9\s]{9,12}">
+                            <input type="tel" id="contact_phone" name="phone" value="<?php echo htmlspecialchars((string) ($_POST['phone'] ?? ''), ENT_QUOTES, 'UTF-8'); ?>" placeholder="24 123 4567" autocomplete="tel-national" inputmode="tel" pattern="[0-9\s]{9,12}">
                         </div>
                         <small class="af-field-error">Please enter a valid phone number.</small>
                     </div>
@@ -83,11 +91,12 @@ ob_start();
                         <label for="contact_subject">Subject <strong>*</strong></label>
                         <div class="af-select-wrap">
                             <select id="contact_subject" name="subject" required>
-                                <option value="" selected disabled>Select a subject</option>
-                                <option>Booking Support</option>
-                                <option>Order Enquiry</option>
-                                <option>Catering Request</option>
-                                <option>General Feedback</option>
+                                <option value="" <?php echo empty($_POST['subject']) ? 'selected' : ''; ?> disabled>Select a subject</option>
+                                <?php foreach (['Booking Support', 'Order Enquiry', 'Catering Request', 'General Feedback'] as $subjectOption): ?>
+                                    <option value="<?php echo htmlspecialchars($subjectOption, ENT_QUOTES, 'UTF-8'); ?>" <?php echo (string) ($_POST['subject'] ?? '') === $subjectOption ? 'selected' : ''; ?>>
+                                        <?php echo htmlspecialchars($subjectOption, ENT_QUOTES, 'UTF-8'); ?>
+                                    </option>
+                                <?php endforeach; ?>
                             </select>
                             <i class="bi bi-chevron-down" aria-hidden="true"></i>
                         </div>
@@ -97,7 +106,7 @@ ob_start();
                     <div class="af-form-group af-full-field">
                         <label for="contact_message">Message <strong>*</strong></label>
                         <div class="af-textarea-wrap">
-                            <textarea id="contact_message" name="message" minlength="10" maxlength="500" placeholder="Type your message here..." data-character-source required></textarea>
+                            <textarea id="contact_message" name="message" minlength="10" maxlength="500" placeholder="Type your message here..." data-character-source required><?php echo htmlspecialchars((string) ($_POST['message'] ?? ''), ENT_QUOTES, 'UTF-8'); ?></textarea>
                             <span class="af-character-count" data-character-count>0/500</span>
                         </div>
                         <small class="af-field-error">Please enter a message with at least 10 characters.</small>
@@ -108,7 +117,9 @@ ob_start();
                     <span>Send Message</span>
                     <i class="bi bi-send" aria-hidden="true"></i>
                 </button>
-                <p class="af-form-status" data-form-status aria-live="polite"></p>
+                <p class="af-form-status <?php echo $contactMessage !== null ? ($contactMessage['success'] ? 'is-success' : 'is-error') : ''; ?>" data-form-status aria-live="polite">
+                    <?php echo $contactMessage !== null ? htmlspecialchars((string) $contactMessage['message'], ENT_QUOTES, 'UTF-8') : ''; ?>
+                </p>
                 <p class="af-privacy-line"><i class="bi bi-lock-fill" aria-hidden="true"></i> We respect your privacy. Your information is safe with us.</p>
             </form>
         </section>

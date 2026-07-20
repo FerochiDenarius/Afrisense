@@ -1,0 +1,241 @@
+.af-public-gallery-hero {
+    min-height: 340px;
+    background:
+        linear-gradient(90deg, rgba(4, 18, 14, 0.92), rgba(4, 18, 14, 0.64), rgba(4, 18, 14, 0.85)),
+        url("../images/foods/jollof-rice.png") center/cover;
+    color: #fff;
+    display: grid;
+    align-items: center;
+    padding: 80px max(24px, calc((100vw - 1180px) / 2)) 64px;
+}
+
+.af-public-gallery-hero nav {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    color: rgba(255, 255, 255, 0.84);
+    font-size: 13px;
+    margin-bottom: 18px;
+}
+
+.af-public-gallery-hero nav a {
+    color: inherit;
+    text-decoration: none;
+}
+
+.af-public-gallery-hero p,
+.af-public-gallery-heading p {
+    color: #cc8f25;
+    font-size: 12px;
+    font-weight: 900;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+}
+
+.af-public-gallery-hero h1 {
+    max-width: 720px;
+    margin: 8px 0 12px;
+    font-family: Georgia, "Times New Roman", serif;
+    font-size: clamp(40px, 6vw, 72px);
+    line-height: 1;
+}
+
+.af-public-gallery-hero span {
+    color: rgba(255, 255, 255, 0.88);
+    display: block;
+    max-width: 560px;
+    font-size: 17px;
+    line-height: 1.7;
+}
+
+.af-public-gallery-page {
+    background: #f8faf9;
+    padding: 54px max(24px, calc((100vw - 1180px) / 2)) 70px;
+}
+
+.af-public-gallery-heading {
+    text-align: center;
+    margin-bottom: 26px;
+}
+
+.af-public-gallery-heading h2 {
+    color: #0d241e;
+    margin: 8px 0;
+    font-family: Georgia, "Times New Roman", serif;
+    font-size: clamp(32px, 4vw, 48px);
+}
+
+.af-public-gallery-heading small {
+    color: #667085;
+    display: block;
+    font-size: 14px;
+}
+
+.af-public-gallery-toolbar {
+    border: 1px solid #edf0f3;
+    border-radius: 8px;
+    background: #fff;
+    box-shadow: 0 12px 30px rgba(16, 24, 40, 0.06);
+    display: grid;
+    grid-template-columns: minmax(260px, 1fr) 220px 120px 100px;
+    gap: 14px;
+    margin-bottom: 24px;
+    padding: 16px;
+}
+
+.af-public-gallery-toolbar label {
+    position: relative;
+}
+
+.af-public-gallery-toolbar label i {
+    color: #667085;
+    left: 14px;
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+}
+
+.af-public-gallery-toolbar input,
+.af-public-gallery-toolbar select,
+.af-public-gallery-toolbar button,
+.af-public-gallery-toolbar a {
+    min-height: 46px;
+    border: 1px solid #d9dee6;
+    border-radius: 7px;
+    background: #fff;
+    color: #111827;
+    font: inherit;
+}
+
+.af-public-gallery-toolbar input {
+    width: 100%;
+    padding: 0 14px 0 42px;
+}
+
+.af-public-gallery-toolbar select {
+    padding: 0 12px;
+}
+
+.af-public-gallery-toolbar button,
+.af-public-gallery-toolbar a {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    padding: 0 14px;
+    font-size: 13px;
+    font-weight: 900;
+    text-decoration: none;
+}
+
+.af-public-gallery-toolbar button {
+    border-color: #0d241e;
+    background: linear-gradient(135deg, #06281f, #0d3b2f);
+    color: #fff;
+}
+
+.af-public-gallery-grid {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 22px;
+}
+
+.af-public-gallery-card {
+    border: 1px solid #edf0f3;
+    border-radius: 8px;
+    background: #fff;
+    box-shadow: 0 14px 34px rgba(16, 24, 40, 0.07);
+    overflow: hidden;
+    transition: transform 0.18s ease, box-shadow 0.18s ease;
+}
+
+.af-public-gallery-card:hover {
+    box-shadow: 0 22px 44px rgba(16, 24, 40, 0.12);
+    transform: translateY(-3px);
+}
+
+.af-public-gallery-card img {
+    width: 100%;
+    aspect-ratio: 1.45 / 1;
+    display: block;
+    object-fit: cover;
+    object-position: center;
+}
+
+.af-public-gallery-card div {
+    display: grid;
+    gap: 8px;
+    padding: 18px;
+}
+
+.af-public-gallery-card span {
+    width: max-content;
+    border-radius: 999px;
+    padding: 5px 10px;
+    font-size: 11px;
+    font-weight: 900;
+}
+
+.af-public-gallery-card span.food {
+    background: #e3f6e6;
+    color: #087a34;
+}
+
+.af-public-gallery-card span.drinks,
+.af-public-gallery-card span.soups {
+    background: #fff1db;
+    color: #c06f00;
+}
+
+.af-public-gallery-card span.events,
+.af-public-gallery-card span.packages {
+    background: #e5f0ff;
+    color: #2563eb;
+}
+
+.af-public-gallery-card h3 {
+    color: #111827;
+    font-size: 20px;
+    line-height: 1.25;
+}
+
+.af-public-gallery-card p {
+    color: #667085;
+    font-size: 14px;
+    line-height: 1.6;
+}
+
+.af-public-gallery-card small {
+    color: #98a2b3;
+    font-size: 12px;
+    font-weight: 800;
+}
+
+.af-public-gallery-empty {
+    grid-column: 1 / -1;
+    border: 1px dashed #d9dee6;
+    border-radius: 8px;
+    background: #fff;
+    color: #667085;
+    padding: 28px;
+    text-align: center;
+}
+
+@media (max-width: 960px) {
+    .af-public-gallery-toolbar,
+    .af-public-gallery-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+}
+
+@media (max-width: 640px) {
+    .af-public-gallery-toolbar,
+    .af-public-gallery-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .af-public-gallery-hero {
+        min-height: 300px;
+        padding-top: 54px;
+    }
+}

@@ -1,9 +1,31 @@
+<?php
+require_once __DIR__ . '/../includes/public_settings.php';
+
+$publicSettings = afrisense_public_settings();
+$websiteSettings = $publicSettings['website'];
+$companySettings = $publicSettings['company'];
+$siteName = (string) ($websiteSettings['site_name'] ?? 'AfriSense Food Services');
+$brandName = str_replace(' Food Services', '', $siteName);
+$siteTagline = (string) ($websiteSettings['site_tagline'] ?? 'Food Services');
+$heroTitle = (string) ($websiteSettings['hero_title'] ?? 'Exceptional Food Memorable Moments');
+$heroSubtitle = (string) ($websiteSettings['hero_subtitle'] ?? 'We provide delicious meals and professional catering services for all occasions.');
+$footerText = (string) ($websiteSettings['footer_text'] ?? '(c) 2026 AfriSense Food Services. All rights reserved.');
+$primaryPhone = (string) ($companySettings['phone_number_1'] ?? '+233 24 123 4567');
+$primaryColor = (string) ($websiteSettings['primary_color'] ?? '#b77b1a');
+$heroTitleWords = preg_split('/\s+/', trim($heroTitle)) ?: [];
+$heroHighlightWords = count($heroTitleWords) >= 2 ? array_splice($heroTitleWords, -2) : [];
+$heroTitleStart = implode(' ', $heroTitleWords);
+$heroTitleHighlight = implode(' ', $heroHighlightWords);
+?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>AfriSense Food Services</title>
+    <meta name="description" content="<?php echo htmlspecialchars($heroSubtitle !== '' ? $heroSubtitle : $siteTagline, ENT_QUOTES, 'UTF-8'); ?>">
+    <meta name="theme-color" content="<?php echo htmlspecialchars($primaryColor, ENT_QUOTES, 'UTF-8'); ?>">
+    <link rel="canonical" href="/Afrisense/frontend/landing/index.php">
+    <title><?php echo htmlspecialchars($siteName, ENT_QUOTES, 'UTF-8'); ?></title>
 
     <link rel="stylesheet" href="../assets/css/index.css">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
@@ -13,7 +35,7 @@
         <a class="brand" href="index.php" aria-label="AfriSense home">
             <span class="brand-icon" aria-hidden="true"><i class="bi bi-cup-hot"></i></span>
             <span>
-                <strong>AfriSense</strong>
+                <strong><?php echo htmlspecialchars($brandName, ENT_QUOTES, 'UTF-8'); ?></strong>
                 <small>Food Services</small>
             </span>
         </a>
@@ -22,6 +44,7 @@
             <ul>
                 <li><a class="active" href="index.php">Home</a></li>
                 <li><a href="menu.php">Menu</a></li>
+                <li><a href="gallery.php">Gallery</a></li>
                 <li><a href="services.php">Catering Packages</a></li>
                 <li><a href="booking.php">Book a Service</a></li>
                 <li><a href="about.php">About Us</a></li>
@@ -30,9 +53,9 @@
         </nav>
 
         <div class="header-actions">
-            <a class="phone-link" href="tel:+233241234567">
+            <a class="phone-link" href="<?php echo htmlspecialchars(afrisense_public_tel_href($primaryPhone), ENT_QUOTES, 'UTF-8'); ?>">
                 <span aria-hidden="true"><i class="bi bi-telephone"></i></span>
-                +233 24 123 4567
+                <?php echo htmlspecialchars($primaryPhone, ENT_QUOTES, 'UTF-8'); ?>
             </a>
             <a class="order-link" href="order.php">Order Now</a>
         </div>
@@ -42,10 +65,12 @@
         <section class="hero-section" aria-labelledby="hero-title">
             <div class="hero-copy">
                 <p class="eyebrow">Taste. Quality. Excellence</p>
-                <h1 id="hero-title">Exceptional Food <span>Memorable Moments</span></h1>
+                <h1 id="hero-title">
+                    <?php echo htmlspecialchars($heroTitleStart !== '' ? $heroTitleStart : $heroTitle, ENT_QUOTES, 'UTF-8'); ?>
+                    <?php if ($heroTitleHighlight !== ''): ?><span><?php echo htmlspecialchars($heroTitleHighlight, ENT_QUOTES, 'UTF-8'); ?></span><?php endif; ?>
+                </h1>
                 <p class="hero-description">
-                    We provide delicious meals and professional catering services for all occasions.
-                    From small gatherings to big events, we&apos;ve got you covered.
+                    <?php echo htmlspecialchars($heroSubtitle, ENT_QUOTES, 'UTF-8'); ?>
                 </p>
 
                 <div class="hero-actions">
@@ -275,7 +300,14 @@
     </main>
 
     <footer class="site-footer">
-        <p>&copy; 2024 AfriSense Food Services. All Rights Reserved.</p>
+        <p><?php echo htmlspecialchars($footerText, ENT_QUOTES, 'UTF-8'); ?></p>
+        <div class="site-footer-social" aria-label="Social media links">
+            <?php foreach (afrisense_public_social_links() as $social): ?>
+                <a href="<?php echo htmlspecialchars($social['url'], ENT_QUOTES, 'UTF-8'); ?>" aria-label="<?php echo htmlspecialchars($social['label'], ENT_QUOTES, 'UTF-8'); ?>">
+                    <i class="bi <?php echo htmlspecialchars($social['icon'], ENT_QUOTES, 'UTF-8'); ?>" aria-hidden="true"></i>
+                </a>
+            <?php endforeach; ?>
+        </div>
         <nav aria-label="Footer links">
             <a href="privacy.php">Privacy Policy</a>
             <a href="terms.php">Terms &amp; Conditions</a>
