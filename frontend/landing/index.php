@@ -1,5 +1,6 @@
 <?php
 require_once __DIR__ . '/../includes/public_settings.php';
+require_once __DIR__ . '/../includes/theme.php';
 
 $publicSettings = afrisense_public_settings();
 $websiteSettings = $publicSettings['website'];
@@ -29,6 +30,7 @@ $heroTitleHighlight = implode(' ', $heroHighlightWords);
 
     <link rel="stylesheet" href="../assets/css/index.css">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+    <?php afrisense_print_theme_style(); ?>
 </head>
 <body>
     <header class="site-header">

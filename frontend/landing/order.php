@@ -7,6 +7,7 @@ $extraStyles = [$frontendBase . '/assets/css/order-payment.css'];
 $extraScripts = [$frontendBase . '/assets/js/order.js'];
 
 require_once __DIR__ . '/../auth/auth_bootstrap.php';
+require_once __DIR__ . '/../includes/public_settings.php';
 
 \AfriSense\Backend\Helpers\Session::start();
 
@@ -196,10 +197,11 @@ try {
             $email = afrisense_guest_post('email');
             $phone = preg_replace('/\s+/', '', afrisense_guest_post('phone'));
             $address = afrisense_guest_post('delivery_address');
-            $paymentMethod = afrisense_guest_post('payment_method', 'Cash');
+            $availablePaymentMethods = afrisense_public_payment_methods();
+            $paymentMethod = afrisense_guest_post('payment_method', $availablePaymentMethods[0] ?? 'Cash');
             $note = afrisense_guest_post('cart_note', $note);
 
-            if ($cart === [] || $fullname === '' || !filter_var($email, FILTER_VALIDATE_EMAIL) || $phone === '' || $address === '' || !in_array($paymentMethod, ['Cash', 'Mobile Money', 'Card'], true)) {
+            if ($cart === [] || $fullname === '' || !filter_var($email, FILTER_VALIDATE_EMAIL) || $phone === '' || $address === '' || !afrisense_public_payment_method_allowed($paymentMethod)) {
                 $message = ['type' => 'error', 'text' => 'Complete your contact, delivery and payment details before checkout.'];
             } else {
                 $foodIds = array_keys($cart);
@@ -215,6 +217,14 @@ try {
                 foreach ($foodLookup->fetchAll(PDO::FETCH_ASSOC) as $food) {
                     $prices[(int) $food['id']] = (float) $food['price'];
                 }
+
+                $orderSubtotal = 0.00;
+                foreach ($cart as $cartFoodId => $quantity) {
+                    if (isset($prices[(int) $cartFoodId])) {
+                        $orderSubtotal += $prices[(int) $cartFoodId] * max(1, min(20, (int) $quantity));
+                    }
+                }
+                $orderDeliveryFee = afrisense_public_delivery_fee($orderSubtotal, $address);
 
                 $pdo->beginTransaction();
                 $customerId = afrisense_guest_customer_id($pdo, $fullname, $email, $phone, $address);
@@ -236,7 +246,7 @@ try {
                     $lineTotal = $prices[(int) $cartFoodId] * $quantity;
 
                     if (!$deliveryFeeApplied) {
-                        $lineTotal += 10.00;
+                        $lineTotal += $orderDeliveryFee;
                         $deliveryFeeApplied = true;
                     }
 
@@ -248,8 +258,8 @@ try {
                         'delivery_address' => $address,
                         'special_instructions' => $note,
                         'payment_method' => $paymentMethod,
-                        'payment_status' => 'Pending',
-                        'order_status' => 'Pending',
+                        'payment_status' => $paymentMethod === 'Cash' ? 'Pending' : 'Paid',
+                        'order_status' => afrisense_public_paid_order_status($paymentMethod),
                     ]);
                     $createdOrderIds[] = (int) $pdo->lastInsertId();
                 }
@@ -335,7 +345,7 @@ $subtotal = array_reduce(
     static fn (float $total, array $food): float => $total + ((float) $food['price'] * (int) $food['quantity']),
     0.00
 );
-$deliveryFee = $cartFoods === [] ? 0.00 : 10.00;
+$deliveryFee = $cartFoods === [] ? 0.00 : afrisense_public_delivery_fee($subtotal);
 $total = $subtotal + $deliveryFee;
 $cartCount = afrisense_guest_cart_count($cart);
 $categoryItems = [
@@ -481,9 +491,9 @@ ob_start();
 
             <form class="af-public-checkout-form" action="cart.php" method="get">
                 <dl class="af-order-total">
-                    <div><dt>Subtotal</dt><dd>GH₵ <?php echo htmlspecialchars(number_format($subtotal, 2), ENT_QUOTES, 'UTF-8'); ?></dd></div>
-                    <div><dt>Delivery Fee</dt><dd>GH₵ <?php echo htmlspecialchars(number_format($deliveryFee, 2), ENT_QUOTES, 'UTF-8'); ?></dd></div>
-                    <div><dt>Total</dt><dd>GH₵ <?php echo htmlspecialchars(number_format($total, 2), ENT_QUOTES, 'UTF-8'); ?></dd></div>
+                    <div><dt>Subtotal</dt><dd><?php echo htmlspecialchars(afrisense_public_money($subtotal), ENT_QUOTES, 'UTF-8'); ?></dd></div>
+                    <div><dt>Delivery Fee</dt><dd><?php echo htmlspecialchars(afrisense_public_money($deliveryFee), ENT_QUOTES, 'UTF-8'); ?></dd></div>
+                    <div><dt>Total</dt><dd><?php echo htmlspecialchars(afrisense_public_money($total), ENT_QUOTES, 'UTF-8'); ?></dd></div>
                 </dl>
                 <button class="af-checkout-btn" type="submit" <?php echo $cartFoods === [] ? 'disabled' : ''; ?>><i class="bi bi-bag-check"></i> View Cart &amp; Checkout</button>
             </form>
@@ -492,7 +502,7 @@ ob_start();
 
         <section class="af-delivery-info">
             <i class="bi bi-scooter"></i>
-            <div><h2>Delivery Information</h2><p>Fast delivery within Accra and environs. Estimated delivery time 30 - 60 minutes.</p><a href="contact.php">Change Location <i class="bi bi-arrow-right"></i></a></div>
+            <div><h2>Delivery Information</h2><p><?php echo htmlspecialchars(afrisense_public_delivery_instructions(), ENT_QUOTES, 'UTF-8'); ?> Estimated delivery time <?php echo htmlspecialchars(afrisense_public_delivery_time(), ENT_QUOTES, 'UTF-8'); ?>.</p><a href="contact.php">Change Location <i class="bi bi-arrow-right"></i></a></div>
         </section>
     </aside>
 </section>

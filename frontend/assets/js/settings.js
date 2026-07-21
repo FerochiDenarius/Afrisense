@@ -86,4 +86,55 @@ document.addEventListener("DOMContentLoaded", () => {
     });
 
     updateSocialPreview();
+
+    const deliveryZoneTable = document.querySelector("[data-delivery-zone-table]");
+    const addDeliveryZoneButton = document.querySelector("[data-add-delivery-zone]");
+
+    const bindDeliveryZoneRemove = (row) => {
+        const removeButton = row.querySelector("[data-remove-delivery-zone]");
+
+        if (!removeButton) {
+            return;
+        }
+
+        removeButton.addEventListener("click", () => {
+            const rows = deliveryZoneTable ? deliveryZoneTable.querySelectorAll("[data-delivery-zone-row]") : [];
+
+            if (rows.length <= 1) {
+                row.querySelectorAll("input").forEach((input) => {
+                    input.value = "";
+                });
+
+                const status = row.querySelector("select");
+                if (status) {
+                    status.value = "Inactive";
+                }
+
+                return;
+            }
+
+            row.remove();
+        });
+    };
+
+    if (deliveryZoneTable) {
+        deliveryZoneTable.querySelectorAll("[data-delivery-zone-row]").forEach(bindDeliveryZoneRemove);
+    }
+
+    if (deliveryZoneTable && addDeliveryZoneButton) {
+        addDeliveryZoneButton.addEventListener("click", () => {
+            const row = document.createElement("div");
+            row.dataset.deliveryZoneRow = "";
+            row.innerHTML = `
+                <span><input name="delivery_zones[name][]" type="text" placeholder="Zone name"></span>
+                <span><input name="delivery_zones[areas][]" type="text" placeholder="Areas / locations"></span>
+                <span><input name="delivery_zones[fee][]" type="number" min="0" step="0.01" value="0.00"></span>
+                <span><input name="delivery_zones[min_order][]" type="number" min="0" step="0.01" value="0.00"></span>
+                <span><select name="delivery_zones[status][]"><option value="Active">Active</option><option value="Inactive">Inactive</option></select></span>
+                <span><button type="button" class="af-icon-action danger" data-remove-delivery-zone title="Remove zone"><i class="bi bi-trash" aria-hidden="true"></i></button></span>
+            `;
+            deliveryZoneTable.appendChild(row);
+            bindDeliveryZoneRemove(row);
+        });
+    }
 });

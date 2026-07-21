@@ -9,6 +9,7 @@ $extraStyles = [
 ];
 
 require_once __DIR__ . '/../auth/auth_bootstrap.php';
+require_once __DIR__ . '/../includes/public_settings.php';
 
 \AfriSense\Backend\Helpers\Session::start();
 $authUser = afrisense_require_customer();
@@ -255,7 +256,7 @@ $selectedSubtotal = array_reduce(
     static fn (float $total, array $item): float => $total + (float) ($item['total_price'] ?? 0),
     0.00
 );
-$selectedDeliveryFee = $selectedItems !== [] ? 10.00 : 0.00;
+$selectedDeliveryFee = $selectedItems !== [] ? min($selectedSubtotal, afrisense_public_delivery_fee($selectedSubtotal, (string) ($selectedFirst['delivery_address'] ?? ''))) : 0.00;
 $selectedDisplaySubtotal = max(0.00, $selectedSubtotal - $selectedDeliveryFee);
 $selectedGroupId = (int) ($selectedFirst['id'] ?? $viewGroupId);
 
@@ -314,7 +315,7 @@ ob_start();
                             <small><i class="bi bi-geo-alt" aria-hidden="true"></i> <?php echo htmlspecialchars((string) ($order['delivery_address'] ?? ''), ENT_QUOTES, 'UTF-8'); ?></small>
                         </div>
                         <div class="af-my-order-price">
-                            <strong>GHC <?php echo htmlspecialchars(number_format((float) ($order['total_amount'] ?? 0), 2), ENT_QUOTES, 'UTF-8'); ?></strong>
+                            <strong><?php echo htmlspecialchars(afrisense_public_money((float) ($order['total_amount'] ?? 0)), ENT_QUOTES, 'UTF-8'); ?></strong>
                             <span class="<?php echo htmlspecialchars(afrisense_my_orders_payment_class($paymentStatus), ENT_QUOTES, 'UTF-8'); ?>"><?php echo htmlspecialchars($paymentStatus, ENT_QUOTES, 'UTF-8'); ?></span>
                         </div>
                         <div class="af-my-order-actions">
@@ -350,14 +351,14 @@ ob_start();
                         <article>
                             <img src="<?php echo htmlspecialchars(afrisense_my_orders_image($frontendBase, (string) ($item['image'] ?? '')), ENT_QUOTES, 'UTF-8'); ?>" alt="">
                             <strong><?php echo htmlspecialchars((string) ($item['food_name'] ?? 'Food'), ENT_QUOTES, 'UTF-8'); ?></strong>
-                            <span>GHC <?php echo htmlspecialchars(number_format((float) ($item['total_price'] ?? 0), 2), ENT_QUOTES, 'UTF-8'); ?><small>x<?php echo htmlspecialchars((string) ($item['quantity'] ?? 1), ENT_QUOTES, 'UTF-8'); ?></small></span>
+                            <span><?php echo htmlspecialchars(afrisense_public_money((float) ($item['total_price'] ?? 0)), ENT_QUOTES, 'UTF-8'); ?><small>x<?php echo htmlspecialchars((string) ($item['quantity'] ?? 1), ENT_QUOTES, 'UTF-8'); ?></small></span>
                         </article>
                     <?php endforeach; ?>
                 </section>
                 <dl class="af-detail-total">
-                    <div><dt>Subtotal</dt><dd>GHC <?php echo htmlspecialchars(number_format($selectedDisplaySubtotal, 2), ENT_QUOTES, 'UTF-8'); ?></dd></div>
-                    <div><dt>Delivery Fee</dt><dd>GHC <?php echo htmlspecialchars(number_format($selectedDeliveryFee, 2), ENT_QUOTES, 'UTF-8'); ?></dd></div>
-                    <div><dt>Total</dt><dd>GHC <?php echo htmlspecialchars(number_format($selectedSubtotal, 2), ENT_QUOTES, 'UTF-8'); ?></dd></div>
+                    <div><dt>Subtotal</dt><dd><?php echo htmlspecialchars(afrisense_public_money($selectedDisplaySubtotal), ENT_QUOTES, 'UTF-8'); ?></dd></div>
+                    <div><dt>Delivery Fee</dt><dd><?php echo htmlspecialchars(afrisense_public_money($selectedDeliveryFee), ENT_QUOTES, 'UTF-8'); ?></dd></div>
+                    <div><dt>Total</dt><dd><?php echo htmlspecialchars(afrisense_public_money($selectedSubtotal), ENT_QUOTES, 'UTF-8'); ?></dd></div>
                 </dl>
                 <section class="af-detail-payment">
                     <h3>Payment Method</h3>

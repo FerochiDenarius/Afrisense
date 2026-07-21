@@ -1,5 +1,6 @@
 <?php
 require_once __DIR__ . '/../auth/auth_bootstrap.php';
+require_once __DIR__ . '/../includes/theme.php';
 
 $authUser = afrisense_require_customer();
 $frontendBase = $frontendBase ?? '/Afrisense/frontend';
@@ -10,12 +11,15 @@ $customerName = $customerName ?? (string) ($authUser['fullname'] ?? $authUser['e
 $extraStyles = $extraStyles ?? [];
 $extraScripts = $extraScripts ?? [];
 $mainScriptVersion = filemtime(__DIR__ . '/../assets/js/main.js') ?: time();
+$themeSettings = afrisense_public_settings();
+$themeColor = afrisense_theme_color((string) ($themeSettings['website']['primary_color'] ?? ''), '#b77b1a');
 ?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="theme-color" content="<?php echo htmlspecialchars($themeColor, ENT_QUOTES, 'UTF-8'); ?>">
     <title><?php echo htmlspecialchars($pageTitle, ENT_QUOTES, 'UTF-8'); ?></title>
     <link rel="stylesheet" href="<?php echo htmlspecialchars($frontendBase . '/assets/css/main.css', ENT_QUOTES, 'UTF-8'); ?>">
     <link rel="stylesheet" href="<?php echo htmlspecialchars($frontendBase . '/assets/css/dashboard.css', ENT_QUOTES, 'UTF-8'); ?>">
@@ -23,6 +27,7 @@ $mainScriptVersion = filemtime(__DIR__ . '/../assets/js/main.js') ?: time();
     <?php foreach ($extraStyles as $style): ?>
         <link rel="stylesheet" href="<?php echo htmlspecialchars($style, ENT_QUOTES, 'UTF-8'); ?>">
     <?php endforeach; ?>
+    <?php afrisense_print_theme_style(); ?>
 </head>
 <body class="af-page af-dashboard-page">
     <?php require __DIR__ . '/../components/customer_sidebar.php'; ?>

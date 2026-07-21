@@ -65,15 +65,16 @@ $cart = is_array($cart) ? $cart : [];
 $details = $_SESSION['afrisense_guest_checkout'] ?? [];
 $details = is_array($details) ? $details : [];
 $message = null;
+$availablePaymentMethods = afrisense_public_payment_methods();
 
 try {
     $pdo = afrisense_pdo();
 
     if (($_SERVER['REQUEST_METHOD'] ?? 'GET') === 'POST' && ($_POST['action'] ?? '') === 'pay_now') {
-        $paymentMethod = (string) ($_POST['payment_method'] ?? 'Mobile Money');
+        $paymentMethod = (string) ($_POST['payment_method'] ?? ($availablePaymentMethods[0] ?? 'Cash'));
         $details['payment_method'] = $paymentMethod;
 
-        if ($cart === [] || empty($details['fullname']) || !filter_var((string) ($details['email'] ?? ''), FILTER_VALIDATE_EMAIL) || empty($details['phone']) || empty($details['delivery_address']) || !in_array($paymentMethod, ['Mobile Money', 'Card', 'Cash'], true)) {
+        if ($cart === [] || empty($details['fullname']) || !filter_var((string) ($details['email'] ?? ''), FILTER_VALIDATE_EMAIL) || empty($details['phone']) || empty($details['delivery_address']) || !afrisense_public_payment_method_allowed($paymentMethod)) {
             $message = ['type' => 'error', 'text' => 'Complete your cart and delivery details before payment.'];
         } else {
             $ids = array_keys($cart);
@@ -84,6 +85,14 @@ try {
             foreach ($foodLookup->fetchAll(PDO::FETCH_ASSOC) as $food) {
                 $prices[(int) $food['id']] = (float) $food['price'];
             }
+
+            $orderSubtotal = 0.00;
+            foreach ($cart as $foodId => $quantity) {
+                if (isset($prices[(int) $foodId])) {
+                    $orderSubtotal += $prices[(int) $foodId] * max(1, min(20, (int) $quantity));
+                }
+            }
+            $orderDeliveryFee = afrisense_public_delivery_fee($orderSubtotal, (string) ($details['delivery_address'] ?? ''));
 
             $pdo->beginTransaction();
             $customerId = afrisense_guest_payment_customer_id($pdo, $details);
@@ -99,7 +108,7 @@ try {
                 $quantity = max(1, min(20, (int) $quantity));
                 $lineTotal = $prices[(int) $foodId] * $quantity;
                 if (!$deliveryFeeApplied) {
-                    $lineTotal += 10.00;
+                    $lineTotal += $orderDeliveryFee;
                     $deliveryFeeApplied = true;
                 }
 
@@ -112,7 +121,7 @@ try {
                     'special_instructions' => (string) ($details['cart_note'] ?? ''),
                     'payment_method' => $paymentMethod === 'Card' ? 'Card' : ($paymentMethod === 'Mobile Money' ? 'Mobile Money' : 'Cash'),
                     'payment_status' => $paymentMethod === 'Cash' ? 'Pending' : 'Paid',
-                    'order_status' => 'Pending',
+                    'order_status' => afrisense_public_paid_order_status($paymentMethod),
                 ]);
                 $orderIds[] = (int) $pdo->lastInsertId();
             }
@@ -148,7 +157,7 @@ try {
 }
 
 $subtotal = array_reduce($cartFoods, static fn (float $total, array $food): float => $total + ((float) $food['price'] * (int) $food['quantity']), 0.00);
-$deliveryFee = $cartFoods === [] ? 0.00 : 10.00;
+$deliveryFee = $cartFoods === [] ? 0.00 : afrisense_public_delivery_fee($subtotal, (string) ($details['delivery_address'] ?? ''));
 $total = $subtotal + $deliveryFee;
 $publicSettings = afrisense_public_settings();
 $supportPhone = (string) ($publicSettings['company']['phone_number_1'] ?? '+233 24 123 4567');
@@ -171,8 +180,8 @@ ob_start();
             <p class="af-payment-alert"><i class="bi bi-shield-check"></i> Your payment is 100% secure and encrypted.</p>
             <form method="post">
                 <input type="hidden" name="action" value="pay_now">
-                <section class="af-payment-section"><h2>Choose Payment Method</h2><label class="af-payment-method is-active"><input type="radio" name="payment_method" value="Mobile Money" checked><i class="bi bi-phone"></i><span><strong>Mobile Money</strong><small>Pay using MTN Mobile Money, Vodafone Cash or AirtelTigo Money</small></span><em>MTN</em><em>Vodafone</em><em>airteltigo</em></label><label class="af-payment-method"><input type="radio" name="payment_method" value="Card"><i class="bi bi-credit-card"></i><span><strong>Card Payment</strong><small>Pay securely using your debit or credit card</small></span><em>VISA</em><em>Mastercard</em></label><label class="af-payment-method"><input type="radio" name="payment_method" value="Cash"><i class="bi bi-cash-coin"></i><span><strong>Cash on Delivery</strong><small>Pay when your food arrives</small></span><i class="bi bi-cash"></i></label></section>
-                <section class="af-payment-section"><h2>Pay with Mobile Money</h2><div class="af-billing-grid single"><label>Select Network<select name="network"><option>MTN Mobile Money</option><option>Vodafone Cash</option><option>AirtelTigo Money</option></select></label></div><label class="af-payment-input">Mobile Money Number<span><i class="bi bi-telephone"></i><input type="tel" name="momo_number" placeholder="Enter mobile money number"></span></label><p class="af-payment-warning"><i class="bi bi-info-circle"></i> You will receive a prompt on your phone to complete the payment.</p></section>
+                <section class="af-payment-section"><h2>Choose Payment Method</h2><?php foreach ($availablePaymentMethods as $index => $method): ?><label class="af-payment-method <?php echo $index === 0 ? 'is-active' : ''; ?>"><input type="radio" name="payment_method" value="<?php echo htmlspecialchars($method, ENT_QUOTES, 'UTF-8'); ?>" <?php echo $index === 0 ? 'checked' : ''; ?>><i class="bi <?php echo $method === 'Card' ? 'bi-credit-card' : ($method === 'Cash' ? 'bi-cash-coin' : 'bi-phone'); ?>"></i><span><strong><?php echo htmlspecialchars($method === 'Card' ? 'Card Payment' : ($method === 'Cash' ? 'Cash on Delivery' : 'Mobile Money'), ENT_QUOTES, 'UTF-8'); ?></strong><small><?php echo htmlspecialchars($method === 'Card' ? 'Pay securely using your debit or credit card' : ($method === 'Cash' ? 'Pay when your food arrives' : 'Pay using enabled mobile money gateways'), ENT_QUOTES, 'UTF-8'); ?></small></span></label><?php endforeach; ?></section>
+                <?php if (in_array('Mobile Money', $availablePaymentMethods, true)): ?><section class="af-payment-section"><h2>Pay with Mobile Money</h2><div class="af-billing-grid single"><label>Select Network<select name="network"><option>MTN Mobile Money</option><option>Vodafone Cash</option><option>AirtelTigo Money</option></select></label></div><label class="af-payment-input">Mobile Money Number<span><i class="bi bi-telephone"></i><input type="tel" name="momo_number" placeholder="Enter mobile money number"></span></label><p class="af-payment-warning"><i class="bi bi-info-circle"></i> <?php echo htmlspecialchars(afrisense_public_payment_instruction(), ENT_QUOTES, 'UTF-8'); ?></p></section><?php endif; ?>
                 <section class="af-payment-section"><h2>Billing Information</h2><div class="af-billing-grid"><label>Full Name<input type="text" value="<?php echo htmlspecialchars((string) ($details['fullname'] ?? ''), ENT_QUOTES, 'UTF-8'); ?>" readonly></label><label>Email Address<input type="email" value="<?php echo htmlspecialchars((string) ($details['email'] ?? ''), ENT_QUOTES, 'UTF-8'); ?>" readonly></label><label>Phone Number<input type="tel" value="<?php echo htmlspecialchars((string) ($details['phone'] ?? ''), ENT_QUOTES, 'UTF-8'); ?>" readonly></label></div><label class="af-terms"><input type="checkbox" required> I have read and agree to the <a href="terms.php">Terms &amp; Conditions</a></label><button class="af-pay-now" type="submit" <?php echo $cartFoods === [] ? 'disabled' : ''; ?>><i class="bi bi-lock"></i> Pay Now</button><a class="af-back-delivery" href="cart.php"><i class="bi bi-arrow-left"></i> Back to Cart</a></section>
             </form>
         </main>

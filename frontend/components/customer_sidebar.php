@@ -1,6 +1,12 @@
 <?php
+require_once __DIR__ . '/../includes/public_settings.php';
+
 $frontendBase = $frontendBase ?? '/Afrisense/frontend';
 $activeCustomerPage = $activeCustomerPage ?? '';
+$publicSettings = afrisense_public_settings();
+$customerSiteName = (string) ($publicSettings['website']['site_name'] ?? 'AfriSense Food Services');
+$customerBrandName = str_replace(' Food Services', '', $customerSiteName);
+$customerSiteTagline = (string) ($publicSettings['website']['site_tagline'] ?? 'Food Services');
 
 $customerItems = [
     ['key' => 'dashboard', 'label' => 'Dashboard', 'icon' => 'bi-house', 'href' => $frontendBase . '/customer/dashboard.php'],
@@ -19,8 +25,8 @@ $customerItems = [
     <a class="af-brand" href="<?php echo htmlspecialchars($frontendBase . '/customer/dashboard.php', ENT_QUOTES, 'UTF-8'); ?>" aria-label="AfriSense customer dashboard">
         <span class="af-brand-icon" aria-hidden="true"><i class="bi bi-cup-hot"></i></span>
         <span>
-            <strong>AfriSense</strong>
-            <small>Food Services</small>
+            <strong><?php echo htmlspecialchars($customerBrandName, ENT_QUOTES, 'UTF-8'); ?></strong>
+            <small><?php echo htmlspecialchars($customerSiteTagline, ENT_QUOTES, 'UTF-8'); ?></small>
         </span>
     </a>
 

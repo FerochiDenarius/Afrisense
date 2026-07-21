@@ -6,6 +6,7 @@ $publicHeaderMode = 'shop';
 $extraStyles = [$frontendBase . '/assets/css/order-payment.css'];
 
 require_once __DIR__ . '/../auth/auth_bootstrap.php';
+require_once __DIR__ . '/../includes/public_settings.php';
 
 \AfriSense\Backend\Helpers\Session::start();
 
@@ -126,18 +127,19 @@ if (!function_exists('afrisense_checkout_details_complete')) {
             && filter_var((string) ($details['email'] ?? ''), FILTER_VALIDATE_EMAIL) !== false
             && trim((string) ($details['phone'] ?? '')) !== ''
             && trim((string) ($details['delivery_address'] ?? '')) !== ''
-            && in_array((string) ($details['payment_method'] ?? ''), ['Cash', 'Mobile Money', 'Card'], true);
+            && afrisense_public_payment_method_allowed((string) ($details['payment_method'] ?? ''));
     }
 }
 
 $message = null;
 $cart = afrisense_checkout_cart();
+$availablePaymentMethods = afrisense_public_payment_methods();
 $details = $_SESSION['afrisense_guest_checkout'] ?? [
     'fullname' => '',
     'email' => '',
     'phone' => '',
     'delivery_address' => '',
-    'payment_method' => 'Cash',
+    'payment_method' => $availablePaymentMethods[0] ?? 'Cash',
     'cart_note' => (string) ($_SESSION['afrisense_guest_cart_note'] ?? ''),
 ];
 $showReview = afrisense_checkout_details_complete($details);
@@ -154,7 +156,7 @@ try {
                 'email' => trim((string) ($_POST['email'] ?? '')),
                 'phone' => preg_replace('/\s+/', '', trim((string) ($_POST['phone'] ?? ''))),
                 'delivery_address' => trim((string) ($_POST['delivery_address'] ?? '')),
-                'payment_method' => trim((string) ($_POST['payment_method'] ?? 'Cash')),
+                'payment_method' => trim((string) ($_POST['payment_method'] ?? ($availablePaymentMethods[0] ?? 'Cash'))),
                 'cart_note' => trim((string) ($_POST['cart_note'] ?? ($_SESSION['afrisense_guest_cart_note'] ?? ''))),
             ];
             $_SESSION['afrisense_guest_checkout'] = $details;
@@ -171,7 +173,7 @@ try {
         if ($action === 'place_order') {
             $details = $_SESSION['afrisense_guest_checkout'] ?? $details;
 
-            if ($cart === [] || $details['fullname'] === '' || !filter_var($details['email'], FILTER_VALIDATE_EMAIL) || $details['phone'] === '' || $details['delivery_address'] === '' || !in_array($details['payment_method'], ['Cash', 'Mobile Money', 'Card'], true)) {
+            if ($cart === [] || $details['fullname'] === '' || !filter_var($details['email'], FILTER_VALIDATE_EMAIL) || $details['phone'] === '' || $details['delivery_address'] === '' || !afrisense_public_payment_method_allowed((string) $details['payment_method'])) {
                 $message = ['type' => 'error', 'text' => 'Complete your checkout details before placing the order.'];
                 $showReview = false;
             } else {
@@ -188,6 +190,14 @@ try {
                 foreach ($foodLookup->fetchAll(PDO::FETCH_ASSOC) as $food) {
                     $prices[(int) $food['id']] = (float) $food['price'];
                 }
+
+                $orderSubtotal = 0.00;
+                foreach ($cart as $foodId => $quantity) {
+                    if (isset($prices[(int) $foodId])) {
+                        $orderSubtotal += $prices[(int) $foodId] * max(1, min(20, (int) $quantity));
+                    }
+                }
+                $orderDeliveryFee = afrisense_public_delivery_fee($orderSubtotal, (string) $details['delivery_address']);
 
                 $pdo->beginTransaction();
                 $customerId = afrisense_checkout_customer_id($pdo, $details);
@@ -209,7 +219,7 @@ try {
                     $lineTotal = $prices[(int) $foodId] * $quantity;
 
                     if (!$deliveryFeeApplied) {
-                        $lineTotal += 10.00;
+                        $lineTotal += $orderDeliveryFee;
                         $deliveryFeeApplied = true;
                     }
 
@@ -221,8 +231,8 @@ try {
                         'delivery_address' => $details['delivery_address'],
                         'special_instructions' => $details['cart_note'],
                         'payment_method' => $details['payment_method'],
-                        'payment_status' => 'Pending',
-                        'order_status' => 'Pending',
+                        'payment_status' => $details['payment_method'] === 'Cash' ? 'Pending' : 'Paid',
+                        'order_status' => afrisense_public_paid_order_status((string) $details['payment_method']),
                     ]);
                     $createdOrders++;
                 }
@@ -269,7 +279,7 @@ $subtotal = array_reduce(
     static fn (float $total, array $food): float => $total + ((float) $food['price'] * (int) $food['quantity']),
     0.00
 );
-$deliveryFee = $cartFoods === [] ? 0.00 : 10.00;
+$deliveryFee = $cartFoods === [] ? 0.00 : afrisense_public_delivery_fee($subtotal, (string) ($details['delivery_address'] ?? ''));
 $total = $subtotal + $deliveryFee;
 
 ob_start();
@@ -312,7 +322,7 @@ ob_start();
                     <label class="af-payment-input">Delivery Address<span><i class="bi bi-geo-alt"></i><input type="text" name="delivery_address" value="<?php echo htmlspecialchars((string) $details['delivery_address'], ENT_QUOTES, 'UTF-8'); ?>" placeholder="House number, street, area" required></span></label>
                     <div class="af-billing-grid single">
                         <label>Payment Method<select name="payment_method" required>
-                            <?php foreach (['Cash', 'Mobile Money', 'Card'] as $paymentMethod): ?>
+                            <?php foreach ($availablePaymentMethods as $paymentMethod): ?>
                                 <option value="<?php echo htmlspecialchars($paymentMethod, ENT_QUOTES, 'UTF-8'); ?>" <?php echo (string) $details['payment_method'] === $paymentMethod ? 'selected' : ''; ?>><?php echo htmlspecialchars($paymentMethod, ENT_QUOTES, 'UTF-8'); ?></option>
                             <?php endforeach; ?>
                         </select></label>
@@ -348,10 +358,10 @@ ob_start();
                     <article>
                         <img src="<?php echo htmlspecialchars(afrisense_checkout_image($frontendBase, (string) ($item['image'] ?? '')), ENT_QUOTES, 'UTF-8'); ?>" alt="<?php echo htmlspecialchars((string) $item['food_name'], ENT_QUOTES, 'UTF-8'); ?>">
                         <span><strong><?php echo htmlspecialchars((string) $item['food_name'], ENT_QUOTES, 'UTF-8'); ?></strong><small>Qty: <?php echo htmlspecialchars((string) $item['quantity'], ENT_QUOTES, 'UTF-8'); ?></small></span>
-                        <b>GH₵ <?php echo htmlspecialchars(number_format((float) $item['price'] * (int) $item['quantity'], 2), ENT_QUOTES, 'UTF-8'); ?></b>
+                        <b><?php echo htmlspecialchars(afrisense_public_money((float) $item['price'] * (int) $item['quantity']), ENT_QUOTES, 'UTF-8'); ?></b>
                     </article>
                 <?php endforeach; ?>
-                <dl><div><dt>Subtotal</dt><dd>GH₵ <?php echo htmlspecialchars(number_format($subtotal, 2), ENT_QUOTES, 'UTF-8'); ?></dd></div><div><dt>Delivery Fee</dt><dd>GH₵ <?php echo htmlspecialchars(number_format($deliveryFee, 2), ENT_QUOTES, 'UTF-8'); ?></dd></div><div class="total"><dt>Total Amount</dt><dd>GH₵ <?php echo htmlspecialchars(number_format($total, 2), ENT_QUOTES, 'UTF-8'); ?></dd></div></dl>
+                <dl><div><dt>Subtotal</dt><dd><?php echo htmlspecialchars(afrisense_public_money($subtotal), ENT_QUOTES, 'UTF-8'); ?></dd></div><div><dt>Delivery Fee</dt><dd><?php echo htmlspecialchars(afrisense_public_money($deliveryFee), ENT_QUOTES, 'UTF-8'); ?></dd></div><div class="total"><dt>Total Amount</dt><dd><?php echo htmlspecialchars(afrisense_public_money($total), ENT_QUOTES, 'UTF-8'); ?></dd></div></dl>
             </section>
 
             <section class="af-summary-card af-payment-help">

@@ -1,8 +1,14 @@
 <?php
+require_once __DIR__ . '/../includes/public_settings.php';
+
 $adminTitle = $adminTitle ?? 'Dashboard';
 $adminName = $adminName ?? 'Admin User';
 $adminRole = $adminRole ?? 'Super Admin';
 $frontendBase = $frontendBase ?? '/Afrisense/frontend';
+$publicSettings = afrisense_public_settings();
+$adminSiteName = (string) ($publicSettings['website']['site_name'] ?? 'AfriSense Food Services');
+$adminBrandName = str_replace(' Food Services', '', $adminSiteName);
+$adminSiteTagline = (string) ($publicSettings['website']['site_tagline'] ?? 'Food Services');
 $adminUnreadNotifications = 0;
 $adminUnreadEnquiries = 0;
 
@@ -33,8 +39,8 @@ try {
     <a class="af-header-brand" href="<?php echo htmlspecialchars($frontendBase . '/admin/dashboard.php', ENT_QUOTES, 'UTF-8'); ?>" aria-label="AfriSense admin dashboard">
         <span class="af-brand-icon" aria-hidden="true"><i class="bi bi-cup-hot"></i></span>
         <span>
-            <strong>AfriSense</strong>
-            <small>Food Services</small>
+            <strong><?php echo htmlspecialchars($adminBrandName, ENT_QUOTES, 'UTF-8'); ?></strong>
+            <small><?php echo htmlspecialchars($adminSiteTagline, ENT_QUOTES, 'UTF-8'); ?></small>
         </span>
     </a>
 

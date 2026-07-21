@@ -9,6 +9,7 @@ $extraStyles = [
 ];
 
 require_once __DIR__ . '/../auth/auth_bootstrap.php';
+require_once __DIR__ . '/../includes/public_settings.php';
 
 \AfriSense\Backend\Helpers\Session::start();
 $authUser = afrisense_require_customer();
@@ -131,12 +132,13 @@ try {
 }
 
 $subtotal = array_reduce($cartFoods, static fn (float $total, array $food): float => $total + ((float) $food['price'] * (int) $food['quantity']), 0.00);
-$deliveryFee = $cartFoods === [] ? 0.00 : 10.00;
-$serviceFee = $cartFoods === [] ? 0.00 : 5.00;
+$defaultAddress = (string) ($checkout['delivery_address'] ?? $customer['address'] ?? '');
+$deliveryFee = $cartFoods === [] ? 0.00 : afrisense_public_delivery_fee($subtotal, $defaultAddress);
+$serviceFee = $cartFoods === [] ? 0.00 : afrisense_public_service_fee();
 $discount = $subtotal >= 200 ? 15.00 : 0.00;
 $total = max(0.00, $subtotal + $deliveryFee + $serviceFee - $discount);
-$freeDeliveryRemaining = max(0.00, 275.00 - $subtotal);
-$defaultAddress = (string) ($checkout['delivery_address'] ?? $customer['address'] ?? '');
+$freeDeliveryOver = afrisense_public_free_delivery_over();
+$freeDeliveryRemaining = max(0.00, $freeDeliveryOver - $subtotal);
 $cartNote = (string) ($_SESSION['afrisense_customer_cart_note'] ?? $checkout['cart_note'] ?? '');
 
 ob_start();
@@ -153,9 +155,9 @@ ob_start();
     <section class="af-cart-layout">
         <main>
             <div class="af-free-delivery">
-                <span><i class="bi bi-check-circle" aria-hidden="true"></i> You're only GHC <?php echo htmlspecialchars(number_format($freeDeliveryRemaining, 2), ENT_QUOTES, 'UTF-8'); ?> away from FREE delivery!</span>
-                <strong>GHC <?php echo htmlspecialchars(number_format($freeDeliveryRemaining, 2), ENT_QUOTES, 'UTF-8'); ?></strong>
-                <i style="--progress: <?php echo htmlspecialchars((string) min(100, ($subtotal / 275) * 100), ENT_QUOTES, 'UTF-8'); ?>%"></i>
+                <span><i class="bi bi-check-circle" aria-hidden="true"></i> You're only <?php echo htmlspecialchars(afrisense_public_money($freeDeliveryRemaining), ENT_QUOTES, 'UTF-8'); ?> away from FREE delivery!</span>
+                <strong><?php echo htmlspecialchars(afrisense_public_money($freeDeliveryRemaining), ENT_QUOTES, 'UTF-8'); ?></strong>
+                <i style="--progress: <?php echo htmlspecialchars((string) ($freeDeliveryOver > 0 ? min(100, ($subtotal / $freeDeliveryOver) * 100) : 100), ENT_QUOTES, 'UTF-8'); ?>%"></i>
             </div>
 
             <section class="af-cart-table-card">
@@ -196,13 +198,13 @@ ob_start();
         <aside class="af-cart-summary-panel">
             <h2>Order Summary</h2>
             <dl>
-                <div><dt>Subtotal (<?php echo htmlspecialchars((string) array_sum(array_map('intval', $cart)), ENT_QUOTES, 'UTF-8'); ?> items)</dt><dd>GHC <?php echo htmlspecialchars(number_format($subtotal, 2), ENT_QUOTES, 'UTF-8'); ?></dd></div>
-                <div><dt>Delivery Fee</dt><dd>GHC <?php echo htmlspecialchars(number_format($deliveryFee, 2), ENT_QUOTES, 'UTF-8'); ?></dd></div>
-                <div><dt>Service Fee <i class="bi bi-info-circle"></i></dt><dd>GHC <?php echo htmlspecialchars(number_format($serviceFee, 2), ENT_QUOTES, 'UTF-8'); ?></dd></div>
-                <div><dt>Discount <i class="bi bi-tags"></i></dt><dd class="discount">- GHC <?php echo htmlspecialchars(number_format($discount, 2), ENT_QUOTES, 'UTF-8'); ?></dd></div>
-                <div class="total"><dt>Total</dt><dd>GHC <?php echo htmlspecialchars(number_format($total, 2), ENT_QUOTES, 'UTF-8'); ?></dd></div>
+                <div><dt>Subtotal (<?php echo htmlspecialchars((string) array_sum(array_map('intval', $cart)), ENT_QUOTES, 'UTF-8'); ?> items)</dt><dd><?php echo htmlspecialchars(afrisense_public_money($subtotal), ENT_QUOTES, 'UTF-8'); ?></dd></div>
+                <div><dt>Delivery Fee</dt><dd><?php echo htmlspecialchars(afrisense_public_money($deliveryFee), ENT_QUOTES, 'UTF-8'); ?></dd></div>
+                <div><dt>Service Fee <i class="bi bi-info-circle"></i></dt><dd><?php echo htmlspecialchars(afrisense_public_money($serviceFee), ENT_QUOTES, 'UTF-8'); ?></dd></div>
+                <div><dt>Discount <i class="bi bi-tags"></i></dt><dd class="discount">- <?php echo htmlspecialchars(afrisense_public_money($discount), ENT_QUOTES, 'UTF-8'); ?></dd></div>
+                <div class="total"><dt>Total</dt><dd><?php echo htmlspecialchars(afrisense_public_money($total), ENT_QUOTES, 'UTF-8'); ?></dd></div>
             </dl>
-            <p class="af-delivery-estimate"><i class="bi bi-scooter"></i><span>Estimated Delivery Time <strong>30 - 45 minutes</strong></span></p>
+            <p class="af-delivery-estimate"><i class="bi bi-scooter"></i><span>Estimated Delivery Time <strong><?php echo htmlspecialchars(afrisense_public_delivery_time(), ENT_QUOTES, 'UTF-8'); ?></strong></span></p>
             <form class="af-cart-checkout-box" method="post">
                 <input type="hidden" name="action" value="save_checkout">
                 <label>Delivering to<input type="text" name="delivery_address" value="<?php echo htmlspecialchars($defaultAddress, ENT_QUOTES, 'UTF-8'); ?>" placeholder="Home - East Legon, Accra" required></label>

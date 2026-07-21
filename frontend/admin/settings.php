@@ -25,8 +25,78 @@ function afrisense_fetch_first_row(PDO $pdo, string $table): array
     return $row ?: [];
 }
 
+function afrisense_column_exists(PDO $pdo, string $table, string $column): bool
+{
+    $statement = $pdo->prepare(
+        'SELECT COUNT(*) AS count_value
+         FROM INFORMATION_SCHEMA.COLUMNS
+         WHERE TABLE_SCHEMA = DATABASE()
+           AND TABLE_NAME = :table_name
+           AND COLUMN_NAME = :column_name'
+    );
+    $statement->execute([
+        'table_name' => $table,
+        'column_name' => $column,
+    ]);
+    $row = $statement->fetch(PDO::FETCH_ASSOC);
+
+    return ((int) ($row['count_value'] ?? 0)) > 0;
+}
+
+function afrisense_ensure_column(PDO $pdo, string $table, string $column, string $definition): void
+{
+    if (afrisense_column_exists($pdo, $table, $column)) {
+        return;
+    }
+
+    $statement = $pdo->prepare(sprintf('ALTER TABLE `%s` ADD COLUMN `%s` %s', $table, $column, $definition));
+    $statement->execute();
+}
+
 function afrisense_ensure_settings_rows(PDO $pdo): void
 {
+    afrisense_ensure_column($pdo, 'company_information', 'tiktok_url', 'VARCHAR(255) NULL AFTER `youtube_url`');
+
+    $systemColumns = [
+        'payment_gateway' => 'VARCHAR(50) NOT NULL DEFAULT "Paystack"',
+        'paystack_enabled' => 'TINYINT(1) NOT NULL DEFAULT 1',
+        'mtn_momo_enabled' => 'TINYINT(1) NOT NULL DEFAULT 1',
+        'vodafone_cash_enabled' => 'TINYINT(1) NOT NULL DEFAULT 0',
+        'flutterwave_enabled' => 'TINYINT(1) NOT NULL DEFAULT 1',
+        'mobile_money_enabled' => 'TINYINT(1) NOT NULL DEFAULT 1',
+        'card_payment_enabled' => 'TINYINT(1) NOT NULL DEFAULT 1',
+        'cash_payment_enabled' => 'TINYINT(1) NOT NULL DEFAULT 1',
+        'guest_checkout_enabled' => 'TINYINT(1) NOT NULL DEFAULT 1',
+        'auto_confirm_paid_orders' => 'TINYINT(1) NOT NULL DEFAULT 1',
+        'payment_test_mode' => 'TINYINT(1) NOT NULL DEFAULT 0',
+        'payment_public_key' => 'VARCHAR(255) NULL',
+        'payment_secret_key' => 'VARCHAR(255) NULL',
+        'payment_webhook_secret' => 'VARCHAR(255) NULL',
+        'payment_instruction' => 'TEXT NULL',
+        'refund_policy' => 'VARCHAR(100) NOT NULL DEFAULT "Allow refund within 7 days"',
+        'cancellation_policy' => 'VARCHAR(100) NOT NULL DEFAULT "Allow cancellation before delivery"',
+        'refund_process_message' => 'TEXT NULL',
+        'delivery_fee' => 'DECIMAL(10,2) NOT NULL DEFAULT 10.00',
+        'service_fee' => 'DECIMAL(10,2) NOT NULL DEFAULT 5.00',
+        'free_delivery_over' => 'DECIMAL(10,2) NOT NULL DEFAULT 275.00',
+        'delivery_zones' => 'TEXT NULL',
+        'default_delivery_time' => 'VARCHAR(50) NOT NULL DEFAULT "30 - 45 minutes"',
+        'maximum_delivery_time' => 'VARCHAR(50) NOT NULL DEFAULT "90 minutes"',
+        'order_cutoff_time' => 'VARCHAR(20) NOT NULL DEFAULT "22:00"',
+        'same_day_delivery' => 'TINYINT(1) NOT NULL DEFAULT 1',
+        'weekend_delivery' => 'TINYINT(1) NOT NULL DEFAULT 1',
+        'real_time_tracking' => 'TINYINT(1) NOT NULL DEFAULT 1',
+        'standard_delivery_enabled' => 'TINYINT(1) NOT NULL DEFAULT 1',
+        'express_delivery_enabled' => 'TINYINT(1) NOT NULL DEFAULT 1',
+        'scheduled_delivery_enabled' => 'TINYINT(1) NOT NULL DEFAULT 1',
+        'pickup_enabled' => 'TINYINT(1) NOT NULL DEFAULT 1',
+        'delivery_instructions' => 'TEXT NULL',
+    ];
+
+    foreach ($systemColumns as $column => $definition) {
+        afrisense_ensure_column($pdo, 'system_settings', $column, $definition);
+    }
+
     if (afrisense_fetch_first_row($pdo, 'website_settings') === []) {
         $statement = $pdo->prepare(
             'INSERT INTO `website_settings`
@@ -90,6 +160,154 @@ function afrisense_ensure_settings_rows(PDO $pdo): void
 function afrisense_post_value(array $source, string $key, string $fallback = ''): string
 {
     return trim((string) ($source[$key] ?? $fallback));
+}
+
+function afrisense_social_post_value(array $company, string $key, string $activeSection): string
+{
+    if ($activeSection !== 'social') {
+        return (string) ($company[$key] ?? '');
+    }
+
+    $enabled = isset($_POST['social_enabled']) && is_array($_POST['social_enabled']) && isset($_POST['social_enabled'][$key]);
+
+    if (!$enabled) {
+        return '';
+    }
+
+    $url = afrisense_post_value($_POST, $key);
+
+    if ($url !== '' && filter_var($url, FILTER_VALIDATE_URL) === false) {
+        throw new RuntimeException('Please enter a valid URL for ' . str_replace('_url', '', $key) . '.');
+    }
+
+    return $url;
+}
+
+function afrisense_post_bool_setting(string $key, array $system, string $activeSection, string $section): int
+{
+    if ($activeSection !== $section) {
+        return (int) ($system[$key] ?? 0);
+    }
+
+    return isset($_POST[$key]) ? 1 : 0;
+}
+
+function afrisense_post_text_setting(string $key, array $system, string $activeSection, string $section, string $fallback = ''): string
+{
+    if ($activeSection !== $section) {
+        return (string) ($system[$key] ?? $fallback);
+    }
+
+    return afrisense_post_value($_POST, $key, $fallback);
+}
+
+function afrisense_post_decimal_setting(string $key, array $system, string $activeSection, string $section, float $fallback): float
+{
+    if ($activeSection !== $section) {
+        return (float) ($system[$key] ?? $fallback);
+    }
+
+    return max(0.00, (float) afrisense_post_value($_POST, $key, (string) $fallback));
+}
+
+function afrisense_default_delivery_zones(float $baseDeliveryFee = 10.00): array
+{
+    return [
+        [
+            'name' => 'Accra Central',
+            'areas' => 'Osu, Airport, Labone, Cantonments, East Legon',
+            'fee' => $baseDeliveryFee,
+            'min_order' => 60.00,
+            'status' => 'Active',
+        ],
+        [
+            'name' => 'Accra Surrounding',
+            'areas' => 'Madina, Adenta, Achimota, Dansoman, Nungua',
+            'fee' => $baseDeliveryFee + 5.00,
+            'min_order' => 80.00,
+            'status' => 'Active',
+        ],
+        [
+            'name' => 'Greater Accra',
+            'areas' => 'Tema, Prampram, Kasoa, Amasaman, Teshie, Bortianor',
+            'fee' => $baseDeliveryFee + 15.00,
+            'min_order' => 120.00,
+            'status' => 'Inactive',
+        ],
+    ];
+}
+
+function afrisense_delivery_zones(array $system): array
+{
+    $baseDeliveryFee = (float) ($system['delivery_fee'] ?? 10.00);
+    $decoded = json_decode((string) ($system['delivery_zones'] ?? ''), true);
+
+    if (!is_array($decoded)) {
+        return afrisense_default_delivery_zones($baseDeliveryFee);
+    }
+
+    $zones = [];
+    foreach ($decoded as $zone) {
+        if (!is_array($zone)) {
+            continue;
+        }
+
+        $name = trim((string) ($zone['name'] ?? ''));
+        $areas = trim((string) ($zone['areas'] ?? ''));
+
+        if ($name === '' && $areas === '') {
+            continue;
+        }
+
+        $zones[] = [
+            'name' => $name !== '' ? $name : 'Delivery Zone',
+            'areas' => $areas,
+            'fee' => max(0.00, (float) ($zone['fee'] ?? $baseDeliveryFee)),
+            'min_order' => max(0.00, (float) ($zone['min_order'] ?? 0.00)),
+            'status' => in_array((string) ($zone['status'] ?? 'Active'), ['Active', 'Inactive'], true) ? (string) $zone['status'] : 'Active',
+        ];
+    }
+
+    return $zones !== [] ? $zones : afrisense_default_delivery_zones($baseDeliveryFee);
+}
+
+function afrisense_post_delivery_zones(array $system, string $activeSection): string
+{
+    if ($activeSection !== 'delivery') {
+        return (string) ($system['delivery_zones'] ?? '');
+    }
+
+    $postedZones = $_POST['delivery_zones'] ?? [];
+
+    if (!is_array($postedZones)) {
+        return json_encode(afrisense_default_delivery_zones(), JSON_THROW_ON_ERROR);
+    }
+
+    $names = is_array($postedZones['name'] ?? null) ? $postedZones['name'] : [];
+    $areasList = is_array($postedZones['areas'] ?? null) ? $postedZones['areas'] : [];
+    $fees = is_array($postedZones['fee'] ?? null) ? $postedZones['fee'] : [];
+    $minimums = is_array($postedZones['min_order'] ?? null) ? $postedZones['min_order'] : [];
+    $statuses = is_array($postedZones['status'] ?? null) ? $postedZones['status'] : [];
+    $zones = [];
+
+    foreach ($names as $index => $name) {
+        $zoneName = trim((string) $name);
+        $zoneAreas = trim((string) ($areasList[$index] ?? ''));
+
+        if ($zoneName === '' && $zoneAreas === '') {
+            continue;
+        }
+
+        $zones[] = [
+            'name' => $zoneName !== '' ? $zoneName : 'Delivery Zone',
+            'areas' => $zoneAreas,
+            'fee' => max(0.00, (float) ($fees[$index] ?? 0.00)),
+            'min_order' => max(0.00, (float) ($minimums[$index] ?? 0.00)),
+            'status' => in_array((string) ($statuses[$index] ?? 'Active'), ['Active', 'Inactive'], true) ? (string) $statuses[$index] : 'Active',
+        ];
+    }
+
+    return json_encode($zones !== [] ? $zones : afrisense_default_delivery_zones(), JSON_THROW_ON_ERROR);
 }
 
 function afrisense_upload_settings_asset(string $field, string $prefix): ?string
@@ -282,6 +500,7 @@ try {
                  `twitter_url` = :twitter_url,
                  `linkedin_url` = :linkedin_url,
                  `youtube_url` = :youtube_url,
+                 `tiktok_url` = :tiktok_url,
                  `updated_at` = NOW()
              ORDER BY `id` ASC
              LIMIT 1'
@@ -298,11 +517,12 @@ try {
             'country' => afrisense_post_value($_POST, 'country', (string) ($company['country'] ?? 'Ghana')),
             'business_hours' => afrisense_post_value($_POST, 'business_hours', (string) ($company['business_hours'] ?? '')),
             'google_map_iframe' => afrisense_post_value($_POST, 'google_map_iframe', (string) ($company['google_map_iframe'] ?? '')),
-            'facebook_url' => afrisense_post_value($_POST, 'facebook_url', (string) ($company['facebook_url'] ?? '')),
-            'instagram_url' => afrisense_post_value($_POST, 'instagram_url', (string) ($company['instagram_url'] ?? '')),
-            'twitter_url' => afrisense_post_value($_POST, 'twitter_url', (string) ($company['twitter_url'] ?? '')),
-            'linkedin_url' => afrisense_post_value($_POST, 'linkedin_url', (string) ($company['linkedin_url'] ?? '')),
-            'youtube_url' => afrisense_post_value($_POST, 'youtube_url', (string) ($company['youtube_url'] ?? '')),
+            'facebook_url' => afrisense_social_post_value($company, 'facebook_url', $activeSettingSection),
+            'instagram_url' => afrisense_social_post_value($company, 'instagram_url', $activeSettingSection),
+            'twitter_url' => afrisense_social_post_value($company, 'twitter_url', $activeSettingSection),
+            'linkedin_url' => afrisense_social_post_value($company, 'linkedin_url', $activeSettingSection),
+            'youtube_url' => afrisense_social_post_value($company, 'youtube_url', $activeSettingSection),
+            'tiktok_url' => afrisense_social_post_value($company, 'tiktok_url', $activeSettingSection),
         ]);
 
         $statement = $pdo->prepare(
@@ -319,6 +539,39 @@ try {
                  `booking_notifications` = :booking_notifications,
                  `order_notifications` = :order_notifications,
                  `items_per_page` = :items_per_page,
+                 `payment_gateway` = :payment_gateway,
+                 `paystack_enabled` = :paystack_enabled,
+                 `mtn_momo_enabled` = :mtn_momo_enabled,
+                 `vodafone_cash_enabled` = :vodafone_cash_enabled,
+                 `flutterwave_enabled` = :flutterwave_enabled,
+                 `mobile_money_enabled` = :mobile_money_enabled,
+                 `card_payment_enabled` = :card_payment_enabled,
+                 `cash_payment_enabled` = :cash_payment_enabled,
+                 `guest_checkout_enabled` = :guest_checkout_enabled,
+                 `auto_confirm_paid_orders` = :auto_confirm_paid_orders,
+                 `payment_test_mode` = :payment_test_mode,
+                 `payment_public_key` = :payment_public_key,
+                 `payment_secret_key` = :payment_secret_key,
+                 `payment_webhook_secret` = :payment_webhook_secret,
+                 `payment_instruction` = :payment_instruction,
+                 `refund_policy` = :refund_policy,
+                 `cancellation_policy` = :cancellation_policy,
+                 `refund_process_message` = :refund_process_message,
+                 `delivery_fee` = :delivery_fee,
+                 `service_fee` = :service_fee,
+                 `free_delivery_over` = :free_delivery_over,
+                 `delivery_zones` = :delivery_zones,
+                 `default_delivery_time` = :default_delivery_time,
+                 `maximum_delivery_time` = :maximum_delivery_time,
+                 `order_cutoff_time` = :order_cutoff_time,
+                 `same_day_delivery` = :same_day_delivery,
+                 `weekend_delivery` = :weekend_delivery,
+                 `real_time_tracking` = :real_time_tracking,
+                 `standard_delivery_enabled` = :standard_delivery_enabled,
+                 `express_delivery_enabled` = :express_delivery_enabled,
+                 `scheduled_delivery_enabled` = :scheduled_delivery_enabled,
+                 `pickup_enabled` = :pickup_enabled,
+                 `delivery_instructions` = :delivery_instructions,
                  `updated_at` = NOW()
              ORDER BY `id` ASC
              LIMIT 1'
@@ -336,6 +589,39 @@ try {
             'booking_notifications' => $bookingNotifications,
             'order_notifications' => $orderNotifications,
             'items_per_page' => max(5, min(100, (int) afrisense_post_value($_POST, 'items_per_page', (string) ($system['items_per_page'] ?? '10')))),
+            'payment_gateway' => afrisense_post_text_setting('payment_gateway', $system, $activeSettingSection, 'payment', 'Paystack'),
+            'paystack_enabled' => afrisense_post_bool_setting('paystack_enabled', $system, $activeSettingSection, 'payment'),
+            'mtn_momo_enabled' => afrisense_post_bool_setting('mtn_momo_enabled', $system, $activeSettingSection, 'payment'),
+            'vodafone_cash_enabled' => afrisense_post_bool_setting('vodafone_cash_enabled', $system, $activeSettingSection, 'payment'),
+            'flutterwave_enabled' => afrisense_post_bool_setting('flutterwave_enabled', $system, $activeSettingSection, 'payment'),
+            'mobile_money_enabled' => afrisense_post_bool_setting('mobile_money_enabled', $system, $activeSettingSection, 'payment'),
+            'card_payment_enabled' => afrisense_post_bool_setting('card_payment_enabled', $system, $activeSettingSection, 'payment'),
+            'cash_payment_enabled' => afrisense_post_bool_setting('cash_payment_enabled', $system, $activeSettingSection, 'payment'),
+            'guest_checkout_enabled' => afrisense_post_bool_setting('guest_checkout_enabled', $system, $activeSettingSection, 'payment'),
+            'auto_confirm_paid_orders' => afrisense_post_bool_setting('auto_confirm_paid_orders', $system, $activeSettingSection, 'payment'),
+            'payment_test_mode' => afrisense_post_bool_setting('payment_test_mode', $system, $activeSettingSection, 'payment'),
+            'payment_public_key' => afrisense_post_text_setting('payment_public_key', $system, $activeSettingSection, 'payment'),
+            'payment_secret_key' => afrisense_post_text_setting('payment_secret_key', $system, $activeSettingSection, 'payment'),
+            'payment_webhook_secret' => afrisense_post_text_setting('payment_webhook_secret', $system, $activeSettingSection, 'payment'),
+            'payment_instruction' => afrisense_post_text_setting('payment_instruction', $system, $activeSettingSection, 'payment', 'You can make payments securely using any of the available payment methods. Your payment is protected with 256-bit SSL encryption.'),
+            'refund_policy' => afrisense_post_text_setting('refund_policy', $system, $activeSettingSection, 'payment', 'Allow refund within 7 days'),
+            'cancellation_policy' => afrisense_post_text_setting('cancellation_policy', $system, $activeSettingSection, 'payment', 'Allow cancellation before delivery'),
+            'refund_process_message' => afrisense_post_text_setting('refund_process_message', $system, $activeSettingSection, 'payment', 'Refunds are processed within 3-5 working days to your original payment method.'),
+            'delivery_fee' => afrisense_post_decimal_setting('delivery_fee', $system, $activeSettingSection, 'delivery', 10.00),
+            'service_fee' => afrisense_post_decimal_setting('service_fee', $system, $activeSettingSection, 'delivery', 5.00),
+            'free_delivery_over' => afrisense_post_decimal_setting('free_delivery_over', $system, $activeSettingSection, 'delivery', 275.00),
+            'delivery_zones' => afrisense_post_delivery_zones($system, $activeSettingSection),
+            'default_delivery_time' => afrisense_post_text_setting('default_delivery_time', $system, $activeSettingSection, 'delivery', '30 - 45 minutes'),
+            'maximum_delivery_time' => afrisense_post_text_setting('maximum_delivery_time', $system, $activeSettingSection, 'delivery', '90 minutes'),
+            'order_cutoff_time' => afrisense_post_text_setting('order_cutoff_time', $system, $activeSettingSection, 'delivery', '22:00'),
+            'same_day_delivery' => afrisense_post_bool_setting('same_day_delivery', $system, $activeSettingSection, 'delivery'),
+            'weekend_delivery' => afrisense_post_bool_setting('weekend_delivery', $system, $activeSettingSection, 'delivery'),
+            'real_time_tracking' => afrisense_post_bool_setting('real_time_tracking', $system, $activeSettingSection, 'delivery'),
+            'standard_delivery_enabled' => afrisense_post_bool_setting('standard_delivery_enabled', $system, $activeSettingSection, 'delivery'),
+            'express_delivery_enabled' => afrisense_post_bool_setting('express_delivery_enabled', $system, $activeSettingSection, 'delivery'),
+            'scheduled_delivery_enabled' => afrisense_post_bool_setting('scheduled_delivery_enabled', $system, $activeSettingSection, 'delivery'),
+            'pickup_enabled' => afrisense_post_bool_setting('pickup_enabled', $system, $activeSettingSection, 'delivery'),
+            'delivery_instructions' => afrisense_post_text_setting('delivery_instructions', $system, $activeSettingSection, 'delivery', 'Please ensure someone is available to receive the order at the delivery address. We will contact you when we are on our way.'),
         ]);
 
         $pdo->commit();
@@ -597,7 +883,7 @@ ob_start();
             ['key' => 'twitter_url', 'name' => 'Twitter (X)', 'hint' => 'Twitter Profile URL', 'icon' => 'bi-twitter-x', 'class' => 'twitter', 'placeholder' => 'https://twitter.com/afrisense_gh'],
             ['key' => 'linkedin_url', 'name' => 'LinkedIn', 'hint' => 'LinkedIn Company URL', 'icon' => 'bi-linkedin', 'class' => 'linkedin', 'placeholder' => 'https://linkedin.com/company/afrisense-foods'],
             ['key' => 'youtube_url', 'name' => 'YouTube', 'hint' => 'YouTube Channel URL', 'icon' => 'bi-youtube', 'class' => 'youtube', 'placeholder' => 'https://youtube.com/@afrisensefoods'],
-            ['key' => 'tiktok_url', 'name' => 'TikTok', 'hint' => 'TikTok Profile URL', 'icon' => 'bi-tiktok', 'class' => 'tiktok', 'placeholder' => 'Add tiktok_url column to save this link', 'disabled' => true],
+            ['key' => 'tiktok_url', 'name' => 'TikTok', 'hint' => 'TikTok Profile URL', 'icon' => 'bi-tiktok', 'class' => 'tiktok', 'placeholder' => 'https://tiktok.com/@afrisense_gh'],
         ];
         ?>
         <section class="af-settings-card af-settings-card-wide af-social-accounts-card" id="social-media">
@@ -618,7 +904,7 @@ ob_start();
                         </div>
                         <input id="<?php echo htmlspecialchars($row['key'], ENT_QUOTES, 'UTF-8'); ?>" <?php echo $socialDisabled ? '' : 'name="' . htmlspecialchars($row['key'], ENT_QUOTES, 'UTF-8') . '"'; ?> type="url" value="<?php echo htmlspecialchars($socialValue, ENT_QUOTES, 'UTF-8'); ?>" placeholder="<?php echo htmlspecialchars($row['placeholder'], ENT_QUOTES, 'UTF-8'); ?>" <?php echo $socialDisabled ? 'disabled' : ''; ?>>
                         <label class="af-social-toggle" aria-label="Enable <?php echo htmlspecialchars($row['name'], ENT_QUOTES, 'UTF-8'); ?>">
-                            <input type="checkbox" data-social-enabled <?php echo $socialValue !== '' ? 'checked' : ''; ?> <?php echo $socialDisabled ? 'disabled' : ''; ?>>
+                            <input type="checkbox" <?php echo $socialDisabled ? '' : 'name="social_enabled[' . htmlspecialchars($row['key'], ENT_QUOTES, 'UTF-8') . ']" value="1"'; ?> data-social-enabled <?php echo $socialValue !== '' ? 'checked' : ''; ?> <?php echo $socialDisabled ? 'disabled' : ''; ?>>
                             <span class="af-switch" aria-hidden="true"></span>
                         </label>
                         <button type="button" class="af-social-clear" data-clear-input="<?php echo htmlspecialchars($row['key'], ENT_QUOTES, 'UTF-8'); ?>" aria-label="Clear <?php echo htmlspecialchars($row['name'], ENT_QUOTES, 'UTF-8'); ?>" <?php echo $socialDisabled ? 'disabled' : ''; ?>>
@@ -701,10 +987,21 @@ ob_start();
                 Add Custom Link
             </button>
         </section>
-        <p class="af-settings-note af-settings-card-wide"><i class="bi bi-info-circle" aria-hidden="true"></i> Social media links are saved only when the current database has a matching URL column.</p>
+        <p class="af-settings-note af-settings-card-wide"><i class="bi bi-info-circle" aria-hidden="true"></i> Enabled social media links are displayed automatically on the public homepage and footer after saving.</p>
         <?php endif; ?>
 
         <?php if ($activeSettingSection === 'payment'): ?>
+        <?php
+        $paymentGateway = (string) ($system['payment_gateway'] ?? 'Paystack');
+        $paymentInstruction = (string) ($system['payment_instruction'] ?? 'You can make payments securely using any of the available payment methods. Your payment is protected with 256-bit SSL encryption.');
+        $refundProcessMessage = (string) ($system['refund_process_message'] ?? 'Refunds are processed within 3-5 working days to your original payment method.');
+        $paymentGateways = [
+            ['key' => 'paystack_enabled', 'label' => 'Paystack', 'hint' => 'Accept card payments, Mobile Money and bank transfers.', 'logo' => '<i class="bi bi-stack" aria-hidden="true"></i>', 'class' => 'paystack'],
+            ['key' => 'mtn_momo_enabled', 'label' => 'MTN Mobile Money', 'hint' => 'Accept payments via MTN Mobile Money.', 'logo' => 'MTN', 'class' => 'mtn'],
+            ['key' => 'vodafone_cash_enabled', 'label' => 'Vodafone Cash', 'hint' => 'Accept payments via Vodafone Cash.', 'logo' => '<i class="bi bi-circle-fill" aria-hidden="true"></i>', 'class' => 'vodafone'],
+            ['key' => 'flutterwave_enabled', 'label' => 'Flutterwave', 'hint' => 'Accept international card payments and more.', 'logo' => '<i class="bi bi-wind" aria-hidden="true"></i>', 'class' => 'flutterwave'],
+        ];
+        ?>
         <section class="af-settings-card af-settings-card-wide af-payment-gateways-card" id="payment-settings">
             <div class="af-settings-section-heading">
                 <div>
@@ -715,34 +1012,22 @@ ob_start();
             </div>
 
             <div class="af-payment-gateway-list">
-                <article>
-                    <span class="af-payment-logo paystack"><i class="bi bi-stack" aria-hidden="true"></i></span>
-                    <div><strong>Paystack</strong><small>Accept card payments, Mobile Money and bank transfers.</small></div>
-                    <em>Enabled</em>
-                    <span class="af-switch is-on" aria-hidden="true"></span>
-                    <button type="button" class="af-icon-action" disabled><i class="bi bi-gear" aria-hidden="true"></i></button>
-                </article>
-                <article>
-                    <span class="af-payment-logo mtn">MTN</span>
-                    <div><strong>MTN Mobile Money</strong><small>Accept payments via MTN Mobile Money.</small></div>
-                    <em>Enabled</em>
-                    <span class="af-switch is-on" aria-hidden="true"></span>
-                    <button type="button" class="af-icon-action" disabled><i class="bi bi-gear" aria-hidden="true"></i></button>
-                </article>
-                <article>
-                    <span class="af-payment-logo vodafone"><i class="bi bi-circle-fill" aria-hidden="true"></i></span>
-                    <div><strong>Vodafone Cash</strong><small>Accept payments via Vodafone Cash.</small></div>
-                    <em class="muted">Disabled</em>
-                    <span class="af-switch" aria-hidden="true"></span>
-                    <button type="button" class="af-icon-action" disabled><i class="bi bi-gear" aria-hidden="true"></i></button>
-                </article>
-                <article>
-                    <span class="af-payment-logo flutterwave"><i class="bi bi-wind" aria-hidden="true"></i></span>
-                    <div><strong>Flutterwave</strong><small>Accept international card payments and more.</small></div>
-                    <em>Enabled</em>
-                    <span class="af-switch is-on" aria-hidden="true"></span>
-                    <button type="button" class="af-icon-action" disabled><i class="bi bi-gear" aria-hidden="true"></i></button>
-                </article>
+                <?php foreach ($paymentGateways as $gateway): ?>
+                    <?php $gatewayEnabled = (int) ($system[$gateway['key']] ?? 0) === 1; ?>
+                    <article>
+                        <span class="af-payment-logo <?php echo htmlspecialchars($gateway['class'], ENT_QUOTES, 'UTF-8'); ?>"><?php echo $gateway['logo']; ?></span>
+                        <div>
+                            <strong><?php echo htmlspecialchars($gateway['label'], ENT_QUOTES, 'UTF-8'); ?></strong>
+                            <small><?php echo htmlspecialchars($gateway['hint'], ENT_QUOTES, 'UTF-8'); ?></small>
+                        </div>
+                        <em class="<?php echo $gatewayEnabled ? '' : 'muted'; ?>"><?php echo $gatewayEnabled ? 'Enabled' : 'Disabled'; ?></em>
+                        <label class="af-settings-inline-switch">
+                            <input type="checkbox" name="<?php echo htmlspecialchars($gateway['key'], ENT_QUOTES, 'UTF-8'); ?>" value="1" <?php echo $gatewayEnabled ? 'checked' : ''; ?>>
+                            <span class="af-switch" aria-hidden="true"></span>
+                        </label>
+                        <button type="button" class="af-icon-action" title="Configure gateway"><i class="bi bi-gear" aria-hidden="true"></i></button>
+                    </article>
+                <?php endforeach; ?>
             </div>
         </section>
 
@@ -751,21 +1036,25 @@ ob_start();
             <p>Configure the selected payment gateway.</p>
             <label class="af-settings-field">
                 <span>Select Gateway</span>
-                <select disabled><option>Paystack</option><option>MTN Mobile Money</option><option>Flutterwave</option></select>
+                <select name="payment_gateway">
+                    <?php foreach (['Paystack', 'MTN Mobile Money', 'Vodafone Cash', 'Flutterwave'] as $gatewayName): ?>
+                        <option value="<?php echo htmlspecialchars($gatewayName, ENT_QUOTES, 'UTF-8'); ?>" <?php echo $paymentGateway === $gatewayName ? 'selected' : ''; ?>><?php echo htmlspecialchars($gatewayName, ENT_QUOTES, 'UTF-8'); ?></option>
+                    <?php endforeach; ?>
+                </select>
             </label>
             <label class="af-settings-field">
                 <span>Public Key</span>
-                <input type="text" value="pk_test_51Hq...examplePublicKey" readonly>
+                <input type="text" name="payment_public_key" value="<?php echo htmlspecialchars((string) ($system['payment_public_key'] ?? ''), ENT_QUOTES, 'UTF-8'); ?>" placeholder="pk_test_...">
             </label>
             <label class="af-settings-field">
                 <span>Secret Key</span>
-                <input type="password" value="not-saved-in-current-schema" readonly>
+                <input type="password" name="payment_secret_key" value="<?php echo htmlspecialchars((string) ($system['payment_secret_key'] ?? ''), ENT_QUOTES, 'UTF-8'); ?>" placeholder="sk_test_...">
             </label>
             <label class="af-settings-field">
                 <span>Webhook Secret (Optional)</span>
-                <input type="password" value="not-saved-in-current-schema" readonly>
+                <input type="password" name="payment_webhook_secret" value="<?php echo htmlspecialchars((string) ($system['payment_webhook_secret'] ?? ''), ENT_QUOTES, 'UTF-8'); ?>" placeholder="Webhook signing secret">
             </label>
-            <button type="button" class="af-test-connection-btn" disabled>
+            <button type="button" class="af-test-connection-btn" title="Credentials are saved locally. Gateway API test is not implemented yet.">
                 <i class="bi bi-broadcast" aria-hidden="true"></i>
                 Test Connection
             </button>
@@ -793,15 +1082,18 @@ ob_start();
         <section class="af-settings-card">
             <h2>Payment Settings</h2>
             <p>Configure how payments work on your website.</p>
-            <label class="af-toggle-row"><input type="checkbox" checked disabled><span class="af-switch" aria-hidden="true"></span><strong>Enable guest checkout</strong><small>Allow customers to checkout without an account.</small></label>
-            <label class="af-toggle-row"><input type="checkbox" checked disabled><span class="af-switch" aria-hidden="true"></span><strong>Auto confirm paid orders</strong><small>Automatically confirm orders after successful payment.</small></label>
+            <label class="af-toggle-row"><input type="checkbox" name="guest_checkout_enabled" value="1" <?php echo (int) ($system['guest_checkout_enabled'] ?? 1) === 1 ? 'checked' : ''; ?>><span class="af-switch" aria-hidden="true"></span><strong>Enable guest checkout</strong><small>Allow customers to checkout without an account.</small></label>
+            <label class="af-toggle-row"><input type="checkbox" name="auto_confirm_paid_orders" value="1" <?php echo (int) ($system['auto_confirm_paid_orders'] ?? 1) === 1 ? 'checked' : ''; ?>><span class="af-switch" aria-hidden="true"></span><strong>Auto confirm paid orders</strong><small>Automatically confirm orders after successful payment.</small></label>
+            <label class="af-toggle-row"><input type="checkbox" name="mobile_money_enabled" value="1" <?php echo (int) ($system['mobile_money_enabled'] ?? 1) === 1 ? 'checked' : ''; ?>><span class="af-switch" aria-hidden="true"></span><strong>Mobile Money checkout</strong><small>Show Mobile Money as a customer payment option.</small></label>
+            <label class="af-toggle-row"><input type="checkbox" name="card_payment_enabled" value="1" <?php echo (int) ($system['card_payment_enabled'] ?? 1) === 1 ? 'checked' : ''; ?>><span class="af-switch" aria-hidden="true"></span><strong>Card checkout</strong><small>Show Card as a customer payment option.</small></label>
+            <label class="af-toggle-row"><input type="checkbox" name="cash_payment_enabled" value="1" <?php echo (int) ($system['cash_payment_enabled'] ?? 1) === 1 ? 'checked' : ''; ?>><span class="af-switch" aria-hidden="true"></span><strong>Cash on delivery</strong><small>Allow customers to pay when food arrives.</small></label>
             <label class="af-toggle-row">
                 <input type="checkbox" name="email_notifications" value="1" <?php echo (int) ($system['email_notifications'] ?? 1) === 1 ? 'checked' : ''; ?>>
                 <span class="af-switch" aria-hidden="true"></span>
                 <strong>Send payment confirmation email</strong>
                 <small>Send email to customer after successful payment.</small>
             </label>
-            <label class="af-toggle-row"><input type="checkbox" disabled><span class="af-switch" aria-hidden="true"></span><strong>Enable test mode</strong><small>Use gateway in test/sandbox mode.</small></label>
+            <label class="af-toggle-row"><input type="checkbox" name="payment_test_mode" value="1" <?php echo (int) ($system['payment_test_mode'] ?? 0) === 1 ? 'checked' : ''; ?>><span class="af-switch" aria-hidden="true"></span><strong>Enable test mode</strong><small>Use gateway in test/sandbox mode.</small></label>
             <input type="hidden" name="order_notifications" value="<?php echo (int) ($system['order_notifications'] ?? 1) === 1 ? '1' : '0'; ?>">
         </section>
 
@@ -810,7 +1102,7 @@ ob_start();
             <p>Add instructions for customers during checkout.</p>
             <label class="af-settings-field">
                 <span>Instruction Message</span>
-                <textarea rows="5" readonly>You can make payments securely using any of the available payment methods. Your payment is protected with 256-bit SSL encryption.</textarea>
+                <textarea name="payment_instruction" rows="5"><?php echo htmlspecialchars($paymentInstruction, ENT_QUOTES, 'UTF-8'); ?></textarea>
             </label>
         </section>
 
@@ -818,10 +1110,26 @@ ob_start();
             <h2>Refund &amp; Cancellation Policy</h2>
             <p>Manage refund and cancellation settings.</p>
             <div class="af-settings-two">
-                <label class="af-settings-field"><span>Refund Policy</span><select disabled><option>Allow refund within 7 days</option></select></label>
-                <label class="af-settings-field"><span>Cancellation Policy</span><select disabled><option>Allow cancellation before delivery</option></select></label>
+                <label class="af-settings-field">
+                    <span>Refund Policy</span>
+                    <?php $refundPolicy = (string) ($system['refund_policy'] ?? 'Allow refund within 7 days'); ?>
+                    <select name="refund_policy">
+                        <?php foreach (['Allow refund within 7 days', 'Allow refund within 3 days', 'No automatic refund'] as $policy): ?>
+                            <option value="<?php echo htmlspecialchars($policy, ENT_QUOTES, 'UTF-8'); ?>" <?php echo $refundPolicy === $policy ? 'selected' : ''; ?>><?php echo htmlspecialchars($policy, ENT_QUOTES, 'UTF-8'); ?></option>
+                        <?php endforeach; ?>
+                    </select>
+                </label>
+                <label class="af-settings-field">
+                    <span>Cancellation Policy</span>
+                    <?php $cancellationPolicy = (string) ($system['cancellation_policy'] ?? 'Allow cancellation before delivery'); ?>
+                    <select name="cancellation_policy">
+                        <?php foreach (['Allow cancellation before delivery', 'Allow cancellation before preparation', 'No customer cancellation'] as $policy): ?>
+                            <option value="<?php echo htmlspecialchars($policy, ENT_QUOTES, 'UTF-8'); ?>" <?php echo $cancellationPolicy === $policy ? 'selected' : ''; ?>><?php echo htmlspecialchars($policy, ENT_QUOTES, 'UTF-8'); ?></option>
+                        <?php endforeach; ?>
+                    </select>
+                </label>
             </div>
-            <label class="af-settings-field"><span>Refund Process Message</span><textarea rows="3" readonly>Refunds are processed within 3-5 working days to your original payment method.</textarea></label>
+            <label class="af-settings-field"><span>Refund Process Message</span><textarea name="refund_process_message" rows="3"><?php echo htmlspecialchars($refundProcessMessage, ENT_QUOTES, 'UTF-8'); ?></textarea></label>
         </section>
 
         <section class="af-settings-card">
@@ -833,50 +1141,72 @@ ob_start();
                 <article><span>Failed Payments</span><strong>No gateway logs</strong><em class="muted">N/A</em></article>
             </div>
         </section>
-        <p class="af-settings-note af-settings-card-wide"><i class="bi bi-info-circle" aria-hidden="true"></i> Gateway API keys, transaction limits and gateway logs need dedicated database columns before they can be saved securely.</p>
+        <p class="af-settings-note af-settings-card-wide"><i class="bi bi-info-circle" aria-hidden="true"></i> Saved payment methods control the options shown on cart, checkout and payment pages.</p>
         <?php endif; ?>
 
         <?php if ($activeSettingSection === 'delivery'): ?>
+        <?php
+        $baseDeliveryFee = (float) ($system['delivery_fee'] ?? 10.00);
+        $serviceFee = (float) ($system['service_fee'] ?? 5.00);
+        $freeDeliveryOver = (float) ($system['free_delivery_over'] ?? 275.00);
+        $defaultDeliveryTime = (string) ($system['default_delivery_time'] ?? '30 - 45 minutes');
+        $maximumDeliveryTime = (string) ($system['maximum_delivery_time'] ?? '90 minutes');
+        $orderCutoffTime = (string) ($system['order_cutoff_time'] ?? '22:00');
+        $deliveryInstructions = (string) ($system['delivery_instructions'] ?? 'Please ensure someone is available to receive the order at the delivery address. We will contact you when we are on our way.');
+        $deliveryZones = afrisense_delivery_zones($system);
+        ?>
         <section class="af-settings-card af-settings-card-wide" id="delivery-settings">
             <h2>Delivery Settings</h2>
-            <p>Review the delivery rules currently used by checkout. Persistent delivery configuration needs database columns before it can be saved.</p>
+            <p>Configure the delivery rules used by carts, checkout, payment pages and order totals.</p>
 
             <div class="af-delivery-settings-layout">
                 <div class="af-delivery-zones">
                     <div class="af-settings-section-heading">
                         <h3>Delivery Zones</h3>
-                        <button type="button" disabled><i class="bi bi-plus-lg" aria-hidden="true"></i> Add Zone</button>
+                        <button type="button" data-add-delivery-zone><i class="bi bi-plus-lg" aria-hidden="true"></i> Add Zone</button>
                     </div>
-                    <div class="af-delivery-zone-table">
-                        <div><strong>Zone Name</strong><strong>Areas / Locations</strong><strong>Delivery Fee</strong><strong>Status</strong></div>
-                        <div><span>Accra Central<small>Primary zone</small></span><span>Osu, Airport, Labone, East Legon</span><span><?php echo htmlspecialchars(afrisense_public_money(10.00), ENT_QUOTES, 'UTF-8'); ?></span><em>Active</em></div>
-                        <div><span>Accra Surrounding<small>Secondary zone</small></span><span>Madina, Adenta, Achimota, Dansoman</span><span><?php echo htmlspecialchars(afrisense_public_money(15.00), ENT_QUOTES, 'UTF-8'); ?></span><em>Active</em></div>
-                        <div><span>Greater Accra<small>Extended zone</small></span><span>Tema, Prampram, Kasoa, Amasaman</span><span><?php echo htmlspecialchars(afrisense_public_money(25.00), ENT_QUOTES, 'UTF-8'); ?></span><em class="muted">Inactive</em></div>
+                    <div class="af-delivery-zone-table" data-delivery-zone-table>
+                        <div><strong>Zone Name</strong><strong>Areas / Locations</strong><strong>Delivery Fee</strong><strong>Min. Order</strong><strong>Status</strong><strong>Action</strong></div>
+                        <?php foreach ($deliveryZones as $zone): ?>
+                            <div data-delivery-zone-row>
+                                <span><input name="delivery_zones[name][]" type="text" value="<?php echo htmlspecialchars((string) $zone['name'], ENT_QUOTES, 'UTF-8'); ?>" placeholder="Zone name"></span>
+                                <span><input name="delivery_zones[areas][]" type="text" value="<?php echo htmlspecialchars((string) $zone['areas'], ENT_QUOTES, 'UTF-8'); ?>" placeholder="Areas / locations"></span>
+                                <span><input name="delivery_zones[fee][]" type="number" min="0" step="0.01" value="<?php echo htmlspecialchars(number_format((float) $zone['fee'], 2, '.', ''), ENT_QUOTES, 'UTF-8'); ?>"></span>
+                                <span><input name="delivery_zones[min_order][]" type="number" min="0" step="0.01" value="<?php echo htmlspecialchars(number_format((float) $zone['min_order'], 2, '.', ''), ENT_QUOTES, 'UTF-8'); ?>"></span>
+                                <span>
+                                    <select name="delivery_zones[status][]">
+                                        <option value="Active" <?php echo (string) $zone['status'] === 'Active' ? 'selected' : ''; ?>>Active</option>
+                                        <option value="Inactive" <?php echo (string) $zone['status'] === 'Inactive' ? 'selected' : ''; ?>>Inactive</option>
+                                    </select>
+                                </span>
+                                <span><button type="button" class="af-icon-action danger" data-remove-delivery-zone title="Remove zone"><i class="bi bi-trash" aria-hidden="true"></i></button></span>
+                            </div>
+                        <?php endforeach; ?>
                     </div>
                 </div>
 
                 <div class="af-delivery-options">
                     <h3>Delivery Options</h3>
                     <label class="af-toggle-row">
-                        <input type="checkbox" checked disabled>
+                        <input type="checkbox" name="standard_delivery_enabled" value="1" <?php echo (int) ($system['standard_delivery_enabled'] ?? 1) === 1 ? 'checked' : ''; ?>>
                         <span class="af-switch" aria-hidden="true"></span>
                         <strong>Standard Delivery</strong>
                         <small>Regular delivery within estimated time.</small>
                     </label>
                     <label class="af-toggle-row">
-                        <input type="checkbox" checked disabled>
+                        <input type="checkbox" name="express_delivery_enabled" value="1" <?php echo (int) ($system['express_delivery_enabled'] ?? 1) === 1 ? 'checked' : ''; ?>>
                         <span class="af-switch" aria-hidden="true"></span>
                         <strong>Express Delivery</strong>
                         <small>Faster delivery in a shorter time.</small>
                     </label>
                     <label class="af-toggle-row">
-                        <input type="checkbox" checked disabled>
+                        <input type="checkbox" name="scheduled_delivery_enabled" value="1" <?php echo (int) ($system['scheduled_delivery_enabled'] ?? 1) === 1 ? 'checked' : ''; ?>>
                         <span class="af-switch" aria-hidden="true"></span>
                         <strong>Scheduled Delivery</strong>
                         <small>Allow customers to schedule delivery.</small>
                     </label>
                     <label class="af-toggle-row">
-                        <input type="checkbox" checked disabled>
+                        <input type="checkbox" name="pickup_enabled" value="1" <?php echo (int) ($system['pickup_enabled'] ?? 1) === 1 ? 'checked' : ''; ?>>
                         <span class="af-switch" aria-hidden="true"></span>
                         <strong>Pickup / Self Collection</strong>
                         <small>Allow customers to pick up their orders.</small>
@@ -890,26 +1220,45 @@ ob_start();
                     <div class="af-settings-two">
                         <label class="af-settings-field">
                             <span>Default Delivery Time</span>
-                            <input type="text" value="30 - 45 Minutes" readonly>
+                            <input type="text" name="default_delivery_time" value="<?php echo htmlspecialchars($defaultDeliveryTime, ENT_QUOTES, 'UTF-8'); ?>">
                         </label>
                         <label class="af-settings-field">
                             <span>Maximum Delivery Time</span>
-                            <input type="text" value="90 Minutes" readonly>
+                            <input type="text" name="maximum_delivery_time" value="<?php echo htmlspecialchars($maximumDeliveryTime, ENT_QUOTES, 'UTF-8'); ?>">
                         </label>
                     </div>
-                    <label class="af-settings-field">
-                        <span>Order Cut-off Time</span>
-                        <input type="text" value="10:00 PM" readonly>
-                    </label>
+                    <div class="af-settings-two">
+                        <label class="af-settings-field">
+                            <span>Order Cut-off Time</span>
+                            <input type="time" name="order_cutoff_time" value="<?php echo htmlspecialchars($orderCutoffTime, ENT_QUOTES, 'UTF-8'); ?>">
+                        </label>
+                        <label class="af-settings-field">
+                            <span>Free Delivery Over</span>
+                            <input type="number" name="free_delivery_over" min="0" step="0.01" value="<?php echo htmlspecialchars(number_format($freeDeliveryOver, 2, '.', ''), ENT_QUOTES, 'UTF-8'); ?>">
+                        </label>
+                    </div>
+                    <div class="af-settings-two">
+                        <label class="af-settings-field">
+                            <span>Base Delivery Fee</span>
+                            <input type="number" name="delivery_fee" min="0" step="0.01" value="<?php echo htmlspecialchars(number_format($baseDeliveryFee, 2, '.', ''), ENT_QUOTES, 'UTF-8'); ?>">
+                        </label>
+                        <label class="af-settings-field">
+                            <span>Service Fee</span>
+                            <input type="number" name="service_fee" min="0" step="0.01" value="<?php echo htmlspecialchars(number_format($serviceFee, 2, '.', ''), ENT_QUOTES, 'UTF-8'); ?>">
+                        </label>
+                    </div>
+                    <label class="af-toggle-row"><input type="checkbox" name="same_day_delivery" value="1" <?php echo (int) ($system['same_day_delivery'] ?? 1) === 1 ? 'checked' : ''; ?>><span class="af-switch" aria-hidden="true"></span><strong>Same Day Delivery</strong><small>Allow same-day delivery for orders.</small></label>
+                    <label class="af-toggle-row"><input type="checkbox" name="weekend_delivery" value="1" <?php echo (int) ($system['weekend_delivery'] ?? 1) === 1 ? 'checked' : ''; ?>><span class="af-switch" aria-hidden="true"></span><strong>Weekend Delivery</strong><small>Enable delivery on weekends.</small></label>
+                    <label class="af-toggle-row"><input type="checkbox" name="real_time_tracking" value="1" <?php echo (int) ($system['real_time_tracking'] ?? 1) === 1 ? 'checked' : ''; ?>><span class="af-switch" aria-hidden="true"></span><strong>Real-time Tracking</strong><small>Enable order tracking for customers.</small></label>
                 </section>
 
                 <section class="af-delivery-mini-card">
                     <h3>Delivery Instructions</h3>
-                    <textarea readonly rows="5">Please ensure someone is available to receive the order at the delivery address. We will contact you when we are on our way.</textarea>
+                    <textarea name="delivery_instructions" rows="5"><?php echo htmlspecialchars($deliveryInstructions, ENT_QUOTES, 'UTF-8'); ?></textarea>
                 </section>
             </div>
 
-            <p class="af-settings-note"><i class="bi bi-info-circle" aria-hidden="true"></i> Delivery fee is currently hardcoded in checkout as <?php echo htmlspecialchars(afrisense_public_money(10.00), ENT_QUOTES, 'UTF-8'); ?> because the existing schema has no delivery settings storage.</p>
+            <p class="af-settings-note"><i class="bi bi-info-circle" aria-hidden="true"></i> Delivery changes take effect immediately on cart, checkout, order and payment pages after saving.</p>
         </section>
         <?php endif; ?>
 
