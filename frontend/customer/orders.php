@@ -117,7 +117,7 @@ function afrisense_customer_id_for_order(PDO $pdo, array $user, string $address)
 
 function afrisense_customer_admin_notifications(PDO $pdo, array $orderIds, string $customerName): void
 {
-    if ($orderIds === []) {
+    if ($orderIds === [] || !afrisense_public_setting_bool('order_notifications', true)) {
         return;
     }
 
@@ -154,6 +154,7 @@ function afrisense_customer_admin_notifications(PDO $pdo, array $orderIds, strin
 }
 
 $authUser = afrisense_require_customer();
+afrisense_enforce_public_delivery_available();
 $cart = afrisense_customer_cart();
 $cartNote = (string) ($_SESSION['afrisense_customer_cart_note'] ?? '');
 $flashMessage = '';
@@ -263,6 +264,14 @@ try {
 
                 afrisense_customer_admin_notifications($pdo, $orderIds, (string) ($authUser['fullname'] ?? $authUser['email'] ?? 'Customer'));
                 $pdo->commit();
+                if ($orderIds !== []) {
+                    afrisense_public_send_order_customer_email_for_order(
+                        $pdo,
+                        $orderIds[0],
+                        'Order Received',
+                        'Your AfriSense order #' . str_pad((string) $orderIds[0], 5, '0', STR_PAD_LEFT) . ' has been received. We will notify you when it is confirmed.'
+                    );
+                }
                 $cart = [];
                 $_SESSION['afrisense_customer_cart_note'] = '';
                 $flashMessage = 'Your order has been placed successfully.';
@@ -415,7 +424,7 @@ ob_start();
                 <i class="bi bi-headset" aria-hidden="true"></i>
                 <h2>Need Help?</h2>
                 <p>Our customer support team is ready to help you.</p>
-                <a href="tel:+233241234567"><i class="bi bi-telephone" aria-hidden="true"></i> +233 24 123 4567</a>
+                <a href="support.php"><i class="bi bi-chat-dots" aria-hidden="true"></i> Chat with Support</a>
                 <small>Mon - Sun: 8:00 AM - 10:00 PM</small>
             </section>
         </aside>

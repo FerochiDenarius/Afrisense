@@ -1,6 +1,8 @@
 <?php
+$frontendBase = '/Afrisense/frontend';
 require_once __DIR__ . '/../includes/public_settings.php';
 require_once __DIR__ . '/../includes/theme.php';
+require_once __DIR__ . '/../includes/remarks_helpers.php';
 
 $publicSettings = afrisense_public_settings();
 $websiteSettings = $publicSettings['website'];
@@ -13,10 +15,40 @@ $heroSubtitle = (string) ($websiteSettings['hero_subtitle'] ?? 'We provide delic
 $footerText = (string) ($websiteSettings['footer_text'] ?? '(c) 2026 AfriSense Food Services. All rights reserved.');
 $primaryPhone = (string) ($companySettings['phone_number_1'] ?? '+233 24 123 4567');
 $primaryColor = (string) ($websiteSettings['primary_color'] ?? '#b77b1a');
+$faviconUrl = afrisense_public_favicon_url($frontendBase);
 $heroTitleWords = preg_split('/\s+/', trim($heroTitle)) ?: [];
 $heroHighlightWords = count($heroTitleWords) >= 2 ? array_splice($heroTitleWords, -2) : [];
 $heroTitleStart = implode(' ', $heroTitleWords);
 $heroTitleHighlight = implode(' ', $heroHighlightWords);
+$homepageRemarks = [];
+$homepageRemarkMessage = null;
+$homepageFoodOptions = array_map(static fn (array $remark): string => (string) $remark['food_service'], afrisense_remarks_samples());
+$homepageUser = null;
+$homepageOrderHref = afrisense_public_order_url($frontendBase);
+$homepageBookingHref = afrisense_public_booking_url($frontendBase);
+$homepageSupportHref = afrisense_public_support_url($frontendBase);
+
+try {
+    $pdo = afrisense_pdo();
+    afrisense_remarks_seed_samples($pdo);
+    $homepageFoodOptions = afrisense_remarks_food_options($pdo);
+
+    try {
+        $homepageUser = afrisense_current_user();
+    } catch (Throwable) {
+        $homepageUser = null;
+    }
+
+    if (($_SERVER['REQUEST_METHOD'] ?? 'GET') === 'POST' && ($_POST['action'] ?? '') === 'submit_home_remark') {
+        $homepageRemarkMessage = afrisense_remarks_submit($pdo, $_POST, $homepageUser, $homepageUser !== null ? 'Customer' : 'Guest');
+    }
+
+    $homepageRemarks = afrisense_remarks_fetch($pdo, ['status' => 'Published'], 3, false);
+} catch (Throwable) {
+    $homepageRemarks = [];
+}
+
+afrisense_enforce_public_site_status($frontendBase);
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -26,6 +58,9 @@ $heroTitleHighlight = implode(' ', $heroHighlightWords);
     <meta name="description" content="<?php echo htmlspecialchars($heroSubtitle !== '' ? $heroSubtitle : $siteTagline, ENT_QUOTES, 'UTF-8'); ?>">
     <meta name="theme-color" content="<?php echo htmlspecialchars($primaryColor, ENT_QUOTES, 'UTF-8'); ?>">
     <link rel="canonical" href="/Afrisense/frontend/landing/index.php">
+    <?php if ($faviconUrl !== ''): ?>
+        <link rel="icon" href="<?php echo htmlspecialchars($faviconUrl, ENT_QUOTES, 'UTF-8'); ?>">
+    <?php endif; ?>
     <title><?php echo htmlspecialchars($siteName, ENT_QUOTES, 'UTF-8'); ?></title>
 
     <link rel="stylesheet" href="../assets/css/index.css">
@@ -35,7 +70,7 @@ $heroTitleHighlight = implode(' ', $heroHighlightWords);
 <body>
     <header class="site-header">
         <a class="brand" href="index.php" aria-label="AfriSense home">
-            <span class="brand-icon" aria-hidden="true"><i class="bi bi-cup-hot"></i></span>
+            <span class="brand-icon" aria-hidden="true"><?php echo afrisense_public_brand_icon_html($frontendBase); ?></span>
             <span>
                 <strong><?php echo htmlspecialchars($brandName, ENT_QUOTES, 'UTF-8'); ?></strong>
                 <small>Food Services</small>
@@ -48,7 +83,8 @@ $heroTitleHighlight = implode(' ', $heroHighlightWords);
                 <li><a href="menu.php">Menu</a></li>
                 <li><a href="gallery.php">Gallery</a></li>
                 <li><a href="services.php">Catering Packages</a></li>
-                <li><a href="booking.php">Book a Service</a></li>
+                <li><a href="<?php echo htmlspecialchars($homepageBookingHref, ENT_QUOTES, 'UTF-8'); ?>">Book a Service</a></li>
+                <li><a href="remarks.php">Reviews</a></li>
                 <li><a href="about.php">About Us</a></li>
                 <li><a href="contact.php">Contact Us</a></li>
             </ul>
@@ -57,9 +93,15 @@ $heroTitleHighlight = implode(' ', $heroHighlightWords);
         <div class="header-actions">
             <a class="phone-link" href="<?php echo htmlspecialchars(afrisense_public_tel_href($primaryPhone), ENT_QUOTES, 'UTF-8'); ?>">
                 <span aria-hidden="true"><i class="bi bi-telephone"></i></span>
-                <?php echo htmlspecialchars($primaryPhone, ENT_QUOTES, 'UTF-8'); ?>
+                <b><?php echo htmlspecialchars($primaryPhone, ENT_QUOTES, 'UTF-8'); ?></b>
             </a>
-            <a class="order-link" href="order.php">Order Now</a>
+            <a class="order-link" href="<?php echo htmlspecialchars($homepageOrderHref, ENT_QUOTES, 'UTF-8'); ?>">Order Now</a>
+            <?php if ($homepageUser === null): ?>
+                <a class="auth-link" href="../auth/login.php">Login</a>
+                <a class="auth-link register" href="../auth/register.php">Register</a>
+            <?php else: ?>
+                <a class="auth-link register" href="<?php echo htmlspecialchars(afrisense_dashboard_url($homepageUser), ENT_QUOTES, 'UTF-8'); ?>">Account</a>
+            <?php endif; ?>
         </div>
     </header>
 
@@ -76,11 +118,11 @@ $heroTitleHighlight = implode(' ', $heroHighlightWords);
                 </p>
 
                 <div class="hero-actions">
-                    <a class="primary-action" href="order.php">
+                    <a class="primary-action" href="<?php echo htmlspecialchars($homepageOrderHref, ENT_QUOTES, 'UTF-8'); ?>">
                         <i class="bi bi-basket2-fill" aria-hidden="true"></i>
                         Order Now
                     </a>
-                    <a class="secondary-action" href="booking.php">
+                    <a class="secondary-action" href="<?php echo htmlspecialchars($homepageBookingHref, ENT_QUOTES, 'UTF-8'); ?>">
                         <i class="bi bi-calendar3" aria-hidden="true"></i>
                         Book a Service
                     </a>
@@ -121,7 +163,7 @@ $heroTitleHighlight = implode(' ', $heroHighlightWords);
                 </div>
             </div>
 
-            <form class="booking-card" id="booking" action="booking.php" method="get">
+            <form class="booking-card" id="booking" action="<?php echo htmlspecialchars($homepageBookingHref, ENT_QUOTES, 'UTF-8'); ?>" method="get">
                 <h2>Book Your Service</h2>
                 <span class="gold-line" aria-hidden="true"></span>
 
@@ -191,14 +233,14 @@ $heroTitleHighlight = implode(' ', $heroHighlightWords);
                     <span><i class="bi bi-bell" aria-hidden="true"></i></span>
                     <h3>Food Ordering</h3>
                     <p>Order delicious meals online with ease.</p>
-                    <a href="order.php" aria-label="View food ordering"><i class="bi bi-arrow-right" aria-hidden="true"></i></a>
+                    <a href="<?php echo htmlspecialchars($homepageOrderHref, ENT_QUOTES, 'UTF-8'); ?>" aria-label="View food ordering"><i class="bi bi-arrow-right" aria-hidden="true"></i></a>
                 </article>
 
                 <article class="service-card">
                     <span><i class="bi bi-calendar3" aria-hidden="true"></i></span>
                     <h3>Service Booking</h3>
                     <p>Book our catering services for any event.</p>
-                    <a href="booking.php" aria-label="View service booking"><i class="bi bi-arrow-right" aria-hidden="true"></i></a>
+                    <a href="<?php echo htmlspecialchars($homepageBookingHref, ENT_QUOTES, 'UTF-8'); ?>" aria-label="View service booking"><i class="bi bi-arrow-right" aria-hidden="true"></i></a>
                 </article>
 
                 <article class="service-card">
@@ -219,14 +261,14 @@ $heroTitleHighlight = implode(' ', $heroHighlightWords);
                     <span><i class="bi bi-truck" aria-hidden="true"></i></span>
                     <h3>Fast Delivery</h3>
                     <p>We deliver fresh and hot meals to you.</p>
-                    <a href="order.php" aria-label="View fast delivery"><i class="bi bi-arrow-right" aria-hidden="true"></i></a>
+                    <a href="<?php echo htmlspecialchars($homepageOrderHref, ENT_QUOTES, 'UTF-8'); ?>" aria-label="View fast delivery"><i class="bi bi-arrow-right" aria-hidden="true"></i></a>
                 </article>
 
                 <article class="service-card">
                     <span><i class="bi bi-headset" aria-hidden="true"></i></span>
                     <h3>24/7 Support</h3>
                     <p>Our team is always ready to assist.</p>
-                    <a href="contact.php" aria-label="View support"><i class="bi bi-arrow-right" aria-hidden="true"></i></a>
+                    <a href="<?php echo htmlspecialchars($homepageSupportHref, ENT_QUOTES, 'UTF-8'); ?>" aria-label="View support"><i class="bi bi-arrow-right" aria-hidden="true"></i></a>
                 </article>
             </div>
         </section>
@@ -299,6 +341,87 @@ $heroTitleHighlight = implode(' ', $heroHighlightWords);
                 </article>
             </div>
         </section>
+
+        <section class="reviews-section" aria-labelledby="reviews-title">
+            <div class="reviews-section-heading">
+                <div>
+                    <p>Customer Feedback</p>
+                    <h2 id="reviews-title">Reviews &amp; Remarks</h2>
+                    <small>Published reviews from customers and guests.</small>
+                </div>
+                <a href="#landing-remark-form">
+                    Give a Remark
+                    <i class="bi bi-arrow-right" aria-hidden="true"></i>
+                </a>
+            </div>
+            <div class="home-review-grid">
+                <?php if ($homepageRemarks === []): ?>
+                    <article class="home-review-empty">
+                        <strong>No published remarks yet</strong>
+                        <span>Be the first to give feedback.</span>
+                    </article>
+                <?php endif; ?>
+                <?php foreach ($homepageRemarks as $remark): ?>
+                    <article class="home-review-card">
+                        <img src="<?php echo htmlspecialchars(afrisense_remarks_image($frontendBase, (string) ($remark['image'] ?? '')), ENT_QUOTES, 'UTF-8'); ?>" alt="">
+                        <div>
+                            <header>
+                                <strong><?php echo htmlspecialchars((string) ($remark['customer_name'] ?? 'Customer'), ENT_QUOTES, 'UTF-8'); ?></strong>
+                                <?php echo afrisense_remarks_stars((float) ($remark['rating'] ?? 0)); ?>
+                            </header>
+                            <p><?php echo htmlspecialchars(afrisense_remarks_excerpt((string) ($remark['remark'] ?? ''), 92), ENT_QUOTES, 'UTF-8'); ?></p>
+                            <small><?php echo htmlspecialchars((string) ($remark['food_service'] ?? 'AfriSense'), ENT_QUOTES, 'UTF-8'); ?></small>
+                        </div>
+                    </article>
+                <?php endforeach; ?>
+            </div>
+            <form class="home-remark-form" id="landing-remark-form" action="index.php#landing-remark-form" method="post">
+                <input type="hidden" name="action" value="submit_home_remark">
+                <header>
+                    <strong>Give a Remark</strong>
+                    <span>Submitted remarks appear publicly after saving.</span>
+                </header>
+                <?php if ($homepageRemarkMessage !== null): ?>
+                    <p class="home-remark-alert <?php echo $homepageRemarkMessage['success'] ? 'success' : 'error'; ?>">
+                        <?php echo htmlspecialchars($homepageRemarkMessage['message'], ENT_QUOTES, 'UTF-8'); ?>
+                    </p>
+                <?php endif; ?>
+                <div>
+                    <label>
+                        <span>Name</span>
+                        <input type="text" name="customer_name" value="<?php echo htmlspecialchars((string) ($_POST['customer_name'] ?? $homepageUser['fullname'] ?? ''), ENT_QUOTES, 'UTF-8'); ?>" required>
+                    </label>
+                    <label>
+                        <span>Email</span>
+                        <input type="email" name="email" value="<?php echo htmlspecialchars((string) ($_POST['email'] ?? $homepageUser['email'] ?? ''), ENT_QUOTES, 'UTF-8'); ?>" required>
+                    </label>
+                    <label>
+                        <span>Food / Service</span>
+                        <select name="food_service" required>
+                            <option value="">Select</option>
+                            <?php foreach ($homepageFoodOptions as $option): ?>
+                                <option value="<?php echo htmlspecialchars($option, ENT_QUOTES, 'UTF-8'); ?>" <?php echo (string) ($_POST['food_service'] ?? '') === $option ? 'selected' : ''; ?>>
+                                    <?php echo htmlspecialchars($option, ENT_QUOTES, 'UTF-8'); ?>
+                                </option>
+                            <?php endforeach; ?>
+                        </select>
+                    </label>
+                    <label>
+                        <span>Rating</span>
+                        <select name="rating" required>
+                            <?php for ($rating = 5; $rating >= 1; $rating--): ?>
+                                <option value="<?php echo $rating; ?>" <?php echo (string) ($_POST['rating'] ?? '5') === (string) $rating ? 'selected' : ''; ?>><?php echo $rating; ?> Stars</option>
+                            <?php endfor; ?>
+                        </select>
+                    </label>
+                    <label class="home-remark-textarea">
+                        <span>Remark</span>
+                        <textarea name="remark" minlength="10" maxlength="500" rows="3" required><?php echo htmlspecialchars((string) ($_POST['remark'] ?? ''), ENT_QUOTES, 'UTF-8'); ?></textarea>
+                    </label>
+                    <button type="submit"><i class="bi bi-send" aria-hidden="true"></i> Submit Remark</button>
+                </div>
+            </form>
+        </section>
     </main>
 
     <footer class="site-footer">
@@ -313,6 +436,7 @@ $heroTitleHighlight = implode(' ', $heroHighlightWords);
         <nav aria-label="Footer links">
             <a href="privacy.php">Privacy Policy</a>
             <a href="terms.php">Terms &amp; Conditions</a>
+            <a href="remarks.php">Reviews &amp; Remarks</a>
         </nav>
     </footer>
 

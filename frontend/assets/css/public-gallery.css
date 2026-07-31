@@ -239,3 +239,91 @@
         padding-top: 54px;
     }
 }
+
+/* Compact public-page scale to match the landing home page. */
+.af-public-gallery-hero {
+    min-height: 280px;
+    padding-top: 38px;
+    padding-bottom: 38px;
+}
+
+.af-public-gallery-hero nav {
+    font-size: 11px;
+    margin-bottom: 14px;
+}
+
+.af-public-gallery-hero p,
+.af-public-gallery-heading p {
+    font-size: 11px;
+}
+
+.af-public-gallery-hero h1 {
+    max-width: 640px;
+    font-size: clamp(32px, 4vw, 46px);
+    margin: 6px 0 10px;
+}
+
+.af-public-gallery-hero span {
+    max-width: 520px;
+    font-size: 13px;
+    line-height: 1.55;
+}
+
+.af-public-gallery-page {
+    padding-top: 34px;
+    padding-bottom: 48px;
+}
+
+.af-public-gallery-heading {
+    margin-bottom: 22px;
+}
+
+.af-public-gallery-heading h2 {
+    font-size: clamp(28px, 3.4vw, 36px);
+}
+
+.af-public-gallery-heading small {
+    font-size: 12px;
+}
+
+.af-public-gallery-toolbar {
+    grid-template-columns: minmax(220px, 1fr) 180px 104px 90px;
+    gap: 10px;
+    margin-bottom: 20px;
+    padding: 12px;
+}
+
+.af-public-gallery-toolbar input,
+.af-public-gallery-toolbar select,
+.af-public-gallery-toolbar button,
+.af-public-gallery-toolbar a {
+    min-height: 38px;
+    font-size: 12px;
+}
+
+.af-public-gallery-grid {
+    gap: 16px;
+}
+
+.af-public-gallery-card div {
+    gap: 6px;
+    padding: 14px;
+}
+
+.af-public-gallery-card span {
+    padding: 4px 8px;
+    font-size: 10px;
+}
+
+.af-public-gallery-card h3 {
+    font-size: 16px;
+}
+
+.af-public-gallery-card p {
+    font-size: 12px;
+    line-height: 1.5;
+}
+
+.af-public-gallery-card small {
+    font-size: 10.5px;
+}

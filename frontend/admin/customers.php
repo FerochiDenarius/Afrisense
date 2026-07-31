@@ -14,6 +14,7 @@ $extraStyles = [
 require_once __DIR__ . '/../auth/auth_bootstrap.php';
 
 afrisense_require_admin();
+$itemsPerPage = afrisense_admin_items_per_page(40);
 
 function afrisense_customer_stage_label(string $stage): string
 {
@@ -144,7 +145,7 @@ try {
             b.`next_booking_date` ASC,
             o.`last_order_at` DESC,
             c.`created_at` DESC
-         LIMIT 40'
+         LIMIT ' . $itemsPerPage
     );
     $customerStatement->execute($params);
     $customers = $customerStatement->fetchAll(PDO::FETCH_ASSOC);

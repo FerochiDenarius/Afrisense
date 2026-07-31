@@ -16,6 +16,19 @@
         });
     });
 
+    document.querySelectorAll('[data-add-to-cart]').forEach((button) => {
+        button.addEventListener('pointerdown', () => {
+            button.classList.remove('is-adding');
+            window.requestAnimationFrame(() => {
+                button.classList.add('is-adding');
+            });
+        });
+
+        button.addEventListener('animationend', () => {
+            button.classList.remove('is-adding');
+        });
+    });
+
     document.querySelectorAll('[data-auto-submit]').forEach((select) => {
         select.addEventListener('change', () => {
             select.form?.submit();

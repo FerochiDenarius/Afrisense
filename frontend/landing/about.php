@@ -5,6 +5,10 @@ $activePage = 'about';
 $extraStyles = [$frontendBase . '/assets/css/menu-services.css'];
 $foodImageBase = $frontendBase . '/assets/images/foods';
 
+require_once __DIR__ . '/../includes/public_settings.php';
+
+$aboutBookingHref = afrisense_public_booking_url($frontendBase);
+
 $values = [
     ['title' => 'Quality Food', 'desc' => 'Fresh ingredients and careful preparation guide every meal we serve.', 'icon' => 'bi-award', 'image' => 'jollof-rice.png'],
     ['title' => 'Reliable Service', 'desc' => 'Our team supports dine-in guests, delivery customers, and event clients with care.', 'icon' => 'bi-people', 'image' => 'grilled-chicken.png'],
@@ -53,7 +57,7 @@ ob_start();
         <p class="af-kicker">Work With Us</p>
         <h2>Planning Food for Your <span>Next Event?</span></h2>
         <p>Tell us what you need and our team will help you choose the right service, menu, and schedule.</p>
-        <a href="booking.php">Book a Service <i class="bi bi-arrow-right" aria-hidden="true"></i></a>
+        <a href="<?php echo htmlspecialchars($aboutBookingHref, ENT_QUOTES, 'UTF-8'); ?>">Book a Service <i class="bi bi-arrow-right" aria-hidden="true"></i></a>
     </section>
 </section>
 <?php

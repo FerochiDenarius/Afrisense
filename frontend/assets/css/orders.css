@@ -353,6 +353,9 @@
 .af-cart-card {
     position: sticky;
     top: 88px;
+    display: flex;
+    flex-direction: column;
+    max-height: calc(100vh - 104px);
     overflow: hidden;
 }
 
@@ -384,6 +387,9 @@
 
 .af-cart-items {
     padding: 10px 16px 0;
+    overflow-y: auto;
+    max-height: 190px;
+    -webkit-overflow-scrolling: touch;
 }
 
 .af-empty-cart {

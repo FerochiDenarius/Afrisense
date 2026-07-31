@@ -10,6 +10,9 @@ require_once __DIR__ . '/../auth/auth_bootstrap.php';
 require_once __DIR__ . '/../includes/public_settings.php';
 
 \AfriSense\Backend\Helpers\Session::start();
+afrisense_enforce_public_site_status($frontendBase);
+afrisense_enforce_guest_checkout_enabled($frontendBase);
+afrisense_enforce_public_delivery_available();
 
 function afrisense_guest_food_image(string $frontendBase, ?string $image): string
 {
@@ -115,7 +118,7 @@ function afrisense_guest_customer_id(PDO $pdo, string $fullname, string $email, 
 
 function afrisense_guest_order_notifications(PDO $pdo, array $orderIds, string $customerName): void
 {
-    if ($orderIds === []) {
+    if ($orderIds === [] || !afrisense_public_setting_bool('order_notifications', true)) {
         return;
     }
 
@@ -266,6 +269,14 @@ try {
 
                 afrisense_guest_order_notifications($pdo, $createdOrderIds, $fullname);
                 $pdo->commit();
+                if ($createdOrderIds !== []) {
+                    afrisense_public_send_order_customer_email_for_order(
+                        $pdo,
+                        $createdOrderIds[0],
+                        'Order Received',
+                        'Your AfriSense order #' . str_pad((string) $createdOrderIds[0], 5, '0', STR_PAD_LEFT) . ' has been received. We will notify you when it is confirmed.'
+                    );
+                }
                 $cart = [];
                 $_SESSION['afrisense_guest_cart_note'] = '';
                 $note = '';
@@ -393,7 +404,7 @@ ob_start();
             <i class="bi bi-headset"></i>
             <h2>Need Help?</h2>
             <p>Our customer support team is ready to help you.</p>
-            <a href="tel:+233241234567"><i class="bi bi-telephone"></i> +233 24 123 4567</a>
+            <a href="support.php"><i class="bi bi-chat-dots"></i> Chat with Support</a>
             <small>Mon - Sun: 8:00 AM - 10:00 PM</small>
         </section>
     </aside>
@@ -439,7 +450,7 @@ ob_start();
                         <form action="order.php?category=<?php echo urlencode($category); ?>&sort=<?php echo urlencode($sort); ?>" method="post">
                             <input type="hidden" name="action" value="add_to_cart">
                             <input type="hidden" name="food_id" value="<?php echo htmlspecialchars((string) ($food['id'] ?? 0), ENT_QUOTES, 'UTF-8'); ?>">
-                            <button type="submit"><i class="bi bi-plus-lg"></i> Add to Order</button>
+                            <button class="af-add-to-cart-btn" type="submit" data-add-to-cart><i class="bi bi-plus-lg"></i> Add to Order</button>
                         </form>
                     </div>
                 </article>

@@ -8,14 +8,32 @@ $extraStyles = $extraStyles ?? [];
 $extraScripts = $extraScripts ?? [];
 $mainScriptVersion = filemtime(__DIR__ . '/../assets/js/main.js') ?: time();
 $themeSettings = afrisense_public_settings();
+$websiteSettings = $themeSettings['website'];
 $themeColor = afrisense_theme_color((string) ($themeSettings['website']['primary_color'] ?? ''), '#b77b1a');
+$metaDescription = $metaDescription ?? (string) ($websiteSettings['hero_subtitle'] ?? $websiteSettings['site_tagline'] ?? '');
+$canonicalUrl = $canonicalUrl ?? '';
+$faviconUrl = afrisense_public_favicon_url($frontendBase);
+$enforcePublicStatus = $enforcePublicStatus ?? true;
+
+if ($enforcePublicStatus) {
+    afrisense_enforce_public_site_status($frontendBase);
+}
 ?>
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <?php if ($metaDescription !== ''): ?>
+        <meta name="description" content="<?php echo htmlspecialchars($metaDescription, ENT_QUOTES, 'UTF-8'); ?>">
+    <?php endif; ?>
     <meta name="theme-color" content="<?php echo htmlspecialchars($themeColor, ENT_QUOTES, 'UTF-8'); ?>">
+    <?php if ($canonicalUrl !== ''): ?>
+        <link rel="canonical" href="<?php echo htmlspecialchars($canonicalUrl, ENT_QUOTES, 'UTF-8'); ?>">
+    <?php endif; ?>
+    <?php if ($faviconUrl !== ''): ?>
+        <link rel="icon" href="<?php echo htmlspecialchars($faviconUrl, ENT_QUOTES, 'UTF-8'); ?>">
+    <?php endif; ?>
     <title><?php echo htmlspecialchars($pageTitle, ENT_QUOTES, 'UTF-8'); ?></title>
     <link rel="stylesheet" href="<?php echo htmlspecialchars($frontendBase . '/assets/css/main.css', ENT_QUOTES, 'UTF-8'); ?>">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">

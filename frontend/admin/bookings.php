@@ -12,6 +12,7 @@ require_once __DIR__ . '/../auth/auth_bootstrap.php';
 
 $adminUser = afrisense_require_admin();
 $adminUserId = (int) ($adminUser['id'] ?? 0);
+$itemsPerPage = afrisense_admin_items_per_page();
 
 function afrisense_booking_status_class(string $status): string
 {
@@ -151,7 +152,7 @@ try {
         $sql .= ' WHERE ' . implode(' AND ', $where);
     }
 
-    $sql .= ' ORDER BY b.`event_date` ASC, b.`event_time` ASC, b.`id` DESC LIMIT 25';
+    $sql .= ' ORDER BY b.`event_date` ASC, b.`event_time` ASC, b.`id` DESC LIMIT ' . $itemsPerPage;
     $statement = $pdo->prepare($sql);
     $statement->execute($params);
     $bookings = $statement->fetchAll(PDO::FETCH_ASSOC);

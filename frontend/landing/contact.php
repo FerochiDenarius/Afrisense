@@ -6,12 +6,28 @@ $extraStyles = [$frontendBase . '/assets/css/booking-contact.css'];
 $extraScripts = [$frontendBase . '/assets/js/booking-contact.js'];
 
 require_once __DIR__ . '/enquiry_helpers.php';
+require_once __DIR__ . '/../includes/public_settings.php';
 
+afrisense_enforce_public_site_status($frontendBase);
+
+$publicSettings = afrisense_public_settings();
+$companySettings = $publicSettings['company'];
+$primaryPhone = (string) ($companySettings['phone_number_1'] ?? '+233 24 123 4567');
+$secondaryPhone = (string) ($companySettings['phone_number_2'] ?? '');
+$companyEmail = (string) ($companySettings['company_email'] ?? 'info@afrisense.com');
+$supportEmail = (string) ($companySettings['support_email'] ?? 'support@afrisense.com');
+$companyAddress = (string) ($companySettings['address'] ?? '15 Senchi Street, Airport Residential Area, Accra, Ghana');
+$businessHours = (string) ($companySettings['business_hours'] ?? 'Mon - Sun: 8:00 AM - 10:00 PM');
+$mapEmbed = afrisense_public_safe_map_embed((string) ($companySettings['google_map_iframe'] ?? ''));
+$contactSupportHref = afrisense_public_support_url($frontendBase);
+$phoneLines = array_values(array_filter([$primaryPhone, $secondaryPhone], static fn (string $value): bool => trim($value) !== ''));
+$emailLines = array_values(array_filter([$companyEmail, $supportEmail], static fn (string $value): bool => trim($value) !== ''));
+$hoursLines = array_values(array_filter(array_map('trim', preg_split('/\R+/', $businessHours) ?: [])));
 $contactItems = [
-    ['title' => 'Phone', 'icon' => 'bi-telephone', 'lines' => ['+233 24 123 4567', '+233 20 987 6543']],
-    ['title' => 'Email', 'icon' => 'bi-envelope', 'lines' => ['info@afrisense.com', 'support@afrisense.com']],
-    ['title' => 'Address', 'icon' => 'bi-geo-alt', 'lines' => ['15 Senchi Street, Airport Residential Area', 'Accra, Ghana']],
-    ['title' => 'Opening Hours', 'icon' => 'bi-clock', 'lines' => ['Mon - Sun: 8:00 AM - 10:00 PM', 'We are open every day!']],
+    ['title' => 'Phone', 'icon' => 'bi-telephone', 'lines' => $phoneLines !== [] ? $phoneLines : ['+233 24 123 4567']],
+    ['title' => 'Email', 'icon' => 'bi-envelope', 'lines' => $emailLines !== [] ? $emailLines : ['info@afrisense.com']],
+    ['title' => 'Address', 'icon' => 'bi-geo-alt', 'lines' => [$companyAddress]],
+    ['title' => 'Opening Hours', 'icon' => 'bi-clock', 'lines' => $hoursLines !== [] ? $hoursLines : ['Mon - Sun: 8:00 AM - 10:00 PM']],
 ];
 
 $faqs = [
@@ -143,10 +159,10 @@ ob_start();
                     <div>
                         <h3>Social Media</h3>
                         <nav class="af-help-socials" aria-label="Social links">
-                            <a href="#" aria-label="Facebook"><i class="bi bi-facebook" aria-hidden="true"></i></a>
-                            <a href="#" aria-label="Instagram"><i class="bi bi-instagram" aria-hidden="true"></i></a>
-                            <a href="#" aria-label="Twitter"><i class="bi bi-twitter-x" aria-hidden="true"></i></a>
-                            <a href="#" aria-label="WhatsApp"><i class="bi bi-whatsapp" aria-hidden="true"></i></a>
+                            <?php foreach (afrisense_public_social_links() as $social): ?>
+                                <a href="<?php echo htmlspecialchars($social['url'], ENT_QUOTES, 'UTF-8'); ?>" aria-label="<?php echo htmlspecialchars($social['label'], ENT_QUOTES, 'UTF-8'); ?>"><i class="bi <?php echo htmlspecialchars($social['icon'], ENT_QUOTES, 'UTF-8'); ?>" aria-hidden="true"></i></a>
+                            <?php endforeach; ?>
+                            <a href="https://wa.me/<?php echo htmlspecialchars(preg_replace('/\D+/', '', $primaryPhone), ENT_QUOTES, 'UTF-8'); ?>" aria-label="WhatsApp"><i class="bi bi-whatsapp" aria-hidden="true"></i></a>
                         </nav>
                     </div>
                 </article>
@@ -171,11 +187,15 @@ ob_start();
             </ul>
         </div>
         <div class="af-map-preview" aria-label="AfriSense location map preview">
-            <div class="af-map-pin">
-                <i class="bi bi-geo-alt-fill" aria-hidden="true"></i>
-                <strong>AfriSense Food Services</strong>
-                <span>15 Senchi Street, Airport Residential Area, Accra</span>
-            </div>
+            <?php if ($mapEmbed !== ''): ?>
+                <?php echo $mapEmbed; ?>
+            <?php else: ?>
+                <div class="af-map-pin">
+                    <i class="bi bi-geo-alt-fill" aria-hidden="true"></i>
+                    <strong>AfriSense Food Services</strong>
+                    <span><?php echo htmlspecialchars($companyAddress, ENT_QUOTES, 'UTF-8'); ?></span>
+                </div>
+            <?php endif; ?>
         </div>
     </section>
 
@@ -196,15 +216,15 @@ ob_start();
                     </details>
                 <?php endforeach; ?>
             </div>
-            <a class="af-outline-link" href="enquiries.php">Send an Enquiry <i class="bi bi-arrow-right" aria-hidden="true"></i></a>
+            <a class="af-outline-link" href="<?php echo htmlspecialchars($contactSupportHref, ENT_QUOTES, 'UTF-8'); ?>">Chat with Support <i class="bi bi-arrow-right" aria-hidden="true"></i></a>
         </section>
 
         <section class="af-help-cta">
             <h2>We're Here to Help!</h2>
             <p>Whether you have a question about our menu, need help with a booking, or just want to say hello, do not hesitate to reach out to us.</p>
             <div>
-                <a href="tel:+233241234567"><i class="bi bi-telephone" aria-hidden="true"></i> Call Us Now</a>
-                <a href="#"><i class="bi bi-whatsapp" aria-hidden="true"></i> WhatsApp Us</a>
+                <a href="<?php echo htmlspecialchars(afrisense_public_tel_href($primaryPhone), ENT_QUOTES, 'UTF-8'); ?>"><i class="bi bi-telephone" aria-hidden="true"></i> Call Us Now</a>
+                <a href="https://wa.me/<?php echo htmlspecialchars(preg_replace('/\D+/', '', $primaryPhone), ENT_QUOTES, 'UTF-8'); ?>"><i class="bi bi-whatsapp" aria-hidden="true"></i> WhatsApp Us</a>
             </div>
         </section>
     </div>

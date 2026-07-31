@@ -11,6 +11,7 @@ $extraStyles = [
 require_once __DIR__ . '/../auth/auth_bootstrap.php';
 
 afrisense_require_admin();
+$itemsPerPage = afrisense_admin_items_per_page();
 
 function afrisense_post_string(string $key, string $fallback = ''): string
 {
@@ -307,7 +308,7 @@ try {
          FROM `foods` f
          LEFT JOIN `food_categories` c ON c.`id` = f.`category_id`
          ORDER BY f.`id` DESC
-         LIMIT 25'
+         LIMIT ' . $itemsPerPage
     );
     $statement->execute();
     $foods = $statement->fetchAll(PDO::FETCH_ASSOC);

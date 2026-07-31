@@ -220,6 +220,173 @@
     font-weight: 850;
 }
 
+/* Compact public shop scale to match the landing home page. */
+.af-order-hero {
+    min-height: 240px;
+    padding-top: 34px;
+    padding-bottom: 34px;
+}
+
+.af-order-hero nav {
+    font-size: 11px;
+}
+
+.af-order-hero h1 {
+    font-size: clamp(32px, 4vw, 44px);
+    margin: 12px 0 6px;
+}
+
+.af-order-benefits {
+    gap: 12px;
+    margin-top: 18px;
+}
+
+.af-order-benefits article {
+    min-width: 180px;
+    grid-template-columns: 38px 1fr;
+    gap: 10px;
+    padding: 12px 14px;
+}
+
+.af-order-benefits i {
+    width: 34px;
+    height: 34px;
+    font-size: 15px;
+}
+
+.af-order-benefits strong {
+    font-size: 12px;
+}
+
+.af-order-benefits span {
+    font-size: 11px;
+}
+
+.af-order-page {
+    grid-template-columns: 220px minmax(0, 1fr) 300px;
+    gap: 20px;
+    padding: 26px 22px;
+}
+
+.af-order-panel,
+.af-help-box {
+    padding: 16px;
+}
+
+.af-order-panel h2,
+.af-order-main h2,
+.af-cart-panel h2,
+.af-delivery-info h2,
+.af-summary-card h2,
+.af-payment-section h2 {
+    font-size: 20px;
+}
+
+.af-category-menu a {
+    min-height: 34px;
+    gap: 9px;
+    padding: 0 10px;
+    font-size: 12px;
+}
+
+.af-help-box {
+    margin-top: 18px;
+}
+
+.af-help-box a {
+    min-height: 34px;
+    font-size: 12px;
+}
+
+.af-order-toolbar {
+    grid-template-columns: minmax(0, 1fr) 150px;
+    gap: 14px;
+    margin-bottom: 18px;
+}
+
+.af-order-toolbar label {
+    height: 40px;
+    grid-template-columns: 36px 1fr 30px;
+}
+
+.af-order-toolbar input,
+.af-order-toolbar select,
+.af-dish-body p,
+.af-help-box p,
+.af-delivery-info p,
+.af-summary-card p,
+.af-pay-reasons span {
+    font-size: 12px;
+}
+
+.af-dish-grid {
+    gap: 16px;
+}
+
+.af-dish-image {
+    height: 145px;
+}
+
+.af-dish-image span {
+    top: 10px;
+    left: 10px;
+    padding: 4px 8px;
+    font-size: 10.5px;
+}
+
+.af-dish-image button {
+    top: 10px;
+    right: 10px;
+    font-size: 18px;
+}
+
+.af-dish-body {
+    gap: 8px;
+    padding: 14px;
+}
+
+.af-dish-body h3 {
+    font-size: 16px;
+}
+
+.af-dish-body small {
+    font-size: 11px;
+}
+
+.af-dish-body button,
+.af-checkout-btn,
+.af-pay-now,
+.af-load-more {
+    min-height: 36px;
+    gap: 7px;
+    font-size: 12px;
+}
+
+.af-cart-panel header {
+    min-height: 44px;
+    padding: 0 14px;
+}
+
+.af-cart-panel header h2 {
+    font-size: 15px;
+}
+
+.af-order-card-section,
+.af-cart-items,
+.af-public-cart-note {
+    padding-left: 14px;
+    padding-right: 14px;
+}
+
+.af-order-selected-summary strong {
+    font-size: 14px;
+}
+
+.af-order-quantity-row > span,
+.af-order-details-section h3 {
+    font-size: 12px;
+}
+
 .af-dish-image button {
     position: absolute;
     top: 12px;
@@ -268,6 +435,86 @@
     text-decoration: none;
 }
 
+.af-dish-body .af-add-to-cart-btn {
+    position: relative;
+    overflow: hidden;
+    cursor: pointer;
+    box-shadow: 0 10px 20px rgba(23, 35, 29, 0.12);
+    transition:
+        background-color 180ms ease,
+        box-shadow 180ms ease,
+        transform 180ms ease;
+}
+
+.af-dish-body .af-add-to-cart-btn::after {
+    content: "";
+    position: absolute;
+    inset: 50% auto auto 50%;
+    width: 14px;
+    height: 14px;
+    border-radius: 999px;
+    background: rgba(255, 255, 255, 0.38);
+    opacity: 0;
+    pointer-events: none;
+    transform: translate(-50%, -50%) scale(1);
+}
+
+.af-dish-body .af-add-to-cart-btn:hover,
+.af-dish-body .af-add-to-cart-btn:focus-visible {
+    background: linear-gradient(135deg, var(--af-green), #255b3c);
+    box-shadow: 0 14px 26px rgba(23, 35, 29, 0.22);
+    transform: translateY(-2px);
+}
+
+.af-dish-body .af-add-to-cart-btn:hover i,
+.af-dish-body .af-add-to-cart-btn:focus-visible i {
+    animation: af-add-to-cart-icon-pop 620ms ease both;
+}
+
+.af-dish-body .af-add-to-cart-btn:active,
+.af-dish-body .af-add-to-cart-btn.is-adding {
+    transform: translateY(0) scale(0.98);
+}
+
+.af-dish-body .af-add-to-cart-btn.is-adding::after {
+    animation: af-add-to-cart-ripple 460ms ease-out;
+}
+
+@keyframes af-add-to-cart-icon-pop {
+    0% {
+        transform: rotate(0deg) scale(1);
+    }
+
+    45% {
+        transform: rotate(90deg) scale(1.18);
+    }
+
+    100% {
+        transform: rotate(90deg) scale(1);
+    }
+}
+
+@keyframes af-add-to-cart-ripple {
+    0% {
+        opacity: 0.85;
+        transform: translate(-50%, -50%) scale(1);
+    }
+
+    100% {
+        opacity: 0;
+        transform: translate(-50%, -50%) scale(18);
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .af-dish-body .af-add-to-cart-btn,
+    .af-dish-body .af-add-to-cart-btn::after,
+    .af-dish-body .af-add-to-cart-btn i {
+        animation: none;
+        transition: none;
+    }
+}
+
 .af-load-more {
     width: 210px;
     height: 42px;
@@ -282,6 +529,9 @@
 }
 
 .af-cart-panel {
+    display: flex;
+    flex-direction: column;
+    max-height: calc(100vh - 96px);
     overflow: hidden;
 }
 
@@ -432,6 +682,9 @@
 
 .af-cart-items {
     padding: 14px 18px 0;
+    overflow-y: auto;
+    max-height: 190px;
+    -webkit-overflow-scrolling: touch;
 }
 
 .af-cart-items article {
@@ -803,6 +1056,209 @@
     font-weight: 850;
 }
 
+.af-public-order-page button,
+.af-public-order-page a,
+.af-order-hero a {
+    -webkit-tap-highlight-color: transparent;
+}
+
+.af-public-order-page button:not(:disabled),
+.af-public-order-page .af-category-menu a,
+.af-public-order-page .af-help-box a,
+.af-public-order-page .af-delivery-info a,
+.af-order-hero a {
+    cursor: pointer;
+    transition:
+        background-color 180ms ease,
+        border-color 180ms ease,
+        filter 180ms ease,
+        box-shadow 180ms ease,
+        color 180ms ease,
+        transform 180ms ease;
+}
+
+.af-public-order-page button:not(:disabled):hover,
+.af-public-order-page button:not(:disabled):focus-visible,
+.af-public-order-page .af-category-menu a:hover,
+.af-public-order-page .af-category-menu a:focus-visible,
+.af-public-order-page .af-help-box a:hover,
+.af-public-order-page .af-help-box a:focus-visible,
+.af-public-order-page .af-delivery-info a:hover,
+.af-public-order-page .af-delivery-info a:focus-visible,
+.af-order-hero a:hover,
+.af-order-hero a:focus-visible {
+    transform: translateY(-2px);
+}
+
+.af-public-order-page button:not(:disabled):active,
+.af-public-order-page .af-category-menu a:active,
+.af-public-order-page .af-help-box a:active,
+.af-public-order-page .af-delivery-info a:active,
+.af-order-hero a:active {
+    transform: translateY(0) scale(0.98);
+}
+
+.af-public-order-page button:focus-visible,
+.af-public-order-page a:focus-visible,
+.af-order-hero a:focus-visible {
+    outline: 3px solid rgba(214, 126, 0, 0.24);
+    outline-offset: 3px;
+}
+
+.af-public-order-page .af-category-menu a:hover,
+.af-public-order-page .af-category-menu a:focus-visible,
+.af-public-order-page .af-category-menu a.is-active {
+    box-shadow: 0 10px 20px rgba(214, 126, 0, 0.14);
+}
+
+.af-public-order-page .af-category-menu a:hover i,
+.af-public-order-page .af-category-menu a:focus-visible i,
+.af-public-order-page .af-help-box a:hover i,
+.af-public-order-page .af-help-box a:focus-visible i,
+.af-public-order-page .af-delivery-info a:hover i,
+.af-public-order-page .af-delivery-info a:focus-visible i,
+.af-public-order-page button:not(:disabled):hover i,
+.af-public-order-page button:not(:disabled):focus-visible i {
+    animation: af-order-icon-nudge 520ms ease both;
+}
+
+.af-public-order-page .af-help-box a:hover,
+.af-public-order-page .af-help-box a:focus-visible,
+.af-public-order-page .af-delivery-info a:hover,
+.af-public-order-page .af-delivery-info a:focus-visible {
+    border-color: rgba(214, 126, 0, 0.42);
+    background: #fff;
+    box-shadow: 0 12px 24px rgba(23, 35, 29, 0.12);
+    color: var(--af-green);
+}
+
+.af-public-order-page .af-dish-image button {
+    cursor: pointer;
+    transition:
+        background-color 180ms ease,
+        color 180ms ease,
+        box-shadow 180ms ease,
+        transform 180ms ease;
+}
+
+.af-public-order-page .af-dish-image button:hover,
+.af-public-order-page .af-dish-image button:focus-visible,
+.af-public-order-page .af-dish-image button.is-active {
+    background: #fff;
+    color: #d92d20;
+    box-shadow: 0 12px 24px rgba(15, 23, 42, 0.22);
+}
+
+.af-public-order-page .af-public-cart-panel header form button:hover,
+.af-public-order-page .af-public-cart-panel header form button:focus-visible {
+    color: #ffe1a8;
+    text-decoration-thickness: 2px;
+}
+
+.af-public-order-page .af-qty button {
+    cursor: pointer;
+    transition:
+        background-color 160ms ease,
+        border-color 160ms ease,
+        box-shadow 160ms ease,
+        color 160ms ease,
+        transform 160ms ease;
+}
+
+.af-public-order-page .af-qty button:hover,
+.af-public-order-page .af-qty button:focus-visible {
+    border-color: var(--af-gold);
+    background: #fff8ef;
+    color: var(--af-green);
+    box-shadow: 0 6px 14px rgba(214, 126, 0, 0.18);
+}
+
+.af-public-order-page .af-remove {
+    cursor: pointer;
+    transition:
+        background-color 160ms ease,
+        color 160ms ease,
+        transform 160ms ease;
+}
+
+.af-public-order-page .af-remove:hover,
+.af-public-order-page .af-remove:focus-visible {
+    background: #fff1f1;
+    color: #b42318;
+}
+
+.af-public-order-page .af-public-cart-note > button:first-of-type {
+    cursor: pointer;
+    transition:
+        color 180ms ease,
+        transform 180ms ease;
+}
+
+.af-public-order-page .af-public-cart-note > button:first-of-type:hover,
+.af-public-order-page .af-public-cart-note > button:first-of-type:focus-visible {
+    color: var(--af-gold);
+}
+
+.af-public-order-page .af-public-cart-note > button:first-of-type .bi-chevron-down {
+    transition: transform 180ms ease;
+}
+
+.af-public-order-page .af-public-cart-note > button:first-of-type:hover .bi-chevron-down,
+.af-public-order-page .af-public-cart-note > button:first-of-type:focus-visible .bi-chevron-down {
+    transform: translateY(2px);
+}
+
+.af-public-order-page .af-public-cart-note > button:last-child {
+    cursor: pointer;
+    transition:
+        background-color 180ms ease,
+        border-color 180ms ease,
+        box-shadow 180ms ease,
+        color 180ms ease,
+        transform 180ms ease;
+}
+
+.af-public-order-page .af-public-cart-note > button:last-child:hover,
+.af-public-order-page .af-public-cart-note > button:last-child:focus-visible {
+    border-color: var(--af-gold);
+    background: var(--af-gold);
+    box-shadow: 0 10px 20px rgba(214, 126, 0, 0.2);
+    color: #fff;
+}
+
+.af-public-order-page .af-checkout-btn:not(:disabled):hover,
+.af-public-order-page .af-checkout-btn:not(:disabled):focus-visible {
+    box-shadow: 0 14px 28px rgba(214, 126, 0, 0.28);
+    filter: saturate(1.08);
+}
+
+@keyframes af-order-icon-nudge {
+    0%,
+    100% {
+        transform: translateX(0) scale(1);
+    }
+
+    45% {
+        transform: translateX(2px) scale(1.12);
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .af-public-order-page button,
+    .af-public-order-page a,
+    .af-public-order-page i,
+    .af-order-hero a {
+        animation: none !important;
+        transition: none !important;
+    }
+
+    .af-public-order-page button,
+    .af-public-order-page a,
+    .af-order-hero a {
+        transform: none !important;
+    }
+}
+
 .af-payment-page {
     background: #fff;
     padding: 44px 28px;
@@ -875,6 +1331,10 @@
     padding: 24px 28px;
     display: grid;
     gap: 16px;
+}
+
+.af-payment-page [hidden] {
+    display: none !important;
 }
 
 .af-payment-method {
@@ -993,6 +1453,12 @@
     width: 100%;
     min-height: 54px;
     font-size: 17px;
+}
+
+a.af-pay-now {
+    align-items: center;
+    justify-content: center;
+    text-decoration: none;
 }
 
 .af-back-delivery {
@@ -1481,4 +1947,171 @@
     .af-cart-benefits {
         grid-template-columns: 1fr;
     }
+}
+
+/* Final compact public shop overrides. */
+.af-order-hero {
+    min-height: 240px;
+    padding-top: 34px;
+    padding-bottom: 34px;
+}
+
+.af-order-hero nav {
+    font-size: 11px;
+}
+
+.af-order-hero h1 {
+    font-size: clamp(32px, 4vw, 44px);
+    margin: 12px 0 6px;
+}
+
+.af-order-benefits {
+    gap: 12px;
+    margin-top: 18px;
+}
+
+.af-order-benefits article {
+    min-width: 180px;
+    grid-template-columns: 38px 1fr;
+    gap: 10px;
+    padding: 12px 14px;
+}
+
+.af-order-benefits i {
+    width: 34px;
+    height: 34px;
+    font-size: 15px;
+}
+
+.af-order-benefits strong {
+    font-size: 12px;
+}
+
+.af-order-benefits span {
+    font-size: 11px;
+}
+
+.af-order-page {
+    grid-template-columns: 220px minmax(0, 1fr) 300px;
+    gap: 20px;
+    padding: 26px 22px;
+}
+
+.af-order-panel,
+.af-help-box {
+    padding: 16px;
+}
+
+.af-order-panel h2,
+.af-order-main h2,
+.af-cart-panel h2,
+.af-delivery-info h2,
+.af-summary-card h2,
+.af-payment-section h2 {
+    font-size: 20px;
+}
+
+.af-category-menu a {
+    min-height: 34px;
+    gap: 9px;
+    padding: 0 10px;
+    font-size: 12px;
+}
+
+.af-help-box {
+    margin-top: 18px;
+}
+
+.af-help-box a {
+    min-height: 34px;
+    font-size: 12px;
+}
+
+.af-order-toolbar {
+    grid-template-columns: minmax(0, 1fr) 150px;
+    gap: 14px;
+    margin-bottom: 18px;
+}
+
+.af-order-toolbar label {
+    height: 40px;
+    grid-template-columns: 36px 1fr 30px;
+}
+
+.af-order-toolbar input,
+.af-order-toolbar select,
+.af-dish-body p,
+.af-help-box p,
+.af-delivery-info p,
+.af-summary-card p,
+.af-pay-reasons span {
+    font-size: 12px;
+}
+
+.af-dish-grid {
+    gap: 16px;
+}
+
+.af-dish-image {
+    height: 145px;
+}
+
+.af-dish-image span {
+    top: 10px;
+    left: 10px;
+    padding: 4px 8px;
+    font-size: 10.5px;
+}
+
+.af-dish-image button {
+    top: 10px;
+    right: 10px;
+    font-size: 18px;
+}
+
+.af-dish-body {
+    gap: 8px;
+    padding: 14px;
+}
+
+.af-dish-body h3 {
+    font-size: 16px;
+}
+
+.af-dish-body small {
+    font-size: 11px;
+}
+
+.af-dish-body button,
+.af-checkout-btn,
+.af-pay-now,
+.af-load-more {
+    min-height: 36px;
+    gap: 7px;
+    font-size: 12px;
+}
+
+.af-cart-panel header {
+    min-height: 44px;
+    padding: 0 14px;
+}
+
+.af-cart-panel header h2 {
+    font-size: 15px;
+}
+
+.af-order-card-section,
+.af-cart-items,
+.af-public-cart-note {
+    padding-left: 14px;
+    padding-right: 14px;
+}
+
+.af-order-selected-summary strong {
+    font-size: 14px;
+}
+
+.af-order-quantity-row > span,
+.af-order-details-section h3 {
+    font-size: 12px;
 }

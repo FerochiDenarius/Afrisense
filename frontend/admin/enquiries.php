@@ -15,6 +15,7 @@ $extraScripts = [$frontendBase . '/assets/js/admin-enquiries.js'];
 require_once __DIR__ . '/../auth/auth_bootstrap.php';
 
 afrisense_require_admin();
+$itemsPerPage = afrisense_admin_items_per_page();
 
 /**
  * @return array<string, string>
@@ -360,7 +361,7 @@ try {
          LEFT JOIN `customers` c ON c.`id` = e.`customer_id`
          ' . $whereSql . '
          ' . $orderSql . '
-         LIMIT 25'
+         LIMIT ' . $itemsPerPage
     );
     $statement->execute($params);
     $enquiries = $statement->fetchAll(PDO::FETCH_ASSOC);

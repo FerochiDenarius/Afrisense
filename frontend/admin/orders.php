@@ -2,6 +2,7 @@
 $frontendBase = '/Afrisense/frontend';
 $pageTitle = 'Orders | AfriSense';
 $adminTitle = 'Orders';
+$adminSearchPlaceholder = 'Search orders, customers, ID...';
 $activeAdminPage = 'orders_all';
 $extraStyles = [
     $frontendBase . '/assets/css/admin-menu.css',
@@ -9,9 +10,16 @@ $extraStyles = [
 ];
 
 require_once __DIR__ . '/../auth/auth_bootstrap.php';
+require_once __DIR__ . '/../includes/public_settings.php';
+
+$ordersCssPath = __DIR__ . '/../assets/css/admin-orders.css';
+if (is_file($ordersCssPath)) {
+    $extraStyles[] = $frontendBase . '/assets/css/admin-orders.css?v=' . filemtime($ordersCssPath);
+}
 
 $adminUser = afrisense_require_admin();
 $adminUserId = (int) ($adminUser['id'] ?? 0);
+$itemsPerPage = min(8, afrisense_admin_items_per_page());
 
 function afrisense_order_status_class(string $status): string
 {
@@ -119,7 +127,7 @@ function afrisense_order_action_form(int $orderId, string $action, string $field
     $classAttribute = $class !== '' ? ' class="' . htmlspecialchars($class, ENT_QUOTES, 'UTF-8') . '"' : '';
 
     return sprintf(
-        '<form action="orders.php" method="post"><input type="hidden" name="action" value="%s"><input type="hidden" name="order_id" value="%d"><input type="hidden" name="%s" value="%s"><button%s type="submit" title="%s" aria-label="%s"><i class="bi %s" aria-hidden="true"></i></button></form>',
+        '<form action="orders.php" method="post"><input type="hidden" name="action" value="%s"><input type="hidden" name="order_id" value="%d"><input type="hidden" name="%s" value="%s"><button%s type="submit" title="%s" aria-label="%s"><i class="bi %s" aria-hidden="true"></i><span>%s</span></button></form>',
         htmlspecialchars($action, ENT_QUOTES, 'UTF-8'),
         $orderId,
         htmlspecialchars($field, ENT_QUOTES, 'UTF-8'),
@@ -127,7 +135,8 @@ function afrisense_order_action_form(int $orderId, string $action, string $field
         $classAttribute,
         htmlspecialchars((string) $config['label'], ENT_QUOTES, 'UTF-8'),
         htmlspecialchars((string) $config['label'], ENT_QUOTES, 'UTF-8'),
-        htmlspecialchars((string) $config['icon'], ENT_QUOTES, 'UTF-8')
+        htmlspecialchars((string) $config['icon'], ENT_QUOTES, 'UTF-8'),
+        htmlspecialchars((string) $config['label'], ENT_QUOTES, 'UTF-8')
     );
 }
 
@@ -150,28 +159,105 @@ function afrisense_order_customer_user_id(PDO $pdo, int $orderId): ?int
     return $userId !== false ? (int) $userId : null;
 }
 
-function afrisense_order_notify_customer(PDO $pdo, int $orderId, string $title, string $message, int $createdBy): void
+function afrisense_order_customer_contact(PDO $pdo, int $orderId): ?array
 {
-    $userId = afrisense_order_customer_user_id($pdo, $orderId);
+    $statement = $pdo->prepare(
+        'SELECT
+            o.`id`,
+            o.`order_status`,
+            o.`payment_status`,
+            o.`payment_method`,
+            o.`total_price`,
+            o.`ordered_at`,
+            c.`fullname`,
+            c.`email`,
+            f.`food_name`
+         FROM `orders` o
+         INNER JOIN `customers` c ON c.`id` = o.`customer_id`
+         INNER JOIN `foods` f ON f.`id` = o.`food_id`
+         WHERE o.`id` = :order_id
+         LIMIT 1'
+    );
+    $statement->execute(['order_id' => $orderId]);
+    $contact = $statement->fetch(PDO::FETCH_ASSOC);
 
-    if ($userId === null || $userId <= 0) {
-        return;
+    return $contact !== false ? $contact : null;
+}
+
+function afrisense_order_email_customer(array $contact, string $title, string $message): array
+{
+    $email = trim((string) ($contact['email'] ?? ''));
+
+    if (!afrisense_public_setting_bool('email_notifications', true)) {
+        return ['success' => false, 'message' => 'Email notifications are disabled in settings.'];
     }
 
-    $statement = $pdo->prepare(
-        'INSERT INTO `notifications`
-            (`user_id`, `title`, `message`, `notification_type`, `action_url`, `created_by`)
-         VALUES
-            (:user_id, :title, :message, :notification_type, :action_url, :created_by)'
-    );
-    $statement->execute([
-        'user_id' => $userId,
-        'title' => $title,
-        'message' => $message,
-        'notification_type' => 'Order',
-        'action_url' => '/Afrisense/frontend/customer/my-orders.php?view=' . $orderId . '#order-details',
-        'created_by' => $createdBy > 0 ? $createdBy : null,
-    ]);
+    if ($email === '' || !filter_var($email, FILTER_VALIDATE_EMAIL)) {
+        return ['success' => false, 'message' => 'Customer email is missing or invalid.'];
+    }
+
+    if (!function_exists('afrisense_send_email')) {
+        return ['success' => false, 'message' => 'Email sender is unavailable.'];
+    }
+
+    $customerName = trim((string) ($contact['fullname'] ?? 'Customer'));
+    $safeName = htmlspecialchars($customerName !== '' ? $customerName : 'Customer', ENT_QUOTES, 'UTF-8');
+    $safeTitle = htmlspecialchars($title, ENT_QUOTES, 'UTF-8');
+    $safeMessage = htmlspecialchars($message, ENT_QUOTES, 'UTF-8');
+    $safeOrderId = htmlspecialchars(str_pad((string) ($contact['id'] ?? 0), 5, '0', STR_PAD_LEFT), ENT_QUOTES, 'UTF-8');
+    $safeFoodName = htmlspecialchars((string) ($contact['food_name'] ?? 'Your order'), ENT_QUOTES, 'UTF-8');
+    $safePayment = htmlspecialchars((string) ($contact['payment_method'] ?? 'Cash'), ENT_QUOTES, 'UTF-8');
+    $safeStatus = htmlspecialchars((string) ($contact['order_status'] ?? 'Pending'), ENT_QUOTES, 'UTF-8');
+    $safeTotal = htmlspecialchars(afrisense_public_money((float) ($contact['total_price'] ?? 0)), ENT_QUOTES, 'UTF-8');
+    $html = <<<HTML
+        <h2>{$safeTitle}</h2>
+        <p>Hello {$safeName},</p>
+        <p>{$safeMessage}</p>
+        <table role="presentation" cellspacing="0" cellpadding="0" style="border-collapse:collapse;margin:18px 0;width:100%;max-width:520px;">
+            <tr><td style="padding:8px 0;color:#667085;">Order ID</td><td style="padding:8px 0;font-weight:700;">#{$safeOrderId}</td></tr>
+            <tr><td style="padding:8px 0;color:#667085;">Item</td><td style="padding:8px 0;font-weight:700;">{$safeFoodName}</td></tr>
+            <tr><td style="padding:8px 0;color:#667085;">Status</td><td style="padding:8px 0;font-weight:700;">{$safeStatus}</td></tr>
+            <tr><td style="padding:8px 0;color:#667085;">Payment</td><td style="padding:8px 0;font-weight:700;">{$safePayment}</td></tr>
+            <tr><td style="padding:8px 0;color:#667085;">Total</td><td style="padding:8px 0;font-weight:700;">{$safeTotal}</td></tr>
+        </table>
+        <p>Thank you for ordering from AfriSense.</p>
+    HTML;
+    $text = $title . "\n\nHello " . ($customerName !== '' ? $customerName : 'Customer') . ",\n\n" . $message . "\n\nOrder #" . str_pad((string) ($contact['id'] ?? 0), 5, '0', STR_PAD_LEFT) . "\nItem: " . (string) ($contact['food_name'] ?? 'Your order') . "\nStatus: " . (string) ($contact['order_status'] ?? 'Pending') . "\nPayment: " . (string) ($contact['payment_method'] ?? 'Cash') . "\nTotal: " . afrisense_public_money((float) ($contact['total_price'] ?? 0));
+
+    return afrisense_send_email($email, $customerName, $title, $html, $text);
+}
+
+function afrisense_order_notify_customer(PDO $pdo, int $orderId, string $title, string $message, int $createdBy): array
+{
+    if (!afrisense_public_setting_bool('order_notifications', true)) {
+        return ['success' => false, 'message' => 'Order notifications are disabled in settings.'];
+    }
+
+    $userId = afrisense_order_customer_user_id($pdo, $orderId);
+    $contact = afrisense_order_customer_contact($pdo, $orderId);
+
+    if ($userId !== null && $userId > 0) {
+        $statement = $pdo->prepare(
+            'INSERT INTO `notifications`
+                (`user_id`, `title`, `message`, `notification_type`, `action_url`, `created_by`)
+             VALUES
+                (:user_id, :title, :message, :notification_type, :action_url, :created_by)'
+        );
+        $statement->execute([
+            'user_id' => $userId,
+            'title' => $title,
+            'message' => $message,
+            'notification_type' => 'Order',
+            'action_url' => '/Afrisense/frontend/customer/my-orders.php?view=' . $orderId . '#order-details',
+            'created_by' => $createdBy > 0 ? $createdBy : null,
+        ]);
+    }
+
+    if ($contact === null) {
+        return ['success' => false, 'message' => 'Order customer details could not be found.'];
+    }
+
+    return afrisense_order_email_customer($contact, $title, $message);
 }
 
 $validStatuses = ['Pending', 'Confirmed', 'Preparing', 'Ready', 'Out for Delivery', 'Delivered', 'Cancelled'];
@@ -222,13 +308,16 @@ try {
                     : 'Order was not changed.';
 
                 if ($update->rowCount() > 0) {
-                    afrisense_order_notify_customer(
+                    $emailResult = afrisense_order_notify_customer(
                         $pdo,
                         $orderId,
                         'Order Status Updated',
                         'Your order #' . str_pad((string) $orderId, 5, '0', STR_PAD_LEFT) . ' is now ' . $nextStatus . '.',
                         $adminUserId
                     );
+                    if (!$emailResult['success']) {
+                        $flashMessage .= ' Email not sent: ' . (string) ($emailResult['message'] ?? 'Unknown email error.');
+                    }
                 }
             }
         }
@@ -256,13 +345,16 @@ try {
                     : 'Payment was not changed.';
 
                 if ($update->rowCount() > 0) {
-                    afrisense_order_notify_customer(
+                    $emailResult = afrisense_order_notify_customer(
                         $pdo,
                         $orderId,
                         'Payment Status Updated',
                         'Payment for your order #' . str_pad((string) $orderId, 5, '0', STR_PAD_LEFT) . ' is now ' . $nextPaymentStatus . '.',
                         $adminUserId
                     );
+                    if (!$emailResult['success']) {
+                        $flashMessage .= ' Email not sent: ' . (string) ($emailResult['message'] ?? 'Unknown email error.');
+                    }
                 }
             }
         }
@@ -274,7 +366,7 @@ try {
     }
 
     if ($search !== '') {
-        $where[] = '(CAST(o.`id` AS CHAR) LIKE :search OR c.`fullname` LIKE :search OR c.`phone_number` LIKE :search OR f.`food_name` LIKE :search)';
+        $where[] = '(CAST(o.`id` AS CHAR) LIKE :search OR c.`fullname` LIKE :search OR c.`email` LIKE :search OR c.`phone_number` LIKE :search OR f.`food_name` LIKE :search)';
         $params['search'] = '%' . $search . '%';
     }
 
@@ -289,6 +381,7 @@ try {
                 o.`delivery_address`,
                 o.`special_instructions`,
                 c.`fullname`,
+                c.`email`,
                 c.`phone_number`,
                 f.`food_name`,
                 f.`image`
@@ -300,7 +393,7 @@ try {
         $sql .= ' WHERE ' . implode(' AND ', $where);
     }
 
-    $sql .= ' ORDER BY o.`ordered_at` DESC, o.`id` DESC LIMIT 25';
+    $sql .= ' ORDER BY o.`ordered_at` DESC, o.`id` DESC LIMIT ' . $itemsPerPage;
     $statement = $pdo->prepare($sql);
     $statement->execute($params);
     $orders = $statement->fetchAll(PDO::FETCH_ASSOC);
@@ -319,6 +412,7 @@ try {
                 o.`delivery_address`,
                 o.`special_instructions`,
                 c.`fullname`,
+                c.`email`,
                 c.`phone_number`,
                 f.`food_name`
              FROM `orders` o
@@ -337,6 +431,13 @@ try {
     $deliveredOrders = afrisense_count_orders($pdo, 'Delivered');
     $cancelledOrders = afrisense_count_orders($pdo, 'Cancelled');
     $confirmedOrders = afrisense_count_orders($pdo, 'Confirmed');
+    $adminOrderNavCounts = [
+        'orders_pending' => $pendingOrders,
+        'orders_confirmed' => $confirmedOrders,
+        'orders_preparing' => $preparingOrders,
+        'orders_delivered' => $deliveredOrders,
+        'orders_cancelled' => $cancelledOrders,
+    ];
     $loadError = '';
 } catch (Throwable $exception) {
     $orders = [];
@@ -346,6 +447,13 @@ try {
     $deliveredOrders = 0;
     $cancelledOrders = 0;
     $confirmedOrders = 0;
+    $adminOrderNavCounts = [
+        'orders_pending' => 0,
+        'orders_confirmed' => 0,
+        'orders_preparing' => 0,
+        'orders_delivered' => 0,
+        'orders_cancelled' => 0,
+    ];
     $selectedOrder = null;
     $loadError = 'Orders could not be loaded. Check that MySQL is running.';
 }
@@ -358,10 +466,10 @@ ob_start();
             <h1>All Orders</h1>
             <p>Dashboard / Orders / All Orders</p>
         </div>
-        <button class="af-add-menu-btn af-new-order-btn" type="button">
+        <a class="af-add-menu-btn af-new-order-btn" href="<?php echo htmlspecialchars($frontendBase . '/admin/new-order.php', ENT_QUOTES, 'UTF-8'); ?>">
             <i class="bi bi-plus-lg" aria-hidden="true"></i>
             New Order
-        </button>
+        </a>
     </header>
 
     <?php if ($loadError !== ''): ?>
@@ -399,10 +507,11 @@ ob_start();
             <form class="af-menu-filters af-orders-filters" action="orders.php" method="get">
                 <label class="af-menu-search" for="order_search">
                     <i class="bi bi-search" aria-hidden="true"></i>
-                    <input type="search" id="order_search" name="search" value="<?php echo htmlspecialchars($search, ENT_QUOTES, 'UTF-8'); ?>" placeholder="Search by order ID, customer, phone...">
+                    <input type="search" id="order_search" name="search" value="<?php echo htmlspecialchars($search, ENT_QUOTES, 'UTF-8'); ?>" placeholder="Search by order ID, customer, email, phone...">
                 </label>
                 <label class="af-menu-select" for="order_status_filter">
-                    <select id="order_status_filter" name="status">
+                    <span>Status</span>
+                    <select id="order_status_filter" name="status" onchange="this.form.submit()">
                         <option value="">All Status</option>
                         <?php foreach ($validStatuses as $status): ?>
                             <option value="<?php echo htmlspecialchars($status, ENT_QUOTES, 'UTF-8'); ?>" <?php echo $statusFilter === $status ? 'selected' : ''; ?>>
@@ -413,14 +522,16 @@ ob_start();
                     <i class="bi bi-chevron-down" aria-hidden="true"></i>
                 </label>
                 <label class="af-menu-select" for="order_date_range">
-                    <select id="order_date_range" name="range">
+                    <span>Date Range</span>
+                    <i class="bi bi-calendar3" aria-hidden="true"></i>
+                    <select id="order_date_range" name="range" onchange="this.form.submit()">
+                        <option>May 18, 2025 - May 24, 2025</option>
                         <option>This Month</option>
                         <option>This Week</option>
                         <option>Today</option>
                     </select>
                     <i class="bi bi-chevron-down" aria-hidden="true"></i>
                 </label>
-                <button type="submit"><i class="bi bi-filter" aria-hidden="true"></i> Filter</button>
                 <button type="button"><i class="bi bi-download" aria-hidden="true"></i> Export</button>
             </form>
 
@@ -430,6 +541,7 @@ ob_start();
                         <tr>
                             <th>Order ID</th>
                             <th>Customer</th>
+                            <th>Email</th>
                             <th>Date &amp; Time</th>
                             <th>Items</th>
                             <th>Amount</th>
@@ -441,7 +553,7 @@ ob_start();
                     <tbody>
                         <?php if ($orders === []): ?>
                             <tr>
-                                <td colspan="8"><div class="af-empty-state">No orders found.</div></td>
+                                <td colspan="9"><div class="af-empty-state">No orders found.</div></td>
                             </tr>
                         <?php endif; ?>
                         <?php foreach ($orders as $order): ?>
@@ -449,6 +561,11 @@ ob_start();
                             $orderedAt = strtotime((string) ($order['ordered_at'] ?? '')) ?: time();
                             $orderStatus = (string) ($order['order_status'] ?? 'Pending');
                             $paymentStatus = (string) ($order['payment_status'] ?? 'Pending');
+                            $paymentMethod = (string) ($order['payment_method'] ?? 'Cash');
+                            $paymentLabel = strtolower($paymentMethod) === 'cash' && strtolower($paymentStatus) === 'pending'
+                                ? 'Cash on Delivery'
+                                : $paymentStatus;
+                            $paymentClass = afrisense_payment_status_class($paymentStatus) . (strtolower($paymentMethod) === 'cash' ? ' cash' : '');
                             ?>
                             <?php $isSelectedOrder = (int) ($order['id'] ?? 0) === $viewOrderId; ?>
                             <tr id="order-row-<?php echo htmlspecialchars((string) ($order['id'] ?? 0), ENT_QUOTES, 'UTF-8'); ?>" class="<?php echo $isSelectedOrder ? 'is-selected' : ''; ?>">
@@ -458,6 +575,13 @@ ob_start();
                                         <strong><?php echo htmlspecialchars((string) ($order['fullname'] ?? 'Customer'), ENT_QUOTES, 'UTF-8'); ?></strong>
                                         <small><?php echo htmlspecialchars((string) ($order['phone_number'] ?? ''), ENT_QUOTES, 'UTF-8'); ?></small>
                                     </span>
+                                </td>
+                                <td>
+                                    <?php if (trim((string) ($order['email'] ?? '')) !== ''): ?>
+                                        <a class="af-order-email" href="mailto:<?php echo htmlspecialchars((string) ($order['email'] ?? ''), ENT_QUOTES, 'UTF-8'); ?>"><?php echo htmlspecialchars((string) ($order['email'] ?? ''), ENT_QUOTES, 'UTF-8'); ?></a>
+                                    <?php else: ?>
+                                        <span class="af-order-email muted">No email</span>
+                                    <?php endif; ?>
                                 </td>
                                 <td>
                                     <span class="af-order-date">
@@ -474,9 +598,9 @@ ob_start();
                                         </span>
                                     </div>
                                 </td>
-                                <td>GHc <?php echo htmlspecialchars(number_format((float) ($order['total_price'] ?? 0), 2), ENT_QUOTES, 'UTF-8'); ?></td>
+                                <td>GH₵ <?php echo htmlspecialchars(number_format((float) ($order['total_price'] ?? 0), 2), ENT_QUOTES, 'UTF-8'); ?></td>
                                 <td><span class="af-order-status <?php echo htmlspecialchars(afrisense_order_status_class($orderStatus), ENT_QUOTES, 'UTF-8'); ?>"><?php echo htmlspecialchars($orderStatus, ENT_QUOTES, 'UTF-8'); ?></span></td>
-                                <td><span class="af-payment-status <?php echo htmlspecialchars(afrisense_payment_status_class($paymentStatus), ENT_QUOTES, 'UTF-8'); ?>"><?php echo htmlspecialchars($paymentStatus, ENT_QUOTES, 'UTF-8'); ?></span></td>
+                                <td><span class="af-payment-status <?php echo htmlspecialchars($paymentClass, ENT_QUOTES, 'UTF-8'); ?>"><?php echo htmlspecialchars($paymentLabel, ENT_QUOTES, 'UTF-8'); ?></span></td>
                                 <td>
                                     <div class="af-row-actions af-order-row-actions">
                                         <a href="orders.php?view=<?php echo htmlspecialchars((string) ($order['id'] ?? 0), ENT_QUOTES, 'UTF-8'); ?>#order-row-<?php echo htmlspecialchars((string) ($order['id'] ?? 0), ENT_QUOTES, 'UTF-8'); ?>" aria-label="View order <?php echo htmlspecialchars((string) ($order['id'] ?? ''), ENT_QUOTES, 'UTF-8'); ?>"><i class="bi bi-eye" aria-hidden="true"></i></a>
@@ -514,9 +638,10 @@ ob_start();
                     <strong>ORD-<?php echo htmlspecialchars(str_pad((string) ($selectedOrder['id'] ?? 0), 5, '0', STR_PAD_LEFT), ENT_QUOTES, 'UTF-8'); ?></strong>
                     <dl>
                         <div><dt>Customer</dt><dd><?php echo htmlspecialchars((string) ($selectedOrder['fullname'] ?? 'Customer'), ENT_QUOTES, 'UTF-8'); ?></dd></div>
+                        <div><dt>Email</dt><dd><?php if (trim((string) ($selectedOrder['email'] ?? '')) !== ''): ?><a href="mailto:<?php echo htmlspecialchars((string) ($selectedOrder['email'] ?? ''), ENT_QUOTES, 'UTF-8'); ?>"><?php echo htmlspecialchars((string) ($selectedOrder['email'] ?? ''), ENT_QUOTES, 'UTF-8'); ?></a><?php else: ?>No email<?php endif; ?></dd></div>
                         <div><dt>Phone</dt><dd><?php echo htmlspecialchars((string) ($selectedOrder['phone_number'] ?? ''), ENT_QUOTES, 'UTF-8'); ?></dd></div>
                         <div><dt>Item</dt><dd><?php echo htmlspecialchars((string) ($selectedOrder['food_name'] ?? 'Food item'), ENT_QUOTES, 'UTF-8'); ?> x <?php echo htmlspecialchars((string) ($selectedOrder['quantity'] ?? 1), ENT_QUOTES, 'UTF-8'); ?></dd></div>
-                        <div><dt>Amount</dt><dd>GHc <?php echo htmlspecialchars(number_format((float) ($selectedOrder['total_price'] ?? 0), 2), ENT_QUOTES, 'UTF-8'); ?></dd></div>
+                        <div><dt>Amount</dt><dd>GH₵ <?php echo htmlspecialchars(number_format((float) ($selectedOrder['total_price'] ?? 0), 2), ENT_QUOTES, 'UTF-8'); ?></dd></div>
                         <div><dt>Status</dt><dd><?php echo htmlspecialchars((string) ($selectedOrder['order_status'] ?? 'Pending'), ENT_QUOTES, 'UTF-8'); ?></dd></div>
                         <div><dt>Payment</dt><dd><?php echo htmlspecialchars((string) ($selectedOrder['payment_status'] ?? 'Pending'), ENT_QUOTES, 'UTF-8'); ?> / <?php echo htmlspecialchars((string) ($selectedOrder['payment_method'] ?? 'Cash'), ENT_QUOTES, 'UTF-8'); ?></dd></div>
                     </dl>

@@ -64,11 +64,22 @@ function afrisense_is_administrator(?array $user): bool
     return in_array(afrisense_role_name($user), ['administrator', 'admin', 'super admin'], true);
 }
 
+function afrisense_is_support_staff(?array $user): bool
+{
+    return in_array(afrisense_role_name($user), ['support agent', 'agent', 'customer support', 'support'], true);
+}
+
 function afrisense_dashboard_url(?array $user): string
 {
-    return afrisense_is_administrator($user)
-        ? '/Afrisense/frontend/admin/dashboard.php'
-        : '/Afrisense/frontend/customer/dashboard.php';
+    if (afrisense_is_administrator($user)) {
+        return '/Afrisense/frontend/admin/dashboard.php';
+    }
+
+    if (afrisense_is_support_staff($user)) {
+        return '/Afrisense/frontend/admin/support.php';
+    }
+
+    return '/Afrisense/frontend/customer/dashboard.php';
 }
 
 function afrisense_require_user(): array
@@ -267,8 +278,159 @@ function afrisense_app_url(): string
     return rtrim((string) ($_ENV['APP_URL'] ?? 'http://localhost/Afrisense'), '/');
 }
 
+function afrisense_admin_items_per_page(int $fallback = 25): int
+{
+    try {
+        $statement = afrisense_pdo()->prepare('SELECT `items_per_page` FROM `system_settings` ORDER BY `id` ASC LIMIT 1');
+        $statement->execute();
+        $value = (int) ($statement->fetchColumn() ?: $fallback);
+
+        return max(5, min(100, $value));
+    } catch (Throwable $exception) {
+        return max(5, min(100, $fallback));
+    }
+}
+
+function afrisense_mail_database_settings(): array
+{
+    try {
+        $pdo = afrisense_pdo();
+        $systemStatement = $pdo->prepare('SELECT * FROM `system_settings` ORDER BY `id` ASC LIMIT 1');
+        $systemStatement->execute();
+        $system = $systemStatement->fetch(PDO::FETCH_ASSOC) ?: [];
+
+        $companyStatement = $pdo->prepare('SELECT * FROM `company_information` ORDER BY `id` ASC LIMIT 1');
+        $companyStatement->execute();
+        $company = $companyStatement->fetch(PDO::FETCH_ASSOC) ?: [];
+
+        return ['system' => $system, 'company' => $company];
+    } catch (Throwable $exception) {
+        return ['system' => [], 'company' => []];
+    }
+}
+
+function afrisense_smtp_response($socket): string
+{
+    $response = '';
+
+    while (($line = fgets($socket, 515)) !== false) {
+        $response .= $line;
+
+        if (strlen($line) >= 4 && $line[3] === ' ') {
+            break;
+        }
+    }
+
+    return $response;
+}
+
+function afrisense_smtp_command($socket, string $command, array $acceptedCodes): string
+{
+    if ($command !== '') {
+        fwrite($socket, $command . "\r\n");
+    }
+
+    $response = afrisense_smtp_response($socket);
+    $code = substr($response, 0, 3);
+
+    if (!in_array($code, $acceptedCodes, true)) {
+        throw new RuntimeException(trim($response) !== '' ? trim($response) : 'SMTP server did not respond as expected.');
+    }
+
+    return $response;
+}
+
+function afrisense_smtp_message(string $from, string $toEmail, string $toName, string $subject, string $html, string $text): string
+{
+    $boundary = 'afrisense_' . bin2hex(random_bytes(12));
+    $toHeader = $toName !== '' ? sprintf('"%s" <%s>', addcslashes($toName, '"\\'), $toEmail) : $toEmail;
+
+    $headers = [
+        'Date: ' . date(DATE_RFC2822),
+        'From: ' . $from,
+        'To: ' . $toHeader,
+        'Subject: ' . $subject,
+        'MIME-Version: 1.0',
+        'Content-Type: multipart/alternative; boundary="' . $boundary . '"',
+    ];
+
+    $body = implode("\r\n", $headers) . "\r\n\r\n";
+    $body .= '--' . $boundary . "\r\nContent-Type: text/plain; charset=UTF-8\r\nContent-Transfer-Encoding: 8bit\r\n\r\n" . $text . "\r\n\r\n";
+    $body .= '--' . $boundary . "\r\nContent-Type: text/html; charset=UTF-8\r\nContent-Transfer-Encoding: 8bit\r\n\r\n" . $html . "\r\n\r\n";
+    $body .= '--' . $boundary . "--\r\n";
+
+    return preg_replace('/^\./m', '..', $body) ?? $body;
+}
+
+function afrisense_send_smtp_email(string $toEmail, string $toName, string $subject, string $html, string $text, array $system, array $company): array
+{
+    $host = trim((string) ($system['smtp_host'] ?? ''));
+    $port = (int) ($system['smtp_port'] ?? 587);
+    $encryption = strtolower(trim((string) ($system['smtp_encryption'] ?? 'tls')));
+    $username = trim((string) ($system['smtp_username'] ?? ''));
+    $password = (string) ($system['smtp_password'] ?? '');
+    $fromEmail = trim((string) ($company['company_email'] ?? $username));
+    $fromName = trim((string) ($company['company_name'] ?? 'AfriSense Food Services'));
+
+    if ($host === '' || $fromEmail === '') {
+        return ['success' => false, 'message' => 'SMTP host and sender email are required.'];
+    }
+
+    $remote = ($encryption === 'ssl' ? 'ssl://' : '') . $host . ':' . max(1, $port);
+    $socket = @stream_socket_client($remote, $errorCode, $errorMessage, 20, STREAM_CLIENT_CONNECT);
+
+    if (!$socket) {
+        return ['success' => false, 'message' => $errorMessage !== '' ? $errorMessage : 'SMTP connection failed.', 'status_code' => $errorCode];
+    }
+
+    stream_set_timeout($socket, 20);
+
+    try {
+        afrisense_smtp_command($socket, '', ['220']);
+        afrisense_smtp_command($socket, 'EHLO localhost', ['250']);
+
+        if ($encryption === 'tls') {
+            afrisense_smtp_command($socket, 'STARTTLS', ['220']);
+
+            if (!stream_socket_enable_crypto($socket, true, STREAM_CRYPTO_METHOD_TLS_CLIENT)) {
+                throw new RuntimeException('SMTP TLS negotiation failed.');
+            }
+
+            afrisense_smtp_command($socket, 'EHLO localhost', ['250']);
+        }
+
+        if ($username !== '') {
+            afrisense_smtp_command($socket, 'AUTH LOGIN', ['334']);
+            afrisense_smtp_command($socket, base64_encode($username), ['334']);
+            afrisense_smtp_command($socket, base64_encode($password), ['235']);
+        }
+
+        $from = sprintf('"%s" <%s>', addcslashes($fromName, '"\\'), $fromEmail);
+        afrisense_smtp_command($socket, 'MAIL FROM:<' . $fromEmail . '>', ['250']);
+        afrisense_smtp_command($socket, 'RCPT TO:<' . $toEmail . '>', ['250', '251']);
+        afrisense_smtp_command($socket, 'DATA', ['354']);
+        fwrite($socket, afrisense_smtp_message($from, $toEmail, $toName, $subject, $html, $text) . "\r\n.\r\n");
+        afrisense_smtp_command($socket, '', ['250']);
+        afrisense_smtp_command($socket, 'QUIT', ['221']);
+        fclose($socket);
+
+        return ['success' => true, 'message' => 'Email sent.'];
+    } catch (Throwable $exception) {
+        fclose($socket);
+
+        return ['success' => false, 'message' => $exception->getMessage()];
+    }
+}
+
 function afrisense_send_email(string $toEmail, string $toName, string $subject, string $html, string $text): array
 {
+    $databaseMailSettings = afrisense_mail_database_settings();
+    $systemMailSettings = $databaseMailSettings['system'];
+
+    if (trim((string) ($systemMailSettings['smtp_host'] ?? '')) !== '') {
+        return afrisense_send_smtp_email($toEmail, $toName, $subject, $html, $text, $systemMailSettings, $databaseMailSettings['company']);
+    }
+
     $mail = require __DIR__ . '/../../backend/config/mail.php';
     $apiKey = (string) ($mail['resend']['api_key'] ?? '');
 

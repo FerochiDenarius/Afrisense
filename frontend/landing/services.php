@@ -5,6 +5,11 @@ $activePage = 'catering';
 $extraStyles = [$frontendBase . '/assets/css/menu-services.css'];
 $foodImageBase = $frontendBase . '/assets/images/foods';
 
+require_once __DIR__ . '/../includes/public_settings.php';
+
+$servicesBookingHref = afrisense_public_booking_url($frontendBase);
+$servicesOrderHref = afrisense_public_order_url($frontendBase);
+
 $services = [
     ['title' => 'Dine-In Experience', 'desc' => 'Enjoy a luxurious and comfortable dining experience in our warm and elegant restaurant.', 'icon' => 'bi-shop', 'image' => 'jollof-rice.png'],
     ['title' => 'Food Delivery', 'desc' => 'Order your favourite meals and enjoy fast, reliable delivery right to your doorstep.', 'icon' => 'bi-truck', 'image' => 'fried-rice.png'],
@@ -33,7 +38,7 @@ ob_start();
         <p class="af-kicker">Catering & Dining</p>
         <h1>Our <span>Services</span></h1>
         <p>From fine dining to catering, AfriSense delivers exceptional culinary experiences tailored to your needs.</p>
-        <p><a class="af-menu-order-btn" href="booking.php">Book a Service <i class="bi bi-arrow-right" aria-hidden="true"></i></a></p>
+        <p><a class="af-menu-order-btn" href="<?php echo htmlspecialchars($servicesBookingHref, ENT_QUOTES, 'UTF-8'); ?>">Book a Service <i class="bi bi-arrow-right" aria-hidden="true"></i></a></p>
     </div>
 </section>
 
@@ -54,7 +59,7 @@ ob_start();
                 <div class="af-public-service-card-body">
                     <h3><?php echo htmlspecialchars($service['title'], ENT_QUOTES, 'UTF-8'); ?></h3>
                     <p><?php echo htmlspecialchars($service['desc'], ENT_QUOTES, 'UTF-8'); ?></p>
-                    <a href="booking.php">Learn More <i class="bi bi-arrow-right" aria-hidden="true"></i></a>
+                    <a href="<?php echo htmlspecialchars($servicesBookingHref, ENT_QUOTES, 'UTF-8'); ?>">Learn More <i class="bi bi-arrow-right" aria-hidden="true"></i></a>
                 </div>
             </article>
         <?php endforeach; ?>
@@ -78,7 +83,7 @@ ob_start();
         <p class="af-kicker">Planning an Event?</p>
         <h2>Let Us Cater Your <span>Special Day</span></h2>
         <p>From birthday parties to corporate events, we provide customized menus and professional service to make your event memorable.</p>
-        <a href="booking.php">Book Catering <i class="bi bi-arrow-right" aria-hidden="true"></i></a>
+        <a href="<?php echo htmlspecialchars($servicesBookingHref, ENT_QUOTES, 'UTF-8'); ?>">Book Catering <i class="bi bi-arrow-right" aria-hidden="true"></i></a>
     </section>
 </section>
 
@@ -86,8 +91,8 @@ ob_start();
     <h2>Ready to Enjoy Our Services?</h2>
     <p>Book a service or place an order and let AfriSense handle the food experience.</p>
     <div>
-        <a href="booking.php">Book a Service <i class="bi bi-arrow-right" aria-hidden="true"></i></a>
-        <a href="order.php">Order Food Now <i class="bi bi-arrow-right" aria-hidden="true"></i></a>
+        <a href="<?php echo htmlspecialchars($servicesBookingHref, ENT_QUOTES, 'UTF-8'); ?>">Book a Service <i class="bi bi-arrow-right" aria-hidden="true"></i></a>
+        <a href="<?php echo htmlspecialchars($servicesOrderHref, ENT_QUOTES, 'UTF-8'); ?>">Order Food Now <i class="bi bi-arrow-right" aria-hidden="true"></i></a>
     </div>
 </section>
 <?php

@@ -6,7 +6,12 @@ $extraStyles = [$frontendBase . '/assets/css/enquiries.css'];
 $extraScripts = [$frontendBase . '/assets/js/enquiries.js'];
 
 require_once __DIR__ . '/enquiry_helpers.php';
+require_once __DIR__ . '/../includes/public_settings.php';
 
+afrisense_enforce_public_site_status($frontendBase);
+
+$publicSettings = afrisense_public_settings();
+$primaryPhone = (string) ($publicSettings['company']['phone_number_1'] ?? '+233 24 123 4567');
 $enquiryMessage = null;
 
 if (($_SERVER['REQUEST_METHOD'] ?? 'GET') === 'POST') {
@@ -185,10 +190,10 @@ ob_start();
                     <div>
                         <h3>Follow Us</h3>
                         <nav class="af-help-socials" aria-label="Social links">
-                            <a href="#" aria-label="Facebook"><i class="bi bi-facebook" aria-hidden="true"></i></a>
-                            <a href="#" aria-label="Instagram"><i class="bi bi-instagram" aria-hidden="true"></i></a>
-                            <a href="#" aria-label="Twitter"><i class="bi bi-twitter-x" aria-hidden="true"></i></a>
-                            <a href="#" aria-label="WhatsApp"><i class="bi bi-whatsapp" aria-hidden="true"></i></a>
+                            <?php foreach (afrisense_public_social_links() as $social): ?>
+                                <a href="<?php echo htmlspecialchars($social['url'], ENT_QUOTES, 'UTF-8'); ?>" aria-label="<?php echo htmlspecialchars($social['label'], ENT_QUOTES, 'UTF-8'); ?>"><i class="bi <?php echo htmlspecialchars($social['icon'], ENT_QUOTES, 'UTF-8'); ?>" aria-hidden="true"></i></a>
+                            <?php endforeach; ?>
+                            <a href="https://wa.me/<?php echo htmlspecialchars(preg_replace('/\D+/', '', $primaryPhone), ENT_QUOTES, 'UTF-8'); ?>" aria-label="WhatsApp"><i class="bi bi-whatsapp" aria-hidden="true"></i></a>
                         </nav>
                     </div>
                 </article>

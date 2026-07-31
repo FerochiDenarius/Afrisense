@@ -10,6 +10,7 @@ $extraStyles = [
 $extraScripts = [$frontendBase . '/assets/js/booking-contact.js'];
 
 require_once __DIR__ . '/../auth/auth_bootstrap.php';
+require_once __DIR__ . '/../includes/public_settings.php';
 
 \AfriSense\Backend\Helpers\Session::start();
 $authUser = afrisense_require_customer();
@@ -149,6 +150,16 @@ try {
                 'special_requests' => $specialRequests,
                 'booking_status' => 'Pending',
             ]);
+            $bookingId = (int) $pdo->lastInsertId();
+            afrisense_public_create_admin_notifications(
+                $pdo,
+                'booking_notifications',
+                'New Booking Received',
+                $fullname . ' submitted a booking for ' . $eventDate . ' at ' . $eventTime . '.',
+                'Booking',
+                '/Afrisense/frontend/admin/bookings.php?view=' . $bookingId,
+                (int) ($authUser['id'] ?? 0) ?: null
+            );
             $pdo->commit();
             $bookingMessage = ['type' => 'success', 'text' => 'Booking submitted. Our team will confirm it shortly.'];
             $customer = afrisense_customer_booking_customer($pdo, $authUser);

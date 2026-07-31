@@ -2,7 +2,22 @@
 require_once __DIR__ . '/../auth/auth_bootstrap.php';
 require_once __DIR__ . '/../includes/theme.php';
 
-$authUser = afrisense_require_admin();
+$allowSupportStaff = (bool) ($allowSupportStaff ?? false);
+$authUser = $authUser ?? ($allowSupportStaff ? afrisense_require_user() : afrisense_require_admin());
+
+if ($allowSupportStaff) {
+    $roleName = afrisense_role_name($authUser);
+    $isSupportStaff = afrisense_is_administrator($authUser)
+        || in_array($roleName, ['support agent', 'agent', 'customer support', 'support'], true);
+
+    if (!$isSupportStaff) {
+        header('Location: /Afrisense/frontend/customer/dashboard.php');
+        exit;
+    }
+} else {
+    $authUser = afrisense_require_admin();
+}
+
 $frontendBase = $frontendBase ?? '/Afrisense/frontend';
 $pageTitle = $pageTitle ?? 'Admin | AfriSense';
 $adminTitle = $adminTitle ?? 'Dashboard';
@@ -14,6 +29,7 @@ $extraScripts = $extraScripts ?? [];
 $mainScriptVersion = filemtime(__DIR__ . '/../assets/js/main.js') ?: time();
 $themeSettings = afrisense_public_settings();
 $themeColor = afrisense_theme_color((string) ($themeSettings['website']['primary_color'] ?? ''), '#b77b1a');
+$faviconUrl = afrisense_public_favicon_url($frontendBase);
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -21,6 +37,9 @@ $themeColor = afrisense_theme_color((string) ($themeSettings['website']['primary
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="theme-color" content="<?php echo htmlspecialchars($themeColor, ENT_QUOTES, 'UTF-8'); ?>">
+    <?php if ($faviconUrl !== ''): ?>
+        <link rel="icon" href="<?php echo htmlspecialchars($faviconUrl, ENT_QUOTES, 'UTF-8'); ?>">
+    <?php endif; ?>
     <title><?php echo htmlspecialchars($pageTitle, ENT_QUOTES, 'UTF-8'); ?></title>
     <link rel="stylesheet" href="<?php echo htmlspecialchars($frontendBase . '/assets/css/main.css', ENT_QUOTES, 'UTF-8'); ?>">
     <link rel="stylesheet" href="<?php echo htmlspecialchars($frontendBase . '/assets/css/dashboard.css', ENT_QUOTES, 'UTF-8'); ?>">

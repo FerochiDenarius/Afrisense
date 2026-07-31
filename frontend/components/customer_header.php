@@ -30,7 +30,7 @@ $customerCartCount = is_array($customerCart) ? array_sum(array_map('intval', $cu
 ?>
 <header class="af-dashboard-header af-customer-header">
     <a class="af-header-brand" href="<?php echo htmlspecialchars($frontendBase . '/customer/dashboard.php', ENT_QUOTES, 'UTF-8'); ?>" aria-label="AfriSense customer dashboard">
-        <span class="af-brand-icon" aria-hidden="true"><i class="bi bi-cup-hot"></i></span>
+        <span class="af-brand-icon" aria-hidden="true"><?php echo afrisense_public_brand_icon_html($frontendBase); ?></span>
         <span>
             <strong><?php echo htmlspecialchars($customerBrandName, ENT_QUOTES, 'UTF-8'); ?></strong>
             <small><?php echo htmlspecialchars($customerSiteTagline, ENT_QUOTES, 'UTF-8'); ?></small>
@@ -74,7 +74,7 @@ $customerCartCount = is_array($customerCart) ? array_sum(array_map('intval', $cu
         <button class="af-profile-menu" type="button" aria-label="Profile menu">
             <img src="<?php echo htmlspecialchars($frontendBase . '/assets/images/foodimage.jpeg', ENT_QUOTES, 'UTF-8'); ?>" alt="">
             <span>
-                <strong><?php echo htmlspecialchars($customerName === 'Customer' ? 'Jane Mensah' : $customerName, ENT_QUOTES, 'UTF-8'); ?></strong>
+                <strong><?php echo htmlspecialchars($customerName !== '' ? $customerName : 'Customer', ENT_QUOTES, 'UTF-8'); ?></strong>
                 <small>Customer</small>
             </span>
             <i class="bi bi-chevron-down" aria-hidden="true"></i>

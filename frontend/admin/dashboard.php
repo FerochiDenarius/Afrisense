@@ -1,5 +1,6 @@
 <?php
 require_once __DIR__ . '/../auth/auth_bootstrap.php';
+require_once __DIR__ . '/../includes/support_helpers.php';
 
 $authUser = afrisense_require_admin();
 $adminName = (string) ($authUser['fullname'] ?? $authUser['email'] ?? 'Admin User');
@@ -67,6 +68,16 @@ try {
     $totalCustomers = afrisense_dashboard_count($pdo, 'customers');
     $totalEnquiries = afrisense_dashboard_count($pdo, 'enquiries');
     $unreadNotifications = 0;
+    $pendingSupport = 0;
+
+    afrisense_support_tables($pdo);
+    $pendingSupportStatement = $pdo->prepare(
+        'SELECT COUNT(*) AS count_value
+         FROM `support_conversations`
+         WHERE `status` = :status'
+    );
+    $pendingSupportStatement->execute(['status' => 'Waiting']);
+    $pendingSupport = (int) ($pendingSupportStatement->fetch(PDO::FETCH_ASSOC)['count_value'] ?? 0);
 
     $notificationStatement = $pdo->prepare(
         'SELECT COUNT(*) AS count_value
@@ -128,6 +139,7 @@ try {
     $totalCustomers = 0;
     $totalEnquiries = 0;
     $pendingEnquiries = 0;
+    $pendingSupport = 0;
     $unreadNotifications = 0;
     $totalRevenue = 0.0;
     $orderStatusCounts = ['Pending' => 0, 'Confirmed' => 0, 'Preparing' => 0, 'Delivered' => 0, 'Cancelled' => 0];
@@ -164,6 +176,7 @@ $dateLabel = date('M j, Y');
             <a href="orders.php"><i class="bi bi-box-seam" aria-hidden="true"></i> Orders <i class="bi bi-chevron-down nav-chevron" aria-hidden="true"></i></a>
             <a href="booking.php"><i class="bi bi-calendar3" aria-hidden="true"></i> Bookings <i class="bi bi-chevron-down nav-chevron" aria-hidden="true"></i></a>
             <a href="enquiries.php"><i class="bi bi-chat-square-text" aria-hidden="true"></i> Enquiries <i class="bi bi-chevron-down nav-chevron" aria-hidden="true"></i></a>
+            <a href="support.php"><i class="bi bi-headset" aria-hidden="true"></i> Support Inbox</a>
             <a href="foods.php"><i class="bi bi-clipboard2" aria-hidden="true"></i> Menu &amp; Packages <i class="bi bi-chevron-down nav-chevron" aria-hidden="true"></i></a>
             <a href="customers.php"><i class="bi bi-people" aria-hidden="true"></i> Customers <i class="bi bi-chevron-down nav-chevron" aria-hidden="true"></i></a>
             <a href="users.php"><i class="bi bi-person-badge" aria-hidden="true"></i> Staff Management <i class="bi bi-chevron-down nav-chevron" aria-hidden="true"></i></a>
@@ -171,7 +184,7 @@ $dateLabel = date('M j, Y');
             <p>Administration</p>
             <a href="roles.php"><i class="bi bi-person-gear" aria-hidden="true"></i> User Roles <i class="bi bi-chevron-down nav-chevron" aria-hidden="true"></i></a>
             <a href="roles.php"><i class="bi bi-shield-check" aria-hidden="true"></i> Permissions <i class="bi bi-chevron-down nav-chevron" aria-hidden="true"></i></a>
-            <a href="settings.php"><i class="bi bi-gear" aria-hidden="true"></i> Settings</a>
+            <a href="settings/index.php"><i class="bi bi-gear" aria-hidden="true"></i> Settings</a>
             <a href="notifications.php"><i class="bi bi-envelope" aria-hidden="true"></i> Email Templates</a>
 
             <p>Reports</p>
@@ -207,6 +220,12 @@ $dateLabel = date('M j, Y');
                     <i class="bi bi-envelope" aria-hidden="true"></i>
                     <?php if ($pendingEnquiries > 0): ?>
                         <span class="green"><?php echo htmlspecialchars((string) min(99, $pendingEnquiries), ENT_QUOTES, 'UTF-8'); ?></span>
+                    <?php endif; ?>
+                </a>
+                <a href="support.php" aria-label="Support inbox">
+                    <i class="bi bi-headset" aria-hidden="true"></i>
+                    <?php if ($pendingSupport > 0): ?>
+                        <span class="green"><?php echo htmlspecialchars((string) min(99, $pendingSupport), ENT_QUOTES, 'UTF-8'); ?></span>
                     <?php endif; ?>
                 </a>
                 <div class="admin-profile">
@@ -425,6 +444,7 @@ $dateLabel = date('M j, Y');
                         <a href="booking.php"><i class="bi bi-calendar-plus-fill gold-action" aria-hidden="true"></i> Manage Bookings</a>
                         <a href="foods.php"><i class="bi bi-fork-knife green-light-action" aria-hidden="true"></i> Manage Foods Sold</a>
                         <a href="services.php"><i class="bi bi-bag-plus-fill blue-action" aria-hidden="true"></i> Manage Services</a>
+                        <a href="support.php"><i class="bi bi-headset green-action" aria-hidden="true"></i> Reply Support Chats</a>
                         <a href="users.php"><i class="bi bi-person-plus-fill purple-action" aria-hidden="true"></i> Manage Users</a>
                         <a href="notifications.php"><i class="bi bi-send-fill orange-action" aria-hidden="true"></i> View Notifications</a>
                     </div>

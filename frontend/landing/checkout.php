@@ -9,6 +9,9 @@ require_once __DIR__ . '/../auth/auth_bootstrap.php';
 require_once __DIR__ . '/../includes/public_settings.php';
 
 \AfriSense\Backend\Helpers\Session::start();
+afrisense_enforce_public_site_status($frontendBase);
+afrisense_enforce_guest_checkout_enabled($frontendBase);
+afrisense_enforce_public_delivery_available();
 
 if (!function_exists('afrisense_checkout_image')) {
     function afrisense_checkout_image(string $frontendBase, ?string $image): string
@@ -87,7 +90,7 @@ if (!function_exists('afrisense_checkout_customer_id')) {
 if (!function_exists('afrisense_checkout_notify_admins')) {
     function afrisense_checkout_notify_admins(PDO $pdo, int $count, string $customerName): void
     {
-        if ($count <= 0) {
+        if ($count <= 0 || !afrisense_public_setting_bool('order_notifications', true)) {
             return;
         }
 
@@ -207,7 +210,7 @@ try {
                      VALUES
                         (:customer_id, :food_id, :quantity, :total_price, :delivery_address, :special_instructions, :payment_method, :payment_status, :order_status)'
                 );
-                $createdOrders = 0;
+                $createdOrderIds = [];
                 $deliveryFeeApplied = false;
 
                 foreach ($cart as $foodId => $quantity) {
@@ -234,11 +237,19 @@ try {
                         'payment_status' => $details['payment_method'] === 'Cash' ? 'Pending' : 'Paid',
                         'order_status' => afrisense_public_paid_order_status((string) $details['payment_method']),
                     ]);
-                    $createdOrders++;
+                    $createdOrderIds[] = (int) $pdo->lastInsertId();
                 }
 
-                afrisense_checkout_notify_admins($pdo, $createdOrders, $details['fullname']);
+                afrisense_checkout_notify_admins($pdo, count($createdOrderIds), $details['fullname']);
                 $pdo->commit();
+                if ($createdOrderIds !== []) {
+                    afrisense_public_send_order_customer_email_for_order(
+                        $pdo,
+                        $createdOrderIds[0],
+                        'Order Received',
+                        'Your AfriSense order #' . str_pad((string) $createdOrderIds[0], 5, '0', STR_PAD_LEFT) . ' has been received. We will notify you when it is confirmed.'
+                    );
+                }
                 $_SESSION['afrisense_guest_cart'] = [];
                 $_SESSION['afrisense_guest_cart_note'] = '';
                 $_SESSION['afrisense_guest_checkout'] = [];
@@ -365,7 +376,7 @@ ob_start();
             </section>
 
             <section class="af-summary-card af-payment-help">
-                <i class="bi bi-headset"></i><div><h2>Need Help?</h2><p>Our support team is here to assist you.</p><strong>Call / WhatsApp: +233 24 123 4567</strong></div>
+                <i class="bi bi-headset"></i><div><h2>Need Help?</h2><p>Our support team is here to assist you.</p><strong><a href="support.php">Chat with Support</a></strong></div>
             </section>
         </aside>
     </div>

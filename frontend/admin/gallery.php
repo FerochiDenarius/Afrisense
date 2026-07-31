@@ -14,6 +14,7 @@ $extraStyles = [
 require_once __DIR__ . '/../auth/auth_bootstrap.php';
 
 $authUser = afrisense_require_admin();
+$itemsPerPage = afrisense_admin_items_per_page(60);
 
 function afrisense_gallery_post(string $key, string $fallback = ''): string
 {
@@ -270,7 +271,7 @@ try {
          LEFT JOIN `users` u ON u.`id` = g.`uploaded_by`
          ' . $whereSql . '
          ' . $orderSql . '
-         LIMIT 60'
+         LIMIT ' . $itemsPerPage
     );
     $galleryStatement->execute($params);
     $galleryItems = $galleryStatement->fetchAll(PDO::FETCH_ASSOC);
@@ -302,7 +303,7 @@ try {
          LEFT JOIN `food_categories` c ON c.`id` = f.`category_id`
          WHERE ' . implode(' AND ', $foodWhere) . '
          ORDER BY f.`created_at` DESC, f.`id` DESC
-         LIMIT 60'
+         LIMIT ' . $itemsPerPage
     );
     $foodStatement->execute($foodParams);
     $foodItems = $foodStatement->fetchAll(PDO::FETCH_ASSOC);

@@ -463,3 +463,166 @@
         padding: 24px 18px;
     }
 }
+
+/* Compact public-page scale to match the landing home page. */
+.af-enquiry-hero {
+    min-height: 260px;
+    padding-top: 36px;
+    padding-bottom: 36px;
+}
+
+.af-enquiry-hero-inner {
+    width: min(680px, 100%);
+}
+
+.af-breadcrumb {
+    gap: 8px;
+    font-size: 11px;
+    margin-bottom: 14px;
+}
+
+.af-enquiry-hero h1 {
+    font-size: clamp(32px, 4vw, 44px);
+}
+
+.af-title-divider {
+    grid-template-columns: 54px 26px 54px;
+    margin: 12px 0;
+}
+
+.af-title-divider i {
+    font-size: 19px;
+}
+
+.af-enquiry-hero p {
+    font-size: 13px;
+    line-height: 1.55;
+}
+
+.af-enquiry-section {
+    padding-top: 26px;
+}
+
+.af-enquiry-grid {
+    grid-template-columns: minmax(0, 1fr) 340px;
+    gap: 20px;
+}
+
+.af-form-card {
+    padding: 22px 20px;
+}
+
+.af-section-heading {
+    gap: 10px;
+    margin-bottom: 20px;
+}
+
+.af-section-heading > span {
+    width: 32px;
+    height: 32px;
+    font-size: 17px;
+}
+
+.af-section-heading h2,
+.af-help-card h2 {
+    font-size: 21px;
+}
+
+.af-section-heading p,
+.af-help-intro,
+.af-help-list p,
+.af-response-card p,
+.af-privacy-line {
+    font-size: 12px;
+    line-height: 1.5;
+}
+
+.af-enquiry-form {
+    gap: 16px;
+}
+
+.af-field-grid {
+    gap: 16px;
+}
+
+.af-form-group {
+    gap: 7px;
+}
+
+.af-form-group label,
+.af-enquiry-types legend {
+    font-size: 12px;
+}
+
+.af-input-icon,
+.af-select-wrap {
+    height: 42px;
+}
+
+.af-input-icon {
+    grid-template-columns: 36px 1fr;
+}
+
+.af-input-icon input,
+.af-select-wrap select,
+.af-textarea-wrap textarea {
+    font-size: 12px;
+}
+
+.af-enquiry-types {
+    gap: 10px;
+}
+
+.af-enquiry-types label {
+    min-height: 82px;
+    gap: 6px;
+    padding: 12px 8px;
+}
+
+.af-enquiry-types label > i {
+    font-size: 22px;
+}
+
+.af-enquiry-types label strong {
+    font-size: 12px;
+}
+
+.af-textarea-wrap textarea {
+    min-height: 96px;
+    padding-top: 12px;
+    padding-bottom: 12px;
+}
+
+.af-send-btn {
+    height: 42px;
+    gap: 10px;
+    font-size: 12px;
+}
+
+.af-help-card {
+    padding: 24px 20px;
+}
+
+.af-help-intro {
+    margin-bottom: 20px;
+}
+
+.af-help-list {
+    gap: 16px;
+}
+
+.af-help-list article {
+    grid-template-columns: 42px 1fr;
+    gap: 12px;
+}
+
+.af-help-list article > span {
+    width: 42px;
+    height: 42px;
+    font-size: 18px;
+}
+
+.af-help-list h3,
+.af-response-card h3 {
+    font-size: 13px;
+}

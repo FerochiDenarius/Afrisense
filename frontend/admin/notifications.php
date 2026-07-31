@@ -12,6 +12,7 @@ require_once __DIR__ . '/../auth/auth_bootstrap.php';
 
 $authUser = afrisense_require_admin();
 $authUserId = (int) ($authUser['id'] ?? 0);
+$itemsPerPage = afrisense_admin_items_per_page();
 
 function afrisense_notification_icon(string $type): string
 {
@@ -275,7 +276,7 @@ try {
          FROM `notifications` n
          WHERE ' . implode(' AND ', $where) . '
          ORDER BY n.`created_at` DESC, n.`id` DESC
-         LIMIT 25'
+         LIMIT ' . $itemsPerPage
     );
     $statement->execute($params);
     $notifications = $statement->fetchAll(PDO::FETCH_ASSOC);

@@ -1,0 +1,558 @@
+.af-remarks-page {
+    gap: 16px;
+}
+
+.af-remarks-heading h1 {
+    font-family: Georgia, "Times New Roman", serif;
+    font-size: 26px;
+}
+
+.af-remarks-heading p {
+    font-size: 13px;
+}
+
+.af-remark-add-btn {
+    height: 38px;
+    padding-inline: 16px;
+    font-size: 12px;
+}
+
+.af-remark-add-btn i {
+    font-size: 13px;
+}
+
+.af-remark-metrics {
+    display: grid;
+    grid-template-columns: repeat(5, minmax(0, 1fr));
+    gap: 10px;
+}
+
+.af-remark-metrics article {
+    min-height: 86px;
+    border: 1px solid #e7e9ee;
+    border-radius: 8px;
+    background: #fff;
+    box-shadow: 0 8px 20px rgba(15, 23, 42, 0.045);
+    display: grid;
+    grid-template-columns: 48px 1fr;
+    gap: 10px;
+    align-items: center;
+    padding: 14px;
+}
+
+.af-remark-metrics article > span {
+    width: 42px;
+    height: 42px;
+    border-radius: 50%;
+    display: grid;
+    place-items: center;
+    font-size: 20px;
+}
+
+.af-remark-metrics .green > span { background: #dff7e7; color: #159447; }
+.af-remark-metrics .gold > span { background: #fff1d7; color: #d48600; }
+.af-remark-metrics .red > span { background: #ffe8ea; color: #e03131; }
+.af-remark-metrics .blue > span { background: #e5f0ff; color: #1677ff; }
+
+.af-remark-metrics small {
+    display: block;
+    color: #111827;
+    font-size: 11px;
+    font-weight: 800;
+    margin-bottom: 5px;
+}
+
+.af-remark-metrics strong {
+    color: #111827;
+    display: block;
+    font-size: 22px;
+    line-height: 1;
+}
+
+.af-remark-metrics p {
+    color: #07923d;
+    font-size: 11px;
+    font-weight: 800;
+    margin-top: 6px;
+}
+
+.af-remark-metrics .red p {
+    color: #e03131;
+}
+
+.af-remark-metrics .blue p {
+    color: #1677ff;
+}
+
+.af-remarks-workspace {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) 270px;
+    gap: 16px;
+    align-items: start;
+}
+
+.af-remarks-table-card {
+    min-width: 0;
+}
+
+.af-remarks-filters {
+    display: grid;
+    grid-template-columns: minmax(230px, 1fr) 136px 136px 170px 88px 98px;
+    gap: 10px;
+    padding: 12px;
+}
+
+.af-remarks-filters .af-menu-search,
+.af-remarks-filters .af-menu-select,
+.af-remarks-filters button,
+.af-remarks-filters a {
+    height: 36px;
+    border: 1px solid #d9dee6;
+    border-radius: 6px;
+    background: #fff;
+    color: #111827;
+    font-size: 12px;
+}
+
+.af-remarks-filters .af-menu-search {
+    grid-template-columns: 1fr 34px;
+}
+
+.af-remarks-filters .af-menu-search input {
+    padding-left: 12px;
+}
+
+.af-remarks-filters button,
+.af-remarks-filters a {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 7px;
+    font-weight: 800;
+    text-decoration: none;
+    cursor: pointer;
+}
+
+.af-remarks-table table {
+    min-width: 900px;
+    table-layout: fixed;
+}
+
+.af-remarks-table th,
+.af-remarks-table td {
+    padding: 12px 10px;
+    font-size: 11.5px;
+}
+
+.af-remarks-table th:nth-child(1),
+.af-remarks-table td:nth-child(1) { width: 32px; }
+.af-remarks-table th:nth-child(2),
+.af-remarks-table td:nth-child(2) { width: 158px; }
+.af-remarks-table th:nth-child(3),
+.af-remarks-table td:nth-child(3) { width: 142px; }
+.af-remarks-table th:nth-child(4),
+.af-remarks-table td:nth-child(4) { width: 82px; }
+.af-remarks-table th:nth-child(5),
+.af-remarks-table td:nth-child(5) { width: 210px; }
+.af-remarks-table th:nth-child(6),
+.af-remarks-table td:nth-child(6) { width: 78px; }
+.af-remarks-table th:nth-child(7),
+.af-remarks-table td:nth-child(7) { width: 78px; }
+.af-remarks-table th:nth-child(8),
+.af-remarks-table td:nth-child(8) { width: 98px; }
+
+.af-remarks-table tr.is-selected {
+    background: #fff8ee;
+}
+
+.af-remark-customer,
+.af-remark-food {
+    display: grid;
+    align-items: center;
+    gap: 9px;
+}
+
+.af-remark-customer {
+    grid-template-columns: 34px 1fr;
+}
+
+.af-remark-customer em {
+    width: 34px;
+    height: 34px;
+    border-radius: 50%;
+    background: #e7f2ff;
+    color: #0b4f8a;
+    display: grid;
+    place-items: center;
+    font-size: 13px;
+    font-style: normal;
+    font-weight: 900;
+}
+
+.af-remark-food {
+    grid-template-columns: 40px 1fr;
+}
+
+.af-remark-food img {
+    width: 38px;
+    height: 38px;
+    border-radius: 7px;
+    object-fit: cover;
+}
+
+.af-remark-customer strong,
+.af-remark-customer small,
+.af-remark-food strong,
+.af-remark-food small,
+.af-remark-date,
+.af-remark-date small {
+    display: block;
+}
+
+.af-remark-customer strong,
+.af-remark-food strong {
+    color: #111827;
+    font-size: 11.5px;
+    line-height: 1.25;
+}
+
+.af-remark-customer small,
+.af-remark-food small,
+.af-remark-date small {
+    color: #667085;
+    font-size: 10.5px;
+    line-height: 1.5;
+}
+
+.af-remark-stars {
+    color: #f6a700;
+    display: inline-flex;
+    gap: 2px;
+    font-size: 12px;
+    white-space: nowrap;
+}
+
+.af-remark-text {
+    color: #111827;
+    display: -webkit-box;
+    font-size: 11.5px;
+    line-height: 1.55;
+    overflow: hidden;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+}
+
+.af-remark-date {
+    color: #111827;
+    font-size: 11.5px;
+    line-height: 1.35;
+}
+
+.af-remark-status {
+    min-height: 23px;
+    border-radius: 5px;
+    display: inline-flex;
+    align-items: center;
+    padding: 0 8px;
+    font-size: 10.5px;
+    font-weight: 850;
+}
+
+.af-remark-status.published {
+    background: #e3f6e6;
+    color: #12823b;
+}
+
+.af-remark-status.pending {
+    background: #fff1db;
+    color: #c06f00;
+}
+
+.af-remark-status.rejected {
+    background: #ffe8ea;
+    color: #d92d20;
+}
+
+.af-remark-actions {
+    gap: 6px;
+}
+
+.af-remark-actions a {
+    width: 30px;
+    height: 30px;
+    border-radius: 6px;
+    font-size: 12px;
+}
+
+.af-remarks-pagination {
+    padding: 12px 14px;
+}
+
+.af-remarks-pagination p,
+.af-remarks-pagination a,
+.af-remarks-pagination span {
+    font-size: 11.5px;
+}
+
+.af-remarks-pagination a,
+.af-remarks-pagination span {
+    min-width: 30px;
+    height: 30px;
+}
+
+.af-remarks-side {
+    display: grid;
+    gap: 12px;
+}
+
+.af-remarks-side .af-menu-panel {
+    border-radius: 8px;
+    padding: 14px;
+}
+
+.af-remarks-side .af-menu-panel h2 {
+    font-family: Georgia, "Times New Roman", serif;
+    font-size: 16px;
+    margin-bottom: 12px;
+}
+
+.af-rating-overview {
+    display: grid;
+    grid-template-columns: 100px 1fr;
+    gap: 12px;
+    align-items: center;
+}
+
+.af-rating-donut {
+    width: 92px;
+    height: 92px;
+    border-radius: 50%;
+    background: conic-gradient(#39ad4a 0 66%, #ffc107 66% 88%, #ff8c1a 88% 94%, #ff2d2d 94% 98%, #d1d5db 98% 100%);
+    display: grid;
+    place-items: center;
+    position: relative;
+}
+
+.af-rating-donut::before {
+    content: "";
+    position: absolute;
+    inset: 17px;
+    border-radius: 50%;
+    background: #fff;
+}
+
+.af-rating-donut strong,
+.af-rating-donut small {
+    position: relative;
+    z-index: 1;
+    display: block;
+    text-align: center;
+}
+
+.af-rating-donut strong {
+    font-size: 22px;
+    line-height: 1;
+}
+
+.af-rating-donut small {
+    color: #667085;
+    font-size: 10px;
+}
+
+.af-rating-overview ul,
+.af-top-foods-card ul {
+    list-style: none;
+    display: grid;
+    gap: 9px;
+}
+
+.af-rating-overview li {
+    display: grid;
+    grid-template-columns: 9px 48px 1fr;
+    gap: 7px;
+    align-items: center;
+    color: #344054;
+    font-size: 10.5px;
+}
+
+.af-rating-overview li span {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+}
+
+.af-rating-overview li strong {
+    justify-self: end;
+    color: #111827;
+    font-size: 10.5px;
+}
+
+.tone-5 { background: #39ad4a; }
+.tone-4 { background: #ffc107; }
+.tone-3 { background: #ff8c1a; }
+.tone-2 { background: #ff2d2d; }
+.tone-1 { background: #d1d5db; }
+
+.af-top-foods-card li {
+    display: grid;
+    grid-template-columns: 30px 1fr auto;
+    gap: 9px;
+    align-items: center;
+}
+
+.af-top-foods-card img {
+    width: 28px;
+    height: 28px;
+    border-radius: 6px;
+    object-fit: cover;
+}
+
+.af-top-foods-card strong,
+.af-top-foods-card span,
+.af-top-foods-card a {
+    font-size: 11.5px;
+}
+
+.af-top-foods-card span {
+    font-weight: 850;
+}
+
+.af-top-foods-card span i {
+    color: #f6a700;
+}
+
+.af-top-foods-card a {
+    color: #3f7f0a;
+    display: inline-block;
+    font-weight: 850;
+    margin-top: 12px;
+    text-decoration: none;
+}
+
+.af-quick-actions-card {
+    display: grid;
+    gap: 7px;
+}
+
+.af-quick-actions-card h2 {
+    margin-bottom: 4px !important;
+}
+
+.af-quick-actions-card a {
+    min-height: 30px;
+    border-radius: 6px;
+    color: #111827;
+    display: grid;
+    grid-template-columns: 22px 1fr auto;
+    align-items: center;
+    gap: 7px;
+    font-size: 11.5px;
+    text-decoration: none;
+}
+
+.af-quick-actions-card i {
+    width: 22px;
+    height: 22px;
+    border-radius: 5px;
+    background: #e3f6e6;
+    color: #12823b;
+    display: grid;
+    place-items: center;
+    font-size: 11px;
+}
+
+.af-quick-actions-card span {
+    min-width: 21px;
+    height: 21px;
+    border-radius: 999px;
+    background: #ffe2bd;
+    color: #b85c00;
+    display: grid;
+    place-items: center;
+    font-size: 10px;
+}
+
+.af-selected-remark {
+    display: grid;
+    gap: 7px;
+}
+
+.af-selected-remark > strong {
+    font-size: 12.5px;
+}
+
+.af-selected-remark small,
+.af-selected-remark p,
+.af-selected-remark a {
+    font-size: 11.5px;
+    line-height: 1.55;
+}
+
+.af-selected-remark small {
+    color: #667085;
+}
+
+.af-selected-remark a {
+    color: #b76b00;
+    font-weight: 850;
+    text-decoration: none;
+}
+
+.af-offline-remark-card form {
+    display: grid;
+    gap: 8px;
+}
+
+.af-offline-remark-card input,
+.af-offline-remark-card select,
+.af-offline-remark-card textarea {
+    width: 100%;
+    border: 1px solid #d9dee6;
+    border-radius: 6px;
+    color: #111827;
+    font-size: 11.5px;
+    outline: 0;
+    padding: 9px;
+}
+
+.af-offline-remark-card button {
+    min-height: 34px;
+    border: 0;
+    border-radius: 6px;
+    background: linear-gradient(135deg, var(--af-gold), var(--af-gold-2));
+    color: #fff;
+    font-size: 12px;
+    font-weight: 850;
+    cursor: pointer;
+}
+
+@media (max-width: 1340px) {
+    .af-remark-metrics {
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+    }
+
+    .af-remarks-workspace {
+        grid-template-columns: 1fr;
+    }
+
+    .af-remarks-side {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+}
+
+@media (max-width: 920px) {
+    .af-remarks-heading,
+    .af-remarks-pagination {
+        align-items: stretch;
+        flex-direction: column;
+    }
+
+    .af-remark-metrics,
+    .af-remarks-side {
+        grid-template-columns: 1fr;
+    }
+
+    .af-remarks-filters {
+        grid-template-columns: 1fr;
+    }
+}

@@ -2371,32 +2371,54 @@
 }
 
 .af-orders-table table {
-    min-width: 1060px;
+    min-width: 1180px;
 }
 
 .af-orders-table th:nth-child(1),
 .af-orders-table td:nth-child(1) {
-    width: 11%;
+    width: 9%;
 }
 
 .af-orders-table th:nth-child(2),
-.af-orders-table td:nth-child(2),
-.af-orders-table th:nth-child(4),
-.af-orders-table td:nth-child(4) {
-    width: 18%;
+.af-orders-table td:nth-child(2) {
+    width: 15%;
 }
 
 .af-orders-table th:nth-child(3),
-.af-orders-table td:nth-child(3),
+.af-orders-table td:nth-child(3) {
+    width: 18%;
+}
+
+.af-orders-table th:nth-child(4),
+.af-orders-table td:nth-child(4),
 .af-orders-table th:nth-child(5),
-.af-orders-table td:nth-child(5),
+.af-orders-table td:nth-child(5) {
+    width: 14%;
+}
+
 .af-orders-table th:nth-child(6),
 .af-orders-table td:nth-child(6),
 .af-orders-table th:nth-child(7),
 .af-orders-table td:nth-child(7),
 .af-orders-table th:nth-child(8),
-.af-orders-table td:nth-child(8) {
-    width: 11%;
+.af-orders-table td:nth-child(8),
+.af-orders-table th:nth-child(9),
+.af-orders-table td:nth-child(9) {
+    width: 10%;
+}
+
+.af-order-email {
+    color: #344054;
+    display: inline-block;
+    max-width: 190px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.af-order-email:hover,
+.af-order-email:focus-visible {
+    color: var(--af-gold);
 }
 
 .af-order-id {

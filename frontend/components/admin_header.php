@@ -5,6 +5,7 @@ $adminTitle = $adminTitle ?? 'Dashboard';
 $adminName = $adminName ?? 'Admin User';
 $adminRole = $adminRole ?? 'Super Admin';
 $frontendBase = $frontendBase ?? '/Afrisense/frontend';
+$adminSearchPlaceholder = $adminSearchPlaceholder ?? 'Search anything...';
 $publicSettings = afrisense_public_settings();
 $adminSiteName = (string) ($publicSettings['website']['site_name'] ?? 'AfriSense Food Services');
 $adminBrandName = str_replace(' Food Services', '', $adminSiteName);
@@ -37,7 +38,7 @@ try {
 ?>
 <header class="af-dashboard-header af-admin-header">
     <a class="af-header-brand" href="<?php echo htmlspecialchars($frontendBase . '/admin/dashboard.php', ENT_QUOTES, 'UTF-8'); ?>" aria-label="AfriSense admin dashboard">
-        <span class="af-brand-icon" aria-hidden="true"><i class="bi bi-cup-hot"></i></span>
+        <span class="af-brand-icon" aria-hidden="true"><?php echo afrisense_public_brand_icon_html($frontendBase); ?></span>
         <span>
             <strong><?php echo htmlspecialchars($adminBrandName, ENT_QUOTES, 'UTF-8'); ?></strong>
             <small><?php echo htmlspecialchars($adminSiteTagline, ENT_QUOTES, 'UTF-8'); ?></small>
@@ -52,7 +53,7 @@ try {
 
     <label class="af-header-search" for="admin_global_search">
         <i class="bi bi-search" aria-hidden="true"></i>
-        <input type="search" id="admin_global_search" name="admin_global_search" placeholder="Search anything...">
+        <input type="search" id="admin_global_search" name="admin_global_search" placeholder="<?php echo htmlspecialchars($adminSearchPlaceholder, ENT_QUOTES, 'UTF-8'); ?>">
         <kbd>Ctrl + /</kbd>
     </label>
 

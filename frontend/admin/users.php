@@ -11,6 +11,7 @@ $extraStyles = [
 require_once __DIR__ . '/../auth/auth_bootstrap.php';
 
 afrisense_require_admin();
+$itemsPerPage = afrisense_admin_items_per_page();
 
 function afrisense_count_users(PDO $pdo, string $condition = '1 = 1', array $params = []): int
 {
@@ -163,7 +164,7 @@ try {
          LEFT JOIN `roles` r ON r.`id` = u.`role_id`
          ' . $whereSql . '
          ORDER BY u.`id` DESC
-         LIMIT 25'
+         LIMIT ' . $itemsPerPage
     );
     $statement->execute($params);
     $users = $statement->fetchAll(PDO::FETCH_ASSOC);

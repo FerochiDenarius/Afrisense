@@ -13,12 +13,15 @@ $secondaryPhone = (string) ($companySettings['phone_number_2'] ?? '');
 $companyEmail = (string) ($companySettings['company_email'] ?? 'info@afrisense.com');
 $companyAddress = (string) ($companySettings['address'] ?? 'Accra, Ghana');
 $businessHours = (string) ($companySettings['business_hours'] ?? 'Mon - Sun: 8:00 AM - 10:00 PM');
+$footerOrderHref = afrisense_public_order_url($frontendBase);
+$footerBookingHref = afrisense_public_booking_url($frontendBase);
+$footerSupportHref = afrisense_public_support_url($frontendBase);
 ?>
 <footer class="af-footer">
     <div class="af-footer-grid">
         <section class="af-footer-brand">
             <a class="af-brand" href="<?php echo htmlspecialchars($frontendBase . '/landing/index.php', ENT_QUOTES, 'UTF-8'); ?>" aria-label="AfriSense home">
-                <span class="af-brand-icon" aria-hidden="true"><i class="bi bi-cup-hot"></i></span>
+                <span class="af-brand-icon" aria-hidden="true"><?php echo afrisense_public_brand_icon_html($frontendBase); ?></span>
                 <span>
                     <strong><?php echo htmlspecialchars(str_replace(' Food Services', '', $siteName), ENT_QUOTES, 'UTF-8'); ?></strong>
                     <small>Food Services</small>
@@ -44,7 +47,9 @@ $businessHours = (string) ($companySettings['business_hours'] ?? 'Mon - Sun: 8:0
                 <li><a href="<?php echo htmlspecialchars($frontendBase . '/landing/menu.php', ENT_QUOTES, 'UTF-8'); ?>">Our Menu</a></li>
                 <li><a href="<?php echo htmlspecialchars($frontendBase . '/landing/gallery.php', ENT_QUOTES, 'UTF-8'); ?>">Gallery</a></li>
                 <li><a href="<?php echo htmlspecialchars($frontendBase . '/landing/services.php', ENT_QUOTES, 'UTF-8'); ?>">Catering Packages</a></li>
-                <li><a href="<?php echo htmlspecialchars($frontendBase . '/landing/booking.php', ENT_QUOTES, 'UTF-8'); ?>">Book a Service</a></li>
+                <li><a href="<?php echo htmlspecialchars($footerBookingHref, ENT_QUOTES, 'UTF-8'); ?>">Book a Service</a></li>
+                <li><a href="<?php echo htmlspecialchars($frontendBase . '/landing/remarks.php', ENT_QUOTES, 'UTF-8'); ?>">Reviews &amp; Remarks</a></li>
+                <li><a href="<?php echo htmlspecialchars($footerSupportHref, ENT_QUOTES, 'UTF-8'); ?>">Support</a></li>
                 <li><a href="<?php echo htmlspecialchars($frontendBase . '/landing/contact.php', ENT_QUOTES, 'UTF-8'); ?>">Contact Us</a></li>
             </ul>
         </section>
@@ -56,11 +61,11 @@ $businessHours = (string) ($companySettings['business_hours'] ?? 'Mon - Sun: 8:0
             </button>
             <ul>
                 <li><a href="<?php echo htmlspecialchars($frontendBase . '/landing/menu.php', ENT_QUOTES, 'UTF-8'); ?>">Food Ordering</a></li>
-                <li><a href="<?php echo htmlspecialchars($frontendBase . '/landing/booking.php', ENT_QUOTES, 'UTF-8'); ?>">Service Booking</a></li>
+                <li><a href="<?php echo htmlspecialchars($footerBookingHref, ENT_QUOTES, 'UTF-8'); ?>">Service Booking</a></li>
                 <li><a href="<?php echo htmlspecialchars($frontendBase . '/landing/services.php', ENT_QUOTES, 'UTF-8'); ?>">Event Catering</a></li>
                 <li><a href="<?php echo htmlspecialchars($frontendBase . '/landing/services.php', ENT_QUOTES, 'UTF-8'); ?>">Custom Menus</a></li>
                 <li><a href="<?php echo htmlspecialchars($frontendBase . '/landing/services.php', ENT_QUOTES, 'UTF-8'); ?>">Corporate Meals</a></li>
-                <li><a href="<?php echo htmlspecialchars($frontendBase . '/landing/order.php', ENT_QUOTES, 'UTF-8'); ?>">Fast Delivery</a></li>
+                <li><a href="<?php echo htmlspecialchars($footerOrderHref, ENT_QUOTES, 'UTF-8'); ?>">Fast Delivery</a></li>
             </ul>
         </section>
 

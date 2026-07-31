@@ -456,3 +456,210 @@
         font-size: 30px;
     }
 }
+
+/* Compact public-page scale to match the landing home header and fit more detail onscreen. */
+.af-menu-hero,
+.af-services-hero {
+    min-height: 280px;
+    padding-top: 38px;
+    padding-bottom: 38px;
+}
+
+.af-menu-hero nav,
+.af-services-hero nav {
+    font-size: 11px;
+    gap: 8px;
+    margin-bottom: 16px;
+}
+
+.af-kicker {
+    font-size: 11px;
+    margin-bottom: 8px;
+}
+
+.af-menu-hero h1,
+.af-services-hero h1 {
+    font-size: clamp(32px, 4vw, 46px);
+    margin-bottom: 12px;
+    max-width: 640px;
+}
+
+.af-menu-hero p:not(.af-kicker),
+.af-services-hero p:not(.af-kicker) {
+    font-size: 13px;
+    line-height: 1.55;
+    max-width: 540px;
+}
+
+.af-menu-page,
+.af-services-page {
+    padding-top: 30px;
+    padding-bottom: 40px;
+}
+
+.af-page-heading {
+    margin-bottom: 24px;
+}
+
+.af-page-heading p {
+    font-size: 11px;
+    margin-bottom: 6px;
+}
+
+.af-page-heading h2 {
+    font-size: 30px;
+}
+
+.af-page-heading small {
+    font-size: 12px;
+    line-height: 1.55;
+    margin-top: 9px;
+}
+
+.af-menu-toolbar {
+    grid-template-columns: minmax(220px, 1fr) 180px 150px;
+    gap: 10px;
+    margin-bottom: 22px;
+    padding: 12px;
+}
+
+.af-menu-toolbar label {
+    height: 40px;
+}
+
+.af-menu-toolbar .search {
+    grid-template-columns: 36px 1fr;
+}
+
+.af-menu-toolbar .select {
+    grid-template-columns: 1fr 34px;
+}
+
+.af-menu-toolbar input,
+.af-menu-toolbar select {
+    font-size: 12px;
+}
+
+.af-menu-category-tabs {
+    gap: 8px;
+    margin-bottom: 22px;
+}
+
+.af-menu-category-tabs a {
+    min-height: 34px;
+    gap: 6px;
+    padding: 0 12px;
+    font-size: 11px;
+}
+
+.af-public-menu-grid,
+.af-service-card-grid {
+    gap: 16px;
+}
+
+.af-menu-image,
+.af-service-image {
+    height: 160px;
+}
+
+.af-menu-image span,
+.af-service-icon {
+    left: 16px;
+    bottom: -24px;
+    width: 50px;
+    height: 50px;
+    font-size: 21px;
+}
+
+.af-public-menu-card-body,
+.af-public-service-card-body {
+    padding: 34px 16px 18px;
+}
+
+.af-public-menu-card h3,
+.af-public-service-card h3 {
+    font-size: 17px;
+    margin-bottom: 6px;
+}
+
+.af-public-menu-card p,
+.af-public-service-card p {
+    font-size: 12px;
+    line-height: 1.55;
+    min-height: 56px;
+}
+
+.af-menu-card-footer {
+    margin-top: 14px;
+    padding-top: 14px;
+}
+
+.af-menu-price {
+    font-size: 16px;
+}
+
+.af-menu-order-btn,
+.af-public-service-card a,
+.af-services-cta a,
+.af-catering-band a,
+.af-services-final a {
+    min-height: 34px;
+    gap: 7px;
+    padding: 0 12px;
+    font-size: 11px;
+}
+
+.af-public-service-card a {
+    margin-top: 13px;
+}
+
+.af-menu-strip,
+.af-why-band {
+    margin-top: 26px;
+    padding: 26px;
+}
+
+.af-menu-strip h2,
+.af-why-band h2,
+.af-catering-band h2,
+.af-services-final h2 {
+    font-size: 26px;
+}
+
+.af-menu-strip p,
+.af-catering-band p,
+.af-services-final p {
+    font-size: 12.5px;
+    line-height: 1.55;
+}
+
+.af-why-band h2 {
+    margin-bottom: 22px;
+}
+
+.af-why-grid {
+    gap: 14px;
+}
+
+.af-why-grid i {
+    font-size: 26px;
+    margin-bottom: 10px;
+}
+
+.af-why-grid h3 {
+    font-size: 13px;
+}
+
+.af-why-grid p {
+    font-size: 11.5px;
+}
+
+.af-catering-band {
+    min-height: 210px;
+    padding: 34px 42px;
+}
+
+.af-services-final {
+    margin-top: 34px;
+    padding: 34px 20px;
+}

@@ -6,6 +6,9 @@ $extraStyles = [$frontendBase . '/assets/css/booking-contact.css'];
 $extraScripts = [$frontendBase . '/assets/js/booking-contact.js'];
 
 require_once __DIR__ . '/../auth/auth_bootstrap.php';
+require_once __DIR__ . '/../includes/public_settings.php';
+
+afrisense_enforce_public_site_status($frontendBase);
 
 function afrisense_booking_post(string $key, string $fallback = ''): string
 {
@@ -107,6 +110,16 @@ try {
                 'special_requests' => $specialRequests,
                 'booking_status' => 'Pending',
             ]);
+            $bookingId = (int) $pdo->lastInsertId();
+            afrisense_public_create_admin_notifications(
+                $pdo,
+                'booking_notifications',
+                'New Booking Received',
+                $fullname . ' submitted a booking for ' . $eventDate . ' at ' . $eventTime . '.',
+                'Booking',
+                '/Afrisense/frontend/admin/bookings.php?view=' . $bookingId,
+                null
+            );
             $pdo->commit();
             $bookingMessage = ['type' => 'success', 'text' => 'Booking submitted. Our team will confirm it shortly.'];
         }
@@ -123,6 +136,24 @@ if ($services === []) {
     $services = [
         ['id' => 0, 'service_name' => 'Service Unavailable', 'description' => 'Please contact AfriSense to book manually.', 'price' => 0],
     ];
+}
+
+$requestedService = strtolower(preg_replace('/[^a-z0-9]+/', '', (string) ($_GET['service'] ?? '')));
+$requestedDate = (string) ($_GET['booking_date'] ?? '');
+$requestedTime = (string) ($_GET['booking_time'] ?? '');
+$prefillDate = preg_match('/^\d{4}-\d{2}-\d{2}$/', $requestedDate) === 1 ? $requestedDate : '';
+$prefillTime = preg_match('/^\d{2}:\d{2}$/', $requestedTime) === 1 ? $requestedTime : '';
+$selectedServiceIndex = 0;
+
+if ($requestedService !== '') {
+    foreach ($services as $index => $service) {
+        $serviceNameKey = strtolower(preg_replace('/[^a-z0-9]+/', '', (string) ($service['service_name'] ?? '')));
+
+        if ($serviceNameKey !== '' && ($serviceNameKey === $requestedService || str_contains($serviceNameKey, $requestedService) || str_contains($requestedService, $serviceNameKey))) {
+            $selectedServiceIndex = (int) $index;
+            break;
+        }
+    }
 }
 
 $serviceIcons = ['bi-calendar3', 'bi-gift', 'bi-people', 'bi-heart'];
@@ -176,8 +207,8 @@ ob_start();
                     <legend>Select Service</legend>
                     <?php foreach ($services as $index => $service): ?>
                         <?php $serviceName = (string) ($service['service_name'] ?? 'Service'); ?>
-                        <label class="<?php echo $index === 0 ? 'is-active' : ''; ?>" data-service-option data-price="<?php echo (float) ($service['price'] ?? 0); ?>">
-                            <input type="radio" name="service_id" value="<?php echo htmlspecialchars((string) ($service['id'] ?? 0), ENT_QUOTES, 'UTF-8'); ?>" data-service-name="<?php echo htmlspecialchars($serviceName, ENT_QUOTES, 'UTF-8'); ?>" <?php echo $index === 0 ? 'checked' : ''; ?> required>
+                        <label class="<?php echo $index === $selectedServiceIndex ? 'is-active' : ''; ?>" data-service-option data-price="<?php echo (float) ($service['price'] ?? 0); ?>">
+                            <input type="radio" name="service_id" value="<?php echo htmlspecialchars((string) ($service['id'] ?? 0), ENT_QUOTES, 'UTF-8'); ?>" data-service-name="<?php echo htmlspecialchars($serviceName, ENT_QUOTES, 'UTF-8'); ?>" <?php echo $index === $selectedServiceIndex ? 'checked' : ''; ?> required>
                             <span class="af-type-check"><i class="bi bi-check" aria-hidden="true"></i></span>
                             <i class="bi <?php echo htmlspecialchars($serviceIcons[$index % count($serviceIcons)], ENT_QUOTES, 'UTF-8'); ?>" aria-hidden="true"></i>
                             <strong><?php echo htmlspecialchars($serviceName, ENT_QUOTES, 'UTF-8'); ?></strong>
@@ -218,7 +249,7 @@ ob_start();
                         <label for="booking_date">Date <strong>*</strong></label>
                         <div class="af-input-icon">
                             <i class="bi bi-calendar-event" aria-hidden="true"></i>
-                            <input type="date" id="booking_date" name="booking_date" data-booking-date required>
+                            <input type="date" id="booking_date" name="booking_date" value="<?php echo htmlspecialchars($prefillDate, ENT_QUOTES, 'UTF-8'); ?>" data-booking-date required>
                         </div>
                         <small class="af-field-error">Please select a booking date.</small>
                     </div>
@@ -227,7 +258,7 @@ ob_start();
                         <label for="booking_time">Time <strong>*</strong></label>
                         <div class="af-input-icon">
                             <i class="bi bi-clock" aria-hidden="true"></i>
-                            <input type="time" id="booking_time" name="booking_time" data-booking-time required>
+                            <input type="time" id="booking_time" name="booking_time" value="<?php echo htmlspecialchars($prefillTime, ENT_QUOTES, 'UTF-8'); ?>" data-booking-time required>
                         </div>
                         <small class="af-field-error">Please select a booking time.</small>
                     </div>

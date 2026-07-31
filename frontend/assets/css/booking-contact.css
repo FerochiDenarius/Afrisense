@@ -708,6 +708,24 @@
         linear-gradient(#ebe4dc 0 0);
 }
 
+.af-map-preview:has(iframe) {
+    background: #e5e7eb;
+}
+
+.af-map-preview iframe {
+    position: relative;
+    z-index: 1;
+    width: 100%;
+    height: 100%;
+    min-height: 260px;
+    border: 0;
+    display: block;
+}
+
+.af-map-preview:has(iframe)::before {
+    content: none;
+}
+
 .af-map-preview::before {
     content: "";
     position: absolute;
@@ -885,4 +903,228 @@
         font-size: 20px;
     }
 
+}
+
+/* Final compact scale overrides for public booking and contact pages. */
+.af-service-hero {
+    min-height: 280px;
+    padding-top: 38px;
+    padding-bottom: 38px;
+}
+
+.af-service-hero .af-breadcrumb {
+    margin-bottom: 16px;
+}
+
+.af-hero-kicker {
+    font-size: 11px;
+    margin-bottom: 8px;
+}
+
+.af-service-hero h1 {
+    font-size: clamp(32px, 4vw, 46px);
+    margin-bottom: 12px;
+    max-width: 650px;
+}
+
+.af-service-hero p:not(.af-hero-kicker) {
+    font-size: 13px;
+    line-height: 1.55;
+    max-width: 520px;
+}
+
+.af-hero-actions {
+    gap: 10px;
+    margin-top: 18px;
+}
+
+.af-hero-primary,
+.af-hero-secondary,
+.af-outline-link {
+    min-height: 36px;
+    gap: 7px;
+    padding: 0 14px;
+    font-size: 12px;
+}
+
+.af-booking-page,
+.af-contact-page {
+    padding-top: 26px;
+    padding-bottom: 34px;
+}
+
+.af-booking-grid,
+.af-contact-grid {
+    grid-template-columns: minmax(0, 1fr) 340px;
+}
+
+.af-booking-grid,
+.af-contact-grid,
+.af-contact-bottom-grid {
+    gap: 20px;
+}
+
+.af-booking-form-card,
+.af-contact-form-card,
+.af-contact-info-card,
+.af-benefits-card,
+.af-hours-card,
+.af-faq-card {
+    padding: 22px 20px;
+}
+
+.af-service-form,
+.af-side-list {
+    gap: 16px;
+}
+
+.af-section-heading {
+    gap: 10px;
+    margin-bottom: 18px;
+}
+
+.af-section-heading > span {
+    width: 30px;
+    height: 30px;
+    font-size: 17px;
+}
+
+.af-section-heading h2 {
+    font-size: 19px;
+    margin-bottom: 4px;
+}
+
+.af-section-heading p,
+.af-field-hint,
+.af-field-error,
+.af-form-status,
+.af-privacy-line,
+.af-side-list p,
+.af-feature-strip p,
+.af-hours-card dd,
+.af-help-cta p {
+    font-size: 11.5px;
+    line-height: 1.5;
+}
+
+.af-field-grid {
+    gap: 16px;
+}
+
+.af-form-group {
+    gap: 6px;
+}
+
+.af-form-group label {
+    font-size: 11.5px;
+}
+
+.af-service-form .af-input-icon,
+.af-service-form .af-select-wrap,
+.af-phone-field {
+    height: 42px;
+}
+
+.af-service-form .af-input-icon {
+    grid-template-columns: 36px minmax(0, 1fr);
+}
+
+.af-service-form input,
+.af-service-form select,
+.af-service-form textarea,
+.af-country-code {
+    font-size: 12px;
+}
+
+.af-phone-field {
+    grid-template-columns: 92px minmax(0, 1fr);
+}
+
+.af-service-types {
+    gap: 10px;
+}
+
+.af-service-types legend {
+    font-size: 12px;
+}
+
+.af-service-types label {
+    min-height: 100px;
+    gap: 6px;
+    padding: 12px 8px;
+}
+
+.af-service-types label > i {
+    font-size: 22px;
+}
+
+.af-service-types label strong {
+    font-size: 12px;
+}
+
+.af-service-types label small {
+    font-size: 10.5px;
+}
+
+.af-service-form .af-textarea-wrap textarea {
+    min-height: 104px;
+    padding: 12px 12px 30px;
+}
+
+.af-booking-summary {
+    gap: 12px;
+    padding: 16px;
+}
+
+.af-booking-summary h3 {
+    font-size: 14px;
+}
+
+.af-summary-grid {
+    gap: 10px;
+}
+
+.af-summary-grid > div {
+    padding: 10px;
+}
+
+.af-booking-summary span {
+    font-size: 10.5px;
+}
+
+.af-booking-summary strong {
+    font-size: 12px;
+}
+
+.af-booking-summary footer strong {
+    font-size: 21px;
+}
+
+.af-send-btn {
+    min-height: 42px;
+    font-size: 12px;
+}
+
+.af-contact-info-card h2,
+.af-benefits-card h2,
+.af-hours-card h2 {
+    font-size: 21px;
+    margin-bottom: 18px;
+}
+
+.af-side-list article {
+    grid-template-columns: 42px 1fr;
+    gap: 12px;
+}
+
+.af-side-list article > span,
+.af-feature-strip article > span {
+    width: 42px;
+    height: 42px;
+    font-size: 18px;
+}
+
+.af-side-list h3,
+.af-feature-strip h3 {
+    font-size: 13px;
 }

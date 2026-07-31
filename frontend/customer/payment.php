@@ -13,6 +13,7 @@ require_once __DIR__ . '/../includes/public_settings.php';
 
 \AfriSense\Backend\Helpers\Session::start();
 $authUser = afrisense_require_customer();
+afrisense_enforce_public_delivery_available();
 
 function afrisense_customer_payment_image(string $frontendBase, ?string $image): string
 {
@@ -47,7 +48,7 @@ function afrisense_customer_payment_customer_id(PDO $pdo, array $user, string $a
 
 function afrisense_customer_payment_notify_admins(PDO $pdo, array $orderIds, string $customerName, int $createdBy): void
 {
-    if ($orderIds === []) {
+    if ($orderIds === [] || !afrisense_public_setting_bool('order_notifications', true)) {
         return;
     }
 
@@ -73,6 +74,7 @@ $checkout = $_SESSION['afrisense_customer_checkout'] ?? [];
 $checkout = is_array($checkout) ? $checkout : [];
 $message = null;
 $availablePaymentMethods = afrisense_public_payment_methods();
+$availableMobileMoneyNetworks = afrisense_public_mobile_money_networks();
 
 try {
     $pdo = afrisense_pdo();
@@ -135,6 +137,14 @@ try {
 
             afrisense_customer_payment_notify_admins($pdo, $orderIds, (string) ($authUser['fullname'] ?? 'Customer'), (int) ($authUser['id'] ?? 0));
             $pdo->commit();
+            if ($orderIds !== []) {
+                afrisense_public_send_order_customer_email_for_order(
+                    $pdo,
+                    $orderIds[0],
+                    'Order Received',
+                    'Your AfriSense order #' . str_pad((string) $orderIds[0], 5, '0', STR_PAD_LEFT) . ' has been received. We will notify you when it is confirmed.'
+                );
+            }
             $_SESSION['afrisense_customer_cart'] = [];
             $_SESSION['afrisense_customer_cart_note'] = '';
             $_SESSION['afrisense_customer_checkout'] = [];
@@ -192,10 +202,10 @@ ob_start();
                     <?php foreach ($availablePaymentMethods as $index => $method): ?>
                         <label class="af-payment-method <?php echo $index === 0 ? 'is-active' : ''; ?>">
                             <input type="radio" name="payment_method" value="<?php echo htmlspecialchars($method, ENT_QUOTES, 'UTF-8'); ?>" <?php echo $index === 0 ? 'checked' : ''; ?>>
-                            <i class="bi <?php echo $method === 'Card' ? 'bi-credit-card' : ($method === 'Cash' ? 'bi-cash-coin' : 'bi-phone'); ?>"></i>
+                            <i class="bi <?php echo htmlspecialchars(afrisense_public_payment_method_icon($method), ENT_QUOTES, 'UTF-8'); ?>"></i>
                             <span>
-                                <strong><?php echo htmlspecialchars($method === 'Card' ? 'Card Payment' : ($method === 'Cash' ? 'Cash on Delivery' : 'Mobile Money'), ENT_QUOTES, 'UTF-8'); ?></strong>
-                                <small><?php echo htmlspecialchars($method === 'Card' ? 'Pay securely using your debit or credit card' : ($method === 'Cash' ? 'Pay when your food arrives' : 'Pay using enabled mobile money gateways'), ENT_QUOTES, 'UTF-8'); ?></small>
+                                <strong><?php echo htmlspecialchars(afrisense_public_payment_method_label($method), ENT_QUOTES, 'UTF-8'); ?></strong>
+                                <small><?php echo htmlspecialchars(afrisense_public_payment_method_hint($method), ENT_QUOTES, 'UTF-8'); ?></small>
                             </span>
                         </label>
                     <?php endforeach; ?>
@@ -203,7 +213,7 @@ ob_start();
                 <?php if (in_array('Mobile Money', $availablePaymentMethods, true)): ?>
                 <section class="af-payment-section">
                     <h2>Pay with Mobile Money</h2>
-                    <div class="af-billing-grid single"><label>Select Network<select name="network"><option>MTN Mobile Money</option><option>Vodafone Cash</option><option>AirtelTigo Money</option></select></label></div>
+                    <div class="af-billing-grid single"><label>Select Network<select name="network"><?php foreach ($availableMobileMoneyNetworks as $network): ?><option><?php echo htmlspecialchars($network, ENT_QUOTES, 'UTF-8'); ?></option><?php endforeach; ?></select></label></div>
                     <label class="af-payment-input">Mobile Money Number<span><i class="bi bi-telephone"></i><input type="tel" name="momo_number" placeholder="Enter mobile money number"></span></label>
                     <p class="af-payment-warning"><i class="bi bi-info-circle"></i> <?php echo htmlspecialchars(afrisense_public_payment_instruction(), ENT_QUOTES, 'UTF-8'); ?></p>
                 </section>
@@ -228,7 +238,7 @@ ob_start();
                 <dl><div><dt>Subtotal</dt><dd><?php echo htmlspecialchars(afrisense_public_money($subtotal), ENT_QUOTES, 'UTF-8'); ?></dd></div><div><dt>Delivery Fee</dt><dd><?php echo htmlspecialchars(afrisense_public_money($deliveryFee), ENT_QUOTES, 'UTF-8'); ?></dd></div><div class="total"><dt>Total Amount</dt><dd><?php echo htmlspecialchars(afrisense_public_money($total), ENT_QUOTES, 'UTF-8'); ?></dd></div></dl>
             </section>
             <section class="af-summary-card"><h2>Why Pay with AfriSense?</h2><ul class="af-pay-reasons"><li><i class="bi bi-shield-check"></i><span><strong>100% Secure Payments</strong>Your payment details are safe with us.</span></li><li><i class="bi bi-hand-thumbs-up"></i><span><strong>Fast &amp; Reliable</strong>Quick payment confirmation and order processing.</span></li><li><i class="bi bi-credit-card"></i><span><strong>Multiple Payment Options</strong>Choose the payment method that works for you.</span></li></ul></section>
-            <section class="af-summary-card af-payment-help"><i class="bi bi-headset"></i><div><h2>Need Help?</h2><p>Our support team is here to assist you.</p><strong>Call / WhatsApp: <?php echo htmlspecialchars($supportPhone, ENT_QUOTES, 'UTF-8'); ?></strong><strong>Email: <?php echo htmlspecialchars($supportEmail, ENT_QUOTES, 'UTF-8'); ?></strong></div></section>
+            <section class="af-summary-card af-payment-help"><i class="bi bi-headset"></i><div><h2>Need Help?</h2><p>Our support team is here to assist you.</p><strong><a href="support.php">Chat with Support</a></strong><strong>Email: <?php echo htmlspecialchars($supportEmail, ENT_QUOTES, 'UTF-8'); ?></strong></div></section>
         </aside>
     </div>
 </section>

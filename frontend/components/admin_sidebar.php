@@ -9,6 +9,7 @@ $publicSettings = afrisense_public_settings();
 $adminSiteName = (string) ($publicSettings['website']['site_name'] ?? 'AfriSense Food Services');
 $adminBrandName = str_replace(' Food Services', '', $adminSiteName);
 $adminSiteTagline = (string) ($publicSettings['website']['site_tagline'] ?? 'Food Services');
+$adminOrderNavCounts = is_array($adminOrderNavCounts ?? null) ? $adminOrderNavCounts : [];
 
 $adminGroups = [
     [
@@ -28,15 +29,17 @@ $adminGroups = [
                 'expandable' => true,
                 'children' => [
                     ['key' => 'orders_all', 'label' => 'All Orders', 'href' => $frontendBase . '/admin/orders.php'],
-                    ['key' => 'orders_pending', 'label' => 'Pending Orders', 'href' => $frontendBase . '/admin/orders.php?status=Pending'],
-                    ['key' => 'orders_confirmed', 'label' => 'Confirmed Orders', 'href' => $frontendBase . '/admin/orders.php?status=Confirmed'],
-                    ['key' => 'orders_preparing', 'label' => 'Preparing Orders', 'href' => $frontendBase . '/admin/orders.php?status=Preparing'],
-                    ['key' => 'orders_delivered', 'label' => 'Delivered Orders', 'href' => $frontendBase . '/admin/orders.php?status=Delivered'],
-                    ['key' => 'orders_cancelled', 'label' => 'Cancelled Orders', 'href' => $frontendBase . '/admin/orders.php?status=Cancelled'],
+                    ['key' => 'orders_pending', 'label' => 'Pending Orders', 'href' => $frontendBase . '/admin/orders.php?status=Pending', 'badge_class' => 'pending'],
+                    ['key' => 'orders_confirmed', 'label' => 'Confirmed Orders', 'href' => $frontendBase . '/admin/orders.php?status=Confirmed', 'badge_class' => 'confirmed'],
+                    ['key' => 'orders_preparing', 'label' => 'Preparing Orders', 'href' => $frontendBase . '/admin/orders.php?status=Preparing', 'badge_class' => 'preparing'],
+                    ['key' => 'orders_delivered', 'label' => 'Delivered Orders', 'href' => $frontendBase . '/admin/orders.php?status=Delivered', 'badge_class' => 'delivered'],
+                    ['key' => 'orders_cancelled', 'label' => 'Cancelled Orders', 'href' => $frontendBase . '/admin/orders.php?status=Cancelled', 'badge_class' => 'cancelled'],
                 ],
             ],
             ['key' => 'bookings', 'label' => 'Bookings', 'icon' => 'bi-calendar3', 'href' => $frontendBase . '/admin/bookings.php', 'expandable' => true],
             ['key' => 'enquiries', 'label' => 'Enquiries', 'icon' => 'bi-chat-square-text', 'href' => $frontendBase . '/admin/enquiries.php', 'expandable' => true],
+            ['key' => 'support', 'label' => 'Support Inbox', 'icon' => 'bi-headset', 'href' => $frontendBase . '/admin/support.php'],
+            ['key' => 'remarks', 'label' => 'Reviews & Remarks', 'icon' => 'bi-chat-square-quote', 'href' => $frontendBase . '/admin/remarks.php'],
             ['key' => 'customers', 'label' => 'Customers', 'icon' => 'bi-people', 'href' => $frontendBase . '/admin/customers.php', 'expandable' => true],
             ['key' => 'users', 'label' => 'Users', 'icon' => 'bi-person-badge', 'href' => $frontendBase . '/admin/users.php', 'expandable' => true],
         ],
@@ -53,7 +56,7 @@ $adminGroups = [
         'items' => [
             ['key' => 'roles', 'label' => 'Roles', 'icon' => 'bi-person-gear', 'href' => $frontendBase . '/admin/roles.php', 'expandable' => true],
             ['key' => 'permissions', 'label' => 'Permissions', 'icon' => 'bi-shield-check', 'href' => $frontendBase . '/admin/roles.php', 'expandable' => true],
-            ['key' => 'settings', 'label' => 'Settings', 'icon' => 'bi-gear', 'href' => $frontendBase . '/admin/settings.php'],
+            ['key' => 'settings', 'label' => 'Settings', 'icon' => 'bi-gear', 'href' => $frontendBase . '/admin/settings/index.php'],
             ['key' => 'notifications', 'label' => 'Notifications', 'icon' => 'bi-bell', 'href' => $frontendBase . '/admin/notifications.php'],
         ],
     ],
@@ -65,6 +68,17 @@ $adminGroups = [
         ],
     ],
 ];
+
+if (isset($authUser) && function_exists('afrisense_is_administrator') && !afrisense_is_administrator($authUser)) {
+    $adminGroups = [
+        [
+            'label' => 'Support',
+            'items' => [
+                ['key' => 'support', 'label' => 'Support Inbox', 'icon' => 'bi-headset', 'href' => $frontendBase . '/admin/support.php'],
+            ],
+        ],
+    ];
+}
 ?>
 <aside class="af-dashboard-sidebar af-admin-sidebar" data-sidebar>
     <button class="af-sidebar-close" type="button" aria-label="Close sidebar" data-sidebar-close>
@@ -72,7 +86,7 @@ $adminGroups = [
     </button>
 
     <a class="af-brand" href="<?php echo htmlspecialchars($frontendBase . '/admin/dashboard.php', ENT_QUOTES, 'UTF-8'); ?>" aria-label="AfriSense admin dashboard">
-        <span class="af-brand-icon" aria-hidden="true"><i class="bi bi-cup-hot"></i></span>
+        <span class="af-brand-icon" aria-hidden="true"><?php echo afrisense_public_brand_icon_html($frontendBase); ?></span>
         <span>
             <strong><?php echo htmlspecialchars($adminBrandName, ENT_QUOTES, 'UTF-8'); ?></strong>
             <small><?php echo htmlspecialchars($adminSiteTagline, ENT_QUOTES, 'UTF-8'); ?></small>
@@ -109,7 +123,10 @@ $adminGroups = [
                     <div class="af-subnav">
                         <?php foreach ($item['children'] as $child): ?>
                             <a class="<?php echo $activeAdminPage === $child['key'] ? 'is-active' : ''; ?>" href="<?php echo htmlspecialchars($child['href'], ENT_QUOTES, 'UTF-8'); ?>">
-                                <?php echo htmlspecialchars($child['label'], ENT_QUOTES, 'UTF-8'); ?>
+                                <span><?php echo htmlspecialchars($child['label'], ENT_QUOTES, 'UTF-8'); ?></span>
+                                <?php if (array_key_exists($child['key'], $adminOrderNavCounts)): ?>
+                                    <em class="af-nav-badge <?php echo htmlspecialchars((string) ($child['badge_class'] ?? ''), ENT_QUOTES, 'UTF-8'); ?>"><?php echo htmlspecialchars((string) min(99, (int) $adminOrderNavCounts[$child['key']]), ENT_QUOTES, 'UTF-8'); ?></em>
+                                <?php endif; ?>
                             </a>
                         <?php endforeach; ?>
                     </div>

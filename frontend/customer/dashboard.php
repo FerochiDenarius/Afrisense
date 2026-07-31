@@ -112,7 +112,8 @@ ob_start();
                         <a href="<?php echo htmlspecialchars($frontendBase . '/customer/orders.php', ENT_QUOTES, 'UTF-8'); ?>"><i class="bi bi-bag-plus green" aria-hidden="true"></i> Place Order</a>
                         <a href="<?php echo htmlspecialchars($frontendBase . '/customer/my-orders.php', ENT_QUOTES, 'UTF-8'); ?>"><i class="bi bi-receipt gold" aria-hidden="true"></i> My Orders</a>
                         <a href="<?php echo htmlspecialchars($frontendBase . '/customer/my-bookings.php#booking_form', ENT_QUOTES, 'UTF-8'); ?>"><i class="bi bi-calendar-plus blue" aria-hidden="true"></i> Book a Service</a>
-                        <a href="<?php echo htmlspecialchars($frontendBase . '/customer/enquiries.php', ENT_QUOTES, 'UTF-8'); ?>"><i class="bi bi-chat-dots purple" aria-hidden="true"></i> Send Enquiry</a>
+                        <a href="<?php echo htmlspecialchars($frontendBase . '/customer/support.php', ENT_QUOTES, 'UTF-8'); ?>"><i class="bi bi-chat-dots purple" aria-hidden="true"></i> Support Agent</a>
+                        <a href="<?php echo htmlspecialchars($frontendBase . '/customer/remarks.php#customer-remark-form', ENT_QUOTES, 'UTF-8'); ?>"><i class="bi bi-chat-square-quote gold" aria-hidden="true"></i> Give Remark</a>
                     </div>
                 </div>
             </section>

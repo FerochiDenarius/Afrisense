@@ -9,6 +9,9 @@ require_once __DIR__ . '/../auth/auth_bootstrap.php';
 require_once __DIR__ . '/../includes/public_settings.php';
 
 \AfriSense\Backend\Helpers\Session::start();
+afrisense_enforce_public_site_status($frontendBase);
+afrisense_enforce_guest_checkout_enabled($frontendBase);
+afrisense_enforce_public_delivery_available();
 
 function afrisense_guest_cart_image(string $frontendBase, ?string $image): string
 {

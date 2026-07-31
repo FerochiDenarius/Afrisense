@@ -5,7 +5,7 @@ $activePage = 'menu';
 $extraStyles = [$frontendBase . '/assets/css/menu-services.css'];
 $foodImageBase = $frontendBase . '/assets/images/foods';
 
-require_once __DIR__ . '/../auth/auth_bootstrap.php';
+require_once __DIR__ . '/../includes/public_settings.php';
 
 function afrisense_menu_food_image(string $frontendBase, ?string $image): string
 {
@@ -48,6 +48,8 @@ $sort = trim((string) ($_GET['sort'] ?? 'popular'));
 $menuItems = [];
 $categories = [];
 $menuMessage = '';
+$menuOrderHref = afrisense_public_order_url($frontendBase);
+$menuBookingHref = afrisense_public_booking_url($frontendBase);
 
 try {
     $pdo = afrisense_pdo();
@@ -188,7 +190,7 @@ ob_start();
                     <p><?php echo htmlspecialchars((string) ($item['description'] ?? 'Freshly prepared AfriSense meal.'), ENT_QUOTES, 'UTF-8'); ?></p>
                     <footer class="af-menu-card-footer">
                         <strong class="af-menu-price">GHC <?php echo htmlspecialchars(number_format((float) ($item['price'] ?? 0), 2), ENT_QUOTES, 'UTF-8'); ?></strong>
-                        <a class="af-menu-order-btn" href="order.php?food_id=<?php echo urlencode((string) ($item['id'] ?? 0)); ?>">Order Now <i class="bi bi-arrow-right" aria-hidden="true"></i></a>
+                        <a class="af-menu-order-btn" href="<?php echo htmlspecialchars($menuOrderHref, ENT_QUOTES, 'UTF-8'); ?>">Order Now <i class="bi bi-arrow-right" aria-hidden="true"></i></a>
                     </footer>
                 </div>
             </article>
@@ -200,7 +202,7 @@ ob_start();
             <h2>Need Catering for a Group?</h2>
             <p>Let AfriSense prepare generous portions, buffet trays, and custom menu packages for your meeting, party, or celebration.</p>
         </div>
-        <a class="af-menu-order-btn" href="booking.php">Book a Service <i class="bi bi-calendar3" aria-hidden="true"></i></a>
+        <a class="af-menu-order-btn" href="<?php echo htmlspecialchars($menuBookingHref, ENT_QUOTES, 'UTF-8'); ?>">Book a Service <i class="bi bi-calendar3" aria-hidden="true"></i></a>
     </section>
 </section>
 <?php

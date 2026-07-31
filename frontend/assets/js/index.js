@@ -5,16 +5,15 @@ document.addEventListener("DOMContentLoaded", function () {
         return;
     }
 
-    bookingForm.addEventListener("submit", function (event) {
-        var service = document.getElementById("service");
-        var date = document.getElementById("booking_date");
-        var time = document.getElementById("booking_time");
+    var date = document.getElementById("booking_date");
 
-        if (!service.value || !date.value || !time.value) {
-            return;
-        }
+    if (!date) {
+        return;
+    }
 
-        event.preventDefault();
-        bookingForm.classList.add("is-submitted");
-    });
+    var today = new Date();
+    var offset = today.getTimezoneOffset();
+    var local = new Date(today.getTime() - offset * 60 * 1000);
+
+    date.min = local.toISOString().split("T")[0];
 });

@@ -1,0 +1,587 @@
+.af-remarks-hero {
+    min-height: 300px;
+    background:
+        linear-gradient(rgba(5, 28, 23, 0.84), rgba(5, 28, 23, 0.9)),
+        url("../images/foodimage.jpeg") center / cover;
+    color: #fff;
+    display: grid;
+    place-items: center;
+    padding: 42px 20px;
+    text-align: center;
+}
+
+.af-remarks-hero > div {
+    width: min(780px, 100%);
+}
+
+.af-remarks-hero h1,
+.af-public-remarks-list h2,
+.af-give-remark-card h2,
+.af-customer-remarks-heading h1,
+.af-my-remarks-list h2 {
+    font-family: Georgia, "Times New Roman", serif;
+}
+
+.af-remarks-hero h1 {
+    font-size: clamp(36px, 5vw, 54px);
+    line-height: 1.05;
+    margin: 8px 0 12px;
+}
+
+.af-remarks-hero p {
+    font-size: 15px;
+    line-height: 1.65;
+}
+
+.af-remarks-hero-actions {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+    margin-top: 22px;
+}
+
+.af-remarks-hero-actions a,
+.af-public-remarks-list header a,
+.af-customer-remarks-heading a {
+    min-height: 38px;
+    border-radius: 6px;
+    background: linear-gradient(135deg, var(--af-gold), var(--af-gold-2));
+    color: #fff;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    padding: 0 14px;
+    font-size: 12px;
+    font-weight: 850;
+    text-decoration: none;
+}
+
+.af-remarks-hero-actions a + a {
+    background: rgba(255, 255, 255, 0.13);
+    border: 1px solid rgba(255, 255, 255, 0.28);
+}
+
+.af-public-remarks-page,
+.af-customer-remarks-page {
+    display: grid;
+    gap: 18px;
+}
+
+.af-public-remarks-page {
+    background: #fafafa;
+    padding: 24px;
+}
+
+.af-customer-remarks-page {
+    gap: 18px;
+}
+
+.af-public-remark-metrics {
+    width: min(1240px, 100%);
+    margin: 0 auto;
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 12px;
+}
+
+.af-customer-remarks-page .af-public-remark-metrics {
+    width: 100%;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+}
+
+.af-public-remark-metrics article {
+    min-height: 86px;
+    border: 1px solid #e5e7eb;
+    border-radius: 8px;
+    background: #fff;
+    box-shadow: 0 8px 24px rgba(15, 23, 42, 0.05);
+    display: grid;
+    grid-template-columns: 44px 1fr;
+    gap: 10px;
+    align-items: center;
+    padding: 14px;
+}
+
+.af-public-remark-metrics span {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    background: #e3f6e6;
+    color: #159447;
+    display: grid;
+    place-items: center;
+    font-size: 18px;
+}
+
+.af-public-remark-metrics small {
+    display: block;
+    color: #111827;
+    font-size: 11px;
+    font-weight: 850;
+    margin-bottom: 5px;
+}
+
+.af-public-remark-metrics strong {
+    display: block;
+    color: #111827;
+    font-size: 23px;
+    line-height: 1;
+}
+
+.af-public-remark-metrics p {
+    color: #667085;
+    font-size: 11px;
+    margin-top: 6px;
+}
+
+.af-public-remarks-grid,
+.af-customer-remarks-grid {
+    width: min(1240px, 100%);
+    margin: 0 auto;
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) 330px;
+    gap: 18px;
+    align-items: start;
+}
+
+.af-customer-remarks-grid {
+    width: 100%;
+    grid-template-columns: 340px minmax(0, 1fr);
+}
+
+.af-public-remarks-list,
+.af-give-remark-card,
+.af-customer-remarks-heading,
+.af-my-remarks-list {
+    border: 1px solid #e5e7eb;
+    border-radius: 8px;
+    background: #fff;
+    box-shadow: 0 8px 24px rgba(15, 23, 42, 0.05);
+}
+
+.af-public-remarks-list {
+    overflow: hidden;
+}
+
+.af-public-remarks-list > header,
+.af-my-remarks-list > header,
+.af-customer-remarks-heading {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 14px;
+    padding: 18px 20px;
+    border-bottom: 1px solid #edf0f3;
+}
+
+.af-customer-remarks-heading {
+    border-bottom: 0;
+}
+
+.af-public-remarks-list h2,
+.af-give-remark-card h2,
+.af-my-remarks-list h2,
+.af-customer-remarks-heading h1 {
+    color: #111827;
+    font-size: 22px;
+    line-height: 1.15;
+    margin: 0 0 5px;
+}
+
+.af-public-remarks-list p,
+.af-give-remark-card p,
+.af-my-remarks-list p,
+.af-customer-remarks-heading p {
+    color: #667085;
+    font-size: 12.5px;
+    line-height: 1.6;
+    margin: 0;
+}
+
+.af-review-card-grid {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+
+.af-review-card {
+    border-right: 1px solid #edf0f3;
+    border-bottom: 1px solid #edf0f3;
+    display: grid;
+    grid-template-columns: 54px 1fr;
+    gap: 12px;
+    padding: 16px;
+}
+
+.af-review-card img,
+.af-my-remark-row img {
+    width: 50px;
+    height: 50px;
+    border-radius: 8px;
+    object-fit: cover;
+}
+
+.af-review-card header,
+.af-my-remark-row header {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 8px;
+}
+
+.af-review-card strong,
+.af-review-card small,
+.af-review-card footer span,
+.af-review-card footer em {
+    display: block;
+}
+
+.af-review-card strong,
+.af-my-remark-row strong {
+    color: #111827;
+    font-size: 12.5px;
+}
+
+.af-review-card small,
+.af-review-card footer,
+.af-my-remark-row small {
+    color: #667085;
+    font-size: 11px;
+}
+
+.af-review-card p,
+.af-my-remark-row p {
+    color: #344054;
+    font-size: 12px;
+    line-height: 1.6;
+    margin: 9px 0;
+}
+
+.af-review-card footer {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 8px;
+}
+
+.af-review-card footer em {
+    border-radius: 999px;
+    background: #f2f4f7;
+    color: #475467;
+    font-style: normal;
+    font-weight: 800;
+    padding: 4px 8px;
+}
+
+.af-remark-stars {
+    color: #f6a700;
+    display: inline-flex;
+    gap: 2px;
+    font-size: 12px;
+    white-space: nowrap;
+}
+
+.af-give-remark-card {
+    display: grid;
+    gap: 12px;
+    padding: 18px;
+}
+
+.af-give-remark-card form {
+    display: grid;
+    gap: 10px;
+}
+
+.af-give-remark-card label {
+    display: grid;
+    gap: 6px;
+}
+
+.af-give-remark-card label span {
+    color: #111827;
+    font-size: 11.5px;
+    font-weight: 850;
+}
+
+.af-give-remark-card input,
+.af-give-remark-card select,
+.af-give-remark-card textarea {
+    width: 100%;
+    border: 1px solid #d9dee6;
+    border-radius: 6px;
+    color: #111827;
+    font-size: 12px;
+    outline: 0;
+    padding: 9px 10px;
+}
+
+.af-give-remark-card textarea {
+    resize: vertical;
+}
+
+.af-give-remark-card button {
+    min-height: 38px;
+    border: 0;
+    border-radius: 6px;
+    background: linear-gradient(135deg, var(--af-gold), var(--af-gold-2));
+    color: #fff;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    font-size: 12px;
+    font-weight: 850;
+    cursor: pointer;
+}
+
+.af-form-recent-reviews {
+    border-top: 1px solid #edf0f3;
+    display: grid;
+    gap: 10px;
+    margin-top: 4px;
+    padding-top: 14px;
+}
+
+.af-form-recent-reviews > header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 10px;
+}
+
+.af-form-recent-reviews > header strong {
+    color: #111827;
+    font-size: 12.5px;
+}
+
+.af-form-recent-reviews > header a {
+    color: #b76b00;
+    font-size: 11px;
+    font-weight: 850;
+    text-decoration: none;
+}
+
+.af-form-recent-reviews article {
+    border: 1px solid #edf0f3;
+    border-radius: 7px;
+    background: #fbfbfb;
+    display: grid;
+    gap: 6px;
+    padding: 10px;
+}
+
+.af-form-recent-reviews article span {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 8px;
+}
+
+.af-form-recent-reviews article strong,
+.af-form-recent-reviews article small {
+    display: block;
+}
+
+.af-form-recent-reviews article strong {
+    color: #111827;
+    font-size: 11.5px;
+}
+
+.af-form-recent-reviews article small,
+.af-form-recent-reviews article p {
+    color: #667085;
+    font-size: 11px;
+    line-height: 1.5;
+}
+
+.af-remark-alert {
+    width: min(1240px, 100%);
+    margin: 0 auto;
+    border-radius: 7px;
+    font-size: 12.5px;
+    font-weight: 800;
+    padding: 12px 14px;
+}
+
+.af-customer-remarks-page .af-remark-alert {
+    width: 100%;
+}
+
+.af-remark-alert.success {
+    background: #e3f6e6;
+    color: #137333;
+}
+
+.af-remark-alert.error {
+    background: #ffe8ea;
+    color: #b42318;
+}
+
+.af-my-remarks-list {
+    overflow: hidden;
+}
+
+.af-my-remark-row {
+    display: grid;
+    grid-template-columns: 58px 1fr;
+    gap: 12px;
+    padding: 14px 18px;
+    border-top: 1px solid #edf0f3;
+}
+
+.af-remark-status {
+    min-height: 23px;
+    border-radius: 5px;
+    display: inline-flex;
+    align-items: center;
+    padding: 0 8px;
+    font-size: 10.5px;
+    font-weight: 850;
+}
+
+.af-remark-status.published {
+    background: #e3f6e6;
+    color: #12823b;
+}
+
+.af-remark-status.pending {
+    background: #fff1db;
+    color: #c06f00;
+}
+
+.af-remark-status.rejected {
+    background: #ffe8ea;
+    color: #d92d20;
+}
+
+.af-empty-remarks {
+    display: grid;
+    place-items: center;
+    gap: 8px;
+    padding: 42px 18px;
+    text-align: center;
+}
+
+.af-empty-remarks i {
+    color: #b77b1a;
+    font-size: 30px;
+}
+
+.af-empty-remarks h3 {
+    color: #111827;
+    font-size: 15px;
+}
+
+@media (max-width: 1160px) {
+    .af-review-card-grid,
+    .af-public-remark-metrics,
+    .af-customer-remarks-page .af-public-remark-metrics {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    .af-public-remarks-grid,
+    .af-customer-remarks-grid {
+        grid-template-columns: 1fr;
+    }
+}
+
+@media (max-width: 720px) {
+    .af-public-remarks-page {
+        padding: 18px 14px;
+    }
+
+    .af-review-card-grid,
+    .af-public-remark-metrics,
+    .af-customer-remarks-page .af-public-remark-metrics {
+        grid-template-columns: 1fr;
+    }
+
+    .af-public-remarks-list > header,
+    .af-customer-remarks-heading {
+        align-items: stretch;
+        flex-direction: column;
+    }
+
+    .af-remarks-hero-actions {
+        flex-direction: column;
+    }
+}
+
+/* Compact public-page scale to match the landing home page. */
+.af-remarks-hero {
+    min-height: 260px;
+    padding-top: 34px;
+    padding-bottom: 34px;
+}
+
+.af-remarks-hero > div {
+    width: min(700px, 100%);
+}
+
+.af-remarks-hero h1 {
+    font-size: clamp(32px, 4vw, 44px);
+    margin: 6px 0 10px;
+}
+
+.af-remarks-hero p {
+    font-size: 13px;
+    line-height: 1.55;
+}
+
+.af-remarks-hero-actions {
+    margin-top: 16px;
+}
+
+.af-remarks-hero-actions a,
+.af-public-remarks-list header a,
+.af-customer-remarks-heading a {
+    min-height: 34px;
+    gap: 6px;
+    padding: 0 12px;
+    font-size: 11px;
+}
+
+.af-public-remarks-page {
+    padding-top: 20px;
+}
+
+.af-public-remark-metrics article {
+    min-height: 76px;
+    grid-template-columns: 38px 1fr;
+    padding: 12px;
+}
+
+.af-public-remark-metrics span {
+    width: 34px;
+    height: 34px;
+    font-size: 15px;
+}
+
+.af-public-remark-metrics strong {
+    font-size: 20px;
+}
+
+.af-public-remarks-list > header,
+.af-my-remarks-list > header,
+.af-customer-remarks-heading {
+    padding: 15px 16px;
+}
+
+.af-public-remarks-list h2,
+.af-give-remark-card h2,
+.af-my-remarks-list h2,
+.af-customer-remarks-heading h1 {
+    font-size: 19px;
+}
+
+.af-review-card {
+    grid-template-columns: 48px 1fr;
+    gap: 10px;
+    padding: 14px;
+}
+
+.af-review-card img,
+.af-my-remark-row img {
+    width: 44px;
+    height: 44px;
+}
