@@ -182,9 +182,28 @@ function afrisense_gallery_format_size(int $bytes): string
     return $bytes . ' B';
 }
 
+function afrisense_gallery_url(array $overrides = [], string $anchor = ''): string
+{
+    $params = $_GET;
+
+    foreach ($overrides as $key => $value) {
+        if ($value === null || $value === '') {
+            unset($params[$key]);
+        } else {
+            $params[$key] = (string) $value;
+        }
+    }
+
+    $query = http_build_query($params);
+
+    return 'gallery.php' . ($query !== '' ? '?' . $query : '') . $anchor;
+}
+
 $search = trim((string) ($_GET['search'] ?? ''));
 $categoryFilter = trim((string) ($_GET['category'] ?? ''));
 $sort = trim((string) ($_GET['sort'] ?? 'newest'));
+$page = max(1, (int) ($_GET['page'] ?? 1));
+$offset = ($page - 1) * $itemsPerPage;
 $flashMessage = '';
 $flashType = 'success';
 
@@ -334,8 +353,11 @@ try {
         $combinedItems[] = $item;
     }
 
-    $displayItems = array_slice($combinedItems, 0, 60);
     $totalGalleryImages = count($combinedItems);
+    $totalPages = max(1, (int) ceil($totalGalleryImages / max(1, $itemsPerPage)));
+    $page = min($page, $totalPages);
+    $offset = ($page - 1) * $itemsPerPage;
+    $displayItems = array_slice($combinedItems, $offset, $itemsPerPage);
     $albums = count(array_unique(array_map(static fn (array $item): string => (string) ($item['category'] ?? 'Food'), $combinedItems)));
     $tags = count($categories);
     $storageBytes = 0;
@@ -349,6 +371,9 @@ try {
     $displayItems = [];
     $categories = [];
     $totalGalleryImages = 0;
+    $totalPages = 1;
+    $page = 1;
+    $offset = 0;
     $albums = 0;
     $tags = 0;
     $storageBytes = 0;
@@ -431,7 +456,7 @@ ob_start();
         </form>
     </section>
 
-    <section class="af-menu-table-card">
+    <section class="af-menu-table-card" id="gallery-table">
         <form class="af-menu-filters af-gallery-filters" action="gallery.php" method="get">
             <label class="af-menu-search" for="gallery_search">
                 <i class="bi bi-search" aria-hidden="true"></i>
@@ -475,7 +500,7 @@ ob_start();
                     <div class="af-gallery-image-wrap">
                         <input type="checkbox" aria-label="Select <?php echo htmlspecialchars((string) ($item['title'] ?? 'image'), ENT_QUOTES, 'UTF-8'); ?>">
                         <img src="<?php echo htmlspecialchars($imageInfo['url'], ENT_QUOTES, 'UTF-8'); ?>" alt="<?php echo htmlspecialchars((string) ($item['title'] ?? 'Gallery image'), ENT_QUOTES, 'UTF-8'); ?>">
-                        <button type="button" aria-label="Image actions"><i class="bi bi-three-dots-vertical" aria-hidden="true"></i></button>
+                        <button type="button" title="Image actions" aria-label="Image actions"><i class="bi bi-three-dots-vertical" aria-hidden="true"></i></button>
                     </div>
                     <div class="af-gallery-card-body">
                         <strong><?php echo htmlspecialchars((string) ($item['title'] ?? 'Gallery image'), ENT_QUOTES, 'UTF-8'); ?></strong>
@@ -489,14 +514,17 @@ ob_start();
         </section>
 
         <footer class="af-menu-pagination">
-            <p>Showing 1 to <?php echo htmlspecialchars((string) count($displayItems), ENT_QUOTES, 'UTF-8'); ?> of <?php echo htmlspecialchars((string) $totalGalleryImages, ENT_QUOTES, 'UTF-8'); ?> images</p>
+            <p>Showing <?php echo htmlspecialchars((string) ($totalGalleryImages > 0 ? $offset + 1 : 0), ENT_QUOTES, 'UTF-8'); ?> to <?php echo htmlspecialchars((string) min($offset + count($displayItems), $totalGalleryImages), ENT_QUOTES, 'UTF-8'); ?> of <?php echo htmlspecialchars((string) $totalGalleryImages, ENT_QUOTES, 'UTF-8'); ?> images</p>
             <nav aria-label="Gallery pagination">
-                <a href="#" aria-label="Previous page"><i class="bi bi-chevron-left" aria-hidden="true"></i></a>
-                <a class="active" href="#">1</a>
-                <a href="#">2</a>
-                <a href="#">3</a>
-                <span>...</span>
-                <a href="#" aria-label="Next page"><i class="bi bi-chevron-right" aria-hidden="true"></i></a>
+                <a class="<?php echo $page <= 1 ? 'is-disabled' : ''; ?>" href="<?php echo htmlspecialchars($page <= 1 ? '#' : afrisense_gallery_url(['page' => (string) ($page - 1)], '#gallery-table'), ENT_QUOTES, 'UTF-8'); ?>" aria-label="Previous page" title="Previous page"><i class="bi bi-chevron-left" aria-hidden="true"></i></a>
+                <?php for ($number = max(1, $page - 1); $number <= min($totalPages, $page + 1); $number++): ?>
+                    <a class="<?php echo $number === $page ? 'active' : ''; ?>" href="<?php echo htmlspecialchars(afrisense_gallery_url(['page' => (string) $number], '#gallery-table'), ENT_QUOTES, 'UTF-8'); ?>"><?php echo htmlspecialchars((string) $number, ENT_QUOTES, 'UTF-8'); ?></a>
+                <?php endfor; ?>
+                <?php if ($totalPages > $page + 1): ?>
+                    <span>...</span>
+                    <a href="<?php echo htmlspecialchars(afrisense_gallery_url(['page' => (string) $totalPages], '#gallery-table'), ENT_QUOTES, 'UTF-8'); ?>"><?php echo htmlspecialchars((string) $totalPages, ENT_QUOTES, 'UTF-8'); ?></a>
+                <?php endif; ?>
+                <a class="<?php echo $page >= $totalPages ? 'is-disabled' : ''; ?>" href="<?php echo htmlspecialchars($page >= $totalPages ? '#' : afrisense_gallery_url(['page' => (string) ($page + 1)], '#gallery-table'), ENT_QUOTES, 'UTF-8'); ?>" aria-label="Next page" title="Next page"><i class="bi bi-chevron-right" aria-hidden="true"></i></a>
             </nav>
         </footer>
     </section>

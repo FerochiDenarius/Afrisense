@@ -368,6 +368,11 @@
     border-color: var(--af-gold);
 }
 
+.af-menu-pagination a.is-disabled {
+    opacity: 0.45;
+    pointer-events: none;
+}
+
 .af-menu-panel {
     padding: 20px;
 }

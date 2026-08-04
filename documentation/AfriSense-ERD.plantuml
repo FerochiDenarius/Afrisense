@@ -1,0 +1,311 @@
+@startuml
+' AfriSense Food Services - Entity Relationship Diagram
+' Paste this into https://www.planttext.com/ or https://www.plantuml.com/plantuml/
+
+left to right direction
+hide circle
+skinparam linetype ortho
+skinparam entity {
+    BackgroundColor #FFFFFF
+    BorderColor #063225
+    FontColor #111827
+}
+
+entity "roles" as ROLES {
+    * id : int <<PK>>
+    --
+    rolename : varchar
+    description : text
+    created_at : timestamp
+}
+
+entity "users" as USERS {
+    * id : int <<PK>>
+    --
+    role_id : int <<FK>>
+    fullname : varchar
+    username : varchar
+    email : varchar
+    phonenumber : varchar
+    password : varchar
+    email_verified : tinyint
+    last_login : datetime
+    created_at : timestamp
+}
+
+entity "permissions" as PERMISSIONS {
+    * id : int <<PK>>
+    --
+    module : varchar
+    name : varchar
+    slug : varchar
+    description : varchar
+    created_at : timestamp
+}
+
+entity "role_permissions" as ROLE_PERMISSIONS {
+    * role_id : int <<PK, FK>>
+    * permission_id : int <<PK, FK>>
+    --
+    created_at : timestamp
+}
+
+entity "customers" as CUSTOMERS {
+    * id : int <<PK>>
+    --
+    fullname : varchar
+    email : varchar
+    phone_number : varchar
+    address : text
+    email_verified : tinyint
+    created_at : timestamp
+}
+
+entity "food_categories" as FOOD_CATEGORIES {
+    * id : int <<PK>>
+    --
+    category_name : varchar
+    description : text
+    created_at : timestamp
+}
+
+entity "foods" as FOODS {
+    * id : int <<PK>>
+    --
+    category_id : int <<FK>>
+    food_name : varchar
+    description : text
+    price : decimal
+    image : varchar
+    availability : enum
+    created_at : timestamp
+}
+
+entity "orders" as ORDERS {
+    * id : int <<PK>>
+    --
+    customer_id : int <<FK>>
+    food_id : int <<FK>>
+    quantity : int
+    total_price : decimal
+    delivery_address : text
+    payment_method : enum
+    payment_status : enum
+    order_status : enum
+    ordered_at : timestamp
+}
+
+entity "service_categories" as SERVICE_CATEGORIES {
+    * id : int <<PK>>
+    --
+    category_name : varchar
+    description : text
+    created_at : timestamp
+}
+
+entity "services" as SERVICES {
+    * id : int <<PK>>
+    --
+    category_id : int <<FK>>
+    service_name : varchar
+    description : text
+    price : decimal
+    estimated_duration : varchar
+    availability : enum
+}
+
+entity "bookings" as BOOKINGS {
+    * id : int <<PK>>
+    --
+    customer_id : int <<FK>>
+    service_id : int <<FK>>
+    event_date : date
+    event_time : time
+    event_location : text
+    number_of_guests : int
+    booking_status : enum
+    created_at : timestamp
+}
+
+entity "enquiries" as ENQUIRIES {
+    * id : int <<PK>>
+    --
+    customer_id : int <<FK>>
+    subject : varchar
+    message : text
+    status : enum
+    admin_response : text
+    created_at : timestamp
+}
+
+entity "delivery_assignments" as DELIVERY_ASSIGNMENTS {
+    * id : int <<PK>>
+    --
+    order_id : int <<FK>>
+    rider_user_id : int <<FK>>
+    delivery_status : enum
+    delivery_type : varchar
+    amount_collected : decimal
+    change_given : decimal
+    assigned_at : datetime
+    picked_up_at : datetime
+    delivered_at : datetime
+}
+
+entity "notifications" as NOTIFICATIONS {
+    * id : int <<PK>>
+    --
+    user_id : int <<FK>>
+    created_by : int <<FK>>
+    title : varchar
+    message : text
+    notification_type : enum
+    is_read : tinyint
+    action_url : varchar
+    created_at : timestamp
+}
+
+entity "support_conversations" as SUPPORT_CONVERSATIONS {
+    * id : int <<PK>>
+    --
+    public_token : varchar
+    customer_id : int <<FK>>
+    user_id : int <<FK>>
+    agent_user_id : int <<FK>>
+    guest_name : varchar
+    guest_email : varchar
+    subject : varchar
+    status : enum
+    priority : enum
+    last_message_at : datetime
+}
+
+entity "support_messages" as SUPPORT_MESSAGES {
+    * id : int <<PK>>
+    --
+    conversation_id : int <<FK>>
+    sender_type : enum
+    sender_user_id : int
+    sender_name : varchar
+    body : text
+    created_at : timestamp
+}
+
+entity "support_attachments" as SUPPORT_ATTACHMENTS {
+    * id : int <<PK>>
+    --
+    message_id : int <<FK>>
+    original_name : varchar
+    file_path : varchar
+    mime_type : varchar
+    file_size : int
+    created_at : timestamp
+}
+
+entity "customer_remarks" as CUSTOMER_REMARKS {
+    * id : int <<PK>>
+    --
+    customer_id : int <<FK>>
+    user_id : int
+    customer_name : varchar
+    email : varchar
+    food_service : varchar
+    rating : tinyint
+    remark : text
+    status : varchar
+}
+
+entity "testimonials" as TESTIMONIALS {
+    * id : int <<PK>>
+    --
+    customer_id : int <<FK>>
+    customer_name : varchar
+    rating : tinyint
+    message : text
+    status : enum
+}
+
+entity "gallery" as GALLERY {
+    * id : int <<PK>>
+    --
+    uploaded_by : int <<FK>>
+    title : varchar
+    description : text
+    category : enum
+    image : varchar
+    uploaded_at : timestamp
+}
+
+entity "audit_logs" as AUDIT_LOGS {
+    * id : int <<PK>>
+    --
+    user_id : int <<FK>>
+    action : varchar
+    table_name : varchar
+    record_id : int
+    description : text
+    ip_address : varchar
+    created_at : timestamp
+}
+
+entity "website_settings" as WEBSITE_SETTINGS {
+    * id : int <<PK>>
+    --
+    site_name : varchar
+    site_tagline : varchar
+    logo : varchar
+    primary_color : varchar
+    hero_title : varchar
+}
+
+entity "company_information" as COMPANY_INFORMATION {
+    * id : int <<PK>>
+    --
+    company_name : varchar
+    company_email : varchar
+    support_email : varchar
+    phone_number_1 : varchar
+    address : text
+}
+
+entity "system_settings" as SYSTEM_SETTINGS {
+    * id : int <<PK>>
+    --
+    site_status : enum
+    default_currency : varchar
+    email_notifications : tinyint
+    order_notifications : tinyint
+    booking_notifications : tinyint
+    guest_checkout_enabled : tinyint
+}
+
+ROLES ||--o{ USERS : has
+ROLES ||--o{ ROLE_PERMISSIONS : grants
+PERMISSIONS ||--o{ ROLE_PERMISSIONS : assigned
+
+CUSTOMERS ||--o{ ORDERS : places
+FOODS ||--o{ ORDERS : ordered_as
+FOOD_CATEGORIES ||--o{ FOODS : contains
+
+CUSTOMERS ||--o{ BOOKINGS : makes
+SERVICES ||--o{ BOOKINGS : booked_for
+SERVICE_CATEGORIES ||--o{ SERVICES : contains
+
+CUSTOMERS ||--o{ ENQUIRIES : submits
+CUSTOMERS ||--o{ CUSTOMER_REMARKS : writes
+CUSTOMERS ||--o{ TESTIMONIALS : gives
+
+ORDERS ||--o| DELIVERY_ASSIGNMENTS : assigned_for
+USERS ||--o{ DELIVERY_ASSIGNMENTS : rider
+
+USERS ||--o{ NOTIFICATIONS : receives
+USERS ||--o{ AUDIT_LOGS : creates
+USERS ||--o{ GALLERY : uploads
+
+CUSTOMERS ||--o{ SUPPORT_CONVERSATIONS : opens
+USERS ||--o{ SUPPORT_CONVERSATIONS : customer_account
+USERS ||--o{ SUPPORT_CONVERSATIONS : agent_account
+SUPPORT_CONVERSATIONS ||--o{ SUPPORT_MESSAGES : contains
+SUPPORT_MESSAGES ||--o{ SUPPORT_ATTACHMENTS : includes
+
+@enduml

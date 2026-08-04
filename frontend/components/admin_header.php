@@ -72,13 +72,13 @@ try {
             </span>
             <small>Enquiries</small>
         </a>
-        <button class="af-header-action" type="button" aria-label="Fullscreen">
+        <button class="af-header-action" type="button" title="Toggle fullscreen" aria-label="Fullscreen" data-fullscreen-toggle>
             <span class="af-action-icon">
                 <i class="bi bi-fullscreen" aria-hidden="true"></i>
             </span>
             <small>Fullscreen</small>
         </button>
-        <button class="af-profile-menu" type="button" aria-label="Profile menu">
+        <button class="af-profile-menu" type="button" title="Profile menu" aria-label="Profile menu">
             <img src="<?php echo htmlspecialchars($frontendBase . '/assets/images/foodimage.jpeg', ENT_QUOTES, 'UTF-8'); ?>" alt="">
             <span>
                 <strong><?php echo htmlspecialchars($adminName, ENT_QUOTES, 'UTF-8'); ?></strong>

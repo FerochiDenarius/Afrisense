@@ -142,7 +142,15 @@ try {
 
 ob_start();
 ?>
-<section class="af-admin-support-page" data-support-page>
+<section
+    class="af-admin-support-page"
+    data-support-page
+    data-support-context="admin"
+    data-support-live-url="<?php echo htmlspecialchars($frontendBase . '/support/live.php', ENT_QUOTES, 'UTF-8'); ?>"
+    data-support-sent-sound-url="<?php echo htmlspecialchars($frontendBase . '/assets/audio/sentSound.wav', ENT_QUOTES, 'UTF-8'); ?>"
+    data-support-received-sound-url="<?php echo htmlspecialchars($frontendBase . '/assets/audio/receivedSound.wav', ENT_QUOTES, 'UTF-8'); ?>"
+    data-support-conversation-id="<?php echo (int) ($selectedConversation['id'] ?? 0); ?>"
+>
     <header class="af-admin-page-heading">
         <div>
             <h1>Support Inbox</h1>
@@ -203,24 +211,7 @@ ob_start();
                 </header>
 
                 <div class="af-chat-body" aria-live="polite">
-                    <time class="af-chat-date"><?php echo htmlspecialchars(afrisense_support_conversation_label($selectedConversation), ENT_QUOTES, 'UTF-8'); ?></time>
-                    <?php foreach ($selectedMessages as $message): ?>
-                        <?php $isAgent = (string) ($message['sender_type'] ?? '') === 'agent'; ?>
-                        <article class="af-chat-message <?php echo $isAgent ? 'is-own' : 'is-agent'; ?>">
-                            <?php if (!$isAgent): ?><span class="af-message-avatar"><i class="bi bi-person" aria-hidden="true"></i></span><?php endif; ?>
-                            <div>
-                                <p><?php echo nl2br(htmlspecialchars((string) ($message['body'] ?? ''), ENT_QUOTES, 'UTF-8')); ?></p>
-                                <?php if (!empty($message['attachments']) && is_array($message['attachments'])): ?>
-                                    <div class="af-message-attachments">
-                                        <?php foreach ($message['attachments'] as $attachment): ?>
-                                            <?php echo afrisense_support_attachment_html($attachment); ?>
-                                        <?php endforeach; ?>
-                                    </div>
-                                <?php endif; ?>
-                                <time><?php echo htmlspecialchars(afrisense_support_time((string) ($message['created_at'] ?? '')), ENT_QUOTES, 'UTF-8'); ?></time>
-                            </div>
-                        </article>
-                    <?php endforeach; ?>
+                    <?php echo afrisense_support_messages_html($selectedConversation, $selectedMessages, ['agent']); ?>
                 </div>
 
                 <form class="af-support-composer af-admin-reply-composer" action="support.php?view=<?php echo (int) $selectedConversation['id']; ?>" method="post" enctype="multipart/form-data">
@@ -229,11 +220,11 @@ ob_start();
                     <label class="af-message-input" for="admin_support_message">
                         <input id="admin_support_message" name="message" type="text" placeholder="Type your reply..." autocomplete="off">
                     </label>
-                    <button class="af-composer-icon" type="button" aria-label="Add emoji" data-support-emoji-toggle><i class="bi bi-emoji-smile" aria-hidden="true"></i></button>
-                    <button class="af-composer-icon" type="button" aria-label="Attach file" data-support-attach-toggle><i class="bi bi-paperclip" aria-hidden="true"></i></button>
+                    <button class="af-composer-icon" type="button" title="Add emoji" aria-label="Add emoji" data-support-emoji-toggle><i class="bi bi-emoji-smile" aria-hidden="true"></i></button>
+                    <button class="af-composer-icon" type="button" title="Attach file" aria-label="Attach file" data-support-attach-toggle><i class="bi bi-paperclip" aria-hidden="true"></i></button>
                     <input class="af-support-file-input" type="file" name="attachment" accept=".jpg,.jpeg,.png,.gif,.webp,.mp4,.webm,.mov,.m4v,.pdf,.doc,.docx,.txt,image/*,video/*" data-support-file-input>
                     <span class="af-attachment-name" data-support-attachment-name></span>
-                    <button class="af-send-chat af-send-reply" type="submit" aria-label="Send reply" style="display:inline-flex;align-items:center;justify-content:center;min-width:118px;height:42px;border:0;border-radius:8px;background:#b77b1a;color:#ffffff;font-weight:850;gap:8px;padding:0 14px;box-shadow:0 10px 18px rgba(183,123,26,.24);">
+                    <button class="af-send-chat af-send-reply" type="submit" title="Send reply" aria-label="Send reply" style="display:inline-flex;align-items:center;justify-content:center;min-width:118px;height:42px;border:0;border-radius:8px;background:#b77b1a;color:#ffffff;font-weight:850;gap:8px;padding:0 14px;box-shadow:0 10px 18px rgba(183,123,26,.24);">
                         <i class="bi bi-send" aria-hidden="true"></i><span>Send Reply</span>
                     </button>
                 </form>

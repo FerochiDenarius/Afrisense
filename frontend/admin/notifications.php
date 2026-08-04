@@ -165,9 +165,28 @@ function afrisense_redirect_admin_notifications(string $typeFilter, string $stat
     exit;
 }
 
+function afrisense_admin_notification_page_url(array $overrides = [], string $anchor = ''): string
+{
+    $params = $_GET;
+
+    foreach ($overrides as $key => $value) {
+        if ($value === null || $value === '') {
+            unset($params[$key]);
+        } else {
+            $params[$key] = (string) $value;
+        }
+    }
+
+    $query = http_build_query($params);
+
+    return 'notifications.php' . ($query !== '' ? '?' . $query : '') . $anchor;
+}
+
 $validTypes = ['Order', 'Booking', 'Enquiry', 'System', 'Security'];
 $typeFilter = (string) ($_GET['type'] ?? '');
 $statusFilter = (string) ($_GET['status'] ?? '');
+$page = max(1, (int) ($_GET['page'] ?? 1));
+$offset = ($page - 1) * $itemsPerPage;
 $flashMessage = '';
 $flashType = 'success';
 
@@ -264,6 +283,17 @@ try {
         $where[] = 'n.`is_read` = 0';
     }
 
+    $countStatement = $pdo->prepare(
+        'SELECT COUNT(*)
+         FROM `notifications` n
+         WHERE ' . implode(' AND ', $where)
+    );
+    $countStatement->execute($params);
+    $filteredNotificationCount = (int) $countStatement->fetchColumn();
+    $totalPages = max(1, (int) ceil($filteredNotificationCount / max(1, $itemsPerPage)));
+    $page = min($page, $totalPages);
+    $offset = ($page - 1) * $itemsPerPage;
+
     $statement = $pdo->prepare(
         'SELECT
             n.`id`,
@@ -276,7 +306,7 @@ try {
          FROM `notifications` n
          WHERE ' . implode(' AND ', $where) . '
          ORDER BY n.`created_at` DESC, n.`id` DESC
-         LIMIT ' . $itemsPerPage
+         LIMIT ' . $itemsPerPage . ' OFFSET ' . $offset
     );
     $statement->execute($params);
     $notifications = $statement->fetchAll(PDO::FETCH_ASSOC);
@@ -293,6 +323,10 @@ try {
 } catch (Throwable $exception) {
     $notifications = [];
     $totalNotifications = 0;
+    $filteredNotificationCount = 0;
+    $totalPages = 1;
+    $page = 1;
+    $offset = 0;
     $unreadNotifications = 0;
     $typeCounts = array_fill_keys($validTypes, 0);
     $loadError = 'Notifications could not be loaded. Check that MySQL is running.';
@@ -326,7 +360,7 @@ ob_start();
     <?php endif; ?>
 
     <section class="af-notifications-workspace">
-        <section class="af-menu-table-card af-notifications-card">
+        <section class="af-menu-table-card af-notifications-card" id="notifications-list">
             <nav class="af-notification-tabs" aria-label="Notification filters">
                 <a class="<?php echo $typeFilter === '' && $statusFilter === '' ? 'active' : ''; ?>" href="notifications.php">All <span><?php echo htmlspecialchars((string) $totalNotifications, ENT_QUOTES, 'UTF-8'); ?></span></a>
                 <a class="<?php echo $statusFilter === 'unread' ? 'active' : ''; ?>" href="notifications.php?status=unread">Unread <span><?php echo htmlspecialchars((string) $unreadNotifications, ENT_QUOTES, 'UTF-8'); ?></span></a>
@@ -391,13 +425,17 @@ ob_start();
             </div>
 
             <footer class="af-menu-pagination">
-                <p>Showing 1 to <?php echo htmlspecialchars((string) count($notifications), ENT_QUOTES, 'UTF-8'); ?> of <?php echo htmlspecialchars((string) $totalNotifications, ENT_QUOTES, 'UTF-8'); ?> notifications</p>
+                <p>Showing <?php echo htmlspecialchars((string) ($filteredNotificationCount > 0 ? $offset + 1 : 0), ENT_QUOTES, 'UTF-8'); ?> to <?php echo htmlspecialchars((string) min($offset + count($notifications), $filteredNotificationCount), ENT_QUOTES, 'UTF-8'); ?> of <?php echo htmlspecialchars((string) $filteredNotificationCount, ENT_QUOTES, 'UTF-8'); ?> notifications</p>
                 <nav aria-label="Notifications pagination">
-                    <a href="#" aria-label="Previous page"><i class="bi bi-chevron-left" aria-hidden="true"></i></a>
-                    <a class="active" href="#">1</a>
-                    <a href="#">2</a>
-                    <a href="#">3</a>
-                    <a href="#" aria-label="Next page"><i class="bi bi-chevron-right" aria-hidden="true"></i></a>
+                    <a class="<?php echo $page <= 1 ? 'is-disabled' : ''; ?>" href="<?php echo htmlspecialchars($page <= 1 ? '#' : afrisense_admin_notification_page_url(['page' => (string) ($page - 1)], '#notifications-list'), ENT_QUOTES, 'UTF-8'); ?>" aria-label="Previous page" title="Previous page"><i class="bi bi-chevron-left" aria-hidden="true"></i></a>
+                    <?php for ($number = max(1, $page - 1); $number <= min($totalPages, $page + 1); $number++): ?>
+                        <a class="<?php echo $number === $page ? 'active' : ''; ?>" href="<?php echo htmlspecialchars(afrisense_admin_notification_page_url(['page' => (string) $number], '#notifications-list'), ENT_QUOTES, 'UTF-8'); ?>"><?php echo htmlspecialchars((string) $number, ENT_QUOTES, 'UTF-8'); ?></a>
+                    <?php endfor; ?>
+                    <?php if ($totalPages > $page + 1): ?>
+                        <span>...</span>
+                        <a href="<?php echo htmlspecialchars(afrisense_admin_notification_page_url(['page' => (string) $totalPages], '#notifications-list'), ENT_QUOTES, 'UTF-8'); ?>"><?php echo htmlspecialchars((string) $totalPages, ENT_QUOTES, 'UTF-8'); ?></a>
+                    <?php endif; ?>
+                    <a class="<?php echo $page >= $totalPages ? 'is-disabled' : ''; ?>" href="<?php echo htmlspecialchars($page >= $totalPages ? '#' : afrisense_admin_notification_page_url(['page' => (string) ($page + 1)], '#notifications-list'), ENT_QUOTES, 'UTF-8'); ?>" aria-label="Next page" title="Next page"><i class="bi bi-chevron-right" aria-hidden="true"></i></a>
                 </nav>
             </footer>
         </section>

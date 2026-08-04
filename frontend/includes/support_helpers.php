@@ -367,6 +367,97 @@ function afrisense_support_attachment_html(array $attachment): string
     return '<a class="af-file-attachment" href="' . $safePath . '" target="_blank" rel="noopener"><i class="bi bi-paperclip" aria-hidden="true"></i>' . $safeName . '</a>';
 }
 
+function afrisense_support_message_html(array $message, array $ownSenderTypes): string
+{
+    $senderType = (string) ($message['sender_type'] ?? 'system');
+    $isOwn = in_array($senderType, $ownSenderTypes, true);
+    $avatarIcon = in_array($senderType, ['customer', 'guest'], true) ? 'bi-person' : 'bi-person-headset';
+    $class = $isOwn ? 'is-own' : 'is-agent';
+    $messageId = (int) ($message['id'] ?? 0);
+    $safeBody = nl2br(htmlspecialchars((string) ($message['body'] ?? ''), ENT_QUOTES, 'UTF-8'));
+    $safeTime = htmlspecialchars(afrisense_support_time((string) ($message['created_at'] ?? '')), ENT_QUOTES, 'UTF-8');
+    $html = '<article class="af-chat-message ' . $class . '" data-message-id="' . $messageId . '" data-sender-type="' . htmlspecialchars($senderType, ENT_QUOTES, 'UTF-8') . '">';
+
+    if (!$isOwn) {
+        $html .= '<span class="af-message-avatar"><i class="bi ' . $avatarIcon . '" aria-hidden="true"></i></span>';
+    }
+
+    $html .= '<div><p>' . $safeBody . '</p>';
+
+    if (!empty($message['attachments']) && is_array($message['attachments'])) {
+        $html .= '<div class="af-message-attachments">';
+        foreach ($message['attachments'] as $attachment) {
+            $html .= afrisense_support_attachment_html($attachment);
+        }
+        $html .= '</div>';
+    }
+
+    $html .= '<time>' . $safeTime . '</time></div></article>';
+
+    return $html;
+}
+
+function afrisense_support_messages_html(array $conversation, array $messages, array $ownSenderTypes): string
+{
+    $label = $conversation !== [] ? afrisense_support_conversation_label($conversation) : 'Today';
+    $html = '<time class="af-chat-date">' . htmlspecialchars($label, ENT_QUOTES, 'UTF-8') . '</time>';
+
+    foreach ($messages as $message) {
+        $html .= afrisense_support_message_html($message, $ownSenderTypes);
+    }
+
+    return $html;
+}
+
+function afrisense_support_last_message_id(array $messages): int
+{
+    $lastId = 0;
+
+    foreach ($messages as $message) {
+        $lastId = max($lastId, (int) ($message['id'] ?? 0));
+    }
+
+    return $lastId;
+}
+
+function afrisense_support_last_incoming_message_id(array $messages, array $ownSenderTypes): int
+{
+    $lastId = 0;
+
+    foreach ($messages as $message) {
+        $senderType = (string) ($message['sender_type'] ?? 'system');
+        if (!in_array($senderType, $ownSenderTypes, true)) {
+            $lastId = max($lastId, (int) ($message['id'] ?? 0));
+        }
+    }
+
+    return $lastId;
+}
+
+function afrisense_support_notify_customer_reply(PDO $pdo, array $conversation, string $message, int $adminUserId): void
+{
+    $userId = (int) ($conversation['user_id'] ?? 0);
+
+    if ($userId <= 0) {
+        return;
+    }
+
+    $statement = $pdo->prepare(
+        'INSERT INTO `notifications`
+            (`user_id`, `title`, `message`, `notification_type`, `action_url`, `created_by`)
+         VALUES
+            (:user_id, :title, :message, :notification_type, :action_url, :created_by)'
+    );
+    $statement->execute([
+        'user_id' => $userId,
+        'title' => 'Support Reply',
+        'message' => $message,
+        'notification_type' => 'Enquiry',
+        'action_url' => '/Afrisense/frontend/customer/support.php',
+        'created_by' => $adminUserId > 0 ? $adminUserId : null,
+    ]);
+}
+
 function afrisense_support_notify_agent(PDO $pdo, array $conversation, string $customerName): void
 {
     $agentId = (int) ($conversation['agent_user_id'] ?? 0);

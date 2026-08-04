@@ -148,6 +148,7 @@ try {
 }
 
 $dateLabel = date('M j, Y');
+$mainScriptVersion = filemtime(__DIR__ . '/../assets/js/main.js') ?: time();
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -174,7 +175,7 @@ $dateLabel = date('M j, Y');
 
             <p>Management</p>
             <a href="orders.php"><i class="bi bi-box-seam" aria-hidden="true"></i> Orders <i class="bi bi-chevron-down nav-chevron" aria-hidden="true"></i></a>
-            <a href="booking.php"><i class="bi bi-calendar3" aria-hidden="true"></i> Bookings <i class="bi bi-chevron-down nav-chevron" aria-hidden="true"></i></a>
+            <a href="bookings.php"><i class="bi bi-calendar3" aria-hidden="true"></i> Bookings <i class="bi bi-chevron-down nav-chevron" aria-hidden="true"></i></a>
             <a href="enquiries.php"><i class="bi bi-chat-square-text" aria-hidden="true"></i> Enquiries <i class="bi bi-chevron-down nav-chevron" aria-hidden="true"></i></a>
             <a href="support.php"><i class="bi bi-headset" aria-hidden="true"></i> Support Inbox</a>
             <a href="foods.php"><i class="bi bi-clipboard2" aria-hidden="true"></i> Menu &amp; Packages <i class="bi bi-chevron-down nav-chevron" aria-hidden="true"></i></a>
@@ -228,6 +229,9 @@ $dateLabel = date('M j, Y');
                         <span class="green"><?php echo htmlspecialchars((string) min(99, $pendingSupport), ENT_QUOTES, 'UTF-8'); ?></span>
                     <?php endif; ?>
                 </a>
+                <button type="button" title="Toggle fullscreen" aria-label="Fullscreen" data-fullscreen-toggle>
+                    <i class="bi bi-fullscreen" aria-hidden="true"></i>
+                </button>
                 <div class="admin-profile">
                     <img src="../assets/images/foodimage.jpeg" alt="">
                     <span>
@@ -406,7 +410,7 @@ $dateLabel = date('M j, Y');
                 <article class="panel package-panel">
                     <header class="panel-header">
                         <h2>Available Services</h2>
-                        <a href="services.php">View All</a>
+                        <a href="bookings.php">View All</a>
                     </header>
                     <div class="table-wrap">
                         <table>
@@ -440,17 +444,18 @@ $dateLabel = date('M j, Y');
                         <h2>Quick Actions</h2>
                     </header>
                     <div class="quick-actions">
-                        <a href="orders.php"><i class="bi bi-plus-circle-fill green-action" aria-hidden="true"></i> Manage Orders</a>
-                        <a href="booking.php"><i class="bi bi-calendar-plus-fill gold-action" aria-hidden="true"></i> Manage Bookings</a>
-                        <a href="foods.php"><i class="bi bi-fork-knife green-light-action" aria-hidden="true"></i> Manage Foods Sold</a>
-                        <a href="services.php"><i class="bi bi-bag-plus-fill blue-action" aria-hidden="true"></i> Manage Services</a>
-                        <a href="support.php"><i class="bi bi-headset green-action" aria-hidden="true"></i> Reply Support Chats</a>
-                        <a href="users.php"><i class="bi bi-person-plus-fill purple-action" aria-hidden="true"></i> Manage Users</a>
-                        <a href="notifications.php"><i class="bi bi-send-fill orange-action" aria-hidden="true"></i> View Notifications</a>
+                        <a href="orders.php" title="Open orders management" aria-label="Open orders management"><i class="bi bi-plus-circle-fill green-action" aria-hidden="true"></i> Manage Orders</a>
+                        <a href="bookings.php" title="Open bookings management" aria-label="Open bookings management"><i class="bi bi-calendar-plus-fill gold-action" aria-hidden="true"></i> Manage Bookings</a>
+                        <a href="foods.php" title="Open foods management" aria-label="Open foods management"><i class="bi bi-fork-knife green-light-action" aria-hidden="true"></i> Manage Foods Sold</a>
+                        <a href="bookings.php" title="Open service bookings management" aria-label="Open service bookings management"><i class="bi bi-bag-plus-fill blue-action" aria-hidden="true"></i> Manage Services</a>
+                        <a href="support.php" title="Open support inbox" aria-label="Open support inbox"><i class="bi bi-headset green-action" aria-hidden="true"></i> Reply Support Chats</a>
+                        <a href="users.php#add_user_form" title="Open user management" aria-label="Open user management"><i class="bi bi-person-plus-fill purple-action" aria-hidden="true"></i> Manage Users</a>
+                        <a href="notifications.php" title="Open notifications" aria-label="Open notifications"><i class="bi bi-send-fill orange-action" aria-hidden="true"></i> View Notifications</a>
                     </div>
                 </article>
             </section>
         </main>
     </div>
+    <script src="<?php echo htmlspecialchars('../assets/js/main.js?v=' . $mainScriptVersion, ENT_QUOTES, 'UTF-8'); ?>" defer></script>
 </body>
 </html>

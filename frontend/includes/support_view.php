@@ -28,7 +28,15 @@ $supportTopics = [
     'Payment methods',
 ];
 ?>
-<section class="af-support-page <?php echo $supportIsGuest ? 'is-guest' : 'is-customer'; ?>" data-support-page>
+<section
+    class="af-support-page <?php echo $supportIsGuest ? 'is-guest' : 'is-customer'; ?>"
+    data-support-page
+    data-support-context="<?php echo $supportIsGuest ? 'guest' : 'customer'; ?>"
+    data-support-live-url="<?php echo htmlspecialchars(($frontendBase ?? '/Afrisense/frontend') . '/support/live.php', ENT_QUOTES, 'UTF-8'); ?>"
+    data-support-sent-sound-url="<?php echo htmlspecialchars(($frontendBase ?? '/Afrisense/frontend') . '/assets/audio/sentSound.wav', ENT_QUOTES, 'UTF-8'); ?>"
+    data-support-received-sound-url="<?php echo htmlspecialchars(($frontendBase ?? '/Afrisense/frontend') . '/assets/audio/receivedSound.wav', ENT_QUOTES, 'UTF-8'); ?>"
+    data-support-conversation-id="<?php echo (int) ($supportConversation['id'] ?? 0); ?>"
+>
     <header class="af-support-heading">
         <div>
             <span class="af-support-title-icon"><i class="bi bi-headset" aria-hidden="true"></i></span>
@@ -99,28 +107,7 @@ $supportTopics = [
             </header>
 
             <div class="af-chat-body" aria-live="polite">
-                <time class="af-chat-date">Today</time>
-
-                <?php foreach ($supportMessages as $message): ?>
-                    <?php
-                    $senderType = (string) ($message['sender_type'] ?? 'system');
-                    $isOwn = in_array($senderType, ['customer', 'guest'], true);
-                    ?>
-                    <article class="af-chat-message <?php echo $isOwn ? 'is-own' : 'is-agent'; ?>">
-                        <?php if (!$isOwn): ?><span class="af-message-avatar"><i class="bi bi-person-headset" aria-hidden="true"></i></span><?php endif; ?>
-                        <div>
-                            <p><?php echo nl2br(htmlspecialchars((string) ($message['body'] ?? ''), ENT_QUOTES, 'UTF-8')); ?></p>
-                            <?php if (!empty($message['attachments']) && is_array($message['attachments'])): ?>
-                                <div class="af-message-attachments">
-                                    <?php foreach ($message['attachments'] as $attachment): ?>
-                                        <?php echo afrisense_support_attachment_html($attachment); ?>
-                                    <?php endforeach; ?>
-                                </div>
-                            <?php endif; ?>
-                            <time><?php echo htmlspecialchars(afrisense_support_time((string) ($message['created_at'] ?? '')), ENT_QUOTES, 'UTF-8'); ?></time>
-                        </div>
-                    </article>
-                <?php endforeach; ?>
+                <?php echo afrisense_support_messages_html($supportConversation, $supportMessages, ['customer', 'guest']); ?>
 
                 <article class="af-chat-message is-agent is-typing" data-support-typing>
                     <span class="af-message-avatar"><i class="bi bi-person-headset" aria-hidden="true"></i></span>
@@ -151,11 +138,11 @@ $supportTopics = [
                 <label class="af-message-input" for="support_message">
                     <input id="support_message" name="message" type="text" placeholder="Type your message..." autocomplete="off">
                 </label>
-                <button class="af-composer-icon" type="button" aria-label="Add emoji" data-support-emoji-toggle><i class="bi bi-emoji-smile" aria-hidden="true"></i></button>
-                <button class="af-composer-icon" type="button" aria-label="Attach file" data-support-attach-toggle><i class="bi bi-paperclip" aria-hidden="true"></i></button>
+                <button class="af-composer-icon" type="button" title="Add emoji" aria-label="Add emoji" data-support-emoji-toggle><i class="bi bi-emoji-smile" aria-hidden="true"></i></button>
+                <button class="af-composer-icon" type="button" title="Attach file" aria-label="Attach file" data-support-attach-toggle><i class="bi bi-paperclip" aria-hidden="true"></i></button>
                 <input class="af-support-file-input" type="file" name="attachment" accept=".jpg,.jpeg,.png,.gif,.webp,.mp4,.webm,.mov,.m4v,.pdf,.doc,.docx,.txt,image/*,video/*" data-support-file-input>
                 <span class="af-attachment-name" data-support-attachment-name></span>
-                <button class="af-send-chat" type="submit" aria-label="Send message"><i class="bi bi-send" aria-hidden="true"></i><span>Send</span></button>
+                <button class="af-send-chat" type="submit" title="Send message" aria-label="Send message"><i class="bi bi-send" aria-hidden="true"></i><span>Send</span></button>
             </form>
         </section>
 

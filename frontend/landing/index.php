@@ -85,6 +85,7 @@ afrisense_enforce_public_site_status($frontendBase);
                 <li><a href="services.php">Catering Packages</a></li>
                 <li><a href="<?php echo htmlspecialchars($homepageBookingHref, ENT_QUOTES, 'UTF-8'); ?>">Book a Service</a></li>
                 <li><a href="remarks.php">Reviews</a></li>
+                <li><a href="<?php echo htmlspecialchars($homepageSupportHref, ENT_QUOTES, 'UTF-8'); ?>">Support</a></li>
                 <li><a href="about.php">About Us</a></li>
                 <li><a href="contact.php">Contact Us</a></li>
             </ul>
@@ -153,13 +154,13 @@ afrisense_enforce_public_site_status($frontendBase);
                         </span>
                     </article>
 
-                    <article class="trust-item">
+                    <a class="trust-item trust-support-link" href="<?php echo htmlspecialchars($homepageSupportHref, ENT_QUOTES, 'UTF-8'); ?>" aria-label="Chat with AfriSense support agent">
                         <i class="bi bi-headset" aria-hidden="true"></i>
                         <span>
                             <strong>24/7 Support</strong>
                             <small>We are always here to help</small>
                         </span>
-                    </article>
+                    </a>
                 </div>
             </div>
 
@@ -229,47 +230,47 @@ afrisense_enforce_public_site_status($frontendBase);
             </div>
 
             <div class="service-grid">
-                <article class="service-card">
+                <a class="service-card service-card-link" href="<?php echo htmlspecialchars($homepageOrderHref, ENT_QUOTES, 'UTF-8'); ?>" aria-label="Open food ordering">
                     <span><i class="bi bi-bell" aria-hidden="true"></i></span>
                     <h3>Food Ordering</h3>
                     <p>Order delicious meals online with ease.</p>
-                    <a href="<?php echo htmlspecialchars($homepageOrderHref, ENT_QUOTES, 'UTF-8'); ?>" aria-label="View food ordering"><i class="bi bi-arrow-right" aria-hidden="true"></i></a>
-                </article>
+                    <i class="bi bi-arrow-right service-card-arrow" aria-hidden="true"></i>
+                </a>
 
-                <article class="service-card">
+                <a class="service-card service-card-link" href="<?php echo htmlspecialchars($homepageBookingHref, ENT_QUOTES, 'UTF-8'); ?>" aria-label="Open service booking">
                     <span><i class="bi bi-calendar3" aria-hidden="true"></i></span>
                     <h3>Service Booking</h3>
                     <p>Book our catering services for any event.</p>
-                    <a href="<?php echo htmlspecialchars($homepageBookingHref, ENT_QUOTES, 'UTF-8'); ?>" aria-label="View service booking"><i class="bi bi-arrow-right" aria-hidden="true"></i></a>
-                </article>
+                    <i class="bi bi-arrow-right service-card-arrow" aria-hidden="true"></i>
+                </a>
 
-                <article class="service-card">
+                <a class="service-card service-card-link" href="services.php" aria-label="Open catering packages">
                     <span><i class="bi bi-gift" aria-hidden="true"></i></span>
                     <h3>Catering Packages</h3>
                     <p>Explore our affordable catering packages.</p>
-                    <a href="services.php" aria-label="View catering packages"><i class="bi bi-arrow-right" aria-hidden="true"></i></a>
-                </article>
+                    <i class="bi bi-arrow-right service-card-arrow" aria-hidden="true"></i>
+                </a>
 
-                <article class="service-card">
+                <a class="service-card service-card-link" href="services.php" aria-label="Open custom menus">
                     <span><i class="bi bi-cup-hot" aria-hidden="true"></i></span>
                     <h3>Custom Menus</h3>
                     <p>We customize menus to fit your occasion.</p>
-                    <a href="services.php" aria-label="View custom menus"><i class="bi bi-arrow-right" aria-hidden="true"></i></a>
-                </article>
+                    <i class="bi bi-arrow-right service-card-arrow" aria-hidden="true"></i>
+                </a>
 
-                <article class="service-card">
+                <a class="service-card service-card-link" href="<?php echo htmlspecialchars($homepageOrderHref, ENT_QUOTES, 'UTF-8'); ?>" aria-label="Open fast delivery ordering">
                     <span><i class="bi bi-truck" aria-hidden="true"></i></span>
                     <h3>Fast Delivery</h3>
                     <p>We deliver fresh and hot meals to you.</p>
-                    <a href="<?php echo htmlspecialchars($homepageOrderHref, ENT_QUOTES, 'UTF-8'); ?>" aria-label="View fast delivery"><i class="bi bi-arrow-right" aria-hidden="true"></i></a>
-                </article>
+                    <i class="bi bi-arrow-right service-card-arrow" aria-hidden="true"></i>
+                </a>
 
-                <article class="service-card">
+                <a class="service-card service-card-link" href="<?php echo htmlspecialchars($homepageSupportHref, ENT_QUOTES, 'UTF-8'); ?>" aria-label="Open AfriSense support agent chat">
                     <span><i class="bi bi-headset" aria-hidden="true"></i></span>
                     <h3>24/7 Support</h3>
                     <p>Our team is always ready to assist.</p>
-                    <a href="<?php echo htmlspecialchars($homepageSupportHref, ENT_QUOTES, 'UTF-8'); ?>" aria-label="View support"><i class="bi bi-arrow-right" aria-hidden="true"></i></a>
-                </article>
+                    <i class="bi bi-arrow-right service-card-arrow" aria-hidden="true"></i>
+                </a>
             </div>
         </section>
 
@@ -439,6 +440,13 @@ afrisense_enforce_public_site_status($frontendBase);
             <a href="remarks.php">Reviews &amp; Remarks</a>
         </nav>
     </footer>
+
+    <?php if ($homepageUser === null): ?>
+        <a class="guest-support-float" href="<?php echo htmlspecialchars($homepageSupportHref, ENT_QUOTES, 'UTF-8'); ?>" aria-label="Chat with support as a guest">
+            <i class="bi bi-headset" aria-hidden="true"></i>
+            <span>Guest Support</span>
+        </a>
+    <?php endif; ?>
 
     <script src="../assets/js/index.js" defer></script>
 </body>

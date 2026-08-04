@@ -74,6 +74,23 @@ function afrisense_count_orders(PDO $pdo, ?string $status = null): int
     return (int) ($row['count_value'] ?? 0);
 }
 
+function afrisense_order_url(array $overrides = [], string $anchor = ''): string
+{
+    $params = $_GET;
+
+    foreach ($overrides as $key => $value) {
+        if ($value === null || $value === '') {
+            unset($params[$key]);
+        } else {
+            $params[$key] = (string) $value;
+        }
+    }
+
+    $query = http_build_query($params);
+
+    return 'orders.php' . ($query !== '' ? '?' . $query : '') . $anchor;
+}
+
 function afrisense_order_status_actions(string $status): array
 {
     return match ($status) {
@@ -265,6 +282,8 @@ $validPaymentStatuses = ['Pending', 'Paid', 'Failed', 'Refunded'];
 $statusFilter = (string) ($_GET['status'] ?? '');
 $search = trim((string) ($_GET['search'] ?? ''));
 $viewOrderId = (int) ($_GET['view'] ?? 0);
+$page = max(1, (int) ($_GET['page'] ?? 1));
+$offset = ($page - 1) * $itemsPerPage;
 $flashMessage = '';
 $flashType = 'success';
 $activeAdminPage = match ($statusFilter) {
@@ -370,6 +389,18 @@ try {
         $params['search'] = '%' . $search . '%';
     }
 
+    $fromSql = ' FROM `orders` o
+            INNER JOIN `customers` c ON c.`id` = o.`customer_id`
+            INNER JOIN `foods` f ON f.`id` = o.`food_id`';
+    $whereSql = $where !== [] ? ' WHERE ' . implode(' AND ', $where) : '';
+
+    $countStatement = $pdo->prepare('SELECT COUNT(*)' . $fromSql . $whereSql);
+    $countStatement->execute($params);
+    $filteredOrderCount = (int) $countStatement->fetchColumn();
+    $totalPages = max(1, (int) ceil($filteredOrderCount / max(1, $itemsPerPage)));
+    $page = min($page, $totalPages);
+    $offset = ($page - 1) * $itemsPerPage;
+
     $sql = 'SELECT
                 o.`id`,
                 o.`quantity`,
@@ -385,15 +416,9 @@ try {
                 c.`phone_number`,
                 f.`food_name`,
                 f.`image`
-            FROM `orders` o
-            INNER JOIN `customers` c ON c.`id` = o.`customer_id`
-            INNER JOIN `foods` f ON f.`id` = o.`food_id`';
-
-    if ($where !== []) {
-        $sql .= ' WHERE ' . implode(' AND ', $where);
-    }
-
-    $sql .= ' ORDER BY o.`ordered_at` DESC, o.`id` DESC LIMIT ' . $itemsPerPage;
+            ' . $fromSql . $whereSql . '
+            ORDER BY o.`ordered_at` DESC, o.`id` DESC
+            LIMIT ' . $itemsPerPage . ' OFFSET ' . $offset;
     $statement = $pdo->prepare($sql);
     $statement->execute($params);
     $orders = $statement->fetchAll(PDO::FETCH_ASSOC);
@@ -442,6 +467,10 @@ try {
 } catch (Throwable $exception) {
     $orders = [];
     $totalOrders = 0;
+    $filteredOrderCount = 0;
+    $totalPages = 1;
+    $page = 1;
+    $offset = 0;
     $pendingOrders = 0;
     $preparingOrders = 0;
     $deliveredOrders = 0;
@@ -503,7 +532,7 @@ ob_start();
     </section>
 
     <section class="af-orders-workspace">
-        <section class="af-menu-table-card">
+        <section class="af-menu-table-card" id="orders-table">
             <form class="af-menu-filters af-orders-filters" action="orders.php" method="get">
                 <label class="af-menu-search" for="order_search">
                     <i class="bi bi-search" aria-hidden="true"></i>
@@ -603,7 +632,7 @@ ob_start();
                                 <td><span class="af-payment-status <?php echo htmlspecialchars($paymentClass, ENT_QUOTES, 'UTF-8'); ?>"><?php echo htmlspecialchars($paymentLabel, ENT_QUOTES, 'UTF-8'); ?></span></td>
                                 <td>
                                     <div class="af-row-actions af-order-row-actions">
-                                        <a href="orders.php?view=<?php echo htmlspecialchars((string) ($order['id'] ?? 0), ENT_QUOTES, 'UTF-8'); ?>#order-row-<?php echo htmlspecialchars((string) ($order['id'] ?? 0), ENT_QUOTES, 'UTF-8'); ?>" aria-label="View order <?php echo htmlspecialchars((string) ($order['id'] ?? ''), ENT_QUOTES, 'UTF-8'); ?>"><i class="bi bi-eye" aria-hidden="true"></i></a>
+                                        <a href="orders.php?view=<?php echo htmlspecialchars((string) ($order['id'] ?? 0), ENT_QUOTES, 'UTF-8'); ?>#order-row-<?php echo htmlspecialchars((string) ($order['id'] ?? 0), ENT_QUOTES, 'UTF-8'); ?>" title="View order details" aria-label="View order <?php echo htmlspecialchars((string) ($order['id'] ?? ''), ENT_QUOTES, 'UTF-8'); ?>"><i class="bi bi-eye" aria-hidden="true"></i></a>
                                         <?php foreach (afrisense_order_status_actions($orderStatus) as $actionConfig): ?>
                                             <?php echo afrisense_order_action_form((int) ($order['id'] ?? 0), 'update_order_status', 'order_status', $actionConfig); ?>
                                         <?php endforeach; ?>
@@ -619,14 +648,17 @@ ob_start();
             </div>
 
             <footer class="af-menu-pagination">
-                <p>Showing 1 to <?php echo htmlspecialchars((string) count($orders), ENT_QUOTES, 'UTF-8'); ?> of <?php echo htmlspecialchars((string) $totalOrders, ENT_QUOTES, 'UTF-8'); ?> orders</p>
+                <p>Showing <?php echo htmlspecialchars((string) ($filteredOrderCount > 0 ? $offset + 1 : 0), ENT_QUOTES, 'UTF-8'); ?> to <?php echo htmlspecialchars((string) min($offset + count($orders), $filteredOrderCount), ENT_QUOTES, 'UTF-8'); ?> of <?php echo htmlspecialchars((string) $filteredOrderCount, ENT_QUOTES, 'UTF-8'); ?> orders</p>
                 <nav aria-label="Orders pagination">
-                    <a href="#" aria-label="Previous page"><i class="bi bi-chevron-left" aria-hidden="true"></i></a>
-                    <a class="active" href="#">1</a>
-                    <a href="#">2</a>
-                    <a href="#">3</a>
-                    <span>...</span>
-                    <a href="#" aria-label="Next page"><i class="bi bi-chevron-right" aria-hidden="true"></i></a>
+                    <a class="<?php echo $page <= 1 ? 'is-disabled' : ''; ?>" href="<?php echo htmlspecialchars($page <= 1 ? '#' : afrisense_order_url(['page' => (string) ($page - 1), 'view' => null], '#orders-table'), ENT_QUOTES, 'UTF-8'); ?>" aria-label="Previous page" title="Previous page"><i class="bi bi-chevron-left" aria-hidden="true"></i></a>
+                    <?php for ($number = max(1, $page - 1); $number <= min($totalPages, $page + 1); $number++): ?>
+                        <a class="<?php echo $number === $page ? 'active' : ''; ?>" href="<?php echo htmlspecialchars(afrisense_order_url(['page' => (string) $number, 'view' => null], '#orders-table'), ENT_QUOTES, 'UTF-8'); ?>"><?php echo htmlspecialchars((string) $number, ENT_QUOTES, 'UTF-8'); ?></a>
+                    <?php endfor; ?>
+                    <?php if ($totalPages > $page + 1): ?>
+                        <span>...</span>
+                        <a href="<?php echo htmlspecialchars(afrisense_order_url(['page' => (string) $totalPages, 'view' => null], '#orders-table'), ENT_QUOTES, 'UTF-8'); ?>"><?php echo htmlspecialchars((string) $totalPages, ENT_QUOTES, 'UTF-8'); ?></a>
+                    <?php endif; ?>
+                    <a class="<?php echo $page >= $totalPages ? 'is-disabled' : ''; ?>" href="<?php echo htmlspecialchars($page >= $totalPages ? '#' : afrisense_order_url(['page' => (string) ($page + 1), 'view' => null], '#orders-table'), ENT_QUOTES, 'UTF-8'); ?>" aria-label="Next page" title="Next page"><i class="bi bi-chevron-right" aria-hidden="true"></i></a>
                 </nav>
             </footer>
         </section>

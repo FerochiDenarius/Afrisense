@@ -118,10 +118,10 @@ function afrisense_require_admin(): array
     return $user;
 }
 
-function afrisense_customer_role_id(PDO $pdo): int
+function afrisense_ensure_role(PDO $pdo, string $roleName, string $description = ''): int
 {
-    $statement = $pdo->prepare('SELECT `id` FROM `roles` WHERE LOWER(`rolename`) = :role LIMIT 1');
-    $statement->execute(['role' => 'customer']);
+    $statement = $pdo->prepare('SELECT `id` FROM `roles` WHERE LOWER(`rolename`) = LOWER(:role) LIMIT 1');
+    $statement->execute(['role' => $roleName]);
     $role = $statement->fetch(PDO::FETCH_ASSOC);
 
     if ($role !== false) {
@@ -130,11 +130,21 @@ function afrisense_customer_role_id(PDO $pdo): int
 
     $statement = $pdo->prepare('INSERT INTO `roles` (`rolename`, `description`) VALUES (:role, :description)');
     $statement->execute([
-        'role' => 'Customer',
-        'description' => 'Public customer account',
+        'role' => $roleName,
+        'description' => $description !== '' ? $description : null,
     ]);
 
     return (int) $pdo->lastInsertId();
+}
+
+function afrisense_customer_role_id(PDO $pdo): int
+{
+    return afrisense_ensure_role($pdo, 'Customer', 'Public customer account');
+}
+
+function afrisense_delivery_rider_role_id(PDO $pdo): int
+{
+    return afrisense_ensure_role($pdo, 'Delivery Rider', 'Handles delivery assignments, pickup and order delivery updates.');
 }
 
 function afrisense_unique_username(PDO $pdo, string $email, string $fallbackName): string

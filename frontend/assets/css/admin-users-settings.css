@@ -1967,6 +1967,20 @@
     cursor: pointer;
 }
 
+.af-role-details-card .af-role-permission-link {
+    min-height: 40px;
+    border: 1px solid var(--af-gold);
+    border-radius: 7px;
+    background: #fff;
+    color: var(--af-gold);
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 13px;
+    font-weight: 850;
+    text-decoration: none;
+}
+
 .af-role-help-card h2 {
     display: flex;
     align-items: center;

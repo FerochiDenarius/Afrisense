@@ -629,6 +629,13 @@
     box-shadow: 0 14px 24px rgba(183, 123, 26, 0.3);
 }
 
+.af-send-chat:disabled,
+.af-send-chat.is-sending {
+    cursor: wait;
+    opacity: 0.72;
+    transform: none;
+}
+
 .af-admin-reply-composer {
     display: grid;
     grid-template-columns: minmax(0, 1fr) auto auto auto auto;

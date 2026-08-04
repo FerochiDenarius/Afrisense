@@ -44,11 +44,32 @@ function afrisense_admin_user_form_value(string $key): string
     return trim((string) ($_POST[$key] ?? ''));
 }
 
+function afrisense_admin_user_url(array $overrides = [], string $anchor = ''): string
+{
+    $params = $_GET;
+
+    foreach ($overrides as $key => $value) {
+        if ($value === null || $value === '') {
+            unset($params[$key]);
+        } else {
+            $params[$key] = (string) $value;
+        }
+    }
+
+    $query = http_build_query($params);
+
+    return 'users.php' . ($query !== '' ? '?' . $query : '') . $anchor;
+}
+
 try {
     $pdo = afrisense_pdo();
+    afrisense_delivery_rider_role_id($pdo);
+
     $search = trim((string) ($_GET['search'] ?? ''));
     $roleFilter = (int) ($_GET['role'] ?? 0);
     $verifiedFilter = trim((string) ($_GET['verified'] ?? ''));
+    $page = max(1, (int) ($_GET['page'] ?? 1));
+    $offset = ($page - 1) * $itemsPerPage;
     $flashMessage = '';
     $flashType = 'success';
 
@@ -150,6 +171,11 @@ try {
     }
 
     $whereSql = $where !== [] ? 'WHERE ' . implode(' AND ', $where) : '';
+    $filteredUserCount = afrisense_count_users($pdo, $where !== [] ? implode(' AND ', $where) : '1 = 1', $params);
+    $totalPages = max(1, (int) ceil($filteredUserCount / max(1, $itemsPerPage)));
+    $page = min($page, $totalPages);
+    $offset = ($page - 1) * $itemsPerPage;
+
     $statement = $pdo->prepare(
         'SELECT
             u.`id`,
@@ -164,7 +190,7 @@ try {
          LEFT JOIN `roles` r ON r.`id` = u.`role_id`
          ' . $whereSql . '
          ORDER BY u.`id` DESC
-         LIMIT ' . $itemsPerPage
+         LIMIT ' . $itemsPerPage . ' OFFSET ' . $offset
     );
     $statement->execute($params);
     $users = $statement->fetchAll(PDO::FETCH_ASSOC);
@@ -180,6 +206,10 @@ try {
     $search = '';
     $roleFilter = 0;
     $verifiedFilter = '';
+    $filteredUserCount = 0;
+    $totalPages = 1;
+    $page = 1;
+    $offset = 0;
     $flashMessage = '';
     $flashType = 'error';
     $loadError = 'Users could not be loaded. Check that MySQL is running.';
@@ -275,7 +305,7 @@ ob_start();
         </form>
     </section>
 
-    <section class="af-menu-table-card">
+    <section class="af-menu-table-card" id="users-table">
         <form class="af-menu-filters af-users-filters" action="users.php" method="get">
             <label class="af-menu-search" for="user_search">
                 <i class="bi bi-search" aria-hidden="true"></i>
@@ -341,7 +371,7 @@ ob_start();
                         $joined = strtotime((string) ($user['created_at'] ?? '')) ?: time();
                         ?>
                         <tr>
-                            <td><?php echo htmlspecialchars((string) ($index + 1), ENT_QUOTES, 'UTF-8'); ?></td>
+                            <td><?php echo htmlspecialchars((string) ($offset + $index + 1), ENT_QUOTES, 'UTF-8'); ?></td>
                             <td>
                                 <div class="af-user-cell">
                                     <img class="af-user-avatar" src="<?php echo htmlspecialchars($frontendBase . '/assets/images/foodimage.jpeg', ENT_QUOTES, 'UTF-8'); ?>" alt="">
@@ -373,9 +403,9 @@ ob_start();
                             </td>
                             <td>
                                 <div class="af-row-actions">
-                                    <button type="button" aria-label="View <?php echo htmlspecialchars((string) ($user['fullname'] ?? 'user'), ENT_QUOTES, 'UTF-8'); ?>"><i class="bi bi-eye" aria-hidden="true"></i></button>
-                                    <button type="button" aria-label="Edit <?php echo htmlspecialchars((string) ($user['fullname'] ?? 'user'), ENT_QUOTES, 'UTF-8'); ?>"><i class="bi bi-pencil-square" aria-hidden="true"></i></button>
-                                    <button type="button" aria-label="More actions"><i class="bi bi-three-dots-vertical" aria-hidden="true"></i></button>
+                                    <button type="button" title="View user details" aria-label="View <?php echo htmlspecialchars((string) ($user['fullname'] ?? 'user'), ENT_QUOTES, 'UTF-8'); ?>"><i class="bi bi-eye" aria-hidden="true"></i></button>
+                                    <button type="button" title="Edit user" aria-label="Edit <?php echo htmlspecialchars((string) ($user['fullname'] ?? 'user'), ENT_QUOTES, 'UTF-8'); ?>"><i class="bi bi-pencil-square" aria-hidden="true"></i></button>
+                                    <button type="button" title="More user actions" aria-label="More actions"><i class="bi bi-three-dots-vertical" aria-hidden="true"></i></button>
                                 </div>
                             </td>
                         </tr>
@@ -385,15 +415,17 @@ ob_start();
         </div>
 
         <footer class="af-menu-pagination">
-            <p>Showing 1 to <?php echo htmlspecialchars((string) count($users), ENT_QUOTES, 'UTF-8'); ?> of <?php echo htmlspecialchars((string) $totalUsers, ENT_QUOTES, 'UTF-8'); ?> users</p>
+            <p>Showing <?php echo htmlspecialchars((string) ($filteredUserCount > 0 ? $offset + 1 : 0), ENT_QUOTES, 'UTF-8'); ?> to <?php echo htmlspecialchars((string) min($offset + count($users), $filteredUserCount), ENT_QUOTES, 'UTF-8'); ?> of <?php echo htmlspecialchars((string) $filteredUserCount, ENT_QUOTES, 'UTF-8'); ?> users</p>
             <nav aria-label="Users pagination">
-                <a href="#" aria-label="Previous page"><i class="bi bi-chevron-left" aria-hidden="true"></i></a>
-                <a class="active" href="#">1</a>
-                <a href="#">2</a>
-                <a href="#">3</a>
-                <span>...</span>
-                <a href="#">19</a>
-                <a href="#" aria-label="Next page"><i class="bi bi-chevron-right" aria-hidden="true"></i></a>
+                <a class="<?php echo $page <= 1 ? 'is-disabled' : ''; ?>" href="<?php echo htmlspecialchars($page <= 1 ? '#' : afrisense_admin_user_url(['page' => (string) ($page - 1)], '#users-table'), ENT_QUOTES, 'UTF-8'); ?>" aria-label="Previous page" title="Previous page"><i class="bi bi-chevron-left" aria-hidden="true"></i></a>
+                <?php for ($number = max(1, $page - 1); $number <= min($totalPages, $page + 1); $number++): ?>
+                    <a class="<?php echo $number === $page ? 'active' : ''; ?>" href="<?php echo htmlspecialchars(afrisense_admin_user_url(['page' => (string) $number], '#users-table'), ENT_QUOTES, 'UTF-8'); ?>"><?php echo htmlspecialchars((string) $number, ENT_QUOTES, 'UTF-8'); ?></a>
+                <?php endfor; ?>
+                <?php if ($totalPages > $page + 1): ?>
+                    <span>...</span>
+                    <a href="<?php echo htmlspecialchars(afrisense_admin_user_url(['page' => (string) $totalPages], '#users-table'), ENT_QUOTES, 'UTF-8'); ?>"><?php echo htmlspecialchars((string) $totalPages, ENT_QUOTES, 'UTF-8'); ?></a>
+                <?php endif; ?>
+                <a class="<?php echo $page >= $totalPages ? 'is-disabled' : ''; ?>" href="<?php echo htmlspecialchars($page >= $totalPages ? '#' : afrisense_admin_user_url(['page' => (string) ($page + 1)], '#users-table'), ENT_QUOTES, 'UTF-8'); ?>" aria-label="Next page" title="Next page"><i class="bi bi-chevron-right" aria-hidden="true"></i></a>
             </nav>
         </footer>
     </section>

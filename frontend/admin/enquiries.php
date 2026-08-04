@@ -247,6 +247,8 @@ function afrisense_redirect_enquiries(array $filters, int $viewId = 0): never
 $filters = afrisense_enquiry_filters();
 $validStatuses = array_keys(afrisense_enquiry_statuses());
 $viewEnquiryId = (int) ($_GET['view'] ?? 0);
+$page = max(1, (int) ($_GET['page'] ?? 1));
+$offset = ($page - 1) * $itemsPerPage;
 $loadError = '';
 $flash = afrisense_flash_get();
 
@@ -344,6 +346,18 @@ try {
         ? 'ORDER BY e.`created_at` ASC, e.`id` ASC'
         : 'ORDER BY e.`created_at` DESC, e.`id` DESC';
 
+    $countStatement = $pdo->prepare(
+        'SELECT COUNT(*)
+         FROM `enquiries` e
+         LEFT JOIN `customers` c ON c.`id` = e.`customer_id`
+         ' . $whereSql
+    );
+    $countStatement->execute($params);
+    $filteredEnquiryCount = (int) $countStatement->fetchColumn();
+    $totalPages = max(1, (int) ceil($filteredEnquiryCount / max(1, $itemsPerPage)));
+    $page = min($page, $totalPages);
+    $offset = ($page - 1) * $itemsPerPage;
+
     $statement = $pdo->prepare(
         'SELECT
             e.`id`,
@@ -361,7 +375,7 @@ try {
          LEFT JOIN `customers` c ON c.`id` = e.`customer_id`
          ' . $whereSql . '
          ' . $orderSql . '
-         LIMIT ' . $itemsPerPage
+         LIMIT ' . $itemsPerPage . ' OFFSET ' . $offset
     );
     $statement->execute($params);
     $enquiries = $statement->fetchAll(PDO::FETCH_ASSOC);
@@ -376,6 +390,10 @@ try {
     $enquiries = [];
     $selectedEnquiry = null;
     $totalEnquiries = 0;
+    $filteredEnquiryCount = 0;
+    $totalPages = 1;
+    $page = 1;
+    $offset = 0;
     $pendingEnquiries = 0;
     $readEnquiries = 0;
     $repliedEnquiries = 0;
@@ -680,10 +698,18 @@ ob_start();
         </div>
 
         <footer class="af-menu-pagination">
-            <p>Showing 1 to <?php echo htmlspecialchars((string) count($enquiries), ENT_QUOTES, 'UTF-8'); ?> of <?php echo htmlspecialchars((string) $totalEnquiries, ENT_QUOTES, 'UTF-8'); ?> enquiries</p>
-            <div>
-                <a class="is-active" href="<?php echo htmlspecialchars(afrisense_enquiry_url($filters), ENT_QUOTES, 'UTF-8'); ?>">1</a>
-            </div>
+            <p>Showing <?php echo htmlspecialchars((string) ($filteredEnquiryCount > 0 ? $offset + 1 : 0), ENT_QUOTES, 'UTF-8'); ?> to <?php echo htmlspecialchars((string) min($offset + count($enquiries), $filteredEnquiryCount), ENT_QUOTES, 'UTF-8'); ?> of <?php echo htmlspecialchars((string) $filteredEnquiryCount, ENT_QUOTES, 'UTF-8'); ?> enquiries</p>
+            <nav aria-label="Enquiries pagination">
+                <a class="<?php echo $page <= 1 ? 'is-disabled' : ''; ?>" href="<?php echo htmlspecialchars($page <= 1 ? '#' : afrisense_enquiry_url($filters, ['page' => (string) ($page - 1), 'view' => null], '#enquiries-table'), ENT_QUOTES, 'UTF-8'); ?>" aria-label="Previous page" title="Previous page"><i class="bi bi-chevron-left" aria-hidden="true"></i></a>
+                <?php for ($number = max(1, $page - 1); $number <= min($totalPages, $page + 1); $number++): ?>
+                    <a class="<?php echo $number === $page ? 'active' : ''; ?>" href="<?php echo htmlspecialchars(afrisense_enquiry_url($filters, ['page' => (string) $number, 'view' => null], '#enquiries-table'), ENT_QUOTES, 'UTF-8'); ?>"><?php echo htmlspecialchars((string) $number, ENT_QUOTES, 'UTF-8'); ?></a>
+                <?php endfor; ?>
+                <?php if ($totalPages > $page + 1): ?>
+                    <span>...</span>
+                    <a href="<?php echo htmlspecialchars(afrisense_enquiry_url($filters, ['page' => (string) $totalPages, 'view' => null], '#enquiries-table'), ENT_QUOTES, 'UTF-8'); ?>"><?php echo htmlspecialchars((string) $totalPages, ENT_QUOTES, 'UTF-8'); ?></a>
+                <?php endif; ?>
+                <a class="<?php echo $page >= $totalPages ? 'is-disabled' : ''; ?>" href="<?php echo htmlspecialchars($page >= $totalPages ? '#' : afrisense_enquiry_url($filters, ['page' => (string) ($page + 1), 'view' => null], '#enquiries-table'), ENT_QUOTES, 'UTF-8'); ?>" aria-label="Next page" title="Next page"><i class="bi bi-chevron-right" aria-hidden="true"></i></a>
+            </nav>
         </footer>
     </section>
 </section>

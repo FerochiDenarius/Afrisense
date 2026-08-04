@@ -52,10 +52,18 @@ $adminGroups = [
         ],
     ],
     [
+        'label' => 'Delivery',
+        'items' => [
+            ['key' => 'delivery_management', 'label' => 'Delivery Management', 'icon' => 'bi-truck', 'href' => $frontendBase . '/admin/delivery-management.php'],
+            ['key' => 'delivery_riders', 'label' => 'Delivery Riders', 'icon' => 'bi-person-vcard', 'href' => $frontendBase . '/admin/users.php#add_user_form'],
+            ['key' => 'delivery_settings', 'label' => 'Delivery Settings', 'icon' => 'bi-gear-wide-connected', 'href' => $frontendBase . '/admin/settings/index.php?section=delivery'],
+        ],
+    ],
+    [
         'label' => 'Administration',
         'items' => [
             ['key' => 'roles', 'label' => 'Roles', 'icon' => 'bi-person-gear', 'href' => $frontendBase . '/admin/roles.php', 'expandable' => true],
-            ['key' => 'permissions', 'label' => 'Permissions', 'icon' => 'bi-shield-check', 'href' => $frontendBase . '/admin/roles.php', 'expandable' => true],
+            ['key' => 'permissions', 'label' => 'Permissions', 'icon' => 'bi-shield-check', 'href' => $frontendBase . '/admin/permissions.php', 'expandable' => true],
             ['key' => 'settings', 'label' => 'Settings', 'icon' => 'bi-gear', 'href' => $frontendBase . '/admin/settings/index.php'],
             ['key' => 'notifications', 'label' => 'Notifications', 'icon' => 'bi-bell', 'href' => $frontendBase . '/admin/notifications.php'],
         ],
@@ -100,7 +108,7 @@ if (isset($authUser) && function_exists('afrisense_is_administrator') && !afrise
             <small><?php echo htmlspecialchars($adminRole, ENT_QUOTES, 'UTF-8'); ?></small>
             <span><i aria-hidden="true"></i> Online</span>
         </div>
-        <button type="button" aria-label="Profile options">
+        <button type="button" title="Profile options" aria-label="Profile options">
             <i class="bi bi-chevron-down" aria-hidden="true"></i>
         </button>
     </section>

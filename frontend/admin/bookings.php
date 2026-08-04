@@ -39,6 +39,23 @@ function afrisense_count_bookings(PDO $pdo, ?string $status = null): int
     return (int) ($row['count_value'] ?? 0);
 }
 
+function afrisense_booking_url(array $overrides = [], string $anchor = ''): string
+{
+    $params = $_GET;
+
+    foreach ($overrides as $key => $value) {
+        if ($value === null || $value === '') {
+            unset($params[$key]);
+        } else {
+            $params[$key] = (string) $value;
+        }
+    }
+
+    $query = http_build_query($params);
+
+    return 'bookings.php' . ($query !== '' ? '?' . $query : '') . $anchor;
+}
+
 function afrisense_booking_customer_user_id(PDO $pdo, int $bookingId): ?int
 {
     $statement = $pdo->prepare(
@@ -85,6 +102,8 @@ function afrisense_booking_notify_customer(PDO $pdo, int $bookingId, string $sta
 $validStatuses = ['Pending', 'Confirmed', 'Completed', 'Cancelled'];
 $statusFilter = (string) ($_GET['status'] ?? '');
 $search = trim((string) ($_GET['search'] ?? ''));
+$page = max(1, (int) ($_GET['page'] ?? 1));
+$offset = ($page - 1) * $itemsPerPage;
 $flashMessage = '';
 $flashType = 'success';
 
@@ -130,6 +149,18 @@ try {
         $params['search'] = '%' . $search . '%';
     }
 
+    $fromSql = ' FROM `bookings` b
+            LEFT JOIN `customers` c ON c.`id` = b.`customer_id`
+            LEFT JOIN `services` s ON s.`id` = b.`service_id`';
+    $whereSql = $where !== [] ? ' WHERE ' . implode(' AND ', $where) : '';
+
+    $countStatement = $pdo->prepare('SELECT COUNT(*)' . $fromSql . $whereSql);
+    $countStatement->execute($params);
+    $filteredBookingCount = (int) $countStatement->fetchColumn();
+    $totalPages = max(1, (int) ceil($filteredBookingCount / max(1, $itemsPerPage)));
+    $page = min($page, $totalPages);
+    $offset = ($page - 1) * $itemsPerPage;
+
     $sql = 'SELECT
                 b.`id`,
                 b.`event_date`,
@@ -144,15 +175,9 @@ try {
                 COALESCE(c.`phone_number`, \'\') AS phone_number,
                 COALESCE(s.`service_name`, \'Unknown Service\') AS service_name,
                 COALESCE(s.`price`, 0) AS price
-            FROM `bookings` b
-            LEFT JOIN `customers` c ON c.`id` = b.`customer_id`
-            LEFT JOIN `services` s ON s.`id` = b.`service_id`';
-
-    if ($where !== []) {
-        $sql .= ' WHERE ' . implode(' AND ', $where);
-    }
-
-    $sql .= ' ORDER BY b.`event_date` ASC, b.`event_time` ASC, b.`id` DESC LIMIT ' . $itemsPerPage;
+            ' . $fromSql . $whereSql . '
+            ORDER BY b.`event_date` ASC, b.`event_time` ASC, b.`id` DESC
+            LIMIT ' . $itemsPerPage . ' OFFSET ' . $offset;
     $statement = $pdo->prepare($sql);
     $statement->execute($params);
     $bookings = $statement->fetchAll(PDO::FETCH_ASSOC);
@@ -187,6 +212,10 @@ try {
     $bookings = [];
     $topServices = [];
     $totalBookings = 0;
+    $filteredBookingCount = 0;
+    $totalPages = 1;
+    $page = 1;
+    $offset = 0;
     $pendingBookings = 0;
     $confirmedBookings = 0;
     $completedBookings = 0;
@@ -251,7 +280,7 @@ ob_start();
     </section>
 
     <section class="af-bookings-workspace">
-        <section class="af-menu-table-card">
+        <section class="af-menu-table-card" id="bookings-table">
             <form class="af-bookings-filters" action="bookings.php" method="get">
                 <label class="af-menu-search" for="booking_search">
                     <i class="bi bi-search" aria-hidden="true"></i>
@@ -333,39 +362,39 @@ ob_start();
                                 <td><?php echo htmlspecialchars((string) ($booking['event_location'] ?? ''), ENT_QUOTES, 'UTF-8'); ?></td>
                                 <td>
                                     <div class="af-row-actions af-booking-row-actions">
-                                        <button type="button" aria-label="View booking"><i class="bi bi-eye" aria-hidden="true"></i></button>
+                                        <button type="button" title="View booking details" aria-label="View booking"><i class="bi bi-eye" aria-hidden="true"></i></button>
                                         <?php if ($status === 'Pending'): ?>
                                             <form action="bookings.php" method="post">
                                                 <input type="hidden" name="action" value="update_status">
                                                 <input type="hidden" name="booking_id" value="<?php echo htmlspecialchars((string) ($booking['id'] ?? 0), ENT_QUOTES, 'UTF-8'); ?>">
                                                 <input type="hidden" name="booking_status" value="Confirmed">
-                                                <button class="success" type="submit" aria-label="Confirm booking"><i class="bi bi-check2" aria-hidden="true"></i></button>
+                                                <button class="success" type="submit" title="Confirm booking" aria-label="Confirm booking"><i class="bi bi-check2" aria-hidden="true"></i></button>
                                             </form>
                                             <form action="bookings.php" method="post">
                                                 <input type="hidden" name="action" value="update_status">
                                                 <input type="hidden" name="booking_id" value="<?php echo htmlspecialchars((string) ($booking['id'] ?? 0), ENT_QUOTES, 'UTF-8'); ?>">
                                                 <input type="hidden" name="booking_status" value="Cancelled">
-                                                <button class="danger" type="submit" aria-label="Cancel booking"><i class="bi bi-x-lg" aria-hidden="true"></i></button>
+                                                <button class="danger" type="submit" title="Cancel booking" aria-label="Cancel booking"><i class="bi bi-x-lg" aria-hidden="true"></i></button>
                                             </form>
                                         <?php elseif ($status === 'Confirmed'): ?>
                                             <form action="bookings.php" method="post">
                                                 <input type="hidden" name="action" value="update_status">
                                                 <input type="hidden" name="booking_id" value="<?php echo htmlspecialchars((string) ($booking['id'] ?? 0), ENT_QUOTES, 'UTF-8'); ?>">
                                                 <input type="hidden" name="booking_status" value="Completed">
-                                                <button class="success" type="submit" aria-label="Mark booking completed"><i class="bi bi-check2-circle" aria-hidden="true"></i></button>
+                                                <button class="success" type="submit" title="Mark booking completed" aria-label="Mark booking completed"><i class="bi bi-check2-circle" aria-hidden="true"></i></button>
                                             </form>
                                             <form action="bookings.php" method="post">
                                                 <input type="hidden" name="action" value="update_status">
                                                 <input type="hidden" name="booking_id" value="<?php echo htmlspecialchars((string) ($booking['id'] ?? 0), ENT_QUOTES, 'UTF-8'); ?>">
                                                 <input type="hidden" name="booking_status" value="Cancelled">
-                                                <button class="danger" type="submit" aria-label="Cancel booking"><i class="bi bi-x-lg" aria-hidden="true"></i></button>
+                                                <button class="danger" type="submit" title="Cancel booking" aria-label="Cancel booking"><i class="bi bi-x-lg" aria-hidden="true"></i></button>
                                             </form>
                                         <?php elseif ($status === 'Cancelled'): ?>
                                             <form action="bookings.php" method="post">
                                                 <input type="hidden" name="action" value="update_status">
                                                 <input type="hidden" name="booking_id" value="<?php echo htmlspecialchars((string) ($booking['id'] ?? 0), ENT_QUOTES, 'UTF-8'); ?>">
                                                 <input type="hidden" name="booking_status" value="Pending">
-                                                <button class="warning" type="submit" aria-label="Reopen booking"><i class="bi bi-arrow-counterclockwise" aria-hidden="true"></i></button>
+                                                <button class="warning" type="submit" title="Reopen booking" aria-label="Reopen booking"><i class="bi bi-arrow-counterclockwise" aria-hidden="true"></i></button>
                                             </form>
                                         <?php endif; ?>
                                     </div>
@@ -377,12 +406,17 @@ ob_start();
             </div>
 
             <footer class="af-menu-pagination">
-                <p>Showing 1 to <?php echo htmlspecialchars((string) count($bookings), ENT_QUOTES, 'UTF-8'); ?> of <?php echo htmlspecialchars((string) $totalBookings, ENT_QUOTES, 'UTF-8'); ?> bookings</p>
+                <p>Showing <?php echo htmlspecialchars((string) ($filteredBookingCount > 0 ? $offset + 1 : 0), ENT_QUOTES, 'UTF-8'); ?> to <?php echo htmlspecialchars((string) min($offset + count($bookings), $filteredBookingCount), ENT_QUOTES, 'UTF-8'); ?> of <?php echo htmlspecialchars((string) $filteredBookingCount, ENT_QUOTES, 'UTF-8'); ?> bookings</p>
                 <nav aria-label="Bookings pagination">
-                    <a href="#" aria-label="Previous page"><i class="bi bi-chevron-left" aria-hidden="true"></i></a>
-                    <a class="active" href="#">1</a>
-                    <a href="#">2</a>
-                    <a href="#" aria-label="Next page"><i class="bi bi-chevron-right" aria-hidden="true"></i></a>
+                    <a class="<?php echo $page <= 1 ? 'is-disabled' : ''; ?>" href="<?php echo htmlspecialchars($page <= 1 ? '#' : afrisense_booking_url(['page' => (string) ($page - 1)], '#bookings-table'), ENT_QUOTES, 'UTF-8'); ?>" aria-label="Previous page" title="Previous page"><i class="bi bi-chevron-left" aria-hidden="true"></i></a>
+                    <?php for ($number = max(1, $page - 1); $number <= min($totalPages, $page + 1); $number++): ?>
+                        <a class="<?php echo $number === $page ? 'active' : ''; ?>" href="<?php echo htmlspecialchars(afrisense_booking_url(['page' => (string) $number], '#bookings-table'), ENT_QUOTES, 'UTF-8'); ?>"><?php echo htmlspecialchars((string) $number, ENT_QUOTES, 'UTF-8'); ?></a>
+                    <?php endfor; ?>
+                    <?php if ($totalPages > $page + 1): ?>
+                        <span>...</span>
+                        <a href="<?php echo htmlspecialchars(afrisense_booking_url(['page' => (string) $totalPages], '#bookings-table'), ENT_QUOTES, 'UTF-8'); ?>"><?php echo htmlspecialchars((string) $totalPages, ENT_QUOTES, 'UTF-8'); ?></a>
+                    <?php endif; ?>
+                    <a class="<?php echo $page >= $totalPages ? 'is-disabled' : ''; ?>" href="<?php echo htmlspecialchars($page >= $totalPages ? '#' : afrisense_booking_url(['page' => (string) ($page + 1)], '#bookings-table'), ENT_QUOTES, 'UTF-8'); ?>" aria-label="Next page" title="Next page"><i class="bi bi-chevron-right" aria-hidden="true"></i></a>
                 </nav>
             </footer>
         </section>

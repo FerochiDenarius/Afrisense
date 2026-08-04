@@ -92,6 +92,8 @@ $filters = [
     'rating' => trim((string) ($_GET['rating'] ?? '')),
     'food' => trim((string) ($_GET['food'] ?? '')),
 ];
+$itemsPerPage = min(8, afrisense_admin_items_per_page());
+$page = max(1, (int) ($_GET['page'] ?? 1));
 $validStatuses = ['Published', 'Pending', 'Rejected'];
 $foodOptions = array_values(array_unique(array_map(static fn (array $remark): string => (string) $remark['food'], $remarks)));
 $filteredRemarks = array_values(array_filter($remarks, static function (array $remark) use ($filters, $validStatuses): bool {
@@ -115,6 +117,12 @@ $filteredRemarks = array_values(array_filter($remarks, static function (array $r
 
     return true;
 }));
+
+$totalFilteredRemarks = count($filteredRemarks);
+$totalPages = max(1, (int) ceil($totalFilteredRemarks / max(1, $itemsPerPage)));
+$page = min($page, $totalPages);
+$offset = ($page - 1) * $itemsPerPage;
+$paginatedRemarks = array_slice($filteredRemarks, $offset, $itemsPerPage);
 
 $selectedRemark = null;
 $selectedRemarkId = (int) ($_GET['view'] ?? 0);
@@ -249,13 +257,13 @@ ob_start();
                         </tr>
                     </thead>
                     <tbody>
-                        <?php if ($filteredRemarks === []): ?>
+                        <?php if ($paginatedRemarks === []): ?>
                             <tr><td colspan="8"><div class="af-empty-state">No remarks found.</div></td></tr>
                         <?php endif; ?>
-                        <?php foreach ($filteredRemarks as $index => $remark): ?>
+                        <?php foreach ($paginatedRemarks as $index => $remark): ?>
                             <?php $date = strtotime((string) $remark['date']) ?: time(); ?>
                             <tr id="remark-row-<?php echo htmlspecialchars((string) $remark['id'], ENT_QUOTES, 'UTF-8'); ?>" class="<?php echo (int) $remark['id'] === $selectedRemarkId ? 'is-selected' : ''; ?>">
-                                <td><?php echo htmlspecialchars((string) ($index + 1), ENT_QUOTES, 'UTF-8'); ?></td>
+                                <td><?php echo htmlspecialchars((string) ($offset + $index + 1), ENT_QUOTES, 'UTF-8'); ?></td>
                                 <td>
                                     <span class="af-remark-customer">
                                         <em><?php echo htmlspecialchars(strtoupper(substr((string) $remark['customer'], 0, 1)), ENT_QUOTES, 'UTF-8'); ?></em>
@@ -274,9 +282,9 @@ ob_start();
                                 <td><span class="af-remark-status <?php echo htmlspecialchars(afrisense_remark_status_class((string) $remark['status']), ENT_QUOTES, 'UTF-8'); ?>"><?php echo htmlspecialchars((string) $remark['status'], ENT_QUOTES, 'UTF-8'); ?></span></td>
                                 <td>
                                     <div class="af-row-actions af-remark-actions">
-                                        <a href="<?php echo htmlspecialchars(afrisense_remark_url(array_merge($filters, ['view' => (string) $remark['id']]), '#remark-row-' . (int) $remark['id']), ENT_QUOTES, 'UTF-8'); ?>" aria-label="View remark"><i class="bi bi-eye" aria-hidden="true"></i></a>
-                                        <a href="mailto:<?php echo htmlspecialchars((string) $remark['email'], ENT_QUOTES, 'UTF-8'); ?>?subject=AfriSense%20review%20response" aria-label="Reply to customer"><i class="bi bi-reply" aria-hidden="true"></i></a>
-                                        <a href="<?php echo htmlspecialchars(afrisense_remark_url(['status' => (string) $remark['status']], '#remarks-table'), ENT_QUOTES, 'UTF-8'); ?>" aria-label="More remark actions"><i class="bi bi-three-dots-vertical" aria-hidden="true"></i></a>
+                                        <a href="<?php echo htmlspecialchars(afrisense_remark_url(array_merge($filters, ['view' => (string) $remark['id']]), '#remark-row-' . (int) $remark['id']), ENT_QUOTES, 'UTF-8'); ?>" title="View remark details" aria-label="View remark"><i class="bi bi-eye" aria-hidden="true"></i></a>
+                                        <a href="mailto:<?php echo htmlspecialchars((string) $remark['email'], ENT_QUOTES, 'UTF-8'); ?>?subject=AfriSense%20review%20response" title="Reply to customer" aria-label="Reply to customer"><i class="bi bi-reply" aria-hidden="true"></i></a>
+                                        <a href="<?php echo htmlspecialchars(afrisense_remark_url(['status' => (string) $remark['status']], '#remarks-table'), ENT_QUOTES, 'UTF-8'); ?>" title="More remark actions" aria-label="More remark actions"><i class="bi bi-three-dots-vertical" aria-hidden="true"></i></a>
                                     </div>
                                 </td>
                             </tr>
@@ -286,15 +294,17 @@ ob_start();
             </div>
 
             <footer class="af-menu-pagination af-remarks-pagination">
-                <p>Showing 1 to <?php echo htmlspecialchars((string) count($filteredRemarks), ENT_QUOTES, 'UTF-8'); ?> of <?php echo htmlspecialchars((string) $metricTotals['total'], ENT_QUOTES, 'UTF-8'); ?> remarks</p>
+                <p>Showing <?php echo htmlspecialchars((string) ($totalFilteredRemarks > 0 ? $offset + 1 : 0), ENT_QUOTES, 'UTF-8'); ?> to <?php echo htmlspecialchars((string) min($offset + count($paginatedRemarks), $totalFilteredRemarks), ENT_QUOTES, 'UTF-8'); ?> of <?php echo htmlspecialchars((string) $totalFilteredRemarks, ENT_QUOTES, 'UTF-8'); ?> remarks</p>
                 <nav aria-label="Remarks pagination">
-                    <a href="<?php echo htmlspecialchars(afrisense_remark_url(array_merge($filters, ['page' => '1']), '#remarks-table'), ENT_QUOTES, 'UTF-8'); ?>" aria-label="Previous page"><i class="bi bi-chevron-left" aria-hidden="true"></i></a>
-                    <a class="active" href="<?php echo htmlspecialchars(afrisense_remark_url(array_merge($filters, ['page' => '1']), '#remarks-table'), ENT_QUOTES, 'UTF-8'); ?>">1</a>
-                    <a href="<?php echo htmlspecialchars(afrisense_remark_url(array_merge($filters, ['page' => '2']), '#remarks-table'), ENT_QUOTES, 'UTF-8'); ?>">2</a>
-                    <a href="<?php echo htmlspecialchars(afrisense_remark_url(array_merge($filters, ['page' => '3']), '#remarks-table'), ENT_QUOTES, 'UTF-8'); ?>">3</a>
-                    <span>...</span>
-                    <a href="<?php echo htmlspecialchars(afrisense_remark_url(array_merge($filters, ['page' => '19']), '#remarks-table'), ENT_QUOTES, 'UTF-8'); ?>">19</a>
-                    <a href="<?php echo htmlspecialchars(afrisense_remark_url(array_merge($filters, ['page' => '2']), '#remarks-table'), ENT_QUOTES, 'UTF-8'); ?>" aria-label="Next page"><i class="bi bi-chevron-right" aria-hidden="true"></i></a>
+                    <a class="<?php echo $page <= 1 ? 'is-disabled' : ''; ?>" href="<?php echo htmlspecialchars($page <= 1 ? '#' : afrisense_remark_url(array_merge($filters, ['page' => (string) ($page - 1)]), '#remarks-table'), ENT_QUOTES, 'UTF-8'); ?>" aria-label="Previous page" title="Previous page"><i class="bi bi-chevron-left" aria-hidden="true"></i></a>
+                    <?php for ($number = max(1, $page - 1); $number <= min($totalPages, $page + 1); $number++): ?>
+                        <a class="<?php echo $number === $page ? 'active' : ''; ?>" href="<?php echo htmlspecialchars(afrisense_remark_url(array_merge($filters, ['page' => (string) $number]), '#remarks-table'), ENT_QUOTES, 'UTF-8'); ?>"><?php echo htmlspecialchars((string) $number, ENT_QUOTES, 'UTF-8'); ?></a>
+                    <?php endfor; ?>
+                    <?php if ($totalPages > $page + 1): ?>
+                        <span>...</span>
+                        <a href="<?php echo htmlspecialchars(afrisense_remark_url(array_merge($filters, ['page' => (string) $totalPages]), '#remarks-table'), ENT_QUOTES, 'UTF-8'); ?>"><?php echo htmlspecialchars((string) $totalPages, ENT_QUOTES, 'UTF-8'); ?></a>
+                    <?php endif; ?>
+                    <a class="<?php echo $page >= $totalPages ? 'is-disabled' : ''; ?>" href="<?php echo htmlspecialchars($page >= $totalPages ? '#' : afrisense_remark_url(array_merge($filters, ['page' => (string) ($page + 1)]), '#remarks-table'), ENT_QUOTES, 'UTF-8'); ?>" aria-label="Next page" title="Next page"><i class="bi bi-chevron-right" aria-hidden="true"></i></a>
                 </nav>
             </footer>
         </section>

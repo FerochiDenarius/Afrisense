@@ -568,6 +568,7 @@ td img {
 
 .donut-chart strong,
 .donut-chart span {
+    grid-area: 1 / 1;
     position: relative;
     z-index: 1;
     display: block;
@@ -577,12 +578,15 @@ td img {
 .donut-chart strong {
     font-size: 28px;
     line-height: 1;
+    align-self: center;
+    margin-top: -12px;
 }
 
 .donut-chart span {
+    align-self: center;
     color: var(--muted);
     font-size: 13px;
-    margin-top: 32px;
+    margin-top: 34px;
 }
 
 .status-list {

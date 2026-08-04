@@ -1,0 +1,18 @@
+0:00:00:00 Starting a new session
+0:00:00:00 Loaded a total of 1 password hash
+0:00:00:00 Cost 1 (iteration count) is 524288 for all loaded hashes
+0:00:00:00 Cost 2 (padding size) is 13 for all loaded hashes
+0:00:00:00 Cost 3 (compression type) is 2 for all loaded hashes
+0:00:00:00 Command line: john --stdin --session=apaloorc_focus --format=7z /Users/kofibright/Downloads/hash.txt 
+0:00:00:00 - UTF-8 input encoding enabled
+0:00:00:00 - Passwords will be stored UTF-8 encoded in .pot file
+0:00:00:00 - Hash type: 7z, 7-Zip (min-len 0, max-len 28)
+0:00:00:00 - Algorithm: SHA256 128/128 SSSE3 4x AES
+0:00:00:00 - Configured to use otherwise idle processor cycles only
+0:00:00:00 - Will reject candidates longer than 84 bytes
+0:00:00:00 - Candidate passwords will be buffered and tried in chunks of 4
+0:00:00:00 Proceeding with wordlist mode
+0:00:00:00 - Reading candidate passwords from stdin
+0:00:00:00 - No word mangling rules
+0:00:00:00 - No stacked rules
+0:00:06:52 Session completed

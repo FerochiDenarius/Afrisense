@@ -60,6 +60,23 @@ function afrisense_food_image(string $frontendBase, ?string $image): string
     return $frontendBase . '/assets/images/foods/jollof-rice.png';
 }
 
+function afrisense_food_url(array $overrides = [], string $anchor = ''): string
+{
+    $params = $_GET;
+
+    foreach ($overrides as $key => $value) {
+        if ($value === null || $value === '') {
+            unset($params[$key]);
+        } else {
+            $params[$key] = (string) $value;
+        }
+    }
+
+    $query = http_build_query($params);
+
+    return 'foods.php' . ($query !== '' ? '?' . $query : '') . $anchor;
+}
+
 function afrisense_food_upload_image(): ?string
 {
     $file = $_FILES['food_image'] ?? null;
@@ -123,6 +140,8 @@ $flashType = 'success';
 try {
     $pdo = afrisense_pdo();
     $editFoodId = max(0, (int) ($_GET['edit'] ?? 0));
+    $page = max(1, (int) ($_GET['page'] ?? 1));
+    $offset = ($page - 1) * $itemsPerPage;
 
     if (($_SERVER['REQUEST_METHOD'] ?? 'GET') === 'POST') {
         $action = afrisense_post_string('action');
@@ -295,6 +314,11 @@ try {
         }
     }
 
+    $totalFoods = (int) $pdo->query('SELECT COUNT(*) FROM `foods`')->fetchColumn();
+    $totalPages = max(1, (int) ceil($totalFoods / max(1, $itemsPerPage)));
+    $page = min($page, $totalPages);
+    $offset = ($page - 1) * $itemsPerPage;
+
     $statement = $pdo->prepare(
         'SELECT
             f.`id`,
@@ -308,7 +332,7 @@ try {
          FROM `foods` f
          LEFT JOIN `food_categories` c ON c.`id` = f.`category_id`
          ORDER BY f.`id` DESC
-         LIMIT ' . $itemsPerPage
+         LIMIT ' . $itemsPerPage . ' OFFSET ' . $offset
     );
     $statement->execute();
     $foods = $statement->fetchAll(PDO::FETCH_ASSOC);
@@ -356,10 +380,13 @@ try {
     $categories = [];
     $selectedFood = null;
     $editFoodId = 0;
+    $totalFoods = 0;
+    $totalPages = 1;
+    $page = 1;
+    $offset = 0;
     $loadError = 'Foods could not be loaded. Check that MySQL is running.';
 }
 
-$totalFoods = count($foods);
 $availableFoods = count(array_filter($foods, static fn (array $food): bool => (string) ($food['availability'] ?? '') === 'Available'));
 $unavailableFoods = count(array_filter($foods, static fn (array $food): bool => (string) ($food['availability'] ?? '') !== 'Available'));
 $fastPrepFoods = count(array_filter($foods, static fn (array $food): bool => (int) ($food['preparation_time'] ?? 0) <= 15));
@@ -413,8 +440,8 @@ ob_start();
     </section>
 
     <section class="af-foods-workspace">
-        <section class="af-menu-table-card">
-            <form class="af-menu-filters af-foods-filters" action="#" method="get">
+        <section class="af-menu-table-card" id="foods-table">
+            <form class="af-menu-filters af-foods-filters" action="foods.php" method="get">
                 <label class="af-menu-search" for="food_search">
                     <i class="bi bi-search" aria-hidden="true"></i>
                     <input type="search" id="food_search" name="search" placeholder="Search foods...">
@@ -490,18 +517,18 @@ ob_start();
                                 <td><span class="af-status <?php echo $isAvailable ? 'active' : 'out'; ?>"><?php echo htmlspecialchars((string) ($food['availability'] ?? 'Unavailable'), ENT_QUOTES, 'UTF-8'); ?></span></td>
                                 <td>
                                     <div class="af-row-actions">
-                                        <a href="foods.php?edit=<?php echo htmlspecialchars((string) ($food['id'] ?? 0), ENT_QUOTES, 'UTF-8'); ?>#edit_food_form" aria-label="Edit <?php echo htmlspecialchars($foodName, ENT_QUOTES, 'UTF-8'); ?>"><i class="bi bi-pencil-square" aria-hidden="true"></i></a>
+                                        <a href="foods.php?edit=<?php echo htmlspecialchars((string) ($food['id'] ?? 0), ENT_QUOTES, 'UTF-8'); ?>#edit_food_form" title="Edit food" aria-label="Edit <?php echo htmlspecialchars($foodName, ENT_QUOTES, 'UTF-8'); ?>"><i class="bi bi-pencil-square" aria-hidden="true"></i></a>
                                         <form action="foods.php" method="post">
                                             <input type="hidden" name="action" value="toggle_availability">
                                             <input type="hidden" name="food_id" value="<?php echo htmlspecialchars((string) ($food['id'] ?? 0), ENT_QUOTES, 'UTF-8'); ?>">
-                                            <button class="<?php echo $isAvailable ? 'warning' : 'success'; ?>" type="submit" aria-label="<?php echo $isAvailable ? 'Disable' : 'Enable'; ?> <?php echo htmlspecialchars($foodName, ENT_QUOTES, 'UTF-8'); ?>">
+                                            <button class="<?php echo $isAvailable ? 'warning' : 'success'; ?>" type="submit" title="<?php echo $isAvailable ? 'Disable food' : 'Enable food'; ?>" aria-label="<?php echo $isAvailable ? 'Disable' : 'Enable'; ?> <?php echo htmlspecialchars($foodName, ENT_QUOTES, 'UTF-8'); ?>">
                                                 <i class="bi <?php echo $isAvailable ? 'bi-slash-circle' : 'bi-check2-circle'; ?>" aria-hidden="true"></i>
                                             </button>
                                         </form>
                                         <form action="foods.php" method="post">
                                             <input type="hidden" name="action" value="delete_food">
                                             <input type="hidden" name="food_id" value="<?php echo htmlspecialchars((string) ($food['id'] ?? 0), ENT_QUOTES, 'UTF-8'); ?>">
-                                            <button class="danger" type="submit" aria-label="Delete <?php echo htmlspecialchars($foodName, ENT_QUOTES, 'UTF-8'); ?>"><i class="bi bi-trash" aria-hidden="true"></i></button>
+                                            <button class="danger" type="submit" title="Delete food" aria-label="Delete <?php echo htmlspecialchars($foodName, ENT_QUOTES, 'UTF-8'); ?>"><i class="bi bi-trash" aria-hidden="true"></i></button>
                                         </form>
                                     </div>
                                 </td>
@@ -512,14 +539,17 @@ ob_start();
             </div>
 
             <footer class="af-menu-pagination">
-                <p>Showing 1 to <?php echo htmlspecialchars((string) count($foods), ENT_QUOTES, 'UTF-8'); ?> of <?php echo htmlspecialchars((string) $totalFoods, ENT_QUOTES, 'UTF-8'); ?> foods</p>
+                <p>Showing <?php echo htmlspecialchars((string) ($totalFoods > 0 ? $offset + 1 : 0), ENT_QUOTES, 'UTF-8'); ?> to <?php echo htmlspecialchars((string) min($offset + count($foods), $totalFoods), ENT_QUOTES, 'UTF-8'); ?> of <?php echo htmlspecialchars((string) $totalFoods, ENT_QUOTES, 'UTF-8'); ?> foods</p>
                 <nav aria-label="Food pagination">
-                    <a href="#" aria-label="Previous page"><i class="bi bi-chevron-left" aria-hidden="true"></i></a>
-                    <a class="active" href="#">1</a>
-                    <a href="#">2</a>
-                    <a href="#">3</a>
-                    <span>...</span>
-                    <a href="#" aria-label="Next page"><i class="bi bi-chevron-right" aria-hidden="true"></i></a>
+                    <a class="<?php echo $page <= 1 ? 'is-disabled' : ''; ?>" href="<?php echo htmlspecialchars($page <= 1 ? '#' : afrisense_food_url(['page' => (string) ($page - 1), 'edit' => null], '#foods-table'), ENT_QUOTES, 'UTF-8'); ?>" aria-label="Previous page" title="Previous page"><i class="bi bi-chevron-left" aria-hidden="true"></i></a>
+                    <?php for ($number = max(1, $page - 1); $number <= min($totalPages, $page + 1); $number++): ?>
+                        <a class="<?php echo $number === $page ? 'active' : ''; ?>" href="<?php echo htmlspecialchars(afrisense_food_url(['page' => (string) $number, 'edit' => null], '#foods-table'), ENT_QUOTES, 'UTF-8'); ?>"><?php echo htmlspecialchars((string) $number, ENT_QUOTES, 'UTF-8'); ?></a>
+                    <?php endfor; ?>
+                    <?php if ($totalPages > $page + 1): ?>
+                        <span>...</span>
+                        <a href="<?php echo htmlspecialchars(afrisense_food_url(['page' => (string) $totalPages, 'edit' => null], '#foods-table'), ENT_QUOTES, 'UTF-8'); ?>"><?php echo htmlspecialchars((string) $totalPages, ENT_QUOTES, 'UTF-8'); ?></a>
+                    <?php endif; ?>
+                    <a class="<?php echo $page >= $totalPages ? 'is-disabled' : ''; ?>" href="<?php echo htmlspecialchars($page >= $totalPages ? '#' : afrisense_food_url(['page' => (string) ($page + 1), 'edit' => null], '#foods-table'), ENT_QUOTES, 'UTF-8'); ?>" aria-label="Next page" title="Next page"><i class="bi bi-chevron-right" aria-hidden="true"></i></a>
                 </nav>
             </footer>
         </section>

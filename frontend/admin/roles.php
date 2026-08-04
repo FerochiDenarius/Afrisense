@@ -81,12 +81,15 @@ function afrisense_role_description(string $roleName, string $description): stri
         str_contains($roleName, 'chef') => 'Manage kitchen operations and food preparation.',
         str_contains($roleName, 'cashier') => 'Handle payments and customer transactions.',
         str_contains($roleName, 'customer') => 'Place orders, bookings and manage profile.',
+        str_contains($roleName, 'rider'), str_contains($roleName, 'delivery') => 'Handle delivery assignments, pickups and delivery status updates.',
         default => 'Access assigned modules based on department.',
     };
 }
 
 try {
     $pdo = afrisense_pdo();
+    afrisense_delivery_rider_role_id($pdo);
+
     $roleSearch = trim((string) ($_GET['search'] ?? ''));
     $flashMessage = '';
     $flashType = 'success';
@@ -132,21 +135,36 @@ try {
         $roleParams['search'] = '%' . $roleSearch . '%';
     }
 
+    $hasPermissionTables = (bool) $pdo->query('SHOW TABLES LIKE "permissions"')->fetchColumn()
+        && (bool) $pdo->query('SHOW TABLES LIKE "role_permissions"')->fetchColumn();
+
+    $permissionJoinSql = $hasPermissionTables
+        ? ', COUNT(DISTINCT rp.`permission_id`) AS assigned_permission_count'
+        : ', 0 AS assigned_permission_count';
+    $permissionJoin = $hasPermissionTables
+        ? ' LEFT JOIN `role_permissions` rp ON rp.`role_id` = r.`id`'
+        : '';
+
     $statement = $pdo->prepare(
         'SELECT
             r.`id`,
             r.`rolename`,
             r.`description`,
             r.`created_at`,
-            COUNT(u.`id`) AS user_count
+            COUNT(DISTINCT u.`id`) AS user_count
+            ' . $permissionJoinSql . '
          FROM `roles` r
          LEFT JOIN `users` u ON u.`role_id` = r.`id`
+         ' . $permissionJoin . '
          ' . $roleWhere . '
          GROUP BY r.`id`, r.`rolename`, r.`description`, r.`created_at`
          ORDER BY r.`id` ASC'
     );
     $statement->execute($roleParams);
     $roles = $statement->fetchAll(PDO::FETCH_ASSOC);
+
+    $permissionCountStatement = $hasPermissionTables ? $pdo->query('SELECT COUNT(*) AS count_value FROM `permissions`') : null;
+    $totalPermissionSlots = $permissionCountStatement !== null ? (int) ($permissionCountStatement->fetch(PDO::FETCH_ASSOC)['count_value'] ?? 0) : 72;
 
     $userCountStatement = $pdo->prepare('SELECT COUNT(*) AS count_value FROM `users`');
     $userCountStatement->execute();
@@ -158,17 +176,21 @@ try {
     $roleSearch = '';
     $flashMessage = '';
     $flashType = 'error';
+    $hasPermissionTables = false;
+    $totalPermissionSlots = 72;
     $loadError = 'Roles could not be loaded. Check that MySQL is running.';
 }
 
 $totalRoles = count($roles);
-$totalPermissionSlots = 72;
 $selectedRole = $roles[0] ?? [
+    'id' => 0,
     'rolename' => 'Administrator',
     'description' => 'Full access to all features and system settings.',
     'created_at' => date('Y-m-d H:i:s'),
     'user_count' => 0,
+    'assigned_permission_count' => 0,
 ];
+$selectedRolePermissionCount = $hasPermissionTables ? (int) ($selectedRole['assigned_permission_count'] ?? 0) : afrisense_role_permission_count((string) $selectedRole['rolename']);
 
 ob_start();
 ?>
@@ -263,8 +285,9 @@ ob_start();
                         <?php endif; ?>
                         <?php foreach ($roles as $index => $role): ?>
                             <?php
+                            $roleId = (int) ($role['id'] ?? 0);
                             $roleName = (string) ($role['rolename'] ?? 'Role');
-                            $permissionCount = afrisense_role_permission_count($roleName);
+                            $permissionCount = $hasPermissionTables ? (int) ($role['assigned_permission_count'] ?? 0) : afrisense_role_permission_count($roleName);
                             $permissionLevel = afrisense_role_permission_level($permissionCount);
                             ?>
                             <tr>
@@ -287,8 +310,8 @@ ob_start();
                                 <td><span class="af-status active"><i class="bi bi-circle-fill" aria-hidden="true"></i> Active</span></td>
                                 <td>
                                     <div class="af-row-actions">
-                                        <button type="button" aria-label="Edit <?php echo htmlspecialchars($roleName, ENT_QUOTES, 'UTF-8'); ?>"><i class="bi bi-pencil-square" aria-hidden="true"></i></button>
-                                        <button type="button" aria-label="More role actions"><i class="bi bi-three-dots-vertical" aria-hidden="true"></i></button>
+                                        <a href="permissions.php?role=<?php echo htmlspecialchars((string) $roleId, ENT_QUOTES, 'UTF-8'); ?>#permission-editor" title="Manage role permissions" aria-label="Manage permissions for <?php echo htmlspecialchars($roleName, ENT_QUOTES, 'UTF-8'); ?>"><i class="bi bi-shield-check" aria-hidden="true"></i></a>
+                                        <button type="button" title="Edit role" aria-label="Edit <?php echo htmlspecialchars($roleName, ENT_QUOTES, 'UTF-8'); ?>"><i class="bi bi-pencil-square" aria-hidden="true"></i></button>
                                     </div>
                                 </td>
                             </tr>
@@ -300,9 +323,9 @@ ob_start();
             <footer class="af-menu-pagination">
                 <p>Showing 1 to <?php echo htmlspecialchars((string) $totalRoles, ENT_QUOTES, 'UTF-8'); ?> of <?php echo htmlspecialchars((string) $totalRoles, ENT_QUOTES, 'UTF-8'); ?> roles</p>
                 <nav aria-label="Roles pagination">
-                    <a href="#" aria-label="Previous page"><i class="bi bi-chevron-left" aria-hidden="true"></i></a>
+                    <a class="is-disabled" href="#" aria-label="Previous page"><i class="bi bi-chevron-left" aria-hidden="true"></i></a>
                     <a class="active" href="#">1</a>
-                    <a href="#" aria-label="Next page"><i class="bi bi-chevron-right" aria-hidden="true"></i></a>
+                    <a class="is-disabled" href="#" aria-label="Next page"><i class="bi bi-chevron-right" aria-hidden="true"></i></a>
                 </nav>
             </footer>
         </section>
@@ -321,13 +344,13 @@ ob_start();
                 <hr>
                 <h3>Permissions Summary</h3>
                 <ul>
-                    <li>Total Permissions: <?php echo htmlspecialchars((string) afrisense_role_permission_count((string) $selectedRole['rolename']), ENT_QUOTES, 'UTF-8'); ?></li>
+                    <li>Total Permissions: <?php echo htmlspecialchars((string) $selectedRolePermissionCount, ENT_QUOTES, 'UTF-8'); ?></li>
                     <li>Module Access: <?php echo str_contains(strtolower((string) $selectedRole['rolename']), 'admin') ? 'All' : 'Assigned modules'; ?></li>
                     <li>User Management: <?php echo str_contains(strtolower((string) $selectedRole['rolename']), 'admin') ? 'Full Access' : 'Limited Access'; ?></li>
                     <li>System Settings: <?php echo str_contains(strtolower((string) $selectedRole['rolename']), 'admin') ? 'Full Access' : 'No Access'; ?></li>
                     <li>Created On: <?php echo htmlspecialchars(date('j M Y', strtotime((string) ($selectedRole['created_at'] ?? 'now'))), ENT_QUOTES, 'UTF-8'); ?></li>
                 </ul>
-                <button type="button">View Full Permissions</button>
+                <a class="af-role-permission-link" href="permissions.php?role=<?php echo htmlspecialchars((string) ($selectedRole['id'] ?? 0), ENT_QUOTES, 'UTF-8'); ?>#permission-editor">View Full Permissions</a>
             </section>
 
             <section class="af-role-help-card">
