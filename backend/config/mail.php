@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 require_once __DIR__ . '/env.php';
 
+// Central mail configuration read by authentication and notification helpers.
 return [
     'provider' => $_ENV['MAIL_PROVIDER'] ?? 'resend',
     'resend' => [

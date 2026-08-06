@@ -1,8 +1,10 @@
+/* Ordering and cart interface styling for .af-my-orders-page. */
 .af-my-orders-page {
     display: grid;
     gap: 24px;
 }
 
+/* Ordering and cart interface styling for .af-my-orders-heading. */
 .af-my-orders-heading {
     display: flex;
     align-items: center;
@@ -10,6 +12,7 @@
     gap: 16px;
 }
 
+/* Ordering and cart interface styling for .af-my-orders-heading h1. */
 .af-my-orders-heading h1 {
     margin: 0;
     color: #0d241e;
@@ -17,6 +20,7 @@
     font-size: 34px;
 }
 
+/* Ordering and cart interface styling for .af-my-orders-heading p. */
 .af-my-orders-heading p {
     margin: 6px 0 0;
     color: #5f6865;
@@ -24,6 +28,7 @@
 
 .af-my-orders-heading a,
 .af-my-order-empty a,
+/* Ordering and cart interface styling for .af-my-orders-heading a, .af-my-order-empty a, .af-my-order-details form button. */
 .af-my-order-details form button {
     display: inline-flex;
     align-items: center;
@@ -40,12 +45,14 @@
     cursor: pointer;
 }
 
+/* Ordering and cart interface styling for .af-my-order-metrics. */
 .af-my-order-metrics {
     display: grid;
     grid-template-columns: repeat(6, minmax(0, 1fr));
     gap: 14px;
 }
 
+/* Ordering and cart interface styling for .af-my-order-metrics article. */
 .af-my-order-metrics article {
     display: flex;
     gap: 12px;
@@ -57,6 +64,7 @@
     box-shadow: 0 10px 28px rgba(13, 36, 30, 0.07);
 }
 
+/* Ordering and cart interface styling for .af-my-order-metrics span. */
 .af-my-order-metrics span {
     display: inline-grid;
     place-items: center;
@@ -68,11 +76,13 @@
     color: #b77b1a;
 }
 
+/* Ordering and cart interface styling for .af-my-order-metrics small. */
 .af-my-order-metrics small {
     color: #0d241e;
     font-weight: 800;
 }
 
+/* Ordering and cart interface styling for .af-my-order-metrics strong. */
 .af-my-order-metrics strong {
     display: block;
     margin-top: 8px;
@@ -81,12 +91,14 @@
     line-height: 1;
 }
 
+/* Ordering and cart interface styling for .af-my-order-metrics p. */
 .af-my-order-metrics p {
     margin: 6px 0 0;
     color: #69736f;
     font-size: 12px;
 }
 
+/* Ordering and cart interface styling for .af-my-orders-layout. */
 .af-my-orders-layout {
     display: grid;
     grid-template-columns: minmax(0, 1fr) 360px;
@@ -95,6 +107,7 @@
 }
 
 .af-my-orders-main,
+/* Ordering and cart interface styling for .af-my-orders-main, .af-my-order-details. */
 .af-my-order-details {
     background: #fff;
     border: 1px solid rgba(12, 35, 29, 0.1);
@@ -102,6 +115,7 @@
     box-shadow: 0 12px 34px rgba(13, 36, 30, 0.08);
 }
 
+/* Ordering and cart interface styling for .af-my-orders-filters. */
 .af-my-orders-filters {
     display: grid;
     grid-template-columns: minmax(220px, 1fr) 180px 210px 110px;
@@ -110,6 +124,7 @@
     border-bottom: 1px solid rgba(12, 35, 29, 0.08);
 }
 
+/* Ordering and cart interface styling for .af-my-orders-filters label. */
 .af-my-orders-filters label {
     position: relative;
     display: flex;
@@ -120,12 +135,14 @@
     background: #fff;
 }
 
+/* Ordering and cart interface styling for .af-my-orders-filters i. */
 .af-my-orders-filters i {
     margin-left: 13px;
     color: #6d7773;
 }
 
 .af-my-orders-filters input,
+/* Ordering and cart interface styling for .af-my-orders-filters input, .af-my-orders-filters select. */
 .af-my-orders-filters select {
     width: 100%;
     min-width: 0;
@@ -136,14 +153,17 @@
     color: #0d241e;
 }
 
+/* Ordering and cart interface styling for .af-my-orders-filters select. */
 .af-my-orders-filters select {
     appearance: none;
 }
 
+/* Ordering and cart interface styling for .af-my-orders-filters label > .bi-chevron-down. */
 .af-my-orders-filters label > .bi-chevron-down {
     margin: 0 12px 0 0;
 }
 
+/* Ordering and cart interface styling for .af-my-orders-filters button. */
 .af-my-orders-filters button {
     border: 1px solid #dfe6e2;
     border-radius: 7px;
@@ -152,10 +172,12 @@
     font-weight: 800;
 }
 
+/* Ordering and cart interface styling for .af-my-orders-list. */
 .af-my-orders-list {
     display: grid;
 }
 
+/* Ordering and cart interface styling for .af-my-order-row. */
 .af-my-order-row {
     display: grid;
     grid-template-columns: 138px minmax(0, 1fr) 120px 145px;
@@ -165,14 +187,17 @@
     border-bottom: 1px solid rgba(12, 35, 29, 0.08);
 }
 
+/* Ordering and cart interface styling for .af-my-order-row:last-child. */
 .af-my-order-row:last-child {
     border-bottom: 0;
 }
 
+/* Ordering and cart interface styling for .af-my-order-row.is-active. */
 .af-my-order-row.is-active {
     background: linear-gradient(90deg, rgba(183, 123, 26, 0.08), transparent);
 }
 
+/* Ordering and cart interface styling for .af-my-order-row > img. */
 .af-my-order-row > img {
     width: 126px;
     height: 86px;
@@ -180,6 +205,7 @@
     border-radius: 7px;
 }
 
+/* Ordering and cart interface styling for .af-my-order-info h2. */
 .af-my-order-info h2 {
     display: flex;
     flex-wrap: wrap;
@@ -191,12 +217,14 @@
 }
 
 .af-my-order-info p,
+/* Ordering and cart interface styling for .af-my-order-info p, .af-my-order-info small. */
 .af-my-order-info small {
     display: block;
     margin: 4px 0 0;
     color: #56615d;
 }
 
+/* Ordering and cart interface styling for .af-my-order-price strong. */
 .af-my-order-price strong {
     display: block;
     color: #0d241e;
@@ -206,6 +234,7 @@
 .af-my-order-price span,
 .af-my-order-info h2 span,
 .af-my-order-details header span,
+/* Header layout and controls for .af-my-order-price span, .af-my-order-info h2 span, .af-my-order-details header span, .af-detail-payment span. */
 .af-detail-payment span {
     display: inline-flex;
     margin-top: 8px;
@@ -215,6 +244,7 @@
     font-weight: 800;
 }
 
+/* Styling rules for .pending. */
 .pending {
     background: #fff2dc;
     color: #b66b00;
@@ -222,12 +252,14 @@
 
 .confirmed,
 .delivered,
+/* Styling rules for .confirmed, .delivered, .paid. */
 .paid {
     background: #e7f6e9;
     color: #0a7a22;
 }
 
 .preparing,
+/* Styling rules for .preparing, .way. */
 .way {
     background: #e7f0ff;
     color: #1d65c1;
@@ -235,17 +267,20 @@
 
 .cancelled,
 .failed,
+/* Styling rules for .cancelled, .failed, .refunded. */
 .refunded {
     background: #ffe7e7;
     color: #c72222;
 }
 
+/* Ordering and cart interface styling for .af-my-order-actions. */
 .af-my-order-actions {
     display: flex;
     align-items: center;
     gap: 8px;
 }
 
+/* Ordering and cart interface styling for .af-my-order-actions a. */
 .af-my-order-actions a {
     display: inline-flex;
     align-items: center;
@@ -259,6 +294,7 @@
     text-decoration: none;
 }
 
+/* Ordering and cart interface styling for .af-my-order-actions i. */
 .af-my-order-actions i {
     display: inline-grid;
     place-items: center;
@@ -268,6 +304,7 @@
     border-radius: 7px;
 }
 
+/* Ordering and cart interface styling for .af-my-order-empty. */
 .af-my-order-empty {
     display: grid;
     place-items: center;
@@ -275,27 +312,32 @@
     text-align: center;
 }
 
+/* Ordering and cart interface styling for .af-my-order-empty i. */
 .af-my-order-empty i {
     color: #b77b1a;
     font-size: 36px;
 }
 
+/* Ordering and cart interface styling for .af-my-order-empty h2. */
 .af-my-order-empty h2 {
     margin: 12px 0 4px;
     color: #0d241e;
 }
 
 .af-my-order-empty p,
+/* Ordering and cart interface styling for .af-my-order-empty p, .af-my-order-empty-side. */
 .af-my-order-empty-side {
     color: #69736f;
 }
 
+/* Ordering and cart interface styling for .af-my-order-details. */
 .af-my-order-details {
     position: sticky;
     top: 96px;
     padding: 20px;
 }
 
+/* Header layout and controls for .af-my-order-details header. */
 .af-my-order-details header {
     display: flex;
     align-items: center;
@@ -304,11 +346,13 @@
 }
 
 .af-my-order-details h2,
+/* Ordering and cart interface styling for .af-my-order-details h2, .af-my-order-details h3. */
 .af-my-order-details h3 {
     margin: 0;
     color: #0d241e;
 }
 
+/* Styling rules for .af-detail-highlight. */
 .af-detail-highlight {
     display: flex;
     gap: 14px;
@@ -318,6 +362,7 @@
     background: #fff4e4;
 }
 
+/* Styling rules for .af-detail-highlight i. */
 .af-detail-highlight i {
     color: #b77b1a;
     font-size: 24px;
@@ -325,6 +370,7 @@
 
 .af-detail-highlight p,
 .af-detail-section p,
+/* Payment interface styling for .af-detail-highlight p, .af-detail-section p, .af-detail-payment p. */
 .af-detail-payment p {
     margin: 5px 0 0;
     color: #5b6662;
@@ -332,17 +378,20 @@
 
 .af-detail-section,
 .af-detail-items,
+/* Payment interface styling for .af-detail-section, .af-detail-items, .af-detail-payment. */
 .af-detail-payment {
     margin-top: 22px;
     padding-top: 20px;
     border-top: 1px solid rgba(12, 35, 29, 0.1);
 }
 
+/* Styling rules for .af-detail-items. */
 .af-detail-items {
     display: grid;
     gap: 14px;
 }
 
+/* Styling rules for .af-detail-items article. */
 .af-detail-items article {
     display: grid;
     grid-template-columns: 52px minmax(0, 1fr) auto;
@@ -350,6 +399,7 @@
     align-items: center;
 }
 
+/* Styling rules for .af-detail-items img. */
 .af-detail-items img {
     width: 52px;
     height: 52px;
@@ -358,21 +408,25 @@
 }
 
 .af-detail-items strong,
+/* Styling rules for .af-detail-items strong, .af-detail-items span. */
 .af-detail-items span {
     color: #0d241e;
 }
 
+/* Styling rules for .af-detail-items span. */
 .af-detail-items span {
     text-align: right;
     font-weight: 800;
 }
 
+/* Styling rules for .af-detail-items small. */
 .af-detail-items small {
     display: block;
     margin-top: 4px;
     color: #68736f;
 }
 
+/* Styling rules for .af-detail-total. */
 .af-detail-total {
     display: grid;
     gap: 10px;
@@ -381,6 +435,7 @@
     border-top: 1px solid rgba(12, 35, 29, 0.1);
 }
 
+/* Styling rules for .af-detail-total div. */
 .af-detail-total div {
     display: flex;
     align-items: center;
@@ -388,75 +443,93 @@
     gap: 16px;
 }
 
+/* Styling rules for .af-detail-total dt. */
 .af-detail-total dt {
     color: #69736f;
 }
 
+/* Styling rules for .af-detail-total dd. */
 .af-detail-total dd {
     margin: 0;
     color: #0d241e;
     font-weight: 800;
 }
 
+/* Styling rules for .af-detail-total div:last-child. */
 .af-detail-total div:last-child {
     margin-top: 6px;
     padding-top: 10px;
     border-top: 1px solid rgba(12, 35, 29, 0.1);
 }
 
+/* Styling rules for .af-detail-total div:last-child dd. */
 .af-detail-total div:last-child dd {
     font-size: 18px;
 }
 
+/* Ordering and cart interface styling for .af-my-order-details form. */
 .af-my-order-details form {
     margin-top: 20px;
 }
 
+/* Ordering and cart interface styling for .af-my-order-details form button. */
 .af-my-order-details form button {
     width: 100%;
     background: #0d241e;
 }
 
+/* Responsive styling rules for @media (max-width: 1320px). */
 @media (max-width: 1320px) {
+    /* Ordering and cart interface styling for .af-my-order-metrics. */
     .af-my-order-metrics {
         grid-template-columns: repeat(3, minmax(0, 1fr));
     }
 
+    /* Ordering and cart interface styling for .af-my-orders-layout. */
     .af-my-orders-layout {
         grid-template-columns: 1fr;
     }
 
+    /* Ordering and cart interface styling for .af-my-order-details. */
     .af-my-order-details {
         position: static;
     }
 }
 
+/* Responsive styling rules for @media (max-width: 900px). */
 @media (max-width: 900px) {
     .af-my-orders-filters,
+    /* Ordering and cart interface styling for .af-my-orders-filters, .af-my-order-row. */
     .af-my-order-row {
         grid-template-columns: 1fr;
     }
 
+    /* Ordering and cart interface styling for .af-my-order-row > img. */
     .af-my-order-row > img {
         width: 100%;
         height: 180px;
     }
 
+    /* Ordering and cart interface styling for .af-my-order-actions. */
     .af-my-order-actions {
         justify-content: stretch;
     }
 
+    /* Ordering and cart interface styling for .af-my-order-actions a. */
     .af-my-order-actions a {
         flex: 1;
     }
 }
 
+/* Responsive styling rules for @media (max-width: 700px). */
 @media (max-width: 700px) {
+    /* Ordering and cart interface styling for .af-my-orders-heading. */
     .af-my-orders-heading {
         align-items: stretch;
         flex-direction: column;
     }
 
+    /* Ordering and cart interface styling for .af-my-order-metrics. */
     .af-my-order-metrics {
         grid-template-columns: 1fr;
     }

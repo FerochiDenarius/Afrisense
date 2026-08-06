@@ -1,3 +1,4 @@
+/* Support chat interface styling for .af-support-page. */
 .af-support-page {
     --support-ink: #111827;
     --support-muted: #667085;
@@ -11,14 +12,17 @@
     color: var(--support-ink);
 }
 
+/* Support chat interface styling for .af-public-page .af-support-page. */
 .af-public-page .af-support-page {
     padding: 34px 18px 48px;
 }
 
+/* Support chat interface styling for .af-dashboard-content .af-support-page. */
 .af-dashboard-content .af-support-page {
     width: 100%;
 }
 
+/* Support chat interface styling for .af-support-heading. */
 .af-support-heading {
     display: flex;
     align-items: center;
@@ -27,6 +31,7 @@
     margin-bottom: 18px;
 }
 
+/* Support chat interface styling for .af-support-heading > div. */
 .af-support-heading > div {
     display: flex;
     align-items: center;
@@ -34,6 +39,7 @@
     min-width: 0;
 }
 
+/* Support chat interface styling for .af-support-title-icon. */
 .af-support-title-icon {
     display: inline-grid;
     place-items: center;
@@ -46,17 +52,20 @@
     box-shadow: inset 0 0 0 1px rgba(10, 107, 54, 0.12);
 }
 
+/* Support chat interface styling for .af-support-heading h1. */
 .af-support-heading h1 {
     margin: 0;
     font-size: clamp(24px, 2.6vw, 30px);
     letter-spacing: 0;
 }
 
+/* Support chat interface styling for .af-support-heading p. */
 .af-support-heading p {
     margin: 5px 0 0;
     color: var(--support-muted);
 }
 
+/* Styling rules for .af-agent-online. */
 .af-agent-online {
     display: inline-flex;
     align-items: center;
@@ -71,11 +80,13 @@
     white-space: nowrap;
 }
 
+/* Styling rules for .af-agent-online i. */
 .af-agent-online i {
     color: #58af65;
     font-size: 10px;
 }
 
+/* Support chat interface styling for .af-support-flash. */
 .af-support-flash {
     margin: 0 0 16px;
     padding: 12px 14px;
@@ -83,16 +94,19 @@
     font-weight: 800;
 }
 
+/* Support chat interface styling for .af-support-flash.is-success. */
 .af-support-flash.is-success {
     background: #eef8ef;
     color: #075c2e;
 }
 
+/* Support chat interface styling for .af-support-flash.is-error. */
 .af-support-flash.is-error {
     background: #fff0f0;
     color: #9f1d1d;
 }
 
+/* Support chat interface styling for .af-support-grid. */
 .af-support-grid {
     display: grid;
     grid-template-columns: minmax(220px, 0.72fr) minmax(360px, 1.4fr) minmax(240px, 0.78fr);
@@ -104,6 +118,7 @@
 .af-support-chat,
 .af-support-info,
 .af-help-topics,
+/* Support chat interface styling for .af-support-conversations, .af-support-chat, .af-support-info, .af-help-topics, .af-rate-support. */
 .af-rate-support {
     min-width: 0;
     border: 1px solid var(--support-line);
@@ -112,6 +127,7 @@
     box-shadow: 0 10px 28px rgba(15, 23, 42, 0.06);
 }
 
+/* Support chat interface styling for .af-support-conversations. */
 .af-support-conversations {
     display: flex;
     flex-direction: column;
@@ -119,18 +135,21 @@
     overflow: hidden;
 }
 
+/* Header layout and controls for .af-support-conversations header. */
 .af-support-conversations header {
     padding: 16px 16px 8px;
 }
 
 .af-support-conversations h2,
 .af-chat-header h2,
+/* Header layout and controls for .af-support-conversations h2, .af-chat-header h2, .af-support-side h2. */
 .af-support-side h2 {
     margin: 0;
     font-size: 16px;
     letter-spacing: 0;
 }
 
+/* Support chat interface styling for .af-support-thread. */
 .af-support-thread {
     display: grid;
     grid-template-columns: 38px minmax(0, 1fr) auto;
@@ -144,17 +163,20 @@
 }
 
 .af-support-thread:hover,
+/* Support chat interface styling for .af-support-thread:hover, .af-support-thread.is-active. */
 .af-support-thread.is-active {
     background: linear-gradient(90deg, rgba(10, 107, 54, 0.12), rgba(245, 250, 246, 0.68));
     border-left-color: var(--support-green);
 }
 
+/* Support chat interface styling for .af-support-thread:hover. */
 .af-support-thread:hover {
     transform: translateX(2px);
 }
 
 .af-thread-icon,
 .af-agent-avatar,
+/* Styling rules for .af-thread-icon, .af-agent-avatar, .af-message-avatar. */
 .af-message-avatar {
     display: inline-grid;
     place-items: center;
@@ -166,11 +188,13 @@
     font-size: 18px;
 }
 
+/* Styling rules for .af-thread-icon.is-blue. */
 .af-thread-icon.is-blue {
     background: #edf6fb;
     color: #116c99;
 }
 
+/* Styling rules for .af-thread-icon.is-gold. */
 .af-thread-icon.is-gold {
     background: #fff3df;
     color: var(--support-orange);
@@ -178,21 +202,25 @@
 
 .af-support-thread strong,
 .af-support-thread small,
+/* Support chat interface styling for .af-support-thread strong, .af-support-thread small, .af-support-thread p. */
 .af-support-thread p {
     display: block;
 }
 
+/* Support chat interface styling for .af-support-thread strong. */
 .af-support-thread strong {
     margin-top: 2px;
     font-size: 14px;
 }
 
+/* Support chat interface styling for .af-support-thread small. */
 .af-support-thread small {
     margin-top: 3px;
     color: var(--support-green);
     font-weight: 800;
 }
 
+/* Support chat interface styling for .af-support-thread p. */
 .af-support-thread p {
     margin: 5px 0 0;
     font-size: 13px;
@@ -202,12 +230,14 @@
     white-space: nowrap;
 }
 
+/* Support chat interface styling for .af-support-thread time. */
 .af-support-thread time {
     color: var(--support-muted);
     font-size: 11px;
     white-space: nowrap;
 }
 
+/* Support chat interface styling for .af-start-chat-btn. */
 .af-start-chat-btn {
     display: inline-flex;
     align-items: center;
@@ -224,12 +254,14 @@
     transition: transform 180ms ease, border-color 180ms ease, box-shadow 180ms ease;
 }
 
+/* Support chat interface styling for .af-start-chat-btn:hover. */
 .af-start-chat-btn:hover {
     border-color: rgba(198, 106, 0, 0.45);
     box-shadow: 0 14px 28px rgba(198, 106, 0, 0.14);
     transform: translateY(-2px);
 }
 
+/* Support chat interface styling for .af-support-chat. */
 .af-support-chat {
     display: flex;
     flex-direction: column;
@@ -237,6 +269,7 @@
     overflow: visible;
 }
 
+/* Header layout and controls for .af-chat-header. */
 .af-chat-header {
     display: flex;
     align-items: center;
@@ -246,6 +279,7 @@
     border-bottom: 1px solid var(--support-line);
 }
 
+/* Header layout and controls for .af-chat-header p. */
 .af-chat-header p {
     margin: 2px 0 0;
     color: var(--support-green);
@@ -256,6 +290,7 @@
 .af-chat-header button,
 .af-composer-icon,
 .af-send-chat,
+/* Header layout and controls for .af-chat-header button, .af-composer-icon, .af-send-chat, .af-stars button. */
 .af-stars button {
     display: inline-flex;
     align-items: center;
@@ -266,6 +301,7 @@
     cursor: pointer;
 }
 
+/* Header layout and controls for .af-chat-header button. */
 .af-chat-header button {
     margin-left: auto;
     width: 34px;
@@ -275,10 +311,12 @@
 }
 
 .af-chat-header button:hover,
+/* Header layout and controls for .af-chat-header button:hover, .af-composer-icon:hover. */
 .af-composer-icon:hover {
     background: #f2f5f1;
 }
 
+/* Support chat interface styling for .af-chat-body. */
 .af-chat-body {
     flex: 1;
     display: flex;
@@ -292,12 +330,14 @@
         linear-gradient(180deg, #ffffff, #fbfcfb);
 }
 
+/* Support chat interface styling for .af-chat-date. */
 .af-chat-date {
     align-self: center;
     color: var(--support-muted);
     font-size: 12px;
 }
 
+/* Support chat interface styling for .af-chat-message. */
 .af-chat-message {
     display: flex;
     align-items: flex-start;
@@ -305,14 +345,17 @@
     max-width: min(78%, 400px);
 }
 
+/* Support chat interface styling for .af-chat-message.is-own. */
 .af-chat-message.is-own {
     align-self: flex-end;
 }
 
+/* Support chat interface styling for .af-chat-message.is-agent. */
 .af-chat-message.is-agent {
     align-self: flex-start;
 }
 
+/* Support chat interface styling for .af-chat-message > div. */
 .af-chat-message > div {
     border-radius: 8px;
     padding: 11px 13px;
@@ -320,18 +363,22 @@
     font-size: 13px;
 }
 
+/* Support chat interface styling for .af-chat-message.is-agent > div. */
 .af-chat-message.is-agent > div {
     background: #f3f3f3;
 }
 
+/* Support chat interface styling for .af-chat-message.is-own > div. */
 .af-chat-message.is-own > div {
     background: #e5f2e5;
 }
 
+/* Support chat interface styling for .af-chat-message p. */
 .af-chat-message p {
     margin: 0;
 }
 
+/* Support chat interface styling for .af-chat-message time. */
 .af-chat-message time {
     display: block;
     margin-top: 8px;
@@ -340,6 +387,7 @@
     text-align: right;
 }
 
+/* Styling rules for .af-message-avatar. */
 .af-message-avatar {
     flex: 0 0 auto;
     width: 30px;
@@ -347,12 +395,14 @@
     font-size: 15px;
 }
 
+/* Support chat interface styling for .af-chat-message.is-typing p. */
 .af-chat-message.is-typing p {
     display: flex;
     align-items: center;
     gap: 6px;
 }
 
+/* Support chat interface styling for .af-chat-message.is-typing i. */
 .af-chat-message.is-typing i {
     width: 7px;
     height: 7px;
@@ -361,26 +411,32 @@
     animation: afSupportTyping 1s infinite ease-in-out;
 }
 
+/* Support chat interface styling for .af-chat-message.is-typing i:nth-child(2). */
 .af-chat-message.is-typing i:nth-child(2) {
     animation-delay: 120ms;
 }
 
+/* Support chat interface styling for .af-chat-message.is-typing i:nth-child(3). */
 .af-chat-message.is-typing i:nth-child(3) {
     animation-delay: 240ms;
 }
 
+/* Animation frames for @keyframes afSupportTyping. */
 @keyframes afSupportTyping {
+    /* Styling rules for 0%, 80%, 100%. */
     0%, 80%, 100% {
         opacity: 0.35;
         transform: translateY(0);
     }
 
+    /* Styling rules for 40%. */
     40% {
         opacity: 1;
         transform: translateY(-3px);
     }
 }
 
+/* Support chat interface styling for .af-support-composer. */
 .af-support-composer {
     position: relative;
     display: flex;
@@ -391,6 +447,7 @@
     background: #fff;
 }
 
+/* Styling rules for .af-guest-fields. */
 .af-guest-fields {
     display: grid;
     grid-template-columns: repeat(3, minmax(0, 1fr));
@@ -399,6 +456,7 @@
     left: -9999px;
 }
 
+/* Styling rules for .af-guest-fields label. */
 .af-guest-fields label {
     display: grid;
     gap: 5px;
@@ -407,6 +465,7 @@
 }
 
 .af-guest-fields input,
+/* Form control styling for .af-guest-fields input, .af-message-input input. */
 .af-message-input input {
     width: 100%;
     min-height: 40px;
@@ -418,10 +477,12 @@
     font-size: 13px;
 }
 
+/* Form control styling for .af-message-input. */
 .af-message-input {
     flex: 1;
 }
 
+/* Form control styling for .af-message-input input. */
 .af-message-input input {
     padding: 0 12px;
     font: inherit;
@@ -429,11 +490,13 @@
 }
 
 .af-message-input input:focus,
+/* Form control styling for .af-message-input input:focus, .af-guest-fields input:focus. */
 .af-guest-fields input:focus {
     border-color: rgba(10, 107, 54, 0.42);
     box-shadow: 0 0 0 4px rgba(10, 107, 54, 0.08);
 }
 
+/* Styling rules for .af-composer-icon. */
 .af-composer-icon {
     flex: 0 0 auto;
     width: 34px;
@@ -443,6 +506,7 @@
     font-size: 17px;
 }
 
+/* Support chat interface styling for .af-support-file-input. */
 .af-support-file-input {
     position: absolute;
     width: 1px;
@@ -451,6 +515,7 @@
     pointer-events: none;
 }
 
+/* Styling rules for .af-attachment-name. */
 .af-attachment-name {
     max-width: 120px;
     overflow: hidden;
@@ -460,6 +525,7 @@
     font-size: 11px;
 }
 
+/* Styling rules for .af-attachment-preview. */
 .af-attachment-preview {
     flex: 1 1 100%;
     order: 10;
@@ -472,15 +538,18 @@
     background: #fbfcfb;
 }
 
+/* Styling rules for .af-admin-reply-composer .af-attachment-preview. */
 .af-admin-reply-composer .af-attachment-preview {
     grid-column: 1 / -1;
 }
 
+/* Styling rules for .af-attachment-preview[hidden]. */
 .af-attachment-preview[hidden] {
     display: none;
 }
 
 .af-attachment-preview img,
+/* Styling rules for .af-attachment-preview img, .af-attachment-preview video. */
 .af-attachment-preview video {
     display: block;
     width: 100%;
@@ -490,6 +559,7 @@
     background: #111827;
 }
 
+/* Styling rules for .af-attachment-preview > span. */
 .af-attachment-preview > span {
     display: inline-flex;
     align-items: center;
@@ -503,6 +573,7 @@
     white-space: nowrap;
 }
 
+/* Button and action control styling for .af-attachment-preview > button. */
 .af-attachment-preview > button {
     position: absolute;
     right: 6px;
@@ -518,6 +589,7 @@
     place-items: center;
 }
 
+/* Styling rules for .af-emoji-picker. */
 .af-emoji-picker {
     position: absolute;
     right: 112px;
@@ -533,10 +605,12 @@
     box-shadow: 0 14px 32px rgba(15, 23, 42, 0.14);
 }
 
+/* Styling rules for .af-emoji-picker[hidden]. */
 .af-emoji-picker[hidden] {
     display: none;
 }
 
+/* Button and action control styling for .af-emoji-picker button. */
 .af-emoji-picker button {
     width: 30px;
     height: 30px;
@@ -547,10 +621,12 @@
     font-size: 17px;
 }
 
+/* Button and action control styling for .af-emoji-picker button:hover. */
 .af-emoji-picker button:hover {
     background: #eef8ef;
 }
 
+/* Support chat interface styling for .af-send-chat. */
 .af-send-chat {
     flex: 0 0 auto;
     width: auto;
@@ -567,12 +643,14 @@
     transition: transform 180ms ease, box-shadow 180ms ease;
 }
 
+/* Styling rules for .af-message-attachments. */
 .af-message-attachments {
     display: grid;
     gap: 6px;
     margin-top: 8px;
 }
 
+/* Styling rules for .af-message-attachments .af-file-attachment. */
 .af-message-attachments .af-file-attachment {
     display: inline-flex;
     align-items: center;
@@ -590,6 +668,7 @@
     overflow-wrap: anywhere;
 }
 
+/* Styling rules for .af-media-attachment. */
 .af-media-attachment {
     display: grid;
     gap: 6px;
@@ -599,6 +678,7 @@
 }
 
 .af-media-attachment img,
+/* Styling rules for .af-media-attachment img, .af-media-attachment video. */
 .af-media-attachment video {
     display: block;
     width: 100%;
@@ -609,6 +689,7 @@
 }
 
 .af-media-attachment span,
+/* Styling rules for .af-media-attachment span, .af-media-attachment a. */
 .af-media-attachment a {
     color: #8f5200;
     font-size: 11px;
@@ -618,33 +699,39 @@
     white-space: nowrap;
 }
 
+/* Support chat interface styling for .af-send-chat span. */
 .af-send-chat span {
     font-size: 12px;
     font-weight: 850;
     white-space: nowrap;
 }
 
+/* Support chat interface styling for .af-send-chat:hover. */
 .af-send-chat:hover {
     transform: translateY(-2px) scale(1.02);
     box-shadow: 0 14px 24px rgba(183, 123, 26, 0.3);
 }
 
 .af-send-chat:disabled,
+/* Support chat interface styling for .af-send-chat:disabled, .af-send-chat.is-sending. */
 .af-send-chat.is-sending {
     cursor: wait;
     opacity: 0.72;
     transform: none;
 }
 
+/* Styling rules for .af-admin-reply-composer. */
 .af-admin-reply-composer {
     display: grid;
     grid-template-columns: minmax(0, 1fr) auto auto auto auto;
 }
 
+/* Form control styling for .af-admin-reply-composer .af-message-input. */
 .af-admin-reply-composer .af-message-input {
     min-width: 0;
 }
 
+/* Styling rules for .af-admin-reply-composer .af-send-reply. */
 .af-admin-reply-composer .af-send-reply {
     display: inline-flex !important;
     align-items: center !important;
@@ -664,6 +751,7 @@
 }
 
 .af-admin-reply-composer .af-send-reply i,
+/* Styling rules for .af-admin-reply-composer .af-send-reply i, .af-admin-reply-composer .af-send-reply span. */
 .af-admin-reply-composer .af-send-reply span {
     display: inline-flex !important;
     color: #fff !important;
@@ -671,6 +759,7 @@
     visibility: visible !important;
 }
 
+/* Support chat interface styling for .af-support-side. */
 .af-support-side {
     display: grid;
     gap: 12px;
@@ -680,10 +769,12 @@
 
 .af-support-info,
 .af-help-topics,
+/* Support chat interface styling for .af-support-info, .af-help-topics, .af-rate-support. */
 .af-rate-support {
     padding: 14px;
 }
 
+/* Support chat interface styling for .af-support-side h2. */
 .af-support-side h2 {
     display: flex;
     align-items: center;
@@ -691,17 +782,20 @@
     font-size: 15px;
 }
 
+/* Support chat interface styling for .af-support-side h2 i. */
 .af-support-side h2 i {
     color: var(--support-orange);
 }
 
 .af-support-info > p,
+/* Support chat interface styling for .af-support-info > p, .af-rate-support p. */
 .af-rate-support p {
     color: var(--support-muted);
     font-size: 13px;
     line-height: 1.45;
 }
 
+/* Support chat interface styling for .af-support-info article. */
 .af-support-info article {
     display: grid;
     grid-template-columns: 36px minmax(0, 1fr);
@@ -710,6 +804,7 @@
     margin-top: 10px;
 }
 
+/* Support chat interface styling for .af-support-info article span. */
 .af-support-info article span {
     display: inline-grid;
     place-items: center;
@@ -721,26 +816,31 @@
     font-size: 17px;
 }
 
+/* Support chat interface styling for .af-support-info article:nth-of-type(2) span. */
 .af-support-info article:nth-of-type(2) span {
     background: #fff1df;
     color: var(--support-orange);
 }
 
+/* Support chat interface styling for .af-support-info article:nth-of-type(3) span. */
 .af-support-info article:nth-of-type(3) span {
     background: #eaf4ff;
     color: #116cbb;
 }
 
+/* Support chat interface styling for .af-support-info article:nth-of-type(4) span. */
 .af-support-info article:nth-of-type(4) span {
     background: #fff0f6;
     color: #c43b77;
 }
 
+/* Support chat interface styling for .af-support-info strong. */
 .af-support-info strong {
     display: block;
     font-size: 13px;
 }
 
+/* Support chat interface styling for .af-support-info article p. */
 .af-support-info article p {
     margin: 3px 0 0;
     color: var(--support-muted);
@@ -748,6 +848,7 @@
     overflow-wrap: anywhere;
 }
 
+/* Button and action control styling for .af-help-topics button. */
 .af-help-topics button {
     display: flex;
     align-items: center;
@@ -765,11 +866,13 @@
     transition: color 180ms ease, transform 180ms ease;
 }
 
+/* Button and action control styling for .af-help-topics button:hover. */
 .af-help-topics button:hover {
     color: var(--support-orange);
     transform: translateX(2px);
 }
 
+/* Styling rules for .af-help-topics a. */
 .af-help-topics a {
     display: inline-flex;
     align-items: center;
@@ -785,14 +888,17 @@
     font-weight: 800;
 }
 
+/* Support chat interface styling for .af-rate-support. */
 .af-rate-support {
     background: linear-gradient(135deg, #eef8ef, #fff);
 }
 
+/* Support chat interface styling for .af-admin-support-page. */
 .af-admin-support-page {
     width: 100%;
 }
 
+/* Support chat interface styling for .af-admin-support-grid. */
 .af-admin-support-grid {
     display: grid;
     grid-template-columns: minmax(210px, 0.76fr) minmax(340px, 1.38fr) minmax(220px, 0.72fr);
@@ -801,20 +907,24 @@
 }
 
 .af-admin-support-grid .af-support-conversations,
+/* Support chat interface styling for .af-admin-support-grid .af-support-conversations, .af-admin-support-grid .af-support-chat. */
 .af-admin-support-grid .af-support-chat {
     min-height: 560px;
 }
 
 .af-support-empty,
+/* Support chat interface styling for .af-support-empty, .af-support-empty-state. */
 .af-support-empty-state {
     color: var(--support-muted);
 }
 
+/* Support chat interface styling for .af-support-empty. */
 .af-support-empty {
     margin: 0;
     padding: 18px 22px;
 }
 
+/* Support chat interface styling for .af-support-empty-state. */
 .af-support-empty-state {
     display: grid;
     place-items: center;
@@ -824,6 +934,7 @@
     text-align: center;
 }
 
+/* Support chat interface styling for .af-support-empty-state i. */
 .af-support-empty-state i {
     display: inline-grid;
     place-items: center;
@@ -836,20 +947,24 @@
     font-size: 32px;
 }
 
+/* Support chat interface styling for .af-support-empty-state h2. */
 .af-support-empty-state h2 {
     margin: 0;
     color: var(--support-ink);
 }
 
+/* Support chat interface styling for .af-support-empty-state p. */
 .af-support-empty-state p {
     margin: 8px 0 0;
 }
 
+/* Styling rules for .af-stars. */
 .af-stars {
     display: flex;
     gap: 6px;
 }
 
+/* Button and action control styling for .af-stars button. */
 .af-stars button {
     width: 28px;
     height: 28px;
@@ -859,11 +974,13 @@
 }
 
 .af-stars button:hover,
+/* Button and action control styling for .af-stars button:hover, .af-stars button.is-active. */
 .af-stars button.is-active {
     color: var(--support-orange);
     transform: translateY(-2px);
 }
 
+/* Support chat interface styling for .af-support-page.is-guest .af-guest-fields. */
 .af-support-page.is-guest .af-guest-fields {
     position: static;
     left: auto;
@@ -871,47 +988,59 @@
     width: 100%;
 }
 
+/* Support chat interface styling for .af-support-page.is-guest .af-support-composer. */
 .af-support-page.is-guest .af-support-composer {
     flex-wrap: wrap;
 }
 
+/* Support chat interface styling for .af-support-page.is-guest .af-message-input. */
 .af-support-page.is-guest .af-message-input {
     min-width: min(100%, 360px);
 }
 
+/* Responsive styling rules for @media (max-width: 1320px). */
 @media (max-width: 1320px) {
     .af-dashboard-content .af-support-grid,
+    /* Support chat interface styling for .af-dashboard-content .af-support-grid, .af-admin-support-grid. */
     .af-admin-support-grid {
         grid-template-columns: minmax(210px, 0.7fr) minmax(0, 1.45fr);
     }
 
     .af-dashboard-content .af-support-side,
+    /* Support chat interface styling for .af-dashboard-content .af-support-side, .af-admin-support-grid .af-support-side. */
     .af-admin-support-grid .af-support-side {
         grid-column: 1 / -1;
         grid-template-columns: repeat(3, minmax(0, 1fr));
     }
 }
 
+/* Responsive styling rules for @media (max-width: 1180px). */
 @media (max-width: 1180px) {
+    /* Support chat interface styling for .af-support-grid. */
     .af-support-grid {
         grid-template-columns: minmax(210px, 0.76fr) minmax(0, 1.35fr);
     }
 
+    /* Support chat interface styling for .af-admin-support-grid. */
     .af-admin-support-grid {
         grid-template-columns: minmax(210px, 0.82fr) minmax(0, 1.35fr);
     }
 
+    /* Support chat interface styling for .af-support-side. */
     .af-support-side {
         grid-column: 1 / -1;
         grid-template-columns: repeat(3, minmax(0, 1fr));
     }
 
+    /* Support chat interface styling for .af-admin-support-grid .af-support-side. */
     .af-admin-support-grid .af-support-side {
         grid-column: 1 / -1;
     }
 }
 
+/* Responsive styling rules for @media (max-width: 860px). */
 @media (max-width: 860px) {
+    /* Support chat interface styling for .af-support-heading. */
     .af-support-heading {
         align-items: flex-start;
         flex-direction: column;
@@ -919,49 +1048,61 @@
 
     .af-support-grid,
     .af-admin-support-grid,
+    /* Support chat interface styling for .af-support-grid, .af-admin-support-grid, .af-support-side. */
     .af-support-side {
         grid-template-columns: 1fr;
     }
 
     .af-support-conversations,
+    /* Support chat interface styling for .af-support-conversations, .af-support-chat. */
     .af-support-chat {
         min-height: auto;
     }
 
+    /* Support chat interface styling for .af-support-conversations. */
     .af-support-conversations {
         max-height: none;
     }
 
+    /* Support chat interface styling for .af-chat-body. */
     .af-chat-body {
         min-height: 460px;
     }
 
+    /* Support chat interface styling for .af-chat-message. */
     .af-chat-message {
         max-width: 92%;
     }
 
+    /* Styling rules for .af-guest-fields. */
     .af-guest-fields {
         grid-template-columns: 1fr;
     }
 }
 
+/* Responsive styling rules for @media (max-width: 560px). */
 @media (max-width: 560px) {
+    /* Support chat interface styling for .af-public-page .af-support-page. */
     .af-public-page .af-support-page {
         padding: 26px 14px 42px;
     }
 
+    /* Support chat interface styling for .af-support-heading > div. */
     .af-support-heading > div {
         align-items: flex-start;
     }
 
+    /* Support chat interface styling for .af-support-composer. */
     .af-support-composer {
         gap: 8px;
     }
 
+    /* Styling rules for .af-composer-icon. */
     .af-composer-icon {
         display: none;
     }
 
+    /* Support chat interface styling for .af-send-chat. */
     .af-send-chat {
         min-width: 66px;
         height: 46px;

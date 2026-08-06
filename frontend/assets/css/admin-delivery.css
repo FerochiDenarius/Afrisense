@@ -1,27 +1,33 @@
+/* Delivery management interface styling for .af-admin-delivery-page. */
 .af-admin-delivery-page {
     display: grid;
     gap: 14px;
 }
 
+/* Delivery management interface styling for .af-delivery-heading. */
 .af-delivery-heading {
     align-items: center;
 }
 
+/* Delivery management interface styling for .af-delivery-heading h1. */
 .af-delivery-heading h1 {
     font-size: 25px;
     margin-bottom: 5px;
 }
 
+/* Delivery management interface styling for .af-delivery-heading p. */
 .af-delivery-heading p {
     font-size: 13px;
 }
 
+/* Delivery management interface styling for .af-delivery-heading-actions. */
 .af-delivery-heading-actions {
     display: flex;
     gap: 10px;
     justify-content: flex-end;
 }
 
+/* Delivery management interface styling for .af-delivery-heading-actions a. */
 .af-delivery-heading-actions a {
     min-height: 38px;
     border-radius: 7px;
@@ -36,21 +42,25 @@
     transition: transform 0.18s ease, box-shadow 0.18s ease, border-color 0.18s ease;
 }
 
+/* Delivery management interface styling for .af-delivery-heading-actions a:hover. */
 .af-delivery-heading-actions a:hover {
     transform: translateY(-1px);
 }
 
+/* Delivery management interface styling for .af-delivery-light-btn. */
 .af-delivery-light-btn {
     border: 1px solid #d9dee6;
     background: #fff;
     color: #111827;
 }
 
+/* Delivery management interface styling for .af-delivery-light-btn:hover. */
 .af-delivery-light-btn:hover {
     border-color: #c4ccd6;
     box-shadow: 0 8px 18px rgba(15, 23, 42, 0.08);
 }
 
+/* Delivery management interface styling for .af-delivery-heading-actions .af-add-menu-btn. */
 .af-delivery-heading-actions .af-add-menu-btn {
     height: 38px;
     border: 0;
@@ -59,12 +69,14 @@
     box-shadow: 0 8px 18px rgba(5, 46, 35, 0.18);
 }
 
+/* Delivery management interface styling for .af-delivery-metrics. */
 .af-delivery-metrics {
     display: grid;
     grid-template-columns: repeat(5, minmax(0, 1fr));
     gap: 10px;
 }
 
+/* Delivery management interface styling for .af-delivery-metrics article. */
 .af-delivery-metrics article {
     min-height: 88px;
     border: 1px solid #e6e9ee;
@@ -78,6 +90,7 @@
     padding: 13px 14px;
 }
 
+/* Delivery management interface styling for .af-delivery-metrics article > span. */
 .af-delivery-metrics article > span {
     width: 42px;
     height: 42px;
@@ -87,31 +100,37 @@
     font-size: 20px;
 }
 
+/* Delivery management interface styling for .af-delivery-metrics .green. */
 .af-delivery-metrics .green {
     background: #e5f7e8;
     color: #209848;
 }
 
+/* Delivery management interface styling for .af-delivery-metrics .gold. */
 .af-delivery-metrics .gold {
     background: #fff4dd;
     color: #d07c00;
 }
 
+/* Delivery management interface styling for .af-delivery-metrics .blue. */
 .af-delivery-metrics .blue {
     background: #e3f0ff;
     color: #2475d6;
 }
 
+/* Delivery management interface styling for .af-delivery-metrics .orange. */
 .af-delivery-metrics .orange {
     background: #fff0d8;
     color: #d97706;
 }
 
+/* Delivery management interface styling for .af-delivery-metrics .purple. */
 .af-delivery-metrics .purple {
     background: #eee7ff;
     color: #7857d7;
 }
 
+/* Delivery management interface styling for .af-delivery-metrics small. */
 .af-delivery-metrics small {
     color: #475467;
     display: block;
@@ -120,6 +139,7 @@
     line-height: 1.25;
 }
 
+/* Delivery management interface styling for .af-delivery-metrics strong. */
 .af-delivery-metrics strong {
     color: #101828;
     display: block;
@@ -129,12 +149,14 @@
     white-space: nowrap;
 }
 
+/* Delivery management interface styling for .af-delivery-metrics p. */
 .af-delivery-metrics p {
     color: #667085;
     font-size: 10px;
     margin-top: 3px;
 }
 
+/* Delivery management interface styling for .af-delivery-layout. */
 .af-delivery-layout {
     display: grid;
     grid-template-columns: minmax(0, 1fr) 332px;
@@ -143,10 +165,12 @@
 }
 
 .af-delivery-main,
+/* Delivery management interface styling for .af-delivery-main, .af-delivery-details. */
 .af-delivery-details {
     min-width: 0;
 }
 
+/* Delivery management interface styling for .af-delivery-main. */
 .af-delivery-main {
     border: 1px solid #e6e9ee;
     border-radius: 8px;
@@ -155,6 +179,7 @@
     overflow: hidden;
 }
 
+/* Delivery management interface styling for .af-delivery-filters. */
 .af-delivery-filters {
     display: grid;
     grid-template-columns: minmax(220px, 1.35fr) minmax(120px, 0.65fr) minmax(160px, 0.8fr) minmax(125px, 0.7fr) minmax(155px, 0.85fr) 78px;
@@ -164,6 +189,7 @@
 }
 
 .af-delivery-filters label,
+/* Delivery management interface styling for .af-delivery-filters label, .af-delivery-filters button. */
 .af-delivery-filters button {
     min-width: 0;
     height: 36px;
@@ -175,18 +201,22 @@
     align-items: center;
 }
 
+/* Delivery management interface styling for .af-delivery-filters label. */
 .af-delivery-filters label {
     grid-template-columns: 34px minmax(0, 1fr);
 }
 
+/* Delivery management interface styling for .af-delivery-filters label:not(.af-delivery-search). */
 .af-delivery-filters label:not(.af-delivery-search) {
     grid-template-columns: minmax(0, 1fr);
 }
 
+/* Delivery management interface styling for .af-delivery-filters label:has(i). */
 .af-delivery-filters label:has(i) {
     grid-template-columns: 32px minmax(0, 1fr);
 }
 
+/* Delivery management interface styling for .af-delivery-filters i. */
 .af-delivery-filters i {
     color: #667085;
     justify-self: center;
@@ -194,6 +224,7 @@
 }
 
 .af-delivery-filters input,
+/* Delivery management interface styling for .af-delivery-filters input, .af-delivery-filters select. */
 .af-delivery-filters select {
     width: 100%;
     min-width: 0;
@@ -206,10 +237,12 @@
     font-weight: 650;
 }
 
+/* Delivery management interface styling for .af-delivery-filters select. */
 .af-delivery-filters select {
     padding: 0 9px;
 }
 
+/* Delivery management interface styling for .af-delivery-filters button. */
 .af-delivery-filters button {
     grid-template-columns: 18px auto;
     justify-content: center;
@@ -220,17 +253,20 @@
     transition: transform 0.18s ease, border-color 0.18s ease, box-shadow 0.18s ease;
 }
 
+/* Delivery management interface styling for .af-delivery-filters button:hover. */
 .af-delivery-filters button:hover {
     border-color: #c7d0db;
     box-shadow: 0 8px 16px rgba(15, 23, 42, 0.07);
     transform: translateY(-1px);
 }
 
+/* Delivery management interface styling for .af-delivery-table-wrap. */
 .af-delivery-table-wrap {
     overflow-x: auto;
     width: 100%;
 }
 
+/* Delivery management interface styling for .af-delivery-table-wrap table. */
 .af-delivery-table-wrap table {
     width: 100%;
     min-width: 1080px;
@@ -239,6 +275,7 @@
 }
 
 .af-delivery-table-wrap th,
+/* Delivery management interface styling for .af-delivery-table-wrap th, .af-delivery-table-wrap td. */
 .af-delivery-table-wrap td {
     border-bottom: 1px solid #edf0f3;
     color: #111827;
@@ -249,6 +286,7 @@
     vertical-align: middle;
 }
 
+/* Delivery management interface styling for .af-delivery-table-wrap th. */
 .af-delivery-table-wrap th {
     background: #fff;
     color: #344054;
@@ -256,10 +294,12 @@
     font-weight: 900;
 }
 
+/* Delivery management interface styling for .af-delivery-table-wrap tr.is-selected td. */
 .af-delivery-table-wrap tr.is-selected td {
     background: #f8fcf7;
 }
 
+/* Delivery management interface styling for .af-clickable-delivery-row. */
 .af-clickable-delivery-row {
     cursor: pointer;
     outline: 0;
@@ -267,45 +307,54 @@
 }
 
 .af-clickable-delivery-row:hover td,
+/* Delivery management interface styling for .af-clickable-delivery-row:hover td, .af-clickable-delivery-row:focus td. */
 .af-clickable-delivery-row:focus td {
     background: #fffaf2;
 }
 
+/* Delivery management interface styling for .af-clickable-delivery-row:focus. */
 .af-clickable-delivery-row:focus {
     box-shadow: inset 0 0 0 2px rgba(196, 111, 0, 0.28);
 }
 
 .af-clickable-delivery-row.is-selected:hover td,
+/* Delivery management interface styling for .af-clickable-delivery-row.is-selected:hover td, .af-clickable-delivery-row.is-selected:focus td. */
 .af-clickable-delivery-row.is-selected:focus td {
     background: #f4fbf2;
 }
 
 .af-delivery-table-wrap th:nth-child(1),
+/* Delivery management interface styling for .af-delivery-table-wrap th:nth-child(1), .af-delivery-table-wrap td:nth-child(1). */
 .af-delivery-table-wrap td:nth-child(1) {
     width: 36px;
 }
 
 .af-delivery-table-wrap th:nth-child(2),
+/* Delivery management interface styling for .af-delivery-table-wrap th:nth-child(2), .af-delivery-table-wrap td:nth-child(2). */
 .af-delivery-table-wrap td:nth-child(2) {
     width: 82px;
 }
 
 .af-delivery-table-wrap th:nth-child(3),
+/* Delivery management interface styling for .af-delivery-table-wrap th:nth-child(3), .af-delivery-table-wrap td:nth-child(3). */
 .af-delivery-table-wrap td:nth-child(3) {
     width: 102px;
 }
 
 .af-delivery-table-wrap th:nth-child(4),
+/* Delivery management interface styling for .af-delivery-table-wrap th:nth-child(4), .af-delivery-table-wrap td:nth-child(4). */
 .af-delivery-table-wrap td:nth-child(4) {
     width: 102px;
 }
 
 .af-delivery-table-wrap th:nth-child(5),
+/* Delivery management interface styling for .af-delivery-table-wrap th:nth-child(5), .af-delivery-table-wrap td:nth-child(5). */
 .af-delivery-table-wrap td:nth-child(5) {
     width: 150px;
 }
 
 .af-delivery-table-wrap th:nth-child(6),
+/* Delivery management interface styling for .af-delivery-table-wrap th:nth-child(6), .af-delivery-table-wrap td:nth-child(6). */
 .af-delivery-table-wrap td:nth-child(6) {
     width: 105px;
 }
@@ -313,6 +362,7 @@
 .af-delivery-table-wrap th:nth-child(7),
 .af-delivery-table-wrap td:nth-child(7),
 .af-delivery-table-wrap th:nth-child(8),
+/* Delivery management interface styling for .af-delivery-table-wrap th:nth-child(7), .af-delivery-table-wrap td:nth-child(7), .af-delivery-table-wrap th:nth-child(8), .af-delivery-table-wrap td:nth-child(8). */
 .af-delivery-table-wrap td:nth-child(8) {
     width: 88px;
 }
@@ -320,16 +370,19 @@
 .af-delivery-table-wrap th:nth-child(9),
 .af-delivery-table-wrap td:nth-child(9),
 .af-delivery-table-wrap th:nth-child(10),
+/* Delivery management interface styling for .af-delivery-table-wrap th:nth-child(9), .af-delivery-table-wrap td:nth-child(9), .af-delivery-table-wrap th:nth-child(10), .af-delivery-table-wrap td:nth-child(10). */
 .af-delivery-table-wrap td:nth-child(10) {
     width: 88px;
 }
 
 .af-delivery-table-wrap th:nth-child(11),
+/* Delivery management interface styling for .af-delivery-table-wrap th:nth-child(11), .af-delivery-table-wrap td:nth-child(11). */
 .af-delivery-table-wrap td:nth-child(11) {
     width: 70px;
 }
 
 .af-delivery-status,
+/* Delivery management interface styling for .af-delivery-status, .af-delivery-payment. */
 .af-delivery-payment {
     border-radius: 5px;
     display: inline-flex;
@@ -342,63 +395,75 @@
     white-space: nowrap;
 }
 
+/* Delivery management interface styling for .af-delivery-status.pending. */
 .af-delivery-status.pending {
     background: #f2f4f7;
     color: #475467;
 }
 
+/* Delivery management interface styling for .af-delivery-status.assigned. */
 .af-delivery-status.assigned {
     background: #fff2d6;
     color: #b86200;
 }
 
 .af-delivery-status.picked,
+/* Delivery management interface styling for .af-delivery-status.picked, .af-delivery-status.transit. */
 .af-delivery-status.transit {
     background: #e4f0ff;
     color: #1262c4;
 }
 
+/* Delivery management interface styling for .af-delivery-status.delivered. */
 .af-delivery-status.delivered {
     background: #def7e5;
     color: #11883b;
 }
 
 .af-delivery-status.returned,
+/* Delivery management interface styling for .af-delivery-status.returned, .af-delivery-status.cancelled. */
 .af-delivery-status.cancelled {
     background: #ffe4e7;
     color: #c52a37;
 }
 
+/* Delivery management interface styling for .af-delivery-payment.cash. */
 .af-delivery-payment.cash {
     background: #e6f6e8;
     color: #13843a;
 }
 
+/* Delivery management interface styling for .af-delivery-payment.momo. */
 .af-delivery-payment.momo {
     background: #e5f0ff;
     color: #0b66d6;
 }
 
+/* Delivery management interface styling for .af-delivery-payment.card. */
 .af-delivery-payment.card {
     background: #efe7ff;
     color: #6f4bd8;
 }
 
+/* Styling rules for .af-muted. */
 .af-muted {
     color: #98a2b3;
 }
 
+/* Delivery management interface styling for .af-delivery-row-actions. */
 .af-delivery-row-actions {
     display: flex;
     gap: 6px;
     align-items: center;
 }
 
+/* Delivery management interface styling for .af-delivery-row-actions form. */
 .af-delivery-row-actions form {
     margin: 0;
 }
 
 .af-delivery-row-actions a,
+/* Delivery management interface styling for .af-delivery-row-actions a, .af-delivery-row-actions button. */
 .af-delivery-row-actions button {
     width: 28px;
     height: 28px;
@@ -415,6 +480,7 @@
 }
 
 .af-delivery-row-actions a:hover,
+/* Delivery management interface styling for .af-delivery-row-actions a:hover, .af-delivery-row-actions button:hover. */
 .af-delivery-row-actions button:hover {
     border-color: #c7d0db;
     box-shadow: 0 8px 14px rgba(15, 23, 42, 0.08);
@@ -422,6 +488,7 @@
     transform: translateY(-1px);
 }
 
+/* Delivery management interface styling for .af-delivery-pagination. */
 .af-delivery-pagination {
     min-height: 54px;
     display: flex;
@@ -431,11 +498,13 @@
     padding: 11px 14px;
 }
 
+/* Delivery management interface styling for .af-delivery-pagination p. */
 .af-delivery-pagination p {
     color: #667085;
     font-size: 11px;
 }
 
+/* Delivery management interface styling for .af-delivery-pagination nav. */
 .af-delivery-pagination nav {
     display: flex;
     align-items: center;
@@ -443,6 +512,7 @@
 }
 
 .af-delivery-pagination a,
+/* Delivery management interface styling for .af-delivery-pagination a, .af-delivery-pagination span. */
 .af-delivery-pagination span {
     min-width: 30px;
     height: 30px;
@@ -457,22 +527,26 @@
     text-decoration: none;
 }
 
+/* Delivery management interface styling for .af-delivery-pagination a.is-active. */
 .af-delivery-pagination a.is-active {
     border-color: #c87000;
     background: linear-gradient(135deg, #d47a00, #b76400);
     color: #fff;
 }
 
+/* Delivery management interface styling for .af-delivery-pagination a.is-disabled. */
 .af-delivery-pagination a.is-disabled {
     opacity: 0.45;
     pointer-events: none;
 }
 
+/* Delivery management interface styling for .af-delivery-details. */
 .af-delivery-details {
     position: sticky;
     top: 88px;
 }
 
+/* Delivery management interface styling for .af-delivery-side-card. */
 .af-delivery-side-card {
     border: 1px solid #e6e9ee;
     border-radius: 8px;
@@ -483,6 +557,7 @@
     padding: 14px;
 }
 
+/* Header layout and controls for .af-delivery-side-card > header. */
 .af-delivery-side-card > header {
     display: flex;
     align-items: center;
@@ -490,6 +565,7 @@
     gap: 10px;
 }
 
+/* Header layout and controls for .af-delivery-side-card > header span. */
 .af-delivery-side-card > header span {
     width: 40px;
     height: 40px;
@@ -501,6 +577,7 @@
     font-size: 18px;
 }
 
+/* Header layout and controls for .af-delivery-side-card > header button. */
 .af-delivery-side-card > header button {
     width: 30px;
     height: 30px;
@@ -512,6 +589,7 @@
     place-items: center;
 }
 
+/* Delivery management interface styling for .af-delivery-side-card h2. */
 .af-delivery-side-card h2 {
     color: #101828;
     display: flex;
@@ -522,20 +600,24 @@
     line-height: 1.25;
 }
 
+/* Delivery management interface styling for .af-delivery-side-card .af-delivery-details-title. */
 .af-delivery-side-card .af-delivery-details-title {
     font-size: 16px;
     margin-bottom: -5px;
 }
 
+/* Delivery management interface styling for .af-delivery-side-card .af-delivery-details-title + h2. */
 .af-delivery-side-card .af-delivery-details-title + h2 {
     font-size: 13px;
 }
 
+/* Delivery management interface styling for .af-delivery-side-card time. */
 .af-delivery-side-card time {
     color: #667085;
     font-size: 11px;
 }
 
+/* Delivery management interface styling for .af-delivery-detail-tabs. */
 .af-delivery-detail-tabs {
     border-bottom: 1px solid #edf0f3;
     display: grid;
@@ -543,6 +625,7 @@
     gap: 0;
 }
 
+/* Delivery management interface styling for .af-delivery-detail-tabs a. */
 .af-delivery-detail-tabs a {
     border-bottom: 2px solid transparent;
     color: #475467;
@@ -554,11 +637,13 @@
 }
 
 .af-delivery-detail-tabs a:hover,
+/* Delivery management interface styling for .af-delivery-detail-tabs a:hover, .af-delivery-detail-tabs a:first-child. */
 .af-delivery-detail-tabs a:first-child {
     border-color: #cf7900;
     color: #101828;
 }
 
+/* Delivery management interface styling for .af-delivery-side-card section. */
 .af-delivery-side-card section {
     border-bottom: 1px solid #edf0f3;
     display: grid;
@@ -566,10 +651,12 @@
     padding-bottom: 12px;
 }
 
+/* Delivery management interface styling for .af-delivery-side-card section:last-of-type. */
 .af-delivery-side-card section:last-of-type {
     border-bottom: 0;
 }
 
+/* Delivery management interface styling for .af-delivery-side-card h3. */
 .af-delivery-side-card h3 {
     color: #101828;
     display: inline-flex;
@@ -579,26 +666,31 @@
     line-height: 1.25;
 }
 
+/* Delivery management interface styling for .af-delivery-side-card h3 i. */
 .af-delivery-side-card h3 i {
     color: #0f7c46;
 }
 
+/* Delivery management interface styling for .af-delivery-side-card strong. */
 .af-delivery-side-card strong {
     color: #101828;
     font-size: 12px;
 }
 
+/* Delivery management interface styling for .af-delivery-side-card p. */
 .af-delivery-side-card p {
     color: #475467;
     font-size: 11px;
     line-height: 1.45;
 }
 
+/* Delivery management interface styling for .af-delivery-side-card dl. */
 .af-delivery-side-card dl {
     display: grid;
     gap: 8px;
 }
 
+/* Delivery management interface styling for .af-delivery-side-card dl div. */
 .af-delivery-side-card dl div {
     display: grid;
     grid-template-columns: minmax(92px, 0.9fr) minmax(0, 1fr);
@@ -606,12 +698,14 @@
     align-items: start;
 }
 
+/* Delivery management interface styling for .af-delivery-side-card dt. */
 .af-delivery-side-card dt {
     color: #667085;
     font-size: 11px;
     font-weight: 750;
 }
 
+/* Delivery management interface styling for .af-delivery-side-card dd. */
 .af-delivery-side-card dd {
     color: #101828;
     font-size: 11px;
@@ -619,6 +713,7 @@
     text-align: right;
 }
 
+/* Delivery management interface styling for .af-delivery-side-card dd small. */
 .af-delivery-side-card dd small {
     color: #667085;
     display: block;
@@ -628,18 +723,21 @@
 }
 
 .af-delivery-assign-form,
+/* Delivery management interface styling for .af-delivery-assign-form, .af-delivery-status-form. */
 .af-delivery-status-form {
     display: grid;
     gap: 8px;
 }
 
 .af-delivery-assign-form label,
+/* Delivery management interface styling for .af-delivery-assign-form label, .af-delivery-status-form label. */
 .af-delivery-status-form label {
     display: grid;
     gap: 4px;
 }
 
 .af-delivery-assign-form span,
+/* Delivery management interface styling for .af-delivery-assign-form span, .af-delivery-status-form span. */
 .af-delivery-status-form span {
     color: #667085;
     font-size: 10px;
@@ -649,6 +747,7 @@
 .af-delivery-assign-form input,
 .af-delivery-assign-form select,
 .af-delivery-status-form input,
+/* Delivery management interface styling for .af-delivery-assign-form input, .af-delivery-assign-form select, .af-delivery-status-form input, .af-delivery-status-form select. */
 .af-delivery-status-form select {
     width: 100%;
     min-width: 0;
@@ -664,6 +763,7 @@
 }
 
 .af-delivery-assign-form button,
+/* Delivery management interface styling for .af-delivery-assign-form button, .af-delivery-status-form button. */
 .af-delivery-status-form button {
     height: 36px;
     border: 0;
@@ -681,11 +781,13 @@
 }
 
 .af-delivery-assign-form button:hover,
+/* Delivery management interface styling for .af-delivery-assign-form button:hover, .af-delivery-status-form button:hover. */
 .af-delivery-status-form button:hover {
     box-shadow: 0 9px 17px rgba(5, 46, 35, 0.2);
     transform: translateY(-1px);
 }
 
+/* Delivery management interface styling for .af-delivery-timeline. */
 .af-delivery-timeline {
     display: grid;
     gap: 8px;
@@ -694,6 +796,7 @@
     padding: 0;
 }
 
+/* Delivery management interface styling for .af-delivery-timeline li. */
 .af-delivery-timeline li {
     color: #667085;
     display: grid;
@@ -704,6 +807,7 @@
     position: relative;
 }
 
+/* Delivery management interface styling for .af-delivery-timeline li::before. */
 .af-delivery-timeline li::before {
     content: "";
     width: 7px;
@@ -714,14 +818,17 @@
     margin-right: 6px;
 }
 
+/* Delivery management interface styling for .af-delivery-timeline li.is-done. */
 .af-delivery-timeline li.is-done {
     color: #101828;
 }
 
+/* Delivery management interface styling for .af-delivery-timeline li.is-done::before. */
 .af-delivery-timeline li.is-done::before {
     background: #19a15f;
 }
 
+/* Delivery management interface styling for .af-delivery-timeline small. */
 .af-delivery-timeline small {
     color: #667085;
     font-size: 10px;
@@ -729,6 +836,7 @@
     text-align: right;
 }
 
+/* Delivery management interface styling for .af-delivery-side-card footer. */
 .af-delivery-side-card footer {
     display: grid;
     grid-template-columns: 1fr 1.15fr;
@@ -736,6 +844,7 @@
 }
 
 .af-delivery-side-card footer button,
+/* Delivery management interface styling for .af-delivery-side-card footer button, .af-delivery-side-card footer a. */
 .af-delivery-side-card footer a {
     height: 36px;
     border-radius: 7px;
@@ -750,12 +859,14 @@
     transition: transform 0.18s ease, box-shadow 0.18s ease;
 }
 
+/* Delivery management interface styling for .af-delivery-side-card footer button. */
 .af-delivery-side-card footer button {
     border: 1px solid #d9dee6;
     background: #fff;
     color: #111827;
 }
 
+/* Delivery management interface styling for .af-delivery-side-card footer a. */
 .af-delivery-side-card footer a {
     border: 0;
     background: linear-gradient(135deg, #052e23, #0a3d30);
@@ -763,101 +874,125 @@
 }
 
 .af-delivery-side-card footer button:hover,
+/* Delivery management interface styling for .af-delivery-side-card footer button:hover, .af-delivery-side-card footer a:hover. */
 .af-delivery-side-card footer a:hover {
     box-shadow: 0 9px 17px rgba(15, 23, 42, 0.12);
     transform: translateY(-1px);
 }
 
+/* Responsive styling rules for @media (max-width: 1320px). */
 @media (max-width: 1320px) {
+    /* Delivery management interface styling for .af-delivery-layout. */
     .af-delivery-layout {
         grid-template-columns: minmax(0, 1fr) 310px;
     }
 
+    /* Delivery management interface styling for .af-delivery-metrics. */
     .af-delivery-metrics {
         grid-template-columns: repeat(3, minmax(0, 1fr));
     }
 
+    /* Delivery management interface styling for .af-delivery-filters. */
     .af-delivery-filters {
         grid-template-columns: minmax(200px, 1fr) repeat(2, minmax(130px, 0.7fr)) 88px;
     }
 
     .af-delivery-filters label:nth-of-type(4),
+    /* Delivery management interface styling for .af-delivery-filters label:nth-of-type(4), .af-delivery-filters label:nth-of-type(5). */
     .af-delivery-filters label:nth-of-type(5) {
         display: none;
     }
 }
 
+/* Responsive styling rules for @media (max-width: 1120px). */
 @media (max-width: 1120px) {
+    /* Delivery management interface styling for .af-delivery-layout. */
     .af-delivery-layout {
         grid-template-columns: 1fr;
     }
 
+    /* Delivery management interface styling for .af-delivery-details. */
     .af-delivery-details {
         position: static;
     }
 
+    /* Delivery management interface styling for .af-delivery-metrics. */
     .af-delivery-metrics {
         grid-template-columns: repeat(2, minmax(0, 1fr));
     }
 }
 
+/* Responsive styling rules for @media (max-width: 720px). */
 @media (max-width: 720px) {
     .af-delivery-heading,
+    /* Delivery management interface styling for .af-delivery-heading, .af-delivery-pagination. */
     .af-delivery-pagination {
         align-items: stretch;
         flex-direction: column;
     }
 
+    /* Delivery management interface styling for .af-delivery-heading-actions. */
     .af-delivery-heading-actions {
         justify-content: stretch;
     }
 
+    /* Delivery management interface styling for .af-delivery-heading-actions a. */
     .af-delivery-heading-actions a {
         flex: 1;
     }
 
     .af-delivery-metrics,
+    /* Delivery management interface styling for .af-delivery-metrics, .af-delivery-filters. */
     .af-delivery-filters {
         grid-template-columns: 1fr;
     }
 
     .af-delivery-filters label:nth-of-type(4),
+    /* Delivery management interface styling for .af-delivery-filters label:nth-of-type(4), .af-delivery-filters label:nth-of-type(5). */
     .af-delivery-filters label:nth-of-type(5) {
         display: grid;
     }
 
+    /* Delivery management interface styling for .af-delivery-side-card footer. */
     .af-delivery-side-card footer {
         grid-template-columns: 1fr;
     }
 }
 
+/* Responsive styling rules for @media print. */
 @media print {
     .af-dashboard-sidebar,
     .af-admin-topbar,
     .af-delivery-heading,
     .af-delivery-metrics,
+    /* Sidebar navigation styling for .af-dashboard-sidebar, .af-admin-topbar, .af-delivery-heading, .af-delivery-metrics, .af-delivery-main. */
     .af-delivery-main {
         display: none !important;
     }
 
+    /* Styling rules for .af-admin-main. */
     .af-admin-main {
         margin: 0 !important;
         padding: 0 !important;
     }
 
+    /* Delivery management interface styling for .af-delivery-layout. */
     .af-delivery-layout {
         display: block;
     }
 
+    /* Delivery management interface styling for .af-delivery-details. */
     .af-delivery-details {
         position: static;
     }
 
+    /* Delivery management interface styling for .af-delivery-side-card. */
     .af-delivery-side-card {
         border: 0;
         box-shadow: none;
     }
 
+    /* Delivery management interface styling for .af-delivery-side-card footer. */
     .af-delivery-side-card footer {
         display: none;
     }

@@ -14,19 +14,23 @@ require_once __DIR__ . '/../includes/public_settings.php';
 \AfriSense\Backend\Helpers\Session::start();
 $authUser = afrisense_require_customer();
 
+// Defines the afrisense_customer_cart_image helper used by this module.
 function afrisense_customer_cart_image(string $frontendBase, ?string $image): string
 {
     $relativeImage = ltrim(str_replace('\\', '/', trim((string) $image)), '/');
     $filename = basename($relativeImage);
 
+    // Guard this block so it only runs when the required condition is met.
     if ($filename !== '' && is_file(__DIR__ . '/../assets/images/foods/' . $filename)) {
         return $frontendBase . '/assets/images/foods/' . $filename;
     }
 
+    // Guard this block so it only runs when the required condition is met.
     if ($relativeImage !== '' && is_file(__DIR__ . '/../uploads/' . $relativeImage)) {
         return $frontendBase . '/uploads/' . $relativeImage;
     }
 
+    // Guard this block so it only runs when the required condition is met.
     if ($filename !== '' && is_file(__DIR__ . '/../uploads/' . $filename)) {
         return $frontendBase . '/uploads/' . $filename;
     }
@@ -34,6 +38,7 @@ function afrisense_customer_cart_image(string $frontendBase, ?string $image): st
     return $frontendBase . '/assets/images/foods/jollof-rice.png';
 }
 
+// Defines the afrisense_customer_cart_customer helper used by this module.
 function afrisense_customer_cart_customer(PDO $pdo, array $user): ?array
 {
     $email = trim((string) ($user['email'] ?? ''));
@@ -57,36 +62,44 @@ $checkout = $_SESSION['afrisense_customer_checkout'] ?? [];
 $checkout = is_array($checkout) ? $checkout : [];
 $message = null;
 
+// Run database/action work inside a guarded block so the page can fail gracefully.
 try {
     $pdo = afrisense_pdo();
     $customer = afrisense_customer_cart_customer($pdo, $authUser);
 
+    // Handle submitted form actions before rendering the page.
     if (($_SERVER['REQUEST_METHOD'] ?? 'GET') === 'POST') {
         $action = trim((string) ($_POST['action'] ?? ''));
         $foodId = (int) ($_POST['food_id'] ?? 0);
 
+        // Guard this block so it only runs when the required condition is met.
         if ($action === 'increase' && isset($cart[$foodId])) {
             $cart[$foodId] = min(20, (int) $cart[$foodId] + 1);
         }
 
+        // Guard this block so it only runs when the required condition is met.
         if ($action === 'decrease' && isset($cart[$foodId])) {
             $cart[$foodId] = max(0, (int) $cart[$foodId] - 1);
         }
 
+        // Guard this block so it only runs when the required condition is met.
         if ($action === 'remove') {
             unset($cart[$foodId]);
         }
 
+        // Guard this block so it only runs when the required condition is met.
         if ($action === 'clear_cart') {
             $cart = [];
             $_SESSION['afrisense_customer_cart_note'] = '';
             $_SESSION['afrisense_customer_checkout'] = [];
         }
 
+        // Guard this block so it only runs when the required condition is met.
         if ($action === 'save_checkout') {
             $deliveryAddress = trim((string) ($_POST['delivery_address'] ?? ''));
             $cartNote = trim((string) ($_POST['cart_note'] ?? ''));
 
+            // Guard this block so it only runs when the required condition is met.
             if ($cart === []) {
                 $message = ['type' => 'error', 'text' => 'Add food items before checkout.'];
             } elseif ($deliveryAddress === '') {
@@ -107,6 +120,7 @@ try {
     }
 
     $cartFoods = [];
+    // Guard this block so it only runs when the required condition is met.
     if ($cart !== []) {
         $ids = array_keys($cart);
         $placeholders = implode(',', array_fill(0, count($ids), '?'));
@@ -118,6 +132,7 @@ try {
         );
         $statement->execute(array_merge(array_map('intval', $ids), array_map('intval', $ids)));
 
+        // Iterate through the data needed for this block.
         foreach ($statement->fetchAll(PDO::FETCH_ASSOC) as $food) {
             $food['quantity'] = max(1, (int) ($cart[(int) $food['id']] ?? 1));
             $cartFoods[] = $food;
@@ -143,16 +158,22 @@ $cartNote = (string) ($_SESSION['afrisense_customer_cart_note'] ?? $checkout['ca
 
 ob_start();
 ?>
+<!-- Page section for this part of the AfriSense interface. -->
 <section class="af-customer-cart-page">
+    <!-- Header block for this interface section. -->
     <header class="af-cart-page-heading">
         <h1>Your Cart</h1>
         <p>Review your items, update quantities, and proceed to checkout.</p>
     </header>
 
+    <?php // Render this conditional/dynamic template block. ?>
     <?php if ($loadError !== ''): ?><div class="af-admin-alert error"><?php echo htmlspecialchars($loadError, ENT_QUOTES, 'UTF-8'); ?></div><?php endif; ?>
+    <?php // Render this conditional/dynamic template block. ?>
     <?php if ($message !== null): ?><div class="af-admin-alert <?php echo htmlspecialchars($message['type'], ENT_QUOTES, 'UTF-8'); ?>"><?php echo htmlspecialchars($message['text'], ENT_QUOTES, 'UTF-8'); ?></div><?php endif; ?>
 
+    <!-- Page section for this part of the AfriSense interface. -->
     <section class="af-cart-layout">
+        <!-- Main content area for this page. -->
         <main>
             <div class="af-free-delivery">
                 <span><i class="bi bi-check-circle" aria-hidden="true"></i> You're only <?php echo htmlspecialchars(afrisense_public_money($freeDeliveryRemaining), ENT_QUOTES, 'UTF-8'); ?> away from FREE delivery!</span>
@@ -160,11 +181,15 @@ ob_start();
                 <i style="--progress: <?php echo htmlspecialchars((string) ($freeDeliveryOver > 0 ? min(100, ($subtotal / $freeDeliveryOver) * 100) : 100), ENT_QUOTES, 'UTF-8'); ?>%"></i>
             </div>
 
+            <!-- Page section for this part of the AfriSense interface. -->
             <section class="af-cart-table-card">
+                <!-- Table block for displaying structured records. -->
                 <table>
                     <thead><tr><th>Item</th><th>Price</th><th>Quantity</th><th>Total</th><th>Action</th></tr></thead>
                     <tbody>
+                        <?php // Render this conditional/dynamic template block. ?>
                         <?php if ($cartFoods === []): ?><tr><td colspan="5"><div class="af-empty-state">Your cart is empty.</div></td></tr><?php endif; ?>
+                        <?php // Render this conditional/dynamic template block. ?>
                         <?php foreach ($cartFoods as $food): ?>
                             <tr>
                                 <td>
@@ -181,12 +206,15 @@ ob_start();
                         <?php endforeach; ?>
                     </tbody>
                 </table>
+                <!-- Footer block for this interface section. -->
                 <footer>
+                    <!-- Form block that submits this page workflow. -->
                     <form method="post"><input type="hidden" name="action" value="clear_cart"><button type="submit"><i class="bi bi-trash"></i> Clear Cart</button></form>
                     <a href="orders.php"><i class="bi bi-arrow-clockwise"></i> Update Cart</a>
                 </footer>
             </section>
 
+            <!-- Page section for this part of the AfriSense interface. -->
             <section class="af-cart-benefits">
                 <article><i class="bi bi-shield-check"></i><strong>Secure Payment</strong><span>100% safe and secure payments.</span></article>
                 <article><i class="bi bi-scooter"></i><strong>Fast Delivery</strong><span>Quick delivery to your doorstep.</span></article>
@@ -195,6 +223,7 @@ ob_start();
             </section>
         </main>
 
+        <!-- Side panel with supporting information and actions. -->
         <aside class="af-cart-summary-panel">
             <h2>Order Summary</h2>
             <dl>
@@ -205,6 +234,7 @@ ob_start();
                 <div class="total"><dt>Total</dt><dd><?php echo htmlspecialchars(afrisense_public_money($total), ENT_QUOTES, 'UTF-8'); ?></dd></div>
             </dl>
             <p class="af-delivery-estimate"><i class="bi bi-scooter"></i><span>Estimated Delivery Time <strong><?php echo htmlspecialchars(afrisense_public_delivery_time(), ENT_QUOTES, 'UTF-8'); ?></strong></span></p>
+            <!-- Form block that submits this page workflow. -->
             <form class="af-cart-checkout-box" method="post">
                 <input type="hidden" name="action" value="save_checkout">
                 <label>Delivering to<input type="text" name="delivery_address" value="<?php echo htmlspecialchars($defaultAddress, ENT_QUOTES, 'UTF-8'); ?>" placeholder="Home - East Legon, Accra" required></label>

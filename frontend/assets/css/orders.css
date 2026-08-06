@@ -1,3 +1,4 @@
+/* Global design tokens and CSS custom properties. */
 :root {
     --af-order-gold: #b77b1a;
     --af-order-gold-2: #cc8f25;
@@ -8,15 +9,18 @@
     --af-order-bg: #fbfbfa;
 }
 
+/* Styling rules for .af-dashboard-content. */
 .af-dashboard-content {
     padding: 0;
     background: var(--af-order-bg);
 }
 
+/* Ordering and cart interface styling for .af-customer-order-page. */
 .af-customer-order-page {
     color: #101828;
 }
 
+/* Ordering and cart interface styling for .af-order-hero. */
 .af-order-hero {
     min-height: 255px;
     background:
@@ -27,6 +31,7 @@
     text-align: center;
 }
 
+/* Ordering and cart interface styling for .af-order-hero-overlay. */
 .af-order-hero-overlay {
     width: min(920px, calc(100% - 40px));
     display: grid;
@@ -37,6 +42,7 @@
 }
 
 .af-order-hero nav,
+/* Ordering and cart interface styling for .af-order-hero nav, .af-order-hero nav a. */
 .af-order-hero nav a {
     color: rgba(255, 255, 255, 0.86);
     display: inline-flex;
@@ -45,6 +51,7 @@
     text-decoration: none;
 }
 
+/* Ordering and cart interface styling for .af-order-hero h1. */
 .af-order-hero h1 {
     color: #fff;
     font-family: Georgia, "Times New Roman", serif;
@@ -52,16 +59,19 @@
     line-height: 1.05;
 }
 
+/* Ordering and cart interface styling for .af-order-hero h1 span. */
 .af-order-hero h1 span {
     color: var(--af-order-gold-2);
 }
 
 .af-order-hero > p,
+/* Ordering and cart interface styling for .af-order-hero > p, .af-order-hero-overlay > p. */
 .af-order-hero-overlay > p {
     color: rgba(255, 255, 255, 0.92);
     font-size: 17px;
 }
 
+/* Ordering and cart interface styling for .af-order-features. */
 .af-order-features {
     width: min(720px, 100%);
     display: grid;
@@ -70,6 +80,7 @@
     margin-top: 16px;
 }
 
+/* Ordering and cart interface styling for .af-order-features article. */
 .af-order-features article {
     min-height: 70px;
     background: rgba(12, 35, 29, 0.74);
@@ -83,6 +94,7 @@
     text-align: left;
 }
 
+/* Ordering and cart interface styling for .af-order-features i. */
 .af-order-features i {
     width: 42px;
     height: 42px;
@@ -95,16 +107,19 @@
     grid-row: span 2;
 }
 
+/* Ordering and cart interface styling for .af-order-features strong. */
 .af-order-features strong {
     color: #fff;
     font-size: 14px;
 }
 
+/* Ordering and cart interface styling for .af-order-features span. */
 .af-order-features span {
     color: rgba(255, 255, 255, 0.78);
     font-size: 13px;
 }
 
+/* Ordering and cart interface styling for .af-order-flash. */
 .af-order-flash {
     width: min(1180px, calc(100% - 40px));
     margin: 22px auto 0;
@@ -116,16 +131,19 @@
     font-weight: 800;
 }
 
+/* Ordering and cart interface styling for .af-order-flash.success. */
 .af-order-flash.success {
     background: #eef8ef;
     color: #137333;
 }
 
+/* Ordering and cart interface styling for .af-order-flash.error. */
 .af-order-flash.error {
     background: #fff1f1;
     color: #b42318;
 }
 
+/* Ordering and cart interface styling for .af-order-layout. */
 .af-order-layout {
     width: min(1180px, calc(100% - 40px));
     margin: 28px auto 38px;
@@ -138,6 +156,7 @@
 .af-order-panel,
 .af-help-card,
 .af-cart-card,
+/* Ordering and cart interface styling for .af-order-panel, .af-help-card, .af-cart-card, .af-delivery-card. */
 .af-delivery-card {
     background: #fff;
     border: 1px solid var(--af-order-line);
@@ -146,6 +165,7 @@
 }
 
 .af-order-panel,
+/* Ordering and cart interface styling for .af-order-panel, .af-help-card. */
 .af-help-card {
     padding: 18px;
 }
@@ -153,11 +173,13 @@
 .af-order-panel h2,
 .af-help-card h2,
 .af-order-center h2,
+/* Ordering and cart interface styling for .af-order-panel h2, .af-help-card h2, .af-order-center h2, .af-delivery-card h2. */
 .af-delivery-card h2 {
     font-family: Georgia, "Times New Roman", serif;
     color: #101828;
 }
 
+/* Card and panel styling for .af-panel-rule. */
 .af-panel-rule {
     width: 34px;
     height: 2px;
@@ -166,11 +188,13 @@
     margin: 10px 0 14px;
 }
 
+/* Styling rules for .af-category-list. */
 .af-category-list {
     display: grid;
     gap: 7px;
 }
 
+/* Styling rules for .af-category-list a. */
 .af-category-list a {
     min-height: 42px;
     border-radius: 7px;
@@ -186,21 +210,25 @@
 }
 
 .af-category-list a:hover,
+/* Interactive state styling for .af-category-list a:hover, .af-category-list a.is-active. */
 .af-category-list a.is-active {
     background: #f9eddd;
     color: var(--af-order-green);
     transform: translateX(2px);
 }
 
+/* Styling rules for .af-category-list i. */
 .af-category-list i {
     color: var(--af-order-gold-2);
 }
 
+/* Card and panel styling for .af-help-card. */
 .af-help-card {
     margin-top: 22px;
     background: linear-gradient(180deg, #fff, #fff8ef);
 }
 
+/* Card and panel styling for .af-help-card > i. */
 .af-help-card > i {
     color: var(--af-order-gold-2);
     font-size: 28px;
@@ -208,11 +236,13 @@
 
 .af-help-card p,
 .af-help-card small,
+/* Delivery management interface styling for .af-help-card p, .af-help-card small, .af-delivery-card p. */
 .af-delivery-card p {
     color: var(--af-order-muted);
     line-height: 1.55;
 }
 
+/* Card and panel styling for .af-help-card a. */
 .af-help-card a {
     min-height: 40px;
     border: 1px solid #eadac5;
@@ -227,6 +257,7 @@
     font-weight: 850;
 }
 
+/* Ordering and cart interface styling for .af-order-toolbar. */
 .af-order-toolbar {
     display: grid;
     grid-template-columns: minmax(0, 1fr) 190px;
@@ -234,6 +265,7 @@
     margin-bottom: 24px;
 }
 
+/* Ordering and cart interface styling for .af-order-toolbar label. */
 .af-order-toolbar label {
     height: 46px;
     border: 1px solid var(--af-order-line);
@@ -245,12 +277,14 @@
     box-shadow: 0 8px 18px rgba(15, 23, 42, 0.04);
 }
 
+/* Ordering and cart interface styling for .af-order-toolbar i. */
 .af-order-toolbar i {
     color: var(--af-order-muted);
     justify-self: center;
 }
 
 .af-order-toolbar input,
+/* Ordering and cart interface styling for .af-order-toolbar input, .af-order-toolbar select. */
 .af-order-toolbar select {
     width: 100%;
     border: 0;
@@ -259,17 +293,20 @@
     color: #344054;
 }
 
+/* Ordering and cart interface styling for .af-order-center > h2. */
 .af-order-center > h2 {
     font-size: 22px;
     margin-bottom: 16px;
 }
 
+/* Styling rules for .af-food-grid. */
 .af-food-grid {
     display: grid;
     grid-template-columns: repeat(3, minmax(0, 1fr));
     gap: 22px;
 }
 
+/* Card and panel styling for .af-food-card. */
 .af-food-card {
     background: #fff;
     border: 1px solid var(--af-order-line);
@@ -279,22 +316,26 @@
     transition: transform 180ms ease, box-shadow 180ms ease;
 }
 
+/* Card and panel styling for .af-food-card:hover. */
 .af-food-card:hover {
     transform: translateY(-4px);
     box-shadow: 0 18px 36px rgba(15, 23, 42, 0.12);
 }
 
+/* Styling rules for .af-food-image. */
 .af-food-image {
     height: 170px;
     position: relative;
 }
 
+/* Styling rules for .af-food-image img. */
 .af-food-image img {
     width: 100%;
     height: 100%;
     object-fit: cover;
 }
 
+/* Button and action control styling for .af-favorite-btn. */
 .af-favorite-btn {
     position: absolute;
     top: 12px;
@@ -309,22 +350,26 @@
     place-items: center;
 }
 
+/* Button and action control styling for .af-favorite-btn.is-active. */
 .af-favorite-btn.is-active {
     background: #fff;
     color: #d33b32;
 }
 
+/* Styling rules for .af-food-body. */
 .af-food-body {
     display: grid;
     gap: 10px;
     padding: 14px;
 }
 
+/* Styling rules for .af-food-body h3. */
 .af-food-body h3 {
     color: #111827;
     font-size: 18px;
 }
 
+/* Styling rules for .af-food-body p. */
 .af-food-body p {
     min-height: 48px;
     color: #667085;
@@ -332,10 +377,12 @@
     line-height: 1.55;
 }
 
+/* Styling rules for .af-food-body strong. */
 .af-food-body strong {
     color: var(--af-order-green);
 }
 
+/* Form control styling for .af-food-body form button. */
 .af-food-body form button {
     width: 100%;
     min-height: 38px;
@@ -350,6 +397,7 @@
     font-weight: 850;
 }
 
+/* Ordering and cart interface styling for .af-cart-card. */
 .af-cart-card {
     position: sticky;
     top: 88px;
@@ -359,6 +407,7 @@
     overflow: hidden;
 }
 
+/* Header layout and controls for .af-cart-card header. */
 .af-cart-card header {
     min-height: 48px;
     background: var(--af-order-green);
@@ -369,6 +418,7 @@
     padding: 0 16px;
 }
 
+/* Header layout and controls for .af-cart-card header h2. */
 .af-cart-card header h2 {
     color: #fff;
     font-size: 16px;
@@ -377,6 +427,7 @@
     gap: 9px;
 }
 
+/* Header layout and controls for .af-cart-card header button. */
 .af-cart-card header button {
     border: 0;
     background: transparent;
@@ -385,6 +436,7 @@
     font-size: 12px;
 }
 
+/* Ordering and cart interface styling for .af-cart-items. */
 .af-cart-items {
     padding: 10px 16px 0;
     overflow-y: auto;
@@ -392,12 +444,14 @@
     -webkit-overflow-scrolling: touch;
 }
 
+/* Ordering and cart interface styling for .af-empty-cart. */
 .af-empty-cart {
     color: var(--af-order-muted);
     line-height: 1.5;
     padding: 14px 0;
 }
 
+/* Ordering and cart interface styling for .af-cart-items article. */
 .af-cart-items article {
     display: grid;
     grid-template-columns: 56px minmax(0, 1fr) 22px;
@@ -406,6 +460,7 @@
     padding: 13px 0;
 }
 
+/* Ordering and cart interface styling for .af-cart-items img. */
 .af-cart-items img {
     width: 56px;
     height: 56px;
@@ -413,11 +468,13 @@
     object-fit: cover;
 }
 
+/* Ordering and cart interface styling for .af-cart-items h3. */
 .af-cart-items h3 {
     font-size: 14px;
     color: #111827;
 }
 
+/* Ordering and cart interface styling for .af-cart-items strong. */
 .af-cart-items strong {
     display: block;
     color: #344054;
@@ -425,12 +482,14 @@
     margin: 4px 0 8px;
 }
 
+/* Ordering and cart interface styling for .af-cart-controls. */
 .af-cart-controls {
     display: inline-grid;
     grid-template-columns: 28px 34px 28px;
     align-items: center;
 }
 
+/* Ordering and cart interface styling for .af-cart-controls button. */
 .af-cart-controls button {
     width: 28px;
     height: 26px;
@@ -439,6 +498,7 @@
     color: #344054;
 }
 
+/* Ordering and cart interface styling for .af-cart-controls span. */
 .af-cart-controls span {
     height: 26px;
     display: grid;
@@ -448,6 +508,7 @@
     font-size: 13px;
 }
 
+/* Styling rules for .af-remove-item. */
 .af-remove-item {
     border: 0;
     background: transparent;
@@ -455,12 +516,14 @@
 }
 
 .af-note-form,
+/* Form control styling for .af-note-form, .af-checkout-form. */
 .af-checkout-form {
     display: grid;
     gap: 10px;
     padding: 12px 16px;
 }
 
+/* Form control styling for .af-note-form > button:first-of-type. */
 .af-note-form > button:first-of-type {
     border: 0;
     background: #fff;
@@ -472,16 +535,19 @@
     font-weight: 750;
 }
 
+/* Form control styling for .af-note-form textarea. */
 .af-note-form textarea {
     display: none;
 }
 
+/* Form control styling for .af-note-form.is-open textarea. */
 .af-note-form.is-open textarea {
     display: block;
 }
 
 .af-note-form textarea,
 .af-checkout-form textarea,
+/* Form control styling for .af-note-form textarea, .af-checkout-form textarea, .af-checkout-form select. */
 .af-checkout-form select {
     width: 100%;
     border: 1px solid var(--af-order-line);
@@ -493,6 +559,7 @@
     padding: 9px 10px;
 }
 
+/* Form control styling for .af-note-form > button:last-child. */
 .af-note-form > button:last-child {
     border: 1px solid #eadac5;
     border-radius: 6px;
@@ -502,12 +569,14 @@
     font-weight: 850;
 }
 
+/* Form control styling for .af-checkout-form label. */
 .af-checkout-form label {
     color: #344054;
     font-size: 12px;
     font-weight: 850;
 }
 
+/* Ordering and cart interface styling for .af-cart-summary. */
 .af-cart-summary {
     display: grid;
     gap: 9px;
@@ -515,22 +584,26 @@
     padding-top: 12px;
 }
 
+/* Ordering and cart interface styling for .af-cart-summary div. */
 .af-cart-summary div {
     display: flex;
     justify-content: space-between;
     color: #344054;
 }
 
+/* Ordering and cart interface styling for .af-cart-summary div:last-child. */
 .af-cart-summary div:last-child {
     color: #111827;
     font-size: 18px;
     font-weight: 900;
 }
 
+/* Ordering and cart interface styling for .af-cart-summary div:last-child dd. */
 .af-cart-summary div:last-child dd {
     color: var(--af-order-green);
 }
 
+/* Button and action control styling for .af-checkout-btn. */
 .af-checkout-btn {
     min-height: 43px;
     border: 0;
@@ -544,10 +617,12 @@
     font-weight: 900;
 }
 
+/* Button and action control styling for .af-checkout-btn:disabled. */
 .af-checkout-btn:disabled {
     opacity: 0.58;
 }
 
+/* Styling rules for .af-secure-note. */
 .af-secure-note {
     background: #eef7ed;
     color: var(--af-order-green);
@@ -561,6 +636,7 @@
     font-size: 12px;
 }
 
+/* Delivery management interface styling for .af-delivery-card. */
 .af-delivery-card {
     display: grid;
     grid-template-columns: 48px 1fr;
@@ -570,16 +646,19 @@
     background: #f4f9f1;
 }
 
+/* Delivery management interface styling for .af-delivery-card > i. */
 .af-delivery-card > i {
     color: var(--af-order-green);
     font-size: 30px;
 }
 
+/* Delivery management interface styling for .af-delivery-card a. */
 .af-delivery-card a {
     color: var(--af-order-gold);
     font-weight: 850;
 }
 
+/* Styling rules for .af-empty-foods. */
 .af-empty-foods {
     grid-column: 1 / -1;
     border: 1px dashed var(--af-order-line);
@@ -592,56 +671,70 @@
     color: var(--af-order-muted);
 }
 
+/* Styling rules for .af-empty-foods i. */
 .af-empty-foods i {
     color: var(--af-order-gold);
     font-size: 34px;
 }
 
 .af-customer-order-page + .af-footer,
+/* Ordering and cart interface styling for .af-customer-order-page + .af-footer, .af-dashboard-content .af-footer. */
 .af-dashboard-content .af-footer {
     margin-top: 0;
 }
 
+/* Responsive styling rules for @media (max-width: 1180px). */
 @media (max-width: 1180px) {
+    /* Ordering and cart interface styling for .af-order-layout. */
     .af-order-layout {
         grid-template-columns: 210px minmax(0, 1fr);
     }
 
+    /* Ordering and cart interface styling for .af-order-right. */
     .af-order-right {
         grid-column: 1 / -1;
     }
 
+    /* Ordering and cart interface styling for .af-cart-card. */
     .af-cart-card {
         position: static;
     }
 }
 
+/* Responsive styling rules for @media (max-width: 900px). */
 @media (max-width: 900px) {
     .af-order-layout,
     .af-order-features,
+    /* Ordering and cart interface styling for .af-order-layout, .af-order-features, .af-order-toolbar. */
     .af-order-toolbar {
         grid-template-columns: 1fr;
     }
 
+    /* Styling rules for .af-food-grid. */
     .af-food-grid {
         grid-template-columns: repeat(2, minmax(0, 1fr));
     }
 }
 
+/* Responsive styling rules for @media (max-width: 620px). */
 @media (max-width: 620px) {
     .af-order-layout,
+    /* Ordering and cart interface styling for .af-order-layout, .af-order-flash. */
     .af-order-flash {
         width: calc(100% - 24px);
     }
 
+    /* Styling rules for .af-food-grid. */
     .af-food-grid {
         grid-template-columns: 1fr;
     }
 
+    /* Ordering and cart interface styling for .af-order-hero. */
     .af-order-hero {
         min-height: 310px;
     }
 
+    /* Ordering and cart interface styling for .af-cart-items article. */
     .af-cart-items article {
         grid-template-columns: 52px minmax(0, 1fr) 22px;
     }

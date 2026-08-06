@@ -17,8 +17,10 @@ $values = [
 
 ob_start();
 ?>
+<!-- Page section for this part of the AfriSense interface. -->
 <section class="af-services-hero">
     <div class="af-services-hero-inner">
+        <!-- Navigation links for this interface. -->
         <nav aria-label="Breadcrumb">
             <a href="index.php">Home</a>
             <i class="bi bi-chevron-right" aria-hidden="true"></i>
@@ -30,7 +32,9 @@ ob_start();
     </div>
 </section>
 
+<!-- Page section for this part of the AfriSense interface. -->
 <section class="af-services-page">
+    <!-- Header block for this interface section. -->
     <header class="af-page-heading">
         <p>Who We Are</p>
         <h2>Serving Taste, Quality, and Excellence</h2>
@@ -38,6 +42,7 @@ ob_start();
     </header>
 
     <div class="af-service-card-grid">
+        <?php // Render this conditional/dynamic template block. ?>
         <?php foreach ($values as $value): ?>
             <article class="af-public-service-card">
                 <div class="af-service-image">
@@ -53,6 +58,7 @@ ob_start();
         <?php endforeach; ?>
     </div>
 
+    <!-- Page section for this part of the AfriSense interface. -->
     <section class="af-catering-band">
         <p class="af-kicker">Work With Us</p>
         <h2>Planning Food for Your <span>Next Event?</span></h2>

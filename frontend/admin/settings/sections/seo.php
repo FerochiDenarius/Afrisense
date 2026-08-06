@@ -1,3 +1,4 @@
+        <!-- Page section for this part of the AfriSense interface. -->
         <section class="af-settings-card af-settings-card-wide" id="seo-settings">
             <h2>SEO &amp; Analytics</h2>
             <p>Manage the SEO values currently supported by the existing website settings schema.</p>
@@ -37,6 +38,7 @@
                     </label>
                 </div>
 
+                <!-- Side panel with supporting information and actions. -->
                 <aside class="af-seo-analytics-panel">
                     <h3>Analytics Overview</h3>
                     <p>Live analytics storage is not present in the current database schema.</p>

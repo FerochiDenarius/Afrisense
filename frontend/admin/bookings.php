@@ -14,6 +14,7 @@ $adminUser = afrisense_require_admin();
 $adminUserId = (int) ($adminUser['id'] ?? 0);
 $itemsPerPage = afrisense_admin_items_per_page();
 
+// Defines the afrisense_booking_status_class helper used by this module.
 function afrisense_booking_status_class(string $status): string
 {
     return match (strtolower($status)) {
@@ -24,8 +25,10 @@ function afrisense_booking_status_class(string $status): string
     };
 }
 
+// Defines the afrisense_count_bookings helper used by this module.
 function afrisense_count_bookings(PDO $pdo, ?string $status = null): int
 {
+    // Guard this block so it only runs when the required condition is met.
     if ($status === null) {
         $statement = $pdo->prepare('SELECT COUNT(*) AS count_value FROM `bookings`');
         $statement->execute();
@@ -39,11 +42,14 @@ function afrisense_count_bookings(PDO $pdo, ?string $status = null): int
     return (int) ($row['count_value'] ?? 0);
 }
 
+// Defines the afrisense_booking_url helper used by this module.
 function afrisense_booking_url(array $overrides = [], string $anchor = ''): string
 {
     $params = $_GET;
 
+    // Iterate through the data needed for this block.
     foreach ($overrides as $key => $value) {
+        // Guard this block so it only runs when the required condition is met.
         if ($value === null || $value === '') {
             unset($params[$key]);
         } else {
@@ -56,6 +62,7 @@ function afrisense_booking_url(array $overrides = [], string $anchor = ''): stri
     return 'bookings.php' . ($query !== '' ? '?' . $query : '') . $anchor;
 }
 
+// Defines the afrisense_booking_customer_user_id helper used by this module.
 function afrisense_booking_customer_user_id(PDO $pdo, int $bookingId): ?int
 {
     $statement = $pdo->prepare(
@@ -75,10 +82,12 @@ function afrisense_booking_customer_user_id(PDO $pdo, int $bookingId): ?int
     return $userId !== false ? (int) $userId : null;
 }
 
+// Defines the afrisense_booking_notify_customer helper used by this module.
 function afrisense_booking_notify_customer(PDO $pdo, int $bookingId, string $status, int $createdBy): void
 {
     $userId = afrisense_booking_customer_user_id($pdo, $bookingId);
 
+    // Guard this block so it only runs when the required condition is met.
     if ($userId === null || $userId <= 0) {
         return;
     }
@@ -107,15 +116,18 @@ $offset = ($page - 1) * $itemsPerPage;
 $flashMessage = '';
 $flashType = 'success';
 
+// Run database/action work inside a guarded block so the page can fail gracefully.
 try {
     $pdo = afrisense_pdo();
     $where = [];
     $params = [];
 
+    // Handle submitted form actions before rendering the page.
     if (($_SERVER['REQUEST_METHOD'] ?? 'GET') === 'POST' && ($_POST['action'] ?? '') === 'update_status') {
         $bookingId = (int) ($_POST['booking_id'] ?? 0);
         $nextStatus = (string) ($_POST['booking_status'] ?? '');
 
+        // Guard this block so it only runs when the required condition is met.
         if ($bookingId <= 0 || !in_array($nextStatus, $validStatuses, true)) {
             $flashType = 'error';
             $flashMessage = 'Booking status could not be updated.';
@@ -133,17 +145,20 @@ try {
 
             $flashMessage = 'Booking status updated to ' . $nextStatus . '.';
 
+            // Guard this block so it only runs when the required condition is met.
             if ($update->rowCount() > 0) {
                 afrisense_booking_notify_customer($pdo, $bookingId, $nextStatus, $adminUserId);
             }
         }
     }
 
+    // Guard this block so it only runs when the required condition is met.
     if (in_array($statusFilter, $validStatuses, true)) {
         $where[] = 'b.`booking_status` = :status';
         $params['status'] = $statusFilter;
     }
 
+    // Guard this block so it only runs when the required condition is met.
     if ($search !== '') {
         $where[] = '(CAST(b.`id` AS CHAR) LIKE :search OR c.`fullname` LIKE :search OR c.`phone_number` LIKE :search OR c.`email` LIKE :search OR s.`service_name` LIKE :search)';
         $params['search'] = '%' . $search . '%';
@@ -226,7 +241,9 @@ try {
 
 ob_start();
 ?>
+<!-- Page section for this part of the AfriSense interface. -->
 <section class="af-admin-menu-page af-bookings-admin-page">
+    <!-- Header block for this interface section. -->
     <header class="af-admin-page-heading">
         <div>
             <h1>Bookings Management</h1>
@@ -242,16 +259,19 @@ ob_start();
         </div>
     </header>
 
+    <?php // Render this conditional/dynamic template block. ?>
     <?php if ($loadError !== ''): ?>
         <div class="af-admin-alert error"><?php echo htmlspecialchars($loadError, ENT_QUOTES, 'UTF-8'); ?></div>
     <?php endif; ?>
 
+    <?php // Render this conditional/dynamic template block. ?>
     <?php if ($flashMessage !== ''): ?>
         <div class="af-admin-alert <?php echo htmlspecialchars($flashType, ENT_QUOTES, 'UTF-8'); ?>">
             <?php echo htmlspecialchars($flashMessage, ENT_QUOTES, 'UTF-8'); ?>
         </div>
     <?php endif; ?>
 
+    <!-- Page section for this part of the AfriSense interface. -->
     <section class="af-menu-metrics af-booking-metrics" aria-label="Booking summary">
         <article class="gold">
             <span><i class="bi bi-calendar3" aria-hidden="true"></i></span>
@@ -279,8 +299,11 @@ ob_start();
         </article>
     </section>
 
+    <!-- Page section for this part of the AfriSense interface. -->
     <section class="af-bookings-workspace">
+        <!-- Page section for this part of the AfriSense interface. -->
         <section class="af-menu-table-card" id="bookings-table">
+            <!-- Form block that submits this page workflow. -->
             <form class="af-bookings-filters" action="bookings.php" method="get">
                 <label class="af-menu-search" for="booking_search">
                     <i class="bi bi-search" aria-hidden="true"></i>
@@ -289,6 +312,7 @@ ob_start();
                 <label class="af-menu-select" for="booking_status_filter">
                     <select id="booking_status_filter" name="status">
                         <option value="">All Status</option>
+                        <?php // Render this conditional/dynamic template block. ?>
                         <?php foreach ($validStatuses as $status): ?>
                             <option value="<?php echo htmlspecialchars($status, ENT_QUOTES, 'UTF-8'); ?>" <?php echo $statusFilter === $status ? 'selected' : ''; ?>>
                                 <?php echo htmlspecialchars($status, ENT_QUOTES, 'UTF-8'); ?>
@@ -301,8 +325,10 @@ ob_start();
                 <a href="bookings.php">Reset</a>
             </form>
 
+            <!-- Navigation links for this interface. -->
             <nav class="af-booking-tabs" aria-label="Booking status filters">
                 <a class="<?php echo $statusFilter === '' ? 'active' : ''; ?>" href="bookings.php">All Bookings</a>
+                <?php // Render this conditional/dynamic template block. ?>
                 <?php foreach ($validStatuses as $status): ?>
                     <a class="<?php echo $statusFilter === $status ? 'active' : ''; ?>" href="bookings.php?status=<?php echo urlencode($status); ?>">
                         <?php echo htmlspecialchars($status, ENT_QUOTES, 'UTF-8'); ?>
@@ -311,6 +337,7 @@ ob_start();
             </nav>
 
             <div class="af-menu-table af-bookings-table">
+                <!-- Table block for displaying structured records. -->
                 <table>
                     <thead>
                         <tr>
@@ -328,11 +355,13 @@ ob_start();
                         </tr>
                     </thead>
                     <tbody>
+                        <?php // Render this conditional/dynamic template block. ?>
                         <?php if ($bookings === []): ?>
                             <tr>
                                 <td colspan="11"><div class="af-empty-state">No bookings found.</div></td>
                             </tr>
                         <?php endif; ?>
+                        <?php // Render this conditional/dynamic template block. ?>
                         <?php foreach ($bookings as $booking): ?>
                             <?php
                             $status = (string) ($booking['booking_status'] ?? 'Pending');
@@ -363,13 +392,16 @@ ob_start();
                                 <td>
                                     <div class="af-row-actions af-booking-row-actions">
                                         <button type="button" title="View booking details" aria-label="View booking"><i class="bi bi-eye" aria-hidden="true"></i></button>
+                                        <?php // Render this conditional/dynamic template block. ?>
                                         <?php if ($status === 'Pending'): ?>
+                                            <!-- Form block that submits this page workflow. -->
                                             <form action="bookings.php" method="post">
                                                 <input type="hidden" name="action" value="update_status">
                                                 <input type="hidden" name="booking_id" value="<?php echo htmlspecialchars((string) ($booking['id'] ?? 0), ENT_QUOTES, 'UTF-8'); ?>">
                                                 <input type="hidden" name="booking_status" value="Confirmed">
                                                 <button class="success" type="submit" title="Confirm booking" aria-label="Confirm booking"><i class="bi bi-check2" aria-hidden="true"></i></button>
                                             </form>
+                                            <!-- Form block that submits this page workflow. -->
                                             <form action="bookings.php" method="post">
                                                 <input type="hidden" name="action" value="update_status">
                                                 <input type="hidden" name="booking_id" value="<?php echo htmlspecialchars((string) ($booking['id'] ?? 0), ENT_QUOTES, 'UTF-8'); ?>">
@@ -377,12 +409,14 @@ ob_start();
                                                 <button class="danger" type="submit" title="Cancel booking" aria-label="Cancel booking"><i class="bi bi-x-lg" aria-hidden="true"></i></button>
                                             </form>
                                         <?php elseif ($status === 'Confirmed'): ?>
+                                            <!-- Form block that submits this page workflow. -->
                                             <form action="bookings.php" method="post">
                                                 <input type="hidden" name="action" value="update_status">
                                                 <input type="hidden" name="booking_id" value="<?php echo htmlspecialchars((string) ($booking['id'] ?? 0), ENT_QUOTES, 'UTF-8'); ?>">
                                                 <input type="hidden" name="booking_status" value="Completed">
                                                 <button class="success" type="submit" title="Mark booking completed" aria-label="Mark booking completed"><i class="bi bi-check2-circle" aria-hidden="true"></i></button>
                                             </form>
+                                            <!-- Form block that submits this page workflow. -->
                                             <form action="bookings.php" method="post">
                                                 <input type="hidden" name="action" value="update_status">
                                                 <input type="hidden" name="booking_id" value="<?php echo htmlspecialchars((string) ($booking['id'] ?? 0), ENT_QUOTES, 'UTF-8'); ?>">
@@ -390,6 +424,7 @@ ob_start();
                                                 <button class="danger" type="submit" title="Cancel booking" aria-label="Cancel booking"><i class="bi bi-x-lg" aria-hidden="true"></i></button>
                                             </form>
                                         <?php elseif ($status === 'Cancelled'): ?>
+                                            <!-- Form block that submits this page workflow. -->
                                             <form action="bookings.php" method="post">
                                                 <input type="hidden" name="action" value="update_status">
                                                 <input type="hidden" name="booking_id" value="<?php echo htmlspecialchars((string) ($booking['id'] ?? 0), ENT_QUOTES, 'UTF-8'); ?>">
@@ -405,13 +440,17 @@ ob_start();
                 </table>
             </div>
 
+            <!-- Footer block for this interface section. -->
             <footer class="af-menu-pagination">
                 <p>Showing <?php echo htmlspecialchars((string) ($filteredBookingCount > 0 ? $offset + 1 : 0), ENT_QUOTES, 'UTF-8'); ?> to <?php echo htmlspecialchars((string) min($offset + count($bookings), $filteredBookingCount), ENT_QUOTES, 'UTF-8'); ?> of <?php echo htmlspecialchars((string) $filteredBookingCount, ENT_QUOTES, 'UTF-8'); ?> bookings</p>
+                <!-- Navigation links for this interface. -->
                 <nav aria-label="Bookings pagination">
                     <a class="<?php echo $page <= 1 ? 'is-disabled' : ''; ?>" href="<?php echo htmlspecialchars($page <= 1 ? '#' : afrisense_booking_url(['page' => (string) ($page - 1)], '#bookings-table'), ENT_QUOTES, 'UTF-8'); ?>" aria-label="Previous page" title="Previous page"><i class="bi bi-chevron-left" aria-hidden="true"></i></a>
+                    <?php // Render this conditional/dynamic template block. ?>
                     <?php for ($number = max(1, $page - 1); $number <= min($totalPages, $page + 1); $number++): ?>
                         <a class="<?php echo $number === $page ? 'active' : ''; ?>" href="<?php echo htmlspecialchars(afrisense_booking_url(['page' => (string) $number], '#bookings-table'), ENT_QUOTES, 'UTF-8'); ?>"><?php echo htmlspecialchars((string) $number, ENT_QUOTES, 'UTF-8'); ?></a>
                     <?php endfor; ?>
+                    <?php // Render this conditional/dynamic template block. ?>
                     <?php if ($totalPages > $page + 1): ?>
                         <span>...</span>
                         <a href="<?php echo htmlspecialchars(afrisense_booking_url(['page' => (string) $totalPages], '#bookings-table'), ENT_QUOTES, 'UTF-8'); ?>"><?php echo htmlspecialchars((string) $totalPages, ENT_QUOTES, 'UTF-8'); ?></a>
@@ -421,7 +460,9 @@ ob_start();
             </footer>
         </section>
 
+        <!-- Side panel with supporting information and actions. -->
         <aside class="af-bookings-side">
+            <!-- Page section for this part of the AfriSense interface. -->
             <section class="af-menu-panel">
                 <h2>Today's Overview</h2>
                 <ul class="af-order-pipeline">
@@ -432,9 +473,11 @@ ob_start();
                 </ul>
             </section>
 
+            <!-- Page section for this part of the AfriSense interface. -->
             <section class="af-menu-panel">
                 <h2>Top Services</h2>
                 <ul class="af-food-category-list">
+                    <?php // Render this conditional/dynamic template block. ?>
                     <?php foreach ($topServices as $service): ?>
                         <li>
                             <span>

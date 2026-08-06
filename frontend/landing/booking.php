@@ -10,11 +10,13 @@ require_once __DIR__ . '/../includes/public_settings.php';
 
 afrisense_enforce_public_site_status($frontendBase);
 
+// Defines the afrisense_booking_post helper used by this module.
 function afrisense_booking_post(string $key, string $fallback = ''): string
 {
     return trim((string) ($_POST[$key] ?? $fallback));
 }
 
+// Defines the afrisense_booking_customer_id helper used by this module.
 function afrisense_booking_customer_id(PDO $pdo, string $fullname, string $email, string $phone): int
 {
     $statement = $pdo->prepare(
@@ -27,6 +29,7 @@ function afrisense_booking_customer_id(PDO $pdo, string $fullname, string $email
     $statement->execute(['email' => $email, 'phone' => $phone]);
     $customerId = $statement->fetchColumn();
 
+    // Guard this block so it only runs when the required condition is met.
     if ($customerId !== false) {
         $update = $pdo->prepare(
             'UPDATE `customers`
@@ -63,6 +66,7 @@ function afrisense_booking_customer_id(PDO $pdo, string $fullname, string $email
 $bookingMessage = null;
 $services = [];
 
+// Run database/action work inside a guarded block so the page can fail gracefully.
 try {
     $pdo = afrisense_pdo();
     $serviceStatement = $pdo->prepare(
@@ -74,6 +78,7 @@ try {
     $serviceStatement->execute(['availability' => 'Available']);
     $services = $serviceStatement->fetchAll(PDO::FETCH_ASSOC);
 
+    // Handle submitted form actions before rendering the page.
     if (($_SERVER['REQUEST_METHOD'] ?? 'GET') === 'POST') {
         $fullname = afrisense_booking_post('full_name');
         $email = afrisense_booking_post('email');
@@ -89,6 +94,7 @@ try {
         $serviceCheck = $pdo->prepare('SELECT `id` FROM `services` WHERE `id` = :id LIMIT 1');
         $serviceCheck->execute(['id' => $serviceId]);
 
+        // Guard this block so it only runs when the required condition is met.
         if ($fullname === '' || !filter_var($email, FILTER_VALIDATE_EMAIL) || $phone === '' || $serviceCheck->fetchColumn() === false || $eventDate === '' || $eventTime === '') {
             $bookingMessage = ['type' => 'error', 'text' => 'Please complete all required booking fields.'];
         } else {
@@ -125,6 +131,7 @@ try {
         }
     }
 } catch (Throwable $exception) {
+    // Guard this block so it only runs when the required condition is met.
     if (isset($pdo) && $pdo->inTransaction()) {
         $pdo->rollBack();
     }
@@ -132,6 +139,7 @@ try {
     $bookingMessage = ['type' => 'error', 'text' => 'Booking could not be submitted. Please try again.'];
 }
 
+// Guard this block so it only runs when the required condition is met.
 if ($services === []) {
     $services = [
         ['id' => 0, 'service_name' => 'Service Unavailable', 'description' => 'Please contact AfriSense to book manually.', 'price' => 0],
@@ -145,10 +153,13 @@ $prefillDate = preg_match('/^\d{4}-\d{2}-\d{2}$/', $requestedDate) === 1 ? $requ
 $prefillTime = preg_match('/^\d{2}:\d{2}$/', $requestedTime) === 1 ? $requestedTime : '';
 $selectedServiceIndex = 0;
 
+// Guard this block so it only runs when the required condition is met.
 if ($requestedService !== '') {
+    // Iterate through the data needed for this block.
     foreach ($services as $index => $service) {
         $serviceNameKey = strtolower(preg_replace('/[^a-z0-9]+/', '', (string) ($service['service_name'] ?? '')));
 
+        // Guard this block so it only runs when the required condition is met.
         if ($serviceNameKey !== '' && ($serviceNameKey === $requestedService || str_contains($serviceNameKey, $requestedService) || str_contains($requestedService, $serviceNameKey))) {
             $selectedServiceIndex = (int) $index;
             break;
@@ -174,8 +185,10 @@ $features = [
 
 ob_start();
 ?>
+<!-- Page section for this part of the AfriSense interface. -->
 <section class="af-service-hero af-booking-hero">
     <div class="af-service-hero-inner">
+        <!-- Navigation links for this interface. -->
         <nav class="af-breadcrumb" aria-label="Breadcrumb">
             <a href="index.php"><i class="bi bi-house-door" aria-hidden="true"></i> Home</a>
             <i class="bi bi-chevron-right" aria-hidden="true"></i>
@@ -191,9 +204,12 @@ ob_start();
     </div>
 </section>
 
+<!-- Page section for this part of the AfriSense interface. -->
 <section class="af-booking-page" id="booking_form">
     <div class="af-booking-grid">
+        <!-- Page section for this part of the AfriSense interface. -->
         <section class="af-service-card af-booking-form-card" aria-labelledby="booking_title">
+            <!-- Header block for this interface section. -->
             <header class="af-section-heading">
                 <span><i class="bi bi-calendar3" aria-hidden="true"></i></span>
                 <div>
@@ -202,9 +218,11 @@ ob_start();
                 </div>
             </header>
 
+            <!-- Form block that submits this page workflow. -->
             <form class="af-service-form" action="booking.php" method="post" data-booking-form data-enhanced-form>
                 <fieldset class="af-service-types">
                     <legend>Select Service</legend>
+                    <?php // Render this conditional/dynamic template block. ?>
                     <?php foreach ($services as $index => $service): ?>
                         <?php $serviceName = (string) ($service['service_name'] ?? 'Service'); ?>
                         <label class="<?php echo $index === $selectedServiceIndex ? 'is-active' : ''; ?>" data-service-option data-price="<?php echo (float) ($service['price'] ?? 0); ?>">
@@ -298,6 +316,7 @@ ob_start();
                     </div>
                 </div>
 
+                <!-- Page section for this part of the AfriSense interface. -->
                 <section class="af-booking-summary" aria-live="polite">
                     <h3><i class="bi bi-calendar-check" aria-hidden="true"></i> Booking Summary</h3>
                     <div class="af-summary-grid">
@@ -314,6 +333,7 @@ ob_start();
                             <strong data-summary-guests>4 Guests</strong>
                         </div>
                     </div>
+                    <!-- Footer block for this interface section. -->
                     <footer>
                         <span>Total Amount</span>
                         <strong data-summary-total>GHC 120.00</strong>
@@ -331,10 +351,13 @@ ob_start();
             </form>
         </section>
 
+        <!-- Side panel with supporting information and actions. -->
         <aside class="af-booking-side">
+            <!-- Page section for this part of the AfriSense interface. -->
             <section class="af-service-card af-benefits-card">
                 <h2>Why Book With Us?</h2>
                 <div class="af-side-list">
+                    <?php // Render this conditional/dynamic template block. ?>
                     <?php foreach ($benefits as $benefit): ?>
                         <article>
                             <span><i class="bi <?php echo htmlspecialchars($benefit['icon'], ENT_QUOTES, 'UTF-8'); ?>" aria-hidden="true"></i></span>
@@ -347,6 +370,7 @@ ob_start();
                 </div>
             </section>
 
+            <!-- Page section for this part of the AfriSense interface. -->
             <section class="af-service-card af-hours-card">
                 <h2>Opening Hours</h2>
                 <dl>
@@ -356,6 +380,7 @@ ob_start();
                 </dl>
             </section>
 
+            <!-- Page section for this part of the AfriSense interface. -->
             <section class="af-event-card">
                 <h2>Planning an Event?</h2>
                 <p>Let us make your special occasion unforgettable with our premium catering services.</p>
@@ -364,7 +389,9 @@ ob_start();
         </aside>
     </div>
 
+    <!-- Page section for this part of the AfriSense interface. -->
     <section class="af-feature-strip" aria-label="AfriSense booking benefits">
+        <?php // Render this conditional/dynamic template block. ?>
         <?php foreach ($features as $feature): ?>
             <article>
                 <span><i class="bi <?php echo htmlspecialchars($feature['icon'], ENT_QUOTES, 'UTF-8'); ?>" aria-hidden="true"></i></span>

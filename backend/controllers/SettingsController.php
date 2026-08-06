@@ -45,6 +45,7 @@ class SettingsController
      */
     public function update(string $key, mixed $value): array
     {
+        // Guard this block so it only runs when the required condition is met.
         if (!$this->settings->set($key, $value)) {
             return Response::error('Setting could not be saved.', 400);
         }
@@ -57,6 +58,7 @@ class SettingsController
      */
     public function destroy(string $key): array
     {
+        // Guard this block so it only runs when the required condition is met.
         if (!$this->settings->delete($key)) {
             return Response::error('Setting could not be deleted.', 400);
         }

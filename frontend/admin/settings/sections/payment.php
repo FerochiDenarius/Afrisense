@@ -9,6 +9,7 @@
             ['key' => 'flutterwave_enabled', 'label' => 'Flutterwave', 'hint' => 'Accept international card payments and more.', 'logo' => '<i class="bi bi-wind" aria-hidden="true"></i>', 'class' => 'flutterwave'],
         ];
         ?>
+        <!-- Page section for this part of the AfriSense interface. -->
         <section class="af-settings-card af-settings-card-wide af-payment-gateways-card" id="payment-settings">
             <div class="af-settings-section-heading">
                 <div>
@@ -19,6 +20,7 @@
             </div>
 
             <div class="af-payment-gateway-list">
+                <?php // Render this conditional/dynamic template block. ?>
                 <?php foreach ($paymentGateways as $gateway): ?>
                     <?php $gatewayEnabled = (int) ($system[$gateway['key']] ?? 0) === 1; ?>
                     <article>
@@ -38,12 +40,14 @@
             </div>
         </section>
 
+        <!-- Page section for this part of the AfriSense interface. -->
         <section class="af-settings-card af-payment-config-card">
             <h2>Gateway Configuration</h2>
             <p>Configure the selected payment gateway.</p>
             <label class="af-settings-field">
                 <span>Select Gateway</span>
                 <select name="payment_gateway">
+                    <?php // Render this conditional/dynamic template block. ?>
                     <?php foreach (['Paystack', 'MTN Mobile Money', 'Vodafone Cash', 'Flutterwave'] as $gatewayName): ?>
                         <option value="<?php echo htmlspecialchars($gatewayName, ENT_QUOTES, 'UTF-8'); ?>" <?php echo $paymentGateway === $gatewayName ? 'selected' : ''; ?>><?php echo htmlspecialchars($gatewayName, ENT_QUOTES, 'UTF-8'); ?></option>
                     <?php endforeach; ?>
@@ -67,6 +71,7 @@
             </button>
         </section>
 
+        <!-- Page section for this part of the AfriSense interface. -->
         <section class="af-settings-card">
             <h2>Currency Settings</h2>
             <p>Manage the currency used on your website.</p>
@@ -86,6 +91,7 @@
             </div>
         </section>
 
+        <!-- Page section for this part of the AfriSense interface. -->
         <section class="af-settings-card">
             <h2>Payment Settings</h2>
             <p>Configure how payments work on your website.</p>
@@ -104,6 +110,7 @@
             <input type="hidden" name="order_notifications" value="<?php echo (int) ($system['order_notifications'] ?? 1) === 1 ? '1' : '0'; ?>">
         </section>
 
+        <!-- Page section for this part of the AfriSense interface. -->
         <section class="af-settings-card">
             <h2>Payment Instructions</h2>
             <p>Add instructions for customers during checkout.</p>
@@ -113,6 +120,7 @@
             </label>
         </section>
 
+        <!-- Page section for this part of the AfriSense interface. -->
         <section class="af-settings-card af-settings-card-wide">
             <h2>Refund &amp; Cancellation Policy</h2>
             <p>Manage refund and cancellation settings.</p>
@@ -121,6 +129,7 @@
                     <span>Refund Policy</span>
                     <?php $refundPolicy = (string) ($system['refund_policy'] ?? 'Allow refund within 7 days'); ?>
                     <select name="refund_policy">
+                        <?php // Render this conditional/dynamic template block. ?>
                         <?php foreach (['Allow refund within 7 days', 'Allow refund within 3 days', 'No automatic refund'] as $policy): ?>
                             <option value="<?php echo htmlspecialchars($policy, ENT_QUOTES, 'UTF-8'); ?>" <?php echo $refundPolicy === $policy ? 'selected' : ''; ?>><?php echo htmlspecialchars($policy, ENT_QUOTES, 'UTF-8'); ?></option>
                         <?php endforeach; ?>
@@ -130,6 +139,7 @@
                     <span>Cancellation Policy</span>
                     <?php $cancellationPolicy = (string) ($system['cancellation_policy'] ?? 'Allow cancellation before delivery'); ?>
                     <select name="cancellation_policy">
+                        <?php // Render this conditional/dynamic template block. ?>
                         <?php foreach (['Allow cancellation before delivery', 'Allow cancellation before preparation', 'No customer cancellation'] as $policy): ?>
                             <option value="<?php echo htmlspecialchars($policy, ENT_QUOTES, 'UTF-8'); ?>" <?php echo $cancellationPolicy === $policy ? 'selected' : ''; ?>><?php echo htmlspecialchars($policy, ENT_QUOTES, 'UTF-8'); ?></option>
                         <?php endforeach; ?>
@@ -139,6 +149,7 @@
             <label class="af-settings-field"><span>Refund Process Message</span><textarea name="refund_process_message" rows="3"><?php echo htmlspecialchars($refundProcessMessage, ENT_QUOTES, 'UTF-8'); ?></textarea></label>
         </section>
 
+        <!-- Page section for this part of the AfriSense interface. -->
         <section class="af-settings-card">
             <h2>Recent Transactions</h2>
             <p>Use the Orders page for live payment records in the current schema.</p>

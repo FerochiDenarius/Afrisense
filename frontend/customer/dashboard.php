@@ -9,6 +9,7 @@ require_once __DIR__ . '/../auth/auth_bootstrap.php';
 
 $authUser = afrisense_require_customer();
 
+// Defines the afrisense_customer_dashboard_customer helper used by this module.
 function afrisense_customer_dashboard_customer(PDO $pdo, array $user): ?array
 {
     $email = trim((string) ($user['email'] ?? ''));
@@ -35,11 +36,13 @@ $memberSince = 'Now';
 $verificationLabel = ((int) ($authUser['email_verified'] ?? 0) === 1) ? '100%' : '0%';
 $loadError = '';
 
+// Run database/action work inside a guarded block so the page can fail gracefully.
 try {
     $pdo = afrisense_pdo();
     $customer = afrisense_customer_dashboard_customer($pdo, $authUser);
     $customerId = (int) ($customer['id'] ?? 0);
 
+    // Guard this block so it only runs when the required condition is met.
     if ($customerId > 0) {
         $ordersStatement = $pdo->prepare('SELECT COUNT(*) AS count_value, COALESCE(SUM(`total_price`), 0) AS total_spent FROM `orders` WHERE `customer_id` = :customer_id');
         $ordersStatement->execute(['customer_id' => $customerId]);
@@ -68,7 +71,9 @@ try {
 
 ob_start();
 ?>
+<!-- Page section for this part of the AfriSense interface. -->
 <section class="af-admin-menu-page">
+    <!-- Header block for this interface section. -->
     <header class="af-admin-page-heading">
         <div>
             <h1>Customer Dashboard</h1>
@@ -80,10 +85,12 @@ ob_start();
         </a>
     </header>
 
+    <?php // Render this conditional/dynamic template block. ?>
     <?php if ($loadError !== ''): ?>
         <div class="af-admin-alert error"><?php echo htmlspecialchars($loadError, ENT_QUOTES, 'UTF-8'); ?></div>
     <?php endif; ?>
 
+    <!-- Page section for this part of the AfriSense interface. -->
     <section class="af-menu-metrics" aria-label="Customer summary">
         <article class="green">
             <span><i class="bi bi-bag-check" aria-hidden="true"></i></span>
@@ -103,8 +110,10 @@ ob_start();
         </article>
     </section>
 
+    <!-- Page section for this part of the AfriSense interface. -->
     <section class="af-menu-workspace">
         <div class="af-menu-main">
+            <!-- Page section for this part of the AfriSense interface. -->
             <section class="af-menu-table-card">
                 <div class="af-menu-panel">
                     <h2>Quick Start</h2>
@@ -119,7 +128,9 @@ ob_start();
             </section>
         </div>
 
+        <!-- Side panel with supporting information and actions. -->
         <aside class="af-menu-side">
+            <!-- Page section for this part of the AfriSense interface. -->
             <section class="af-menu-panel">
                 <h2>Your Account</h2>
                 <ul class="af-category-list">

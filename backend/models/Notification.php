@@ -25,6 +25,7 @@ class Notification extends BaseModel
      */
     public function allForUser(int $userId): array
     {
+        // Guard this block so it only runs when the required condition is met.
         if (!$this->tableExists($this->table) || !$this->columnExists($this->table, 'user_id')) {
             return [];
         }
@@ -48,11 +49,13 @@ class Notification extends BaseModel
      */
     public function create(array $data): ?int
     {
+        // Guard this block so it only runs when the required condition is met.
         if (isset($data['type']) && $this->columnExists($this->table, 'notification_type')) {
             $data['notification_type'] = $data['type'];
             unset($data['type']);
         }
 
+        // Guard this block so it only runs when the required condition is met.
         if ($this->columnExists($this->table, 'created_at') && !isset($data['created_at'])) {
             $data['created_at'] = date('Y-m-d H:i:s');
         }
@@ -65,12 +68,14 @@ class Notification extends BaseModel
      */
     public function markAsRead(int $id, int $userId): bool
     {
+        // Guard this block so it only runs when the required condition is met.
         if (!$this->tableExists($this->table) || !$this->columnExists($this->table, 'user_id')) {
             return false;
         }
 
         $readColumn = $this->readColumn();
 
+        // Guard this block so it only runs when the required condition is met.
         if ($readColumn === null) {
             return false;
         }
@@ -94,12 +99,14 @@ class Notification extends BaseModel
      */
     public function markAllAsRead(int $userId): int
     {
+        // Guard this block so it only runs when the required condition is met.
         if (!$this->tableExists($this->table) || !$this->columnExists($this->table, 'user_id')) {
             return 0;
         }
 
         $readColumn = $this->readColumn();
 
+        // Guard this block so it only runs when the required condition is met.
         if ($readColumn === null) {
             return 0;
         }
@@ -123,6 +130,7 @@ class Notification extends BaseModel
      */
     public function delete(int $id, int $userId): bool
     {
+        // Guard this block so it only runs when the required condition is met.
         if (!$this->tableExists($this->table) || !$this->columnExists($this->table, 'user_id')) {
             return false;
         }
@@ -140,12 +148,14 @@ class Notification extends BaseModel
      */
     public function unreadCount(int $userId): int
     {
+        // Guard this block so it only runs when the required condition is met.
         if (!$this->tableExists($this->table) || !$this->columnExists($this->table, 'user_id')) {
             return 0;
         }
 
         $readColumn = $this->readColumn();
 
+        // Guard this block so it only runs when the required condition is met.
         if ($readColumn === null) {
             return 0;
         }
@@ -153,6 +163,7 @@ class Notification extends BaseModel
         $operator = $readColumn === 'read_at' ? 'IS NULL' : '= :read_value';
         $params = ['user_id' => $userId];
 
+        // Guard this block so it only runs when the required condition is met.
         if ($readColumn !== 'read_at') {
             $params['read_value'] = $readColumn === 'status' ? 'unread' : 0;
         }
@@ -175,7 +186,9 @@ class Notification extends BaseModel
 
     private function readColumn(): ?string
     {
+        // Iterate through the data needed for this block.
         foreach (['is_read', 'read_at', 'status'] as $column) {
+            // Guard this block so it only runs when the required condition is met.
             if ($this->columnExists($this->table, $column)) {
                 return $column;
             }

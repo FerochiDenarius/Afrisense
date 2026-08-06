@@ -1,23 +1,28 @@
+/* Ordering and cart interface styling for .af-orders-page. */
 .af-orders-page {
     gap: 16px;
 }
 
+/* Ordering and cart interface styling for .af-orders-page .af-admin-page-heading. */
 .af-orders-page .af-admin-page-heading {
     align-items: center;
 }
 
+/* Ordering and cart interface styling for .af-orders-page .af-admin-page-heading h1. */
 .af-orders-page .af-admin-page-heading h1 {
     font-size: 23px;
     line-height: 1.1;
     margin-bottom: 6px;
 }
 
+/* Ordering and cart interface styling for .af-orders-page .af-admin-page-heading p. */
 .af-orders-page .af-admin-page-heading p {
     color: #667085;
     font-size: 12px;
     font-weight: 650;
 }
 
+/* Ordering and cart interface styling for .af-orders-page .af-add-menu-btn. */
 .af-orders-page .af-add-menu-btn {
     height: 34px;
     min-width: 110px;
@@ -32,16 +37,19 @@
 .af-orders-page .af-add-menu-btn:hover,
 .af-orders-page .af-menu-filters button:hover,
 .af-orders-page .af-row-actions a:hover,
+/* Ordering and cart interface styling for .af-orders-page .af-add-menu-btn:hover, .af-orders-page .af-menu-filters button:hover, .af-orders-page .af-row-actions a:hover, .af-orders-page .af-order-more summary:hover. */
 .af-orders-page .af-order-more summary:hover {
     transform: translateY(-1px);
     box-shadow: 0 9px 18px rgba(15, 23, 42, 0.12);
 }
 
+/* Ordering and cart interface styling for .af-order-metrics. */
 .af-order-metrics {
     grid-template-columns: repeat(5, minmax(0, 1fr));
     gap: 12px;
 }
 
+/* Ordering and cart interface styling for .af-order-metrics article. */
 .af-order-metrics article {
     min-height: 86px;
     border-radius: 8px;
@@ -50,12 +58,14 @@
     padding: 14px;
 }
 
+/* Ordering and cart interface styling for .af-order-metrics article > span. */
 .af-order-metrics article > span {
     width: 43px;
     height: 43px;
     font-size: 20px;
 }
 
+/* Ordering and cart interface styling for .af-order-metrics small. */
 .af-order-metrics small {
     color: #344054;
     font-size: 10px;
@@ -63,17 +73,20 @@
     margin-bottom: 5px;
 }
 
+/* Ordering and cart interface styling for .af-order-metrics strong. */
 .af-order-metrics strong {
     font-size: 24px;
     line-height: 1;
 }
 
+/* Ordering and cart interface styling for .af-order-metrics p. */
 .af-order-metrics p {
     color: #667085;
     font-size: 10px;
     margin-top: 6px;
 }
 
+/* Ordering and cart interface styling for .af-orders-workspace. */
 .af-orders-workspace {
     display: grid;
     grid-template-columns: minmax(0, 1fr) 270px;
@@ -81,10 +94,12 @@
     align-items: start;
 }
 
+/* Ordering and cart interface styling for .af-orders-page .af-menu-table-card. */
 .af-orders-page .af-menu-table-card {
     border-radius: 8px;
 }
 
+/* Ordering and cart interface styling for .af-orders-filters. */
 .af-orders-filters {
     grid-template-columns: minmax(300px, 1fr) 168px 250px 86px;
     gap: 12px;
@@ -93,26 +108,31 @@
 
 .af-orders-filters .af-menu-search,
 .af-orders-filters .af-menu-select,
+/* Ordering and cart interface styling for .af-orders-filters .af-menu-search, .af-orders-filters .af-menu-select, .af-orders-filters button. */
 .af-orders-filters button {
     height: 34px;
     border-radius: 6px;
 }
 
+/* Ordering and cart interface styling for .af-orders-filters .af-menu-search. */
 .af-orders-filters .af-menu-search {
     grid-template-columns: 34px 1fr;
 }
 
 .af-orders-filters .af-menu-search input,
+/* Ordering and cart interface styling for .af-orders-filters .af-menu-search input, .af-orders-filters .af-menu-select select. */
 .af-orders-filters .af-menu-select select {
     font-size: 11px;
     font-weight: 650;
 }
 
+/* Ordering and cart interface styling for .af-orders-filters .af-menu-select. */
 .af-orders-filters .af-menu-select {
     position: relative;
     grid-template-columns: 1fr 26px;
 }
 
+/* Ordering and cart interface styling for .af-orders-filters .af-menu-select > span. */
 .af-orders-filters .af-menu-select > span {
     position: absolute;
     left: 0;
@@ -122,18 +142,22 @@
     font-weight: 800;
 }
 
+/* Ordering and cart interface styling for .af-orders-filters .af-menu-select[for="order_date_range"]. */
 .af-orders-filters .af-menu-select[for="order_date_range"] {
     grid-template-columns: 25px 1fr 26px;
 }
 
+/* Ordering and cart interface styling for .af-orders-filters .af-menu-select[for="order_date_range"] select. */
 .af-orders-filters .af-menu-select[for="order_date_range"] select {
     padding-left: 0;
 }
 
+/* Ordering and cart interface styling for .af-orders-filters .af-menu-select i. */
 .af-orders-filters .af-menu-select i {
     font-size: 13px;
 }
 
+/* Ordering and cart interface styling for .af-orders-filters button. */
 .af-orders-filters button {
     grid-template-columns: 16px auto;
     gap: 6px;
@@ -142,6 +166,7 @@
     transition: transform 160ms ease, box-shadow 160ms ease;
 }
 
+/* Ordering and cart interface styling for .af-orders-table. */
 .af-orders-table {
     display: block;
     max-width: 100%;
@@ -151,19 +176,23 @@
     -webkit-overflow-scrolling: touch;
 }
 
+/* Ordering and cart interface styling for .af-orders-table::-webkit-scrollbar. */
 .af-orders-table::-webkit-scrollbar {
     height: 10px;
 }
 
+/* Ordering and cart interface styling for .af-orders-table::-webkit-scrollbar-track. */
 .af-orders-table::-webkit-scrollbar-track {
     background: #f1f5f9;
 }
 
+/* Ordering and cart interface styling for .af-orders-table::-webkit-scrollbar-thumb. */
 .af-orders-table::-webkit-scrollbar-thumb {
     border-radius: 999px;
     background: #c8d0d9;
 }
 
+/* Ordering and cart interface styling for .af-orders-table table. */
 .af-orders-table table {
     width: 1600px;
     min-width: 1600px;
@@ -171,12 +200,14 @@
 }
 
 .af-orders-table th,
+/* Ordering and cart interface styling for .af-orders-table th, .af-orders-table td. */
 .af-orders-table td {
     height: 54px;
     padding: 9px 12px;
     font-size: 11px;
 }
 
+/* Ordering and cart interface styling for .af-orders-table th. */
 .af-orders-table th {
     background: #fcfcfd;
     color: #344054;
@@ -184,55 +215,66 @@
 }
 
 .af-orders-table th:nth-child(1),
+/* Ordering and cart interface styling for .af-orders-table th:nth-child(1), .af-orders-table td:nth-child(1). */
 .af-orders-table td:nth-child(1) {
     width: 130px;
 }
 
 .af-orders-table th:nth-child(2),
+/* Ordering and cart interface styling for .af-orders-table th:nth-child(2), .af-orders-table td:nth-child(2). */
 .af-orders-table td:nth-child(2) {
     width: 190px;
 }
 
 .af-orders-table th:nth-child(3),
+/* Ordering and cart interface styling for .af-orders-table th:nth-child(3), .af-orders-table td:nth-child(3). */
 .af-orders-table td:nth-child(3) {
     width: 220px;
 }
 
 .af-orders-table th:nth-child(4),
+/* Ordering and cart interface styling for .af-orders-table th:nth-child(4), .af-orders-table td:nth-child(4). */
 .af-orders-table td:nth-child(4) {
     width: 145px;
 }
 
 .af-orders-table th:nth-child(5),
+/* Ordering and cart interface styling for .af-orders-table th:nth-child(5), .af-orders-table td:nth-child(5). */
 .af-orders-table td:nth-child(5) {
     width: 360px;
 }
 
 .af-orders-table th:nth-child(6),
+/* Ordering and cart interface styling for .af-orders-table th:nth-child(6), .af-orders-table td:nth-child(6). */
 .af-orders-table td:nth-child(6) {
     width: 120px;
 }
 
 .af-orders-table th:nth-child(7),
+/* Ordering and cart interface styling for .af-orders-table th:nth-child(7), .af-orders-table td:nth-child(7). */
 .af-orders-table td:nth-child(7) {
     width: 130px;
 }
 
 .af-orders-table th:nth-child(8),
+/* Ordering and cart interface styling for .af-orders-table th:nth-child(8), .af-orders-table td:nth-child(8). */
 .af-orders-table td:nth-child(8) {
     width: 130px;
 }
 
 .af-orders-table th:nth-child(9),
+/* Ordering and cart interface styling for .af-orders-table th:nth-child(9), .af-orders-table td:nth-child(9). */
 .af-orders-table td:nth-child(9) {
     width: 235px;
 }
 
+/* Ordering and cart interface styling for .af-order-id. */
 .af-order-id {
     font-size: 11px;
     white-space: nowrap;
 }
 
+/* Ordering and cart interface styling for .af-order-email. */
 .af-order-email {
     color: #344054;
     display: inline-block;
@@ -244,17 +286,20 @@
 }
 
 .af-order-email:hover,
+/* Ordering and cart interface styling for .af-order-email:hover, .af-order-email:focus-visible. */
 .af-order-email:focus-visible {
     color: #b77b1a;
 }
 
 .af-order-customer,
+/* Ordering and cart interface styling for .af-order-customer, .af-order-date. */
 .af-order-date {
     gap: 3px;
 }
 
 .af-order-customer strong,
 .af-order-date strong,
+/* Ordering and cart interface styling for .af-order-customer strong, .af-order-date strong, .af-order-item-cell strong. */
 .af-order-item-cell strong {
     font-size: 11px;
     line-height: 1.25;
@@ -262,16 +307,19 @@
 
 .af-order-customer small,
 .af-order-date small,
+/* Ordering and cart interface styling for .af-order-customer small, .af-order-date small, .af-order-item-cell small. */
 .af-order-item-cell small {
     color: #667085;
     font-size: 10px;
 }
 
+/* Ordering and cart interface styling for .af-order-item-cell. */
 .af-order-item-cell {
     grid-template-columns: 34px minmax(0, 1fr);
     gap: 9px;
 }
 
+/* Ordering and cart interface styling for .af-order-item-cell img. */
 .af-order-item-cell img {
     width: 34px;
     height: 34px;
@@ -279,6 +327,7 @@
 }
 
 .af-order-status,
+/* Ordering and cart interface styling for .af-order-status, .af-payment-status. */
 .af-payment-status {
     min-height: 22px;
     border-radius: 5px;
@@ -288,11 +337,13 @@
     white-space: nowrap;
 }
 
+/* Payment interface styling for .af-payment-status.cash. */
 .af-payment-status.cash {
     background: #e5f0ff;
     color: #2563eb;
 }
 
+/* Ordering and cart interface styling for .af-order-row-actions. */
 .af-order-row-actions {
     flex-wrap: nowrap;
     gap: 7px;
@@ -300,12 +351,14 @@
     position: relative;
 }
 
+/* Ordering and cart interface styling for .af-order-row-actions form. */
 .af-order-row-actions form {
     margin: 0;
 }
 
 .af-order-row-actions > a,
 .af-order-row-actions form button,
+/* Ordering and cart interface styling for .af-order-row-actions > a, .af-order-row-actions form button, .af-order-more summary. */
 .af-order-more summary {
     width: 29px;
     height: 29px;
@@ -320,10 +373,12 @@
     transition: transform 160ms ease, box-shadow 160ms ease;
 }
 
+/* Ordering and cart interface styling for .af-order-row-actions form button. */
 .af-order-row-actions form button {
     padding: 0;
 }
 
+/* Ordering and cart interface styling for .af-order-row-actions form button span. */
 .af-order-row-actions form button span {
     position: absolute;
     width: 1px;
@@ -333,80 +388,97 @@
     white-space: nowrap;
 }
 
+/* Ordering and cart interface styling for .af-order-row-actions form button.success. */
 .af-order-row-actions form button.success {
     border-color: #b7e4c7;
     color: #159447;
 }
 
+/* Ordering and cart interface styling for .af-order-row-actions form button.warning. */
 .af-order-row-actions form button.warning {
     border-color: #fed7aa;
     color: #c06f00;
 }
 
+/* Ordering and cart interface styling for .af-order-row-actions form button.danger. */
 .af-order-row-actions form button.danger {
     border-color: #ffb4b4;
     color: #ef4444;
 }
 
+/* Ordering and cart interface styling for .af-orders-side. */
 .af-orders-side {
     display: grid;
     gap: 14px;
 }
 
+/* Ordering and cart interface styling for .af-orders-side .af-menu-panel. */
 .af-orders-side .af-menu-panel {
     padding: 16px;
 }
 
+/* Ordering and cart interface styling for .af-orders-side .af-menu-panel h2. */
 .af-orders-side .af-menu-panel h2 {
     font-size: 16px;
     margin-bottom: 14px;
 }
 
+/* Ordering and cart interface styling for .af-selected-order-panel. */
 .af-selected-order-panel {
     gap: 10px;
 }
 
+/* Ordering and cart interface styling for .af-selected-order-panel > strong. */
 .af-selected-order-panel > strong {
     font-size: 15px;
 }
 
+/* Ordering and cart interface styling for .af-selected-order-panel dl. */
 .af-selected-order-panel dl {
     gap: 8px;
 }
 
+/* Ordering and cart interface styling for .af-selected-order-panel dl div. */
 .af-selected-order-panel dl div {
     grid-template-columns: 66px minmax(0, 1fr);
     gap: 8px;
 }
 
+/* Ordering and cart interface styling for .af-selected-order-panel dt. */
 .af-selected-order-panel dt {
     font-size: 10px;
 }
 
 .af-selected-order-panel dd,
+/* Ordering and cart interface styling for .af-selected-order-panel dd, .af-selected-order-panel p. */
 .af-selected-order-panel p {
     font-size: 11px;
     line-height: 1.45;
     overflow-wrap: anywhere;
 }
 
+/* Ordering and cart interface styling for .af-order-more. */
 .af-order-more {
     position: relative;
 }
 
+/* Ordering and cart interface styling for .af-order-more summary. */
 .af-order-more summary {
     list-style: none;
 }
 
+/* Ordering and cart interface styling for .af-order-more summary::-webkit-details-marker. */
 .af-order-more summary::-webkit-details-marker {
     display: none;
 }
 
+/* Ordering and cart interface styling for .af-order-more[open] summary. */
 .af-order-more[open] summary {
     border-color: #d4a15c;
     color: #9a5d08;
 }
 
+/* Ordering and cart interface styling for .af-order-more > div. */
 .af-order-more > div {
     position: absolute;
     right: 0;
@@ -422,6 +494,7 @@
     padding: 7px;
 }
 
+/* Ordering and cart interface styling for .af-order-more button. */
 .af-order-more button {
     width: 100%;
     min-height: 31px;
@@ -439,35 +512,43 @@
     cursor: pointer;
 }
 
+/* Ordering and cart interface styling for .af-order-more button:hover. */
 .af-order-more button:hover {
     background: #f8fafc;
 }
 
+/* Ordering and cart interface styling for .af-order-more button.success. */
 .af-order-more button.success {
     color: #15803d;
 }
 
+/* Ordering and cart interface styling for .af-order-more button.warning. */
 .af-order-more button.warning {
     color: #b45309;
 }
 
+/* Ordering and cart interface styling for .af-order-more button.danger. */
 .af-order-more button.danger {
     color: #dc2626;
 }
 
+/* Navigation and menu styling for .af-menu-pagination. */
 .af-menu-pagination {
     padding: 12px 14px;
 }
 
+/* Navigation and menu styling for .af-menu-pagination p. */
 .af-menu-pagination p {
     font-size: 11px;
 }
 
+/* Navigation and menu styling for .af-menu-pagination nav. */
 .af-menu-pagination nav {
     gap: 6px;
 }
 
 .af-menu-pagination a,
+/* Navigation and menu styling for .af-menu-pagination a, .af-menu-pagination span. */
 .af-menu-pagination span {
     min-width: 28px;
     height: 28px;
@@ -475,16 +556,19 @@
     font-size: 11px;
 }
 
+/* Sidebar navigation styling for .af-admin-sidebar .af-subnav a. */
 .af-admin-sidebar .af-subnav a {
     display: grid;
     grid-template-columns: 4px minmax(0, 1fr) auto;
     gap: 10px;
 }
 
+/* Sidebar navigation styling for .af-admin-sidebar .af-subnav a::before. */
 .af-admin-sidebar .af-subnav a::before {
     grid-column: 1;
 }
 
+/* Sidebar navigation styling for .af-admin-sidebar .af-subnav a > span. */
 .af-admin-sidebar .af-subnav a > span {
     grid-column: 2;
     min-width: 0;
@@ -493,6 +577,7 @@
     white-space: nowrap;
 }
 
+/* Navigation and menu styling for .af-nav-badge. */
 .af-nav-badge {
     grid-column: 3;
     min-width: 22px;
@@ -508,35 +593,44 @@
 }
 
 .af-nav-badge.confirmed,
+/* Navigation and menu styling for .af-nav-badge.confirmed, .af-nav-badge.delivered. */
 .af-nav-badge.delivered {
     background: #159447;
 }
 
+/* Navigation and menu styling for .af-nav-badge.preparing. */
 .af-nav-badge.preparing {
     background: #2f78d4;
 }
 
+/* Navigation and menu styling for .af-nav-badge.cancelled. */
 .af-nav-badge.cancelled {
     background: #6b7280;
 }
 
+/* Responsive styling rules for @media (max-width: 1180px). */
 @media (max-width: 1180px) {
+    /* Ordering and cart interface styling for .af-order-metrics. */
     .af-order-metrics {
         grid-template-columns: repeat(2, minmax(0, 1fr));
     }
 
+    /* Ordering and cart interface styling for .af-orders-filters. */
     .af-orders-filters {
         grid-template-columns: repeat(2, minmax(0, 1fr));
         row-gap: 24px;
     }
 }
 
+/* Responsive styling rules for @media (max-width: 720px). */
 @media (max-width: 720px) {
     .af-order-metrics,
+    /* Ordering and cart interface styling for .af-order-metrics, .af-orders-filters. */
     .af-orders-filters {
         grid-template-columns: 1fr;
     }
 
+    /* Ordering and cart interface styling for .af-orders-page .af-admin-page-heading. */
     .af-orders-page .af-admin-page-heading {
         align-items: stretch;
     }

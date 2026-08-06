@@ -1,3 +1,4 @@
+/* Ordering and cart interface styling for .af-order-hero. */
 .af-order-hero {
     min-height: 270px;
     background: linear-gradient(rgba(5, 20, 16, 0.78), rgba(5, 20, 16, 0.82)), url("../images/foodimage.jpeg") center / cover;
@@ -9,11 +10,13 @@
 }
 
 .af-order-hero nav,
+/* Ordering and cart interface styling for .af-order-hero nav, .af-order-hero nav a. */
 .af-order-hero nav a {
     color: #fff;
     text-decoration: none;
 }
 
+/* Ordering and cart interface styling for .af-order-hero h1. */
 .af-order-hero h1 {
     font-family: Georgia, "Times New Roman", serif;
     font-size: clamp(38px, 5vw, 56px);
@@ -21,10 +24,12 @@
 }
 
 .af-order-hero h1 span,
+/* Ordering and cart interface styling for .af-order-hero h1 span, .af-order-hero nav span. */
 .af-order-hero nav span {
     color: var(--af-gold-2);
 }
 
+/* Ordering and cart interface styling for .af-order-benefits. */
 .af-order-benefits {
     display: grid;
     grid-template-columns: repeat(3, minmax(0, 1fr));
@@ -32,6 +37,7 @@
     margin-top: 26px;
 }
 
+/* Ordering and cart interface styling for .af-order-benefits article. */
 .af-order-benefits article {
     min-width: 210px;
     background: rgba(0, 0, 0, 0.3);
@@ -44,6 +50,7 @@
     padding: 16px 20px;
 }
 
+/* Ordering and cart interface styling for .af-order-benefits i. */
 .af-order-benefits i {
     width: 42px;
     height: 42px;
@@ -55,10 +62,12 @@
 }
 
 .af-order-benefits strong,
+/* Ordering and cart interface styling for .af-order-benefits strong, .af-order-benefits span. */
 .af-order-benefits span {
     display: block;
 }
 
+/* Ordering and cart interface styling for .af-order-page. */
 .af-order-page {
     background: #fafafa;
     display: grid;
@@ -72,6 +81,7 @@
 .af-cart-panel,
 .af-delivery-info,
 .af-summary-card,
+/* Ordering and cart interface styling for .af-order-panel, .af-help-box, .af-cart-panel, .af-delivery-info, .af-summary-card, .af-payment-card. */
 .af-payment-card {
     border: 1px solid #e5e7eb;
     border-radius: 10px;
@@ -80,6 +90,7 @@
 }
 
 .af-order-panel,
+/* Ordering and cart interface styling for .af-order-panel, .af-help-box. */
 .af-help-box {
     padding: 22px;
 }
@@ -89,11 +100,13 @@
 .af-cart-panel h2,
 .af-delivery-info h2,
 .af-summary-card h2,
+/* Ordering and cart interface styling for .af-order-panel h2, .af-order-main h2, .af-cart-panel h2, .af-delivery-info h2, .af-summary-card h2, .af-payment-section h2. */
 .af-payment-section h2 {
     color: var(--af-green);
     font-family: Georgia, "Times New Roman", serif;
 }
 
+/* Card and panel styling for .af-panel-line. */
 .af-panel-line {
     width: 34px;
     height: 2px;
@@ -102,11 +115,13 @@
     margin: 12px 0;
 }
 
+/* Navigation and menu styling for .af-category-menu. */
 .af-category-menu {
     display: grid;
     gap: 8px;
 }
 
+/* Navigation and menu styling for .af-category-menu a. */
 .af-category-menu a {
     min-height: 41px;
     border-radius: 7px;
@@ -119,21 +134,25 @@
 }
 
 .af-category-menu a.is-active,
+/* Navigation and menu styling for .af-category-menu a.is-active, .af-category-menu a:hover. */
 .af-category-menu a:hover {
     background: #fff2df;
     color: var(--af-green);
 }
 
 .af-category-menu i,
+/* Navigation and menu styling for .af-category-menu i, .af-help-box > i. */
 .af-help-box > i {
     color: var(--af-gold);
 }
 
+/* Styling rules for .af-help-box. */
 .af-help-box {
     background: #fff8ef;
     margin-top: 24px;
 }
 
+/* Styling rules for .af-help-box a. */
 .af-help-box a {
     min-height: 42px;
     border: 1px solid #eadfd3;
@@ -147,10 +166,12 @@
     margin: 14px 0;
 }
 
+/* Ordering and cart interface styling for .af-order-main. */
 .af-order-main {
     min-width: 0;
 }
 
+/* Ordering and cart interface styling for .af-order-toolbar. */
 .af-order-toolbar {
     display: grid;
     grid-template-columns: minmax(0, 1fr) 180px;
@@ -158,6 +179,7 @@
     margin-bottom: 24px;
 }
 
+/* Ordering and cart interface styling for .af-order-toolbar label. */
 .af-order-toolbar label {
     height: 46px;
     border: 1px solid #d9dee6;
@@ -169,6 +191,7 @@
 }
 
 .af-order-toolbar input,
+/* Ordering and cart interface styling for .af-order-toolbar input, .af-order-toolbar select. */
 .af-order-toolbar select {
     width: 100%;
     border: 0;
@@ -176,12 +199,14 @@
     background: transparent;
 }
 
+/* Styling rules for .af-dish-grid. */
 .af-dish-grid {
     display: grid;
     grid-template-columns: repeat(3, minmax(0, 1fr));
     gap: 22px;
 }
 
+/* Card and panel styling for .af-dish-card. */
 .af-dish-card {
     border: 1px solid #e5e7eb;
     border-radius: 10px;
@@ -190,11 +215,13 @@
     box-shadow: 0 8px 22px rgba(15, 23, 42, 0.06);
 }
 
+/* Form control styling for .af-dish-card.is-selected. */
 .af-dish-card.is-selected {
     border-color: var(--af-gold);
     box-shadow: 0 14px 34px rgba(214, 126, 0, 0.16);
 }
 
+/* Styling rules for .af-dish-image. */
 .af-dish-image {
     height: 170px;
     position: relative;
@@ -202,12 +229,14 @@
 
 .af-dish-image img,
 .af-cart-items img,
+/* Ordering and cart interface styling for .af-dish-image img, .af-cart-items img, .af-summary-card article img. */
 .af-summary-card article img {
     width: 100%;
     height: 100%;
     object-fit: cover;
 }
 
+/* Styling rules for .af-dish-image span. */
 .af-dish-image span {
     position: absolute;
     top: 12px;
@@ -227,20 +256,24 @@
     padding-bottom: 34px;
 }
 
+/* Ordering and cart interface styling for .af-order-hero nav. */
 .af-order-hero nav {
     font-size: 11px;
 }
 
+/* Ordering and cart interface styling for .af-order-hero h1. */
 .af-order-hero h1 {
     font-size: clamp(32px, 4vw, 44px);
     margin: 12px 0 6px;
 }
 
+/* Ordering and cart interface styling for .af-order-benefits. */
 .af-order-benefits {
     gap: 12px;
     margin-top: 18px;
 }
 
+/* Ordering and cart interface styling for .af-order-benefits article. */
 .af-order-benefits article {
     min-width: 180px;
     grid-template-columns: 38px 1fr;
@@ -248,20 +281,24 @@
     padding: 12px 14px;
 }
 
+/* Ordering and cart interface styling for .af-order-benefits i. */
 .af-order-benefits i {
     width: 34px;
     height: 34px;
     font-size: 15px;
 }
 
+/* Ordering and cart interface styling for .af-order-benefits strong. */
 .af-order-benefits strong {
     font-size: 12px;
 }
 
+/* Ordering and cart interface styling for .af-order-benefits span. */
 .af-order-benefits span {
     font-size: 11px;
 }
 
+/* Ordering and cart interface styling for .af-order-page. */
 .af-order-page {
     grid-template-columns: 220px minmax(0, 1fr) 300px;
     gap: 20px;
@@ -269,6 +306,7 @@
 }
 
 .af-order-panel,
+/* Ordering and cart interface styling for .af-order-panel, .af-help-box. */
 .af-help-box {
     padding: 16px;
 }
@@ -278,10 +316,12 @@
 .af-cart-panel h2,
 .af-delivery-info h2,
 .af-summary-card h2,
+/* Ordering and cart interface styling for .af-order-panel h2, .af-order-main h2, .af-cart-panel h2, .af-delivery-info h2, .af-summary-card h2, .af-payment-section h2. */
 .af-payment-section h2 {
     font-size: 20px;
 }
 
+/* Navigation and menu styling for .af-category-menu a. */
 .af-category-menu a {
     min-height: 34px;
     gap: 9px;
@@ -289,21 +329,25 @@
     font-size: 12px;
 }
 
+/* Styling rules for .af-help-box. */
 .af-help-box {
     margin-top: 18px;
 }
 
+/* Styling rules for .af-help-box a. */
 .af-help-box a {
     min-height: 34px;
     font-size: 12px;
 }
 
+/* Ordering and cart interface styling for .af-order-toolbar. */
 .af-order-toolbar {
     grid-template-columns: minmax(0, 1fr) 150px;
     gap: 14px;
     margin-bottom: 18px;
 }
 
+/* Ordering and cart interface styling for .af-order-toolbar label. */
 .af-order-toolbar label {
     height: 40px;
     grid-template-columns: 36px 1fr 30px;
@@ -315,18 +359,22 @@
 .af-help-box p,
 .af-delivery-info p,
 .af-summary-card p,
+/* Ordering and cart interface styling for .af-order-toolbar input, .af-order-toolbar select, .af-dish-body p, .af-help-box p, .af-delivery-info p, .af-summary-card p, .af-pay-reasons span. */
 .af-pay-reasons span {
     font-size: 12px;
 }
 
+/* Styling rules for .af-dish-grid. */
 .af-dish-grid {
     gap: 16px;
 }
 
+/* Styling rules for .af-dish-image. */
 .af-dish-image {
     height: 145px;
 }
 
+/* Styling rules for .af-dish-image span. */
 .af-dish-image span {
     top: 10px;
     left: 10px;
@@ -334,21 +382,25 @@
     font-size: 10.5px;
 }
 
+/* Button and action control styling for .af-dish-image button. */
 .af-dish-image button {
     top: 10px;
     right: 10px;
     font-size: 18px;
 }
 
+/* Styling rules for .af-dish-body. */
 .af-dish-body {
     gap: 8px;
     padding: 14px;
 }
 
+/* Styling rules for .af-dish-body h3. */
 .af-dish-body h3 {
     font-size: 16px;
 }
 
+/* Styling rules for .af-dish-body small. */
 .af-dish-body small {
     font-size: 11px;
 }
@@ -356,37 +408,44 @@
 .af-dish-body button,
 .af-checkout-btn,
 .af-pay-now,
+/* Button and action control styling for .af-dish-body button, .af-checkout-btn, .af-pay-now, .af-load-more. */
 .af-load-more {
     min-height: 36px;
     gap: 7px;
     font-size: 12px;
 }
 
+/* Header layout and controls for .af-cart-panel header. */
 .af-cart-panel header {
     min-height: 44px;
     padding: 0 14px;
 }
 
+/* Header layout and controls for .af-cart-panel header h2. */
 .af-cart-panel header h2 {
     font-size: 15px;
 }
 
 .af-order-card-section,
 .af-cart-items,
+/* Ordering and cart interface styling for .af-order-card-section, .af-cart-items, .af-public-cart-note. */
 .af-public-cart-note {
     padding-left: 14px;
     padding-right: 14px;
 }
 
+/* Ordering and cart interface styling for .af-order-selected-summary strong. */
 .af-order-selected-summary strong {
     font-size: 14px;
 }
 
 .af-order-quantity-row > span,
+/* Ordering and cart interface styling for .af-order-quantity-row > span, .af-order-details-section h3. */
 .af-order-details-section h3 {
     font-size: 12px;
 }
 
+/* Button and action control styling for .af-dish-image button. */
 .af-dish-image button {
     position: absolute;
     top: 12px;
@@ -397,12 +456,14 @@
     font-size: 22px;
 }
 
+/* Styling rules for .af-dish-body. */
 .af-dish-body {
     padding: 16px;
     display: grid;
     gap: 10px;
 }
 
+/* Styling rules for .af-dish-body small. */
 .af-dish-body small {
     color: #6b7280;
     display: inline-flex;
@@ -414,6 +475,7 @@
 .af-help-box p,
 .af-delivery-info p,
 .af-summary-card p,
+/* Delivery management interface styling for .af-dish-body p, .af-help-box p, .af-delivery-info p, .af-summary-card p, .af-pay-reasons span. */
 .af-pay-reasons span {
     color: #4b5563;
     line-height: 1.55;
@@ -421,6 +483,7 @@
 
 .af-dish-body button,
 .af-checkout-btn,
+/* Button and action control styling for .af-dish-body button, .af-checkout-btn, .af-pay-now. */
 .af-pay-now {
     min-height: 42px;
     border: 0;
@@ -435,6 +498,7 @@
     text-decoration: none;
 }
 
+/* Ordering and cart interface styling for .af-dish-body .af-add-to-cart-btn. */
 .af-dish-body .af-add-to-cart-btn {
     position: relative;
     overflow: hidden;
@@ -446,6 +510,7 @@
         transform 180ms ease;
 }
 
+/* Ordering and cart interface styling for .af-dish-body .af-add-to-cart-btn::after. */
 .af-dish-body .af-add-to-cart-btn::after {
     content: "";
     position: absolute;
@@ -460,6 +525,7 @@
 }
 
 .af-dish-body .af-add-to-cart-btn:hover,
+/* Ordering and cart interface styling for .af-dish-body .af-add-to-cart-btn:hover, .af-dish-body .af-add-to-cart-btn:focus-visible. */
 .af-dish-body .af-add-to-cart-btn:focus-visible {
     background: linear-gradient(135deg, var(--af-green), #255b3c);
     box-shadow: 0 14px 26px rgba(23, 35, 29, 0.22);
@@ -467,54 +533,67 @@
 }
 
 .af-dish-body .af-add-to-cart-btn:hover i,
+/* Ordering and cart interface styling for .af-dish-body .af-add-to-cart-btn:hover i, .af-dish-body .af-add-to-cart-btn:focus-visible i. */
 .af-dish-body .af-add-to-cart-btn:focus-visible i {
     animation: af-add-to-cart-icon-pop 620ms ease both;
 }
 
 .af-dish-body .af-add-to-cart-btn:active,
+/* Ordering and cart interface styling for .af-dish-body .af-add-to-cart-btn:active, .af-dish-body .af-add-to-cart-btn.is-adding. */
 .af-dish-body .af-add-to-cart-btn.is-adding {
     transform: translateY(0) scale(0.98);
 }
 
+/* Ordering and cart interface styling for .af-dish-body .af-add-to-cart-btn.is-adding::after. */
 .af-dish-body .af-add-to-cart-btn.is-adding::after {
     animation: af-add-to-cart-ripple 460ms ease-out;
 }
 
+/* Animation frames for @keyframes af-add-to-cart-icon-pop. */
 @keyframes af-add-to-cart-icon-pop {
+    /* Styling rules for 0%. */
     0% {
         transform: rotate(0deg) scale(1);
     }
 
+    /* Styling rules for 45%. */
     45% {
         transform: rotate(90deg) scale(1.18);
     }
 
+    /* Styling rules for 100%. */
     100% {
         transform: rotate(90deg) scale(1);
     }
 }
 
+/* Animation frames for @keyframes af-add-to-cart-ripple. */
 @keyframes af-add-to-cart-ripple {
+    /* Styling rules for 0%. */
     0% {
         opacity: 0.85;
         transform: translate(-50%, -50%) scale(1);
     }
 
+    /* Styling rules for 100%. */
     100% {
         opacity: 0;
         transform: translate(-50%, -50%) scale(18);
     }
 }
 
+/* Responsive styling rules for @media (prefers-reduced-motion: reduce). */
 @media (prefers-reduced-motion: reduce) {
     .af-dish-body .af-add-to-cart-btn,
     .af-dish-body .af-add-to-cart-btn::after,
+    /* Ordering and cart interface styling for .af-dish-body .af-add-to-cart-btn, .af-dish-body .af-add-to-cart-btn::after, .af-dish-body .af-add-to-cart-btn i. */
     .af-dish-body .af-add-to-cart-btn i {
         animation: none;
         transition: none;
     }
 }
 
+/* Styling rules for .af-load-more. */
 .af-load-more {
     width: 210px;
     height: 42px;
@@ -528,6 +607,7 @@
     margin: 24px auto 0;
 }
 
+/* Ordering and cart interface styling for .af-cart-panel. */
 .af-cart-panel {
     display: flex;
     flex-direction: column;
@@ -535,6 +615,7 @@
     overflow: hidden;
 }
 
+/* Ordering and cart interface styling for .af-order-submit-panel. */
 .af-order-submit-panel {
     position: sticky;
     top: 18px;
@@ -543,11 +624,13 @@
     box-shadow: 0 20px 45px rgba(15, 23, 42, 0.12);
 }
 
+/* Ordering and cart interface styling for .af-landing-order-card. */
 .af-landing-order-card {
     border-radius: 9px;
     background: #fff;
 }
 
+/* Header layout and controls for .af-cart-panel header. */
 .af-cart-panel header {
     background: var(--af-green);
     color: #fff;
@@ -558,6 +641,7 @@
     padding: 0 18px;
 }
 
+/* Header layout and controls for .af-cart-panel header h2. */
 .af-cart-panel header h2 {
     color: #fff;
     font-size: 17px;
@@ -566,6 +650,7 @@
     gap: 9px;
 }
 
+/* Header layout and controls for .af-cart-panel header a. */
 .af-cart-panel header a {
     color: #fff;
     font-size: 12px;
@@ -573,21 +658,25 @@
     text-decoration: underline;
 }
 
+/* Ordering and cart interface styling for .af-order-card-section. */
 .af-order-card-section {
     border-bottom: 1px solid #edf0f3;
     padding: 14px 18px;
 }
 
+/* Ordering and cart interface styling for .af-order-selected-summary. */
 .af-order-selected-summary {
     display: grid;
     gap: 10px;
 }
 
+/* Ordering and cart interface styling for .af-order-selected-summary > div. */
 .af-order-selected-summary > div {
     display: grid;
     gap: 3px;
 }
 
+/* Ordering and cart interface styling for .af-order-selected-summary small. */
 .af-order-selected-summary small {
     color: #8a93a3;
     font-size: 11px;
@@ -595,22 +684,26 @@
     text-transform: uppercase;
 }
 
+/* Ordering and cart interface styling for .af-order-selected-summary strong. */
 .af-order-selected-summary strong {
     color: #111827;
     font-size: 17px;
     line-height: 1.25;
 }
 
+/* Ordering and cart interface styling for .af-order-selected-summary > span. */
 .af-order-selected-summary > span {
     color: var(--af-green);
     font-weight: 950;
 }
 
+/* Ordering and cart interface styling for .af-order-controls-section. */
 .af-order-controls-section {
     display: grid;
     gap: 12px;
 }
 
+/* Ordering and cart interface styling for .af-order-quantity-row. */
 .af-order-quantity-row {
     min-height: 40px;
     display: flex;
@@ -619,12 +712,14 @@
     gap: 14px;
 }
 
+/* Ordering and cart interface styling for .af-order-quantity-row > span. */
 .af-order-quantity-row > span {
     color: #344054;
     font-size: 13px;
     font-weight: 850;
 }
 
+/* Ordering and cart interface styling for .af-order-quantity-control. */
 .af-order-quantity-control {
     display: grid;
     grid-template-columns: 32px 42px 32px;
@@ -632,6 +727,7 @@
 }
 
 .af-order-quantity-control button,
+/* Ordering and cart interface styling for .af-order-quantity-control button, .af-order-quantity-control input. */
 .af-order-quantity-control input {
     height: 32px;
     border: 1px solid #d9dee6;
@@ -640,14 +736,17 @@
     text-align: center;
 }
 
+/* Ordering and cart interface styling for .af-order-quantity-control button:first-child. */
 .af-order-quantity-control button:first-child {
     border-radius: 6px 0 0 6px;
 }
 
+/* Ordering and cart interface styling for .af-order-quantity-control button:last-child. */
 .af-order-quantity-control button:last-child {
     border-radius: 0 6px 6px 0;
 }
 
+/* Ordering and cart interface styling for .af-order-quantity-control input. */
 .af-order-quantity-control input {
     width: 42px;
     border-left: 0;
@@ -657,16 +756,19 @@
 }
 
 .af-order-quantity-control input::-webkit-outer-spin-button,
+/* Ordering and cart interface styling for .af-order-quantity-control input::-webkit-outer-spin-button, .af-order-quantity-control input::-webkit-inner-spin-button. */
 .af-order-quantity-control input::-webkit-inner-spin-button {
     margin: 0;
     appearance: none;
 }
 
+/* Ordering and cart interface styling for .af-order-details-section. */
 .af-order-details-section {
     display: grid;
     gap: 11px;
 }
 
+/* Ordering and cart interface styling for .af-order-details-section h3. */
 .af-order-details-section h3 {
     color: #111827;
     display: inline-flex;
@@ -676,10 +778,12 @@
     margin: 0;
 }
 
+/* Ordering and cart interface styling for .af-order-details-section h3 i. */
 .af-order-details-section h3 i {
     color: var(--af-gold);
 }
 
+/* Ordering and cart interface styling for .af-cart-items. */
 .af-cart-items {
     padding: 14px 18px 0;
     overflow-y: auto;
@@ -687,6 +791,7 @@
     -webkit-overflow-scrolling: touch;
 }
 
+/* Ordering and cart interface styling for .af-cart-items article. */
 .af-cart-items article {
     border-bottom: 1px solid #edf0f3;
     display: grid;
@@ -695,21 +800,25 @@
     padding: 12px 0;
 }
 
+/* Ordering and cart interface styling for .af-cart-items img. */
 .af-cart-items img {
     height: 58px;
     border-radius: 6px;
 }
 
+/* Styling rules for .af-qty. */
 .af-qty {
     display: inline-grid;
     grid-template-columns: 28px 32px 28px;
     margin-top: 10px;
 }
 
+/* Form control styling for .af-qty form. */
 .af-qty form {
     display: contents;
 }
 
+/* Button and action control styling for .af-qty button. */
 .af-qty button {
     border: 1px solid #e5e7eb;
     background: #fff;
@@ -717,6 +826,7 @@
     color: #344054;
 }
 
+/* Styling rules for .af-qty span. */
 .af-qty span {
     border-top: 1px solid #e5e7eb;
     border-bottom: 1px solid #e5e7eb;
@@ -727,12 +837,14 @@
     font-weight: 800;
 }
 
+/* Styling rules for .af-remove. */
 .af-remove {
     border: 0;
     background: transparent;
     color: #475467;
 }
 
+/* Header layout and controls for .af-public-cart-panel header form button. */
 .af-public-cart-panel header form button {
     border: 0;
     background: transparent;
@@ -743,12 +855,14 @@
     text-decoration: underline;
 }
 
+/* Ordering and cart interface styling for .af-empty-cart. */
 .af-empty-cart {
     color: #667085;
     line-height: 1.55;
     padding: 16px 0;
 }
 
+/* Ordering and cart interface styling for .af-public-cart-note. */
 .af-public-cart-note {
     border-bottom: 1px solid #edf0f3;
     display: grid;
@@ -756,6 +870,7 @@
     padding: 13px 18px;
 }
 
+/* Ordering and cart interface styling for .af-public-cart-note > button:first-of-type. */
 .af-public-cart-note > button:first-of-type {
     border: 0;
     background: #fff;
@@ -767,6 +882,7 @@
     padding: 0;
 }
 
+/* Ordering and cart interface styling for .af-public-cart-note textarea. */
 .af-public-cart-note textarea {
     display: none;
     width: 100%;
@@ -779,10 +895,12 @@
     resize: vertical;
 }
 
+/* Ordering and cart interface styling for .af-public-cart-note.is-open textarea. */
 .af-public-cart-note.is-open textarea {
     display: block;
 }
 
+/* Ordering and cart interface styling for .af-public-cart-note > button:last-child. */
 .af-public-cart-note > button:last-child {
     display: none;
     min-height: 34px;
@@ -793,20 +911,24 @@
     font-weight: 850;
 }
 
+/* Ordering and cart interface styling for .af-public-cart-note.is-open > button:last-child. */
 .af-public-cart-note.is-open > button:last-child {
     display: inline-flex;
     align-items: center;
     justify-content: center;
 }
 
+/* Form control styling for .af-public-checkout-form. */
 .af-public-checkout-form {
     display: grid;
 }
 
+/* Ordering and cart interface styling for .af-public-checkout-form .af-order-total. */
 .af-public-checkout-form .af-order-total {
     padding-top: 16px;
 }
 
+/* Button and action control styling for .af-note-btn. */
 .af-note-btn {
     width: calc(100% - 36px);
     border: 0;
@@ -816,6 +938,7 @@
     margin: 12px 18px;
 }
 
+/* Ordering and cart interface styling for .af-order-total. */
 .af-order-total {
     display: grid;
     gap: 10px;
@@ -823,33 +946,39 @@
 }
 
 .af-order-total div,
+/* Ordering and cart interface styling for .af-order-total div, .af-summary-card dl div. */
 .af-summary-card dl div {
     display: flex;
     justify-content: space-between;
 }
 
 .af-order-total div:last-child,
+/* Ordering and cart interface styling for .af-order-total div:last-child, .af-summary-card dl .total. */
 .af-summary-card dl .total {
     font-size: 20px;
     font-weight: 900;
 }
 
 .af-order-total div:last-child dd,
+/* Ordering and cart interface styling for .af-order-total div:last-child dd, .af-summary-card dl .total dd. */
 .af-summary-card dl .total dd {
     color: var(--af-gold);
 }
 
+/* Button and action control styling for .af-checkout-btn. */
 .af-checkout-btn {
     background: linear-gradient(135deg, var(--af-gold), var(--af-gold-2));
     margin: 0 18px;
 }
 
+/* Button and action control styling for .af-checkout-btn:disabled. */
 .af-checkout-btn:disabled {
     cursor: not-allowed;
     opacity: 0.6;
 }
 
 .af-secure-note,
+/* Payment interface styling for .af-secure-note, .af-payment-alert. */
 .af-payment-alert {
     background: #eef7ed;
     color: var(--af-green);
@@ -861,6 +990,7 @@
     border-radius: 7px;
 }
 
+/* Ordering and cart interface styling for .af-order-alert. */
 .af-order-alert {
     border: 1px solid #d9eee0;
     border-radius: 8px;
@@ -872,17 +1002,20 @@
     font-weight: 800;
 }
 
+/* Ordering and cart interface styling for .af-order-alert.success. */
 .af-order-alert.success {
     background: #eef8f0;
     color: #137333;
 }
 
+/* Ordering and cart interface styling for .af-order-alert.error. */
 .af-order-alert.error {
     background: #fff1f1;
     border-color: #ffd1d1;
     color: #b42318;
 }
 
+/* Ordering and cart interface styling for .af-order-empty. */
 .af-order-empty {
     border: 1px dashed #d9dee6;
     border-radius: 10px;
@@ -894,11 +1027,13 @@
     text-align: center;
 }
 
+/* Ordering and cart interface styling for .af-order-empty i. */
 .af-order-empty i {
     color: var(--af-gold);
     font-size: 34px;
 }
 
+/* Ordering and cart interface styling for .af-selected-order. */
 .af-selected-order {
     background:
         linear-gradient(135deg, rgba(0, 57, 43, 0.96), rgba(0, 36, 28, 0.96)),
@@ -911,6 +1046,7 @@
     border-radius: 8px;
 }
 
+/* Ordering and cart interface styling for .af-selected-order small. */
 .af-selected-order small {
     color: rgba(255, 255, 255, 0.72);
     font-weight: 800;
@@ -919,6 +1055,7 @@
     letter-spacing: 0;
 }
 
+/* Ordering and cart interface styling for .af-selected-order strong. */
 .af-selected-order strong {
     color: #fff;
     font-family: Georgia, "Times New Roman", serif;
@@ -926,6 +1063,7 @@
     line-height: 1.25;
 }
 
+/* Ordering and cart interface styling for .af-selected-order div. */
 .af-selected-order div {
     display: flex;
     align-items: center;
@@ -933,11 +1071,13 @@
     gap: 12px;
 }
 
+/* Ordering and cart interface styling for .af-selected-order span. */
 .af-selected-order span {
     color: #f8b94f;
     font-weight: 900;
 }
 
+/* Ordering and cart interface styling for .af-selected-order em. */
 .af-selected-order em {
     color: rgba(255, 255, 255, 0.76);
     font-size: 12px;
@@ -945,24 +1085,29 @@
     font-weight: 750;
 }
 
+/* Ordering and cart interface styling for .af-order-field. */
 .af-order-field {
     display: grid;
     gap: 8px;
     padding: 0 16px 13px;
 }
 
+/* Ordering and cart interface styling for .af-landing-order-card .af-order-field. */
 .af-landing-order-card .af-order-field {
     padding: 0;
 }
 
+/* Ordering and cart interface styling for .af-order-field:first-of-type. */
 .af-order-field:first-of-type {
     padding-top: 4px;
 }
 
+/* Ordering and cart interface styling for .af-landing-order-card .af-order-field:first-of-type. */
 .af-landing-order-card .af-order-field:first-of-type {
     padding-top: 0;
 }
 
+/* Ordering and cart interface styling for .af-order-field span. */
 .af-order-field span {
     color: #1f2937;
     font-size: 13px;
@@ -971,6 +1116,7 @@
 
 .af-order-field input,
 .af-order-field select,
+/* Ordering and cart interface styling for .af-order-field input, .af-order-field select, .af-order-field textarea. */
 .af-order-field textarea {
     width: 100%;
     border: 1px solid #dde3eb;
@@ -986,23 +1132,27 @@
 
 .af-landing-order-card .af-order-field input,
 .af-landing-order-card .af-order-field select,
+/* Ordering and cart interface styling for .af-landing-order-card .af-order-field input, .af-landing-order-card .af-order-field select, .af-landing-order-card .af-order-field textarea. */
 .af-landing-order-card .af-order-field textarea {
     min-height: 40px;
     padding: 9px 11px;
 }
 
+/* Ordering and cart interface styling for .af-order-field textarea. */
 .af-order-field textarea {
     resize: vertical;
 }
 
 .af-order-field input:focus,
 .af-order-field select:focus,
+/* Ordering and cart interface styling for .af-order-field input:focus, .af-order-field select:focus, .af-order-field textarea:focus. */
 .af-order-field textarea:focus {
     background: #fff;
     border-color: var(--af-gold);
     box-shadow: 0 0 0 3px rgba(214, 126, 0, 0.14);
 }
 
+/* Ordering and cart interface styling for .af-order-submit-panel .af-order-total. */
 .af-order-submit-panel .af-order-total {
     background: #fff;
     border: 0;
@@ -1012,6 +1162,7 @@
     padding: 16px 18px;
 }
 
+/* Ordering and cart interface styling for .af-order-submit-panel .af-order-total div:last-child. */
 .af-order-submit-panel .af-order-total div:last-child {
     border-top: 1px solid #edf0f3;
     margin-top: 6px;
@@ -1019,24 +1170,28 @@
     font-size: 18px;
 }
 
+/* Ordering and cart interface styling for .af-order-submit-panel .af-checkout-btn. */
 .af-order-submit-panel .af-checkout-btn {
     width: calc(100% - 36px);
     min-height: 44px;
     margin: 16px 18px 0;
 }
 
+/* Ordering and cart interface styling for .af-order-submit-panel .af-secure-note. */
 .af-order-submit-panel .af-secure-note {
     margin: 14px 18px 18px;
     font-size: 12px;
     line-height: 1.45;
 }
 
+/* Navigation and menu styling for .af-category-menu small. */
 .af-category-menu small {
     margin-left: auto;
     color: #9ca3af;
     font-size: 12px;
 }
 
+/* Delivery management interface styling for .af-delivery-info. */
 .af-delivery-info {
     display: grid;
     grid-template-columns: 50px 1fr;
@@ -1046,11 +1201,13 @@
     background: #f3faef;
 }
 
+/* Delivery management interface styling for .af-delivery-info > i. */
 .af-delivery-info > i {
     color: var(--af-green);
     font-size: 34px;
 }
 
+/* Delivery management interface styling for .af-delivery-info a. */
 .af-delivery-info a {
     color: var(--af-gold);
     font-weight: 850;
@@ -1058,6 +1215,7 @@
 
 .af-public-order-page button,
 .af-public-order-page a,
+/* Ordering and cart interface styling for .af-public-order-page button, .af-public-order-page a, .af-order-hero a. */
 .af-order-hero a {
     -webkit-tap-highlight-color: transparent;
 }
@@ -1066,6 +1224,7 @@
 .af-public-order-page .af-category-menu a,
 .af-public-order-page .af-help-box a,
 .af-public-order-page .af-delivery-info a,
+/* Ordering and cart interface styling for .af-public-order-page button:not(:disabled), .af-public-order-page .af-category-menu a, .af-public-order-page .af-help-box a, .af-public-order-page .af-delivery-info a, .af-order-hero a. */
 .af-order-hero a {
     cursor: pointer;
     transition:
@@ -1086,6 +1245,7 @@
 .af-public-order-page .af-delivery-info a:hover,
 .af-public-order-page .af-delivery-info a:focus-visible,
 .af-order-hero a:hover,
+/* Ordering and cart interface styling for .af-public-order-page button:not(:disabled):hover, .af-public-order-page button:not(:disabled):focus-visible, .af-public-order-page .af-category-menu a:hover, .af-public-order-page .af-category-menu a:focus-visible, .af-public-order-page .af-help-box a:hover, .af-public-order-page .af-help-box a:focus-visible, .af-public-order-page .af-delivery-info a:hover, .af-public-order-page .af-delivery-info a:focus-visible, .af-order-hero a:hover, .af-order-hero a:focus-visible. */
 .af-order-hero a:focus-visible {
     transform: translateY(-2px);
 }
@@ -1094,12 +1254,14 @@
 .af-public-order-page .af-category-menu a:active,
 .af-public-order-page .af-help-box a:active,
 .af-public-order-page .af-delivery-info a:active,
+/* Ordering and cart interface styling for .af-public-order-page button:not(:disabled):active, .af-public-order-page .af-category-menu a:active, .af-public-order-page .af-help-box a:active, .af-public-order-page .af-delivery-info a:active, .af-order-hero a:active. */
 .af-order-hero a:active {
     transform: translateY(0) scale(0.98);
 }
 
 .af-public-order-page button:focus-visible,
 .af-public-order-page a:focus-visible,
+/* Ordering and cart interface styling for .af-public-order-page button:focus-visible, .af-public-order-page a:focus-visible, .af-order-hero a:focus-visible. */
 .af-order-hero a:focus-visible {
     outline: 3px solid rgba(214, 126, 0, 0.24);
     outline-offset: 3px;
@@ -1107,6 +1269,7 @@
 
 .af-public-order-page .af-category-menu a:hover,
 .af-public-order-page .af-category-menu a:focus-visible,
+/* Ordering and cart interface styling for .af-public-order-page .af-category-menu a:hover, .af-public-order-page .af-category-menu a:focus-visible, .af-public-order-page .af-category-menu a.is-active. */
 .af-public-order-page .af-category-menu a.is-active {
     box-shadow: 0 10px 20px rgba(214, 126, 0, 0.14);
 }
@@ -1118,6 +1281,7 @@
 .af-public-order-page .af-delivery-info a:hover i,
 .af-public-order-page .af-delivery-info a:focus-visible i,
 .af-public-order-page button:not(:disabled):hover i,
+/* Ordering and cart interface styling for .af-public-order-page .af-category-menu a:hover i, .af-public-order-page .af-category-menu a:focus-visible i, .af-public-order-page .af-help-box a:hover i, .af-public-order-page .af-help-box a:focus-visible i, .af-public-order-page .af-delivery-info a:hover i, .af-public-order-page .af-delivery-info a:focus-visible i, .af-public-order-page button:not(:disabled):hover i, .af-public-order-page button:not(:disabled):focus-visible i. */
 .af-public-order-page button:not(:disabled):focus-visible i {
     animation: af-order-icon-nudge 520ms ease both;
 }
@@ -1125,6 +1289,7 @@
 .af-public-order-page .af-help-box a:hover,
 .af-public-order-page .af-help-box a:focus-visible,
 .af-public-order-page .af-delivery-info a:hover,
+/* Ordering and cart interface styling for .af-public-order-page .af-help-box a:hover, .af-public-order-page .af-help-box a:focus-visible, .af-public-order-page .af-delivery-info a:hover, .af-public-order-page .af-delivery-info a:focus-visible. */
 .af-public-order-page .af-delivery-info a:focus-visible {
     border-color: rgba(214, 126, 0, 0.42);
     background: #fff;
@@ -1132,6 +1297,7 @@
     color: var(--af-green);
 }
 
+/* Ordering and cart interface styling for .af-public-order-page .af-dish-image button. */
 .af-public-order-page .af-dish-image button {
     cursor: pointer;
     transition:
@@ -1143,6 +1309,7 @@
 
 .af-public-order-page .af-dish-image button:hover,
 .af-public-order-page .af-dish-image button:focus-visible,
+/* Ordering and cart interface styling for .af-public-order-page .af-dish-image button:hover, .af-public-order-page .af-dish-image button:focus-visible, .af-public-order-page .af-dish-image button.is-active. */
 .af-public-order-page .af-dish-image button.is-active {
     background: #fff;
     color: #d92d20;
@@ -1150,11 +1317,13 @@
 }
 
 .af-public-order-page .af-public-cart-panel header form button:hover,
+/* Header layout and controls for .af-public-order-page .af-public-cart-panel header form button:hover, .af-public-order-page .af-public-cart-panel header form button:focus-visible. */
 .af-public-order-page .af-public-cart-panel header form button:focus-visible {
     color: #ffe1a8;
     text-decoration-thickness: 2px;
 }
 
+/* Ordering and cart interface styling for .af-public-order-page .af-qty button. */
 .af-public-order-page .af-qty button {
     cursor: pointer;
     transition:
@@ -1166,6 +1335,7 @@
 }
 
 .af-public-order-page .af-qty button:hover,
+/* Ordering and cart interface styling for .af-public-order-page .af-qty button:hover, .af-public-order-page .af-qty button:focus-visible. */
 .af-public-order-page .af-qty button:focus-visible {
     border-color: var(--af-gold);
     background: #fff8ef;
@@ -1173,6 +1343,7 @@
     box-shadow: 0 6px 14px rgba(214, 126, 0, 0.18);
 }
 
+/* Ordering and cart interface styling for .af-public-order-page .af-remove. */
 .af-public-order-page .af-remove {
     cursor: pointer;
     transition:
@@ -1182,11 +1353,13 @@
 }
 
 .af-public-order-page .af-remove:hover,
+/* Ordering and cart interface styling for .af-public-order-page .af-remove:hover, .af-public-order-page .af-remove:focus-visible. */
 .af-public-order-page .af-remove:focus-visible {
     background: #fff1f1;
     color: #b42318;
 }
 
+/* Ordering and cart interface styling for .af-public-order-page .af-public-cart-note > button:first-of-type. */
 .af-public-order-page .af-public-cart-note > button:first-of-type {
     cursor: pointer;
     transition:
@@ -1195,19 +1368,23 @@
 }
 
 .af-public-order-page .af-public-cart-note > button:first-of-type:hover,
+/* Ordering and cart interface styling for .af-public-order-page .af-public-cart-note > button:first-of-type:hover, .af-public-order-page .af-public-cart-note > button:first-of-type:focus-visible. */
 .af-public-order-page .af-public-cart-note > button:first-of-type:focus-visible {
     color: var(--af-gold);
 }
 
+/* Ordering and cart interface styling for .af-public-order-page .af-public-cart-note > button:first-of-type .bi-chevron-down. */
 .af-public-order-page .af-public-cart-note > button:first-of-type .bi-chevron-down {
     transition: transform 180ms ease;
 }
 
 .af-public-order-page .af-public-cart-note > button:first-of-type:hover .bi-chevron-down,
+/* Ordering and cart interface styling for .af-public-order-page .af-public-cart-note > button:first-of-type:hover .bi-chevron-down, .af-public-order-page .af-public-cart-note > button:first-of-type:focus-visible .bi-chevron-down. */
 .af-public-order-page .af-public-cart-note > button:first-of-type:focus-visible .bi-chevron-down {
     transform: translateY(2px);
 }
 
+/* Ordering and cart interface styling for .af-public-order-page .af-public-cart-note > button:last-child. */
 .af-public-order-page .af-public-cart-note > button:last-child {
     cursor: pointer;
     transition:
@@ -1219,6 +1396,7 @@
 }
 
 .af-public-order-page .af-public-cart-note > button:last-child:hover,
+/* Ordering and cart interface styling for .af-public-order-page .af-public-cart-note > button:last-child:hover, .af-public-order-page .af-public-cart-note > button:last-child:focus-visible. */
 .af-public-order-page .af-public-cart-note > button:last-child:focus-visible {
     border-color: var(--af-gold);
     background: var(--af-gold);
@@ -1227,26 +1405,32 @@
 }
 
 .af-public-order-page .af-checkout-btn:not(:disabled):hover,
+/* Ordering and cart interface styling for .af-public-order-page .af-checkout-btn:not(:disabled):hover, .af-public-order-page .af-checkout-btn:not(:disabled):focus-visible. */
 .af-public-order-page .af-checkout-btn:not(:disabled):focus-visible {
     box-shadow: 0 14px 28px rgba(214, 126, 0, 0.28);
     filter: saturate(1.08);
 }
 
+/* Animation frames for @keyframes af-order-icon-nudge. */
 @keyframes af-order-icon-nudge {
     0%,
+    /* Styling rules for 0%, 100%. */
     100% {
         transform: translateX(0) scale(1);
     }
 
+    /* Styling rules for 45%. */
     45% {
         transform: translateX(2px) scale(1.12);
     }
 }
 
+/* Responsive styling rules for @media (prefers-reduced-motion: reduce). */
 @media (prefers-reduced-motion: reduce) {
     .af-public-order-page button,
     .af-public-order-page a,
     .af-public-order-page i,
+    /* Ordering and cart interface styling for .af-public-order-page button, .af-public-order-page a, .af-public-order-page i, .af-order-hero a. */
     .af-order-hero a {
         animation: none !important;
         transition: none !important;
@@ -1254,16 +1438,19 @@
 
     .af-public-order-page button,
     .af-public-order-page a,
+    /* Ordering and cart interface styling for .af-public-order-page button, .af-public-order-page a, .af-order-hero a. */
     .af-order-hero a {
         transform: none !important;
     }
 }
 
+/* Payment interface styling for .af-payment-page. */
 .af-payment-page {
     background: #fff;
     padding: 44px 28px;
 }
 
+/* Styling rules for .af-checkout-steps. */
 .af-checkout-steps {
     width: min(900px, 100%);
     margin: 0 auto 34px;
@@ -1273,6 +1460,7 @@
     gap: 24px;
 }
 
+/* Styling rules for .af-checkout-steps li. */
 .af-checkout-steps li {
     color: #344054;
     display: flex;
@@ -1281,6 +1469,7 @@
     gap: 10px;
 }
 
+/* Styling rules for .af-checkout-steps span. */
 .af-checkout-steps span {
     width: 58px;
     height: 58px;
@@ -1291,10 +1480,14 @@
     font-size: 25px;
 }
 
+/* Styling rules for .af-checkout-steps .done span. */
 .af-checkout-steps .done span { background: #eaf6e7; color: var(--af-green); }
+/* Interactive state styling for .af-checkout-steps .active. */
 .af-checkout-steps .active { color: var(--af-gold); font-weight: 850; }
+/* Interactive state styling for .af-checkout-steps .active span. */
 .af-checkout-steps .active span { background: #fff0dc; }
 
+/* Payment interface styling for .af-payment-grid. */
 .af-payment-grid {
     width: min(1180px, 100%);
     margin: 0 auto;
@@ -1303,10 +1496,12 @@
     gap: 34px;
 }
 
+/* Payment interface styling for .af-payment-card. */
 .af-payment-card {
     overflow: hidden;
 }
 
+/* Payment interface styling for .af-payment-heading. */
 .af-payment-heading {
     display: flex;
     gap: 18px;
@@ -1314,6 +1509,7 @@
     padding: 28px;
 }
 
+/* Payment interface styling for .af-payment-heading > i. */
 .af-payment-heading > i {
     color: var(--af-gold);
     font-size: 28px;
@@ -1321,11 +1517,13 @@
 
 .af-payment-heading h1,
 .af-payment-section h2,
+/* Payment interface styling for .af-payment-heading h1, .af-payment-section h2, .af-summary-card h2. */
 .af-summary-card h2 {
     font-family: Georgia, "Times New Roman", serif;
     color: var(--af-green);
 }
 
+/* Payment interface styling for .af-payment-section. */
 .af-payment-section {
     border-top: 1px solid #edf0f3;
     padding: 24px 28px;
@@ -1333,10 +1531,12 @@
     gap: 16px;
 }
 
+/* Payment interface styling for .af-payment-page [hidden]. */
 .af-payment-page [hidden] {
     display: none !important;
 }
 
+/* Payment interface styling for .af-payment-method. */
 .af-payment-method {
     min-height: 78px;
     border: 1px solid #e5e7eb;
@@ -1348,21 +1548,25 @@
     padding: 14px 18px;
 }
 
+/* Payment interface styling for .af-payment-method.is-active. */
 .af-payment-method.is-active {
     border-color: var(--af-gold);
     background: #fffaf3;
 }
 
+/* Payment interface styling for .af-payment-method > i. */
 .af-payment-method > i {
     font-size: 25px;
 }
 
 .af-payment-method span small,
+/* Payment interface styling for .af-payment-method span small, .af-summary-card small. */
 .af-summary-card small {
     color: #667085;
     display: block;
 }
 
+/* Payment interface styling for .af-payment-method em. */
 .af-payment-method em {
     border: 1px solid #e5e7eb;
     border-radius: 4px;
@@ -1373,6 +1577,7 @@
 }
 
 .af-payment-input,
+/* Payment interface styling for .af-payment-input, .af-billing-grid label. */
 .af-billing-grid label {
     display: grid;
     gap: 8px;
@@ -1381,6 +1586,7 @@
 
 .af-payment-input span,
 .af-billing-grid input,
+/* Payment interface styling for .af-payment-input span, .af-billing-grid input, .af-billing-grid select. */
 .af-billing-grid select {
     height: 48px;
     border: 1px solid #d9dee6;
@@ -1388,6 +1594,7 @@
     background: #fff;
 }
 
+/* Payment interface styling for .af-payment-input span. */
 .af-payment-input span {
     display: grid;
     grid-template-columns: 42px 1fr;
@@ -1398,27 +1605,32 @@
 .af-payment-input textarea,
 .af-billing-grid input,
 .af-billing-grid select,
+/* Payment interface styling for .af-payment-input input, .af-payment-input textarea, .af-billing-grid input, .af-billing-grid select, .af-promo input. */
 .af-promo input {
     border: 0;
     outline: 0;
     padding: 0 12px;
 }
 
+/* Payment interface styling for .af-payment-input textarea. */
 .af-payment-input textarea {
     min-height: 92px;
     padding: 13px 12px;
     resize: vertical;
 }
 
+/* Payment interface styling for .af-payment-input .af-payment-textarea. */
 .af-payment-input .af-payment-textarea {
     height: auto;
     align-items: start;
 }
 
+/* Payment interface styling for .af-payment-input .af-payment-textarea i. */
 .af-payment-input .af-payment-textarea i {
     padding-top: 14px;
 }
 
+/* Payment interface styling for .af-payment-warning. */
 .af-payment-warning {
     background: #fff4df;
     color: #4b5563;
@@ -1428,16 +1640,19 @@
     border-radius: 7px;
 }
 
+/* Styling rules for .af-billing-grid. */
 .af-billing-grid {
     display: grid;
     grid-template-columns: repeat(3, 1fr);
     gap: 20px;
 }
 
+/* Styling rules for .af-billing-grid.single. */
 .af-billing-grid.single {
     grid-template-columns: 1fr;
 }
 
+/* Styling rules for .af-terms. */
 .af-terms {
     display: flex;
     gap: 10px;
@@ -1445,36 +1660,43 @@
 }
 
 .af-terms a,
+/* Delivery management interface styling for .af-terms a, .af-back-delivery. */
 .af-back-delivery {
     color: var(--af-gold);
 }
 
+/* Styling rules for .af-pay-now. */
 .af-pay-now {
     width: 100%;
     min-height: 54px;
     font-size: 17px;
 }
 
+/* Styling rules for a.af-pay-now. */
 a.af-pay-now {
     align-items: center;
     justify-content: center;
     text-decoration: none;
 }
 
+/* Delivery management interface styling for .af-back-delivery. */
 .af-back-delivery {
     text-decoration: none;
     font-weight: 800;
 }
 
+/* Payment interface styling for .af-payment-side. */
 .af-payment-side {
     display: grid;
     gap: 24px;
 }
 
+/* Card and panel styling for .af-summary-card. */
 .af-summary-card {
     padding: 24px;
 }
 
+/* Card and panel styling for .af-summary-card article. */
 .af-summary-card article {
     border-bottom: 1px solid #edf0f3;
     display: grid;
@@ -1483,17 +1705,20 @@ a.af-pay-now {
     padding: 14px 0;
 }
 
+/* Card and panel styling for .af-summary-card article img. */
 .af-summary-card article img {
     height: 64px;
     border-radius: 7px;
 }
 
+/* Card and panel styling for .af-summary-card dl. */
 .af-summary-card dl {
     display: grid;
     gap: 14px;
     padding: 18px 0;
 }
 
+/* Styling rules for .af-promo. */
 .af-promo {
     background: #f6fbf2;
     border: 1px solid #dcead8;
@@ -1501,6 +1726,7 @@ a.af-pay-now {
     padding: 16px;
 }
 
+/* Styling rules for .af-promo div. */
 .af-promo div {
     display: grid;
     grid-template-columns: 1fr 74px;
@@ -1509,6 +1735,7 @@ a.af-pay-now {
 }
 
 .af-promo input,
+/* Form control styling for .af-promo input, .af-promo button. */
 .af-promo button {
     height: 46px;
     border: 1px solid #d9dee6;
@@ -1516,6 +1743,7 @@ a.af-pay-now {
     background: #fff;
 }
 
+/* Styling rules for .af-pay-reasons. */
 .af-pay-reasons {
     list-style: none;
     display: grid;
@@ -1523,6 +1751,7 @@ a.af-pay-now {
 }
 
 .af-pay-reasons li,
+/* Payment interface styling for .af-pay-reasons li, .af-payment-help. */
 .af-payment-help {
     display: grid;
     grid-template-columns: 42px 1fr;
@@ -1530,6 +1759,7 @@ a.af-pay-now {
 }
 
 .af-pay-reasons i,
+/* Payment interface styling for .af-pay-reasons i, .af-payment-help > i. */
 .af-payment-help > i {
     width: 40px;
     height: 40px;
@@ -1541,73 +1771,89 @@ a.af-pay-now {
 }
 
 .af-pay-reasons strong,
+/* Payment interface styling for .af-pay-reasons strong, .af-payment-help strong. */
 .af-payment-help strong {
     display: block;
     margin-bottom: 4px;
 }
 
+/* Responsive styling rules for @media (max-width: 1180px). */
 @media (max-width: 1180px) {
     .af-order-page,
+    /* Ordering and cart interface styling for .af-order-page, .af-payment-grid. */
     .af-payment-grid {
         grid-template-columns: 1fr;
     }
 
+    /* Ordering and cart interface styling for .af-order-left. */
     .af-order-left {
         display: none;
     }
 
+    /* Styling rules for .af-dish-grid. */
     .af-dish-grid {
         grid-template-columns: repeat(2, minmax(0, 1fr));
     }
 }
 
+/* Responsive styling rules for @media (max-width: 720px). */
 @media (max-width: 720px) {
     .af-order-benefits,
     .af-dish-grid,
     .af-order-toolbar,
     .af-checkout-steps,
+    /* Ordering and cart interface styling for .af-order-benefits, .af-dish-grid, .af-order-toolbar, .af-checkout-steps, .af-billing-grid. */
     .af-billing-grid {
         grid-template-columns: 1fr;
     }
 
     .af-order-page,
+    /* Ordering and cart interface styling for .af-order-page, .af-payment-page. */
     .af-payment-page {
         padding: 24px 16px;
     }
 
+    /* Payment interface styling for .af-payment-method. */
     .af-payment-method {
         grid-template-columns: 26px 36px 1fr;
     }
 
+    /* Payment interface styling for .af-payment-method em. */
     .af-payment-method em {
         display: none;
     }
 }
 
+/* Ordering and cart interface styling for .af-customer-cart-page. */
 .af-customer-cart-page {
     padding: 24px 28px;
     background: #fff;
 }
 
+/* Ordering and cart interface styling for .af-guest-cart-page. */
 .af-guest-cart-page {
     width: min(1480px, calc(100% - 40px));
     margin: 0 auto;
 }
 
+/* Ordering and cart interface styling for .af-cart-page-heading. */
 .af-cart-page-heading {
     margin-bottom: 22px;
 }
 
+/* Ordering and cart interface styling for .af-cart-page-heading h1. */
 .af-cart-page-heading h1 {
     margin: 0 0 8px;
     color: var(--af-green);
     font-size: 30px;
 }
 
+/* Ordering and cart interface styling for .af-cart-page-heading p. */
 .af-cart-page-heading p {
     color: #5f6865;
 }
 
+/* Ordering and cart interface styling for .af-cart-layout. */
 .af-cart-layout {
     display: grid;
     grid-template-columns: minmax(0, 1fr) 380px;
@@ -1618,6 +1864,7 @@ a.af-pay-now {
 .af-free-delivery,
 .af-cart-table-card,
 .af-cart-summary-panel,
+/* Ordering and cart interface styling for .af-free-delivery, .af-cart-table-card, .af-cart-summary-panel, .af-cart-benefits. */
 .af-cart-benefits {
     border: 1px solid #e6ebe8;
     border-radius: 8px;
@@ -1625,6 +1872,7 @@ a.af-pay-now {
     box-shadow: 0 10px 28px rgba(13, 36, 30, 0.06);
 }
 
+/* Delivery management interface styling for .af-free-delivery. */
 .af-free-delivery {
     position: relative;
     overflow: hidden;
@@ -1638,6 +1886,7 @@ a.af-pay-now {
     font-weight: 800;
 }
 
+/* Delivery management interface styling for .af-free-delivery i:last-child. */
 .af-free-delivery i:last-child {
     position: absolute;
     left: 50px;
@@ -1648,6 +1897,7 @@ a.af-pay-now {
     background: #dce9d9;
 }
 
+/* Delivery management interface styling for .af-free-delivery i:last-child::before. */
 .af-free-delivery i:last-child::before {
     content: "";
     display: block;
@@ -1657,10 +1907,12 @@ a.af-pay-now {
     background: var(--af-green);
 }
 
+/* Ordering and cart interface styling for .af-cart-table-card. */
 .af-cart-table-card {
     overflow-x: auto;
 }
 
+/* Ordering and cart interface styling for .af-cart-table-card table. */
 .af-cart-table-card table {
     width: 100%;
     border-collapse: collapse;
@@ -1668,6 +1920,7 @@ a.af-pay-now {
 }
 
 .af-cart-table-card th,
+/* Ordering and cart interface styling for .af-cart-table-card th, .af-cart-table-card td. */
 .af-cart-table-card td {
     padding: 16px 20px;
     border-bottom: 1px solid #edf0f3;
@@ -1675,12 +1928,14 @@ a.af-pay-now {
     vertical-align: middle;
 }
 
+/* Ordering and cart interface styling for .af-cart-table-card th. */
 .af-cart-table-card th {
     color: #101828;
     font-size: 13px;
     font-weight: 900;
 }
 
+/* Ordering and cart interface styling for .af-cart-product. */
 .af-cart-product {
     display: grid;
     grid-template-columns: 86px minmax(0, 1fr);
@@ -1688,6 +1943,7 @@ a.af-pay-now {
     align-items: center;
 }
 
+/* Ordering and cart interface styling for .af-cart-product img. */
 .af-cart-product img {
     width: 86px;
     height: 72px;
@@ -1696,11 +1952,13 @@ a.af-pay-now {
 }
 
 .af-cart-product strong,
+/* Ordering and cart interface styling for .af-cart-product strong, .af-cart-summary-panel h2. */
 .af-cart-summary-panel h2 {
     display: block;
     color: var(--af-green);
 }
 
+/* Ordering and cart interface styling for .af-cart-product small. */
 .af-cart-product small {
     display: block;
     max-width: 260px;
@@ -1709,6 +1967,7 @@ a.af-pay-now {
     line-height: 1.5;
 }
 
+/* Ordering and cart interface styling for .af-cart-stepper. */
 .af-cart-stepper {
     display: inline-grid;
     grid-template-columns: 34px 40px 34px;
@@ -1717,11 +1976,13 @@ a.af-pay-now {
     border-radius: 6px;
 }
 
+/* Ordering and cart interface styling for .af-cart-stepper form. */
 .af-cart-stepper form {
     margin: 0;
 }
 
 .af-cart-stepper button,
+/* Ordering and cart interface styling for .af-cart-stepper button, .af-cart-icon-button. */
 .af-cart-icon-button {
     width: 34px;
     height: 34px;
@@ -1730,6 +1991,7 @@ a.af-pay-now {
     cursor: pointer;
 }
 
+/* Ordering and cart interface styling for .af-cart-stepper span. */
 .af-cart-stepper span {
     display: grid;
     place-items: center;
@@ -1737,11 +1999,13 @@ a.af-pay-now {
     font-weight: 800;
 }
 
+/* Ordering and cart interface styling for .af-cart-icon-button. */
 .af-cart-icon-button {
     border: 1px solid #d9dee6;
     border-radius: 7px;
 }
 
+/* Ordering and cart interface styling for .af-cart-table-card footer. */
 .af-cart-table-card footer {
     display: flex;
     justify-content: space-between;
@@ -1749,11 +2013,13 @@ a.af-pay-now {
     padding: 16px 20px;
 }
 
+/* Ordering and cart interface styling for .af-cart-table-card footer form. */
 .af-cart-table-card footer form {
     margin: 0;
 }
 
 .af-cart-table-card footer button,
+/* Ordering and cart interface styling for .af-cart-table-card footer button, .af-cart-table-card footer a. */
 .af-cart-table-card footer a {
     display: inline-flex;
     align-items: center;
@@ -1768,6 +2034,7 @@ a.af-pay-now {
     text-decoration: none;
 }
 
+/* Ordering and cart interface styling for .af-cart-benefits. */
 .af-cart-benefits {
     display: grid;
     grid-template-columns: repeat(4, minmax(0, 1fr));
@@ -1777,6 +2044,7 @@ a.af-pay-now {
     background: #fff9ef;
 }
 
+/* Ordering and cart interface styling for .af-cart-benefits article. */
 .af-cart-benefits article {
     display: grid;
     grid-template-columns: 46px 1fr;
@@ -1784,6 +2052,7 @@ a.af-pay-now {
     align-items: center;
 }
 
+/* Ordering and cart interface styling for .af-cart-benefits i. */
 .af-cart-benefits i {
     display: grid;
     place-items: center;
@@ -1796,27 +2065,32 @@ a.af-pay-now {
 }
 
 .af-cart-benefits strong,
+/* Ordering and cart interface styling for .af-cart-benefits strong, .af-cart-benefits span. */
 .af-cart-benefits span {
     display: block;
 }
 
+/* Ordering and cart interface styling for .af-cart-benefits span. */
 .af-cart-benefits span {
     color: #667085;
     font-size: 13px;
 }
 
+/* Ordering and cart interface styling for .af-cart-summary-panel. */
 .af-cart-summary-panel {
     position: sticky;
     top: 92px;
     padding: 24px;
 }
 
+/* Ordering and cart interface styling for .af-cart-summary-panel dl. */
 .af-cart-summary-panel dl {
     display: grid;
     gap: 14px;
     margin: 20px 0;
 }
 
+/* Ordering and cart interface styling for .af-cart-summary-panel dl div. */
 .af-cart-summary-panel dl div {
     display: flex;
     justify-content: space-between;
@@ -1824,16 +2098,19 @@ a.af-pay-now {
     color: #344054;
 }
 
+/* Ordering and cart interface styling for .af-cart-summary-panel dd. */
 .af-cart-summary-panel dd {
     margin: 0;
     color: #111827;
     font-weight: 850;
 }
 
+/* Ordering and cart interface styling for .af-cart-summary-panel .discount. */
 .af-cart-summary-panel .discount {
     color: #dc2626;
 }
 
+/* Ordering and cart interface styling for .af-cart-summary-panel .total. */
 .af-cart-summary-panel .total {
     margin-top: 8px;
     padding-top: 18px;
@@ -1842,11 +2119,13 @@ a.af-pay-now {
     font-weight: 900;
 }
 
+/* Ordering and cart interface styling for .af-cart-summary-panel .total dd. */
 .af-cart-summary-panel .total dd {
     color: #c76f00;
     font-size: 26px;
 }
 
+/* Delivery management interface styling for .af-delivery-estimate. */
 .af-delivery-estimate {
     display: grid;
     grid-template-columns: 54px 1fr;
@@ -1857,22 +2136,26 @@ a.af-pay-now {
     background: #f0f8ee;
 }
 
+/* Delivery management interface styling for .af-delivery-estimate i. */
 .af-delivery-estimate i {
     color: var(--af-green);
     font-size: 34px;
 }
 
+/* Delivery management interface styling for .af-delivery-estimate strong. */
 .af-delivery-estimate strong {
     display: block;
     margin-top: 4px;
     color: var(--af-green);
 }
 
+/* Ordering and cart interface styling for .af-cart-checkout-box. */
 .af-cart-checkout-box {
     display: grid;
     gap: 14px;
 }
 
+/* Ordering and cart interface styling for .af-cart-checkout-box label. */
 .af-cart-checkout-box label {
     display: grid;
     gap: 8px;
@@ -1881,6 +2164,7 @@ a.af-pay-now {
 }
 
 .af-cart-checkout-box input,
+/* Ordering and cart interface styling for .af-cart-checkout-box input, .af-cart-checkout-box textarea. */
 .af-cart-checkout-box textarea {
     width: 100%;
     border: 1px solid #d9dee6;
@@ -1890,11 +2174,13 @@ a.af-pay-now {
     outline: 0;
 }
 
+/* Ordering and cart interface styling for .af-cart-checkout-box textarea. */
 .af-cart-checkout-box textarea {
     min-height: 84px;
     resize: vertical;
 }
 
+/* Ordering and cart interface styling for .af-cart-checkout-box button. */
 .af-cart-checkout-box button {
     min-height: 52px;
     border: 0;
@@ -1906,11 +2192,13 @@ a.af-pay-now {
 }
 
 .af-cart-checkout-box button:disabled,
+/* Ordering and cart interface styling for .af-cart-checkout-box button:disabled, .af-pay-now:disabled. */
 .af-pay-now:disabled {
     opacity: 0.55;
     cursor: not-allowed;
 }
 
+/* Ordering and cart interface styling for .af-cart-summary-panel > small. */
 .af-cart-summary-panel > small {
     display: block;
     margin-top: 14px;
@@ -1918,32 +2206,40 @@ a.af-pay-now {
     text-align: center;
 }
 
+/* Responsive styling rules for @media (max-width: 1180px). */
 @media (max-width: 1180px) {
+    /* Ordering and cart interface styling for .af-cart-layout. */
     .af-cart-layout {
         grid-template-columns: 1fr;
     }
 
+    /* Ordering and cart interface styling for .af-cart-summary-panel. */
     .af-cart-summary-panel {
         position: static;
     }
 
+    /* Ordering and cart interface styling for .af-cart-benefits. */
     .af-cart-benefits {
         grid-template-columns: repeat(2, minmax(0, 1fr));
     }
 }
 
+/* Responsive styling rules for @media (max-width: 720px). */
 @media (max-width: 720px) {
     .af-customer-cart-page,
+    /* Ordering and cart interface styling for .af-customer-cart-page, .af-guest-cart-page. */
     .af-guest-cart-page {
         width: auto;
         padding: 18px 14px;
     }
 
     .af-free-delivery,
+    /* Ordering and cart interface styling for .af-free-delivery, .af-cart-table-card footer. */
     .af-cart-table-card footer {
         flex-direction: column;
     }
 
+    /* Ordering and cart interface styling for .af-cart-benefits. */
     .af-cart-benefits {
         grid-template-columns: 1fr;
     }
@@ -1956,20 +2252,24 @@ a.af-pay-now {
     padding-bottom: 34px;
 }
 
+/* Ordering and cart interface styling for .af-order-hero nav. */
 .af-order-hero nav {
     font-size: 11px;
 }
 
+/* Ordering and cart interface styling for .af-order-hero h1. */
 .af-order-hero h1 {
     font-size: clamp(32px, 4vw, 44px);
     margin: 12px 0 6px;
 }
 
+/* Ordering and cart interface styling for .af-order-benefits. */
 .af-order-benefits {
     gap: 12px;
     margin-top: 18px;
 }
 
+/* Ordering and cart interface styling for .af-order-benefits article. */
 .af-order-benefits article {
     min-width: 180px;
     grid-template-columns: 38px 1fr;
@@ -1977,20 +2277,24 @@ a.af-pay-now {
     padding: 12px 14px;
 }
 
+/* Ordering and cart interface styling for .af-order-benefits i. */
 .af-order-benefits i {
     width: 34px;
     height: 34px;
     font-size: 15px;
 }
 
+/* Ordering and cart interface styling for .af-order-benefits strong. */
 .af-order-benefits strong {
     font-size: 12px;
 }
 
+/* Ordering and cart interface styling for .af-order-benefits span. */
 .af-order-benefits span {
     font-size: 11px;
 }
 
+/* Ordering and cart interface styling for .af-order-page. */
 .af-order-page {
     grid-template-columns: 220px minmax(0, 1fr) 300px;
     gap: 20px;
@@ -1998,6 +2302,7 @@ a.af-pay-now {
 }
 
 .af-order-panel,
+/* Ordering and cart interface styling for .af-order-panel, .af-help-box. */
 .af-help-box {
     padding: 16px;
 }
@@ -2007,10 +2312,12 @@ a.af-pay-now {
 .af-cart-panel h2,
 .af-delivery-info h2,
 .af-summary-card h2,
+/* Ordering and cart interface styling for .af-order-panel h2, .af-order-main h2, .af-cart-panel h2, .af-delivery-info h2, .af-summary-card h2, .af-payment-section h2. */
 .af-payment-section h2 {
     font-size: 20px;
 }
 
+/* Navigation and menu styling for .af-category-menu a. */
 .af-category-menu a {
     min-height: 34px;
     gap: 9px;
@@ -2018,21 +2325,25 @@ a.af-pay-now {
     font-size: 12px;
 }
 
+/* Styling rules for .af-help-box. */
 .af-help-box {
     margin-top: 18px;
 }
 
+/* Styling rules for .af-help-box a. */
 .af-help-box a {
     min-height: 34px;
     font-size: 12px;
 }
 
+/* Ordering and cart interface styling for .af-order-toolbar. */
 .af-order-toolbar {
     grid-template-columns: minmax(0, 1fr) 150px;
     gap: 14px;
     margin-bottom: 18px;
 }
 
+/* Ordering and cart interface styling for .af-order-toolbar label. */
 .af-order-toolbar label {
     height: 40px;
     grid-template-columns: 36px 1fr 30px;
@@ -2044,18 +2355,22 @@ a.af-pay-now {
 .af-help-box p,
 .af-delivery-info p,
 .af-summary-card p,
+/* Ordering and cart interface styling for .af-order-toolbar input, .af-order-toolbar select, .af-dish-body p, .af-help-box p, .af-delivery-info p, .af-summary-card p, .af-pay-reasons span. */
 .af-pay-reasons span {
     font-size: 12px;
 }
 
+/* Styling rules for .af-dish-grid. */
 .af-dish-grid {
     gap: 16px;
 }
 
+/* Styling rules for .af-dish-image. */
 .af-dish-image {
     height: 145px;
 }
 
+/* Styling rules for .af-dish-image span. */
 .af-dish-image span {
     top: 10px;
     left: 10px;
@@ -2063,21 +2378,25 @@ a.af-pay-now {
     font-size: 10.5px;
 }
 
+/* Button and action control styling for .af-dish-image button. */
 .af-dish-image button {
     top: 10px;
     right: 10px;
     font-size: 18px;
 }
 
+/* Styling rules for .af-dish-body. */
 .af-dish-body {
     gap: 8px;
     padding: 14px;
 }
 
+/* Styling rules for .af-dish-body h3. */
 .af-dish-body h3 {
     font-size: 16px;
 }
 
+/* Styling rules for .af-dish-body small. */
 .af-dish-body small {
     font-size: 11px;
 }
@@ -2085,33 +2404,39 @@ a.af-pay-now {
 .af-dish-body button,
 .af-checkout-btn,
 .af-pay-now,
+/* Button and action control styling for .af-dish-body button, .af-checkout-btn, .af-pay-now, .af-load-more. */
 .af-load-more {
     min-height: 36px;
     gap: 7px;
     font-size: 12px;
 }
 
+/* Header layout and controls for .af-cart-panel header. */
 .af-cart-panel header {
     min-height: 44px;
     padding: 0 14px;
 }
 
+/* Header layout and controls for .af-cart-panel header h2. */
 .af-cart-panel header h2 {
     font-size: 15px;
 }
 
 .af-order-card-section,
 .af-cart-items,
+/* Ordering and cart interface styling for .af-order-card-section, .af-cart-items, .af-public-cart-note. */
 .af-public-cart-note {
     padding-left: 14px;
     padding-right: 14px;
 }
 
+/* Ordering and cart interface styling for .af-order-selected-summary strong. */
 .af-order-selected-summary strong {
     font-size: 14px;
 }
 
 .af-order-quantity-row > span,
+/* Ordering and cart interface styling for .af-order-quantity-row > span, .af-order-details-section h3. */
 .af-order-details-section h3 {
     font-size: 12px;
 }

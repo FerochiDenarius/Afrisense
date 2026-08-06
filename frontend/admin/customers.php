@@ -16,6 +16,7 @@ require_once __DIR__ . '/../auth/auth_bootstrap.php';
 afrisense_require_admin();
 $itemsPerPage = afrisense_admin_items_per_page(40);
 
+// Defines the afrisense_customer_stage_label helper used by this module.
 function afrisense_customer_stage_label(string $stage): string
 {
     return match ($stage) {
@@ -27,6 +28,7 @@ function afrisense_customer_stage_label(string $stage): string
     };
 }
 
+// Defines the afrisense_customer_stage_class helper used by this module.
 function afrisense_customer_stage_class(string $stage): string
 {
     return match ($stage) {
@@ -38,6 +40,7 @@ function afrisense_customer_stage_class(string $stage): string
     };
 }
 
+// Defines the afrisense_customer_count helper used by this module.
 function afrisense_customer_count(PDO $pdo, string $sql, array $params = []): int
 {
     $statement = $pdo->prepare($sql);
@@ -52,24 +55,29 @@ $selectedDate = trim((string) ($_GET['date'] ?? date('Y-m-d')));
 $dateFilterActive = array_key_exists('date', $_GET) && trim((string) ($_GET['date'] ?? '')) !== '';
 $validStages = ['', 'orders', 'delivered', 'active_bookings', 'pending_bookings'];
 
+// Guard this block so it only runs when the required condition is met.
 if (!in_array($stage, $validStages, true)) {
     $stage = '';
 }
 
+// Guard this block so it only runs when the required condition is met.
 if (!preg_match('/^\d{4}-\d{2}-\d{2}$/', $selectedDate)) {
     $selectedDate = date('Y-m-d');
 }
 
+// Run database/action work inside a guarded block so the page can fail gracefully.
 try {
     $pdo = afrisense_pdo();
     $params = [];
     $where = [];
 
+    // Guard this block so it only runs when the required condition is met.
     if ($search !== '') {
         $where[] = '(c.`fullname` LIKE :search OR c.`email` LIKE :search OR c.`phone_number` LIKE :search OR c.`address` LIKE :search)';
         $params['search'] = '%' . $search . '%';
     }
 
+    // Guard this block so it only runs when the required condition is met.
     if ($stage === 'orders') {
         $where[] = 'COALESCE(o.`order_count`, 0) > 0';
     } elseif ($stage === 'delivered') {
@@ -80,6 +88,7 @@ try {
         $where[] = 'COALESCE(b.`pending_booking_count`, 0) > 0';
     }
 
+    // Guard this block so it only runs when the required condition is met.
     if ($dateFilterActive) {
         $where[] = '(
             EXISTS (
@@ -219,7 +228,9 @@ $todayDate = date('Y-m-d');
 
 ob_start();
 ?>
+<!-- Page section for this part of the AfriSense interface. -->
 <section class="af-admin-menu-page af-customers-page">
+    <!-- Header block for this interface section. -->
     <header class="af-admin-page-heading">
         <div>
             <h1>Customers</h1>
@@ -232,10 +243,12 @@ ob_start();
         </div>
     </header>
 
+    <?php // Render this conditional/dynamic template block. ?>
     <?php if ($loadError !== ''): ?>
         <div class="af-admin-alert error"><?php echo htmlspecialchars($loadError, ENT_QUOTES, 'UTF-8'); ?></div>
     <?php endif; ?>
 
+    <!-- Page section for this part of the AfriSense interface. -->
     <section class="af-menu-metrics af-customer-metrics" aria-label="Customer summary">
         <article class="green">
             <span><i class="bi bi-people" aria-hidden="true"></i></span>
@@ -259,7 +272,9 @@ ob_start();
         </article>
     </section>
 
+    <!-- Page section for this part of the AfriSense interface. -->
     <section class="af-menu-table-card">
+        <!-- Form block that submits this page workflow. -->
         <form class="af-menu-filters af-customers-filters" action="customers.php" method="get">
             <label class="af-menu-search" for="customer_search">
                 <i class="bi bi-search" aria-hidden="true"></i>
@@ -267,6 +282,7 @@ ob_start();
             </label>
             <label class="af-menu-select" for="customer_stage">
                 <select id="customer_stage" name="stage">
+                    <?php // Render this conditional/dynamic template block. ?>
                     <?php foreach ($validStages as $stageValue): ?>
                         <option value="<?php echo htmlspecialchars($stageValue, ENT_QUOTES, 'UTF-8'); ?>" <?php echo $stage === $stageValue ? 'selected' : ''; ?>>
                             <?php echo htmlspecialchars(afrisense_customer_stage_label($stageValue), ENT_QUOTES, 'UTF-8'); ?>
@@ -283,6 +299,7 @@ ob_start();
             <a href="customers.php"><i class="bi bi-arrow-repeat" aria-hidden="true"></i> Reset</a>
         </form>
 
+        <!-- Page section for this part of the AfriSense interface. -->
         <section class="af-customer-date-summary">
             <div>
                 <small><?php echo htmlspecialchars(date('l', $selectedTimestamp), ENT_QUOTES, 'UTF-8'); ?></small>
@@ -295,6 +312,7 @@ ob_start();
         </section>
 
         <div class="af-menu-table af-customers-table">
+            <!-- Table block for displaying structured records. -->
             <table>
                 <thead>
                     <tr>
@@ -309,12 +327,14 @@ ob_start();
                     </tr>
                 </thead>
                 <tbody>
+                    <?php // Render this conditional/dynamic template block. ?>
                     <?php if ($customers === []): ?>
                         <tr>
                             <td colspan="8"><div class="af-empty-state">No customers match this date or filter.</div></td>
                         </tr>
                     <?php endif; ?>
 
+                    <?php // Render this conditional/dynamic template block. ?>
                     <?php foreach ($customers as $customer): ?>
                         <?php
                         $nextBookingDate = (string) ($customer['next_booking_date'] ?? '');
@@ -356,16 +376,20 @@ ob_start();
         </div>
     </section>
 
+    <!-- Page section for this part of the AfriSense interface. -->
     <section class="af-menu-table-card af-customer-activity-card">
+        <!-- Header block for this interface section. -->
         <header class="af-table-toolbar">
             <h2>Date Activity</h2>
             <p>Orders and bookings tied to <?php echo htmlspecialchars(date('d M Y', $selectedTimestamp), ENT_QUOTES, 'UTF-8'); ?>.</p>
         </header>
         <div class="af-customer-activity-list">
+            <?php // Render this conditional/dynamic template block. ?>
             <?php if ($dateActivities === []): ?>
                 <div class="af-empty-state">No customer activity for this date.</div>
             <?php endif; ?>
 
+            <?php // Render this conditional/dynamic template block. ?>
             <?php foreach ($dateActivities as $activity): ?>
                 <?php
                 $activityTime = strtotime((string) ($activity['activity_time'] ?? '')) ?: time();

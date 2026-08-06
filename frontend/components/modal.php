@@ -1,5 +1,7 @@
 <?php
+// Guard this block so it only runs when the required condition is met.
 if (!function_exists('afrisense_modal')) {
+    // Defines the afrisense_modal helper used by this module.
     function afrisense_modal(
         string $id = 'afConfirmModal',
         string $title = 'Confirm Action',
@@ -10,6 +12,7 @@ if (!function_exists('afrisense_modal')) {
         ?>
         <div class="af-modal" id="<?php echo htmlspecialchars($id, ENT_QUOTES, 'UTF-8'); ?>" aria-hidden="true" data-modal>
             <div class="af-modal-backdrop" data-modal-close></div>
+            <!-- Page section for this part of the AfriSense interface. -->
             <section class="af-modal-dialog" role="dialog" aria-modal="true" aria-labelledby="<?php echo htmlspecialchars($id, ENT_QUOTES, 'UTF-8'); ?>_title">
                 <button class="af-modal-close" type="button" aria-label="Close modal" data-modal-close>
                     <i class="bi bi-x-lg" aria-hidden="true"></i>

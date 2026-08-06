@@ -20,6 +20,7 @@ function afrisense_remarks_samples(): array
     ];
 }
 
+// Defines the afrisense_remarks_ensure_table helper used by this module.
 function afrisense_remarks_ensure_table(PDO $pdo): void
 {
     $pdo->exec(
@@ -51,6 +52,7 @@ function afrisense_remarks_ensure_table(PDO $pdo): void
     $columnStatement = $pdo->prepare('SHOW COLUMNS FROM `customer_remarks`');
     $columnStatement->execute();
 
+    // Iterate through the data needed for this block.
     foreach ($columnStatement->fetchAll(PDO::FETCH_ASSOC) as $column) {
         $columns[(string) ($column['Field'] ?? '')] = true;
     }
@@ -65,13 +67,16 @@ function afrisense_remarks_ensure_table(PDO $pdo): void
         'updated_at' => 'DATETIME NULL DEFAULT NULL ON UPDATE CURRENT_TIMESTAMP AFTER `created_at`',
     ];
 
+    // Iterate through the data needed for this block.
     foreach ($requiredColumns as $column => $definition) {
+        // Guard this block so it only runs when the required condition is met.
         if (!isset($columns[$column])) {
             $pdo->exec(sprintf('ALTER TABLE `customer_remarks` ADD COLUMN `%s` %s', $column, $definition));
         }
     }
 }
 
+// Defines the afrisense_remarks_seed_samples helper used by this module.
 function afrisense_remarks_seed_samples(PDO $pdo): void
 {
     afrisense_remarks_ensure_table($pdo);
@@ -79,6 +84,7 @@ function afrisense_remarks_seed_samples(PDO $pdo): void
     $countStatement = $pdo->prepare('SELECT COUNT(*) AS count_value FROM `customer_remarks`');
     $countStatement->execute();
 
+    // Guard this block so it only runs when the required condition is met.
     if ((int) ($countStatement->fetch(PDO::FETCH_ASSOC)['count_value'] ?? 0) > 0) {
         return;
     }
@@ -90,6 +96,7 @@ function afrisense_remarks_seed_samples(PDO $pdo): void
             (:customer_name, :email, :phone, :food_service, :category, :image, :rating, :remark, :status, :source, :created_at)'
     );
 
+    // Iterate through the data needed for this block.
     foreach (afrisense_remarks_samples() as $remark) {
         $insert->execute([
             'customer_name' => (string) $remark['customer_name'],
@@ -107,8 +114,10 @@ function afrisense_remarks_seed_samples(PDO $pdo): void
     }
 }
 
+// Defines the afrisense_remarks_customer_for_user helper used by this module.
 function afrisense_remarks_customer_for_user(PDO $pdo, ?array $user): ?array
 {
+    // Guard this block so it only runs when the required condition is met.
     if ($user === null) {
         return null;
     }
@@ -116,6 +125,7 @@ function afrisense_remarks_customer_for_user(PDO $pdo, ?array $user): ?array
     $email = trim((string) ($user['email'] ?? ''));
     $phone = preg_replace('/\s+/', '', trim((string) ($user['phonenumber'] ?? $user['phone'] ?? '')));
 
+    // Guard this block so it only runs when the required condition is met.
     if ($email === '' && $phone === '') {
         return null;
     }
@@ -139,19 +149,23 @@ function afrisense_remarks_customer_for_user(PDO $pdo, ?array $user): ?array
     return $customer ?: null;
 }
 
+// Defines the afrisense_remarks_image helper used by this module.
 function afrisense_remarks_image(string $frontendBase, ?string $image): string
 {
     $relativeImage = ltrim(str_replace('\\', '/', trim((string) $image)), '/');
     $filename = basename($relativeImage);
 
+    // Guard this block so it only runs when the required condition is met.
     if ($filename !== '' && is_file(__DIR__ . '/../assets/images/foods/' . $filename)) {
         return $frontendBase . '/assets/images/foods/' . $filename;
     }
 
+    // Guard this block so it only runs when the required condition is met.
     if ($relativeImage !== '' && is_file(__DIR__ . '/../uploads/' . $relativeImage)) {
         return $frontendBase . '/uploads/' . $relativeImage;
     }
 
+    // Guard this block so it only runs when the required condition is met.
     if ($filename !== '' && is_file(__DIR__ . '/../uploads/' . $filename)) {
         return $frontendBase . '/uploads/' . $filename;
     }
@@ -159,6 +173,7 @@ function afrisense_remarks_image(string $frontendBase, ?string $image): string
     return $frontendBase . '/assets/images/foodimage.jpeg';
 }
 
+// Defines the afrisense_remarks_status_class helper used by this module.
 function afrisense_remarks_status_class(string $status): string
 {
     return match (strtolower($status)) {
@@ -168,10 +183,12 @@ function afrisense_remarks_status_class(string $status): string
     };
 }
 
+// Defines the afrisense_remarks_excerpt helper used by this module.
 function afrisense_remarks_excerpt(string $value, int $limit = 120): string
 {
     $value = trim(preg_replace('/\s+/', ' ', $value) ?? '');
 
+    // Guard this block so it only runs when the required condition is met.
     if (strlen($value) <= $limit) {
         return $value;
     }
@@ -179,10 +196,12 @@ function afrisense_remarks_excerpt(string $value, int $limit = 120): string
     return rtrim(substr($value, 0, $limit - 3)) . '...';
 }
 
+// Defines the afrisense_remarks_stars helper used by this module.
 function afrisense_remarks_stars(float $rating): string
 {
     $html = '<span class="af-remark-stars" aria-label="' . htmlspecialchars(number_format($rating, 1), ENT_QUOTES, 'UTF-8') . ' out of 5">';
 
+    // Iterate through the data needed for this block.
     for ($i = 1; $i <= 5; $i++) {
         $html .= '<i class="bi ' . ($i <= round($rating) ? 'bi-star-fill' : 'bi-star') . '" aria-hidden="true"></i>';
     }
@@ -197,6 +216,7 @@ function afrisense_remarks_food_options(PDO $pdo): array
 {
     $options = [];
 
+    // Run database/action work inside a guarded block so the page can fail gracefully.
     try {
         $foods = $pdo->prepare('SELECT `food_name` FROM `foods` ORDER BY `food_name` ASC LIMIT 40');
         $foods->execute();
@@ -205,6 +225,7 @@ function afrisense_remarks_food_options(PDO $pdo): array
         $options = [];
     }
 
+    // Run database/action work inside a guarded block so the page can fail gracefully.
     try {
         $services = $pdo->prepare('SELECT `service_name` FROM `services` ORDER BY `service_name` ASC LIMIT 20');
         $services->execute();
@@ -213,6 +234,7 @@ function afrisense_remarks_food_options(PDO $pdo): array
         // Foods alone are enough when services are unavailable.
     }
 
+    // Guard this block so it only runs when the required condition is met.
     if ($options === []) {
         $options = array_map(static fn (array $remark): string => (string) $remark['food_service'], afrisense_remarks_samples());
     }
@@ -231,31 +253,37 @@ function afrisense_remarks_fetch(PDO $pdo, array $filters = [], int $limit = 24,
     $where = [];
     $params = [];
 
+    // Guard this block so it only runs when the required condition is met.
     if (($filters['status'] ?? '') !== '') {
         $where[] = '`status` = :status';
         $params['status'] = (string) $filters['status'];
     }
 
+    // Guard this block so it only runs when the required condition is met.
     if (($filters['email'] ?? '') !== '') {
         $where[] = '`email` = :email';
         $params['email'] = (string) $filters['email'];
     }
 
+    // Guard this block so it only runs when the required condition is met.
     if (($filters['customer_id'] ?? '') !== '') {
         $where[] = '`customer_id` = :customer_id';
         $params['customer_id'] = (int) $filters['customer_id'];
     }
 
+    // Guard this block so it only runs when the required condition is met.
     if (($filters['rating'] ?? '') !== '') {
         $where[] = '`rating` = :rating';
         $params['rating'] = (int) $filters['rating'];
     }
 
+    // Guard this block so it only runs when the required condition is met.
     if (($filters['food_service'] ?? '') !== '') {
         $where[] = '`food_service` = :food_service';
         $params['food_service'] = (string) $filters['food_service'];
     }
 
+    // Guard this block so it only runs when the required condition is met.
     if (($filters['search'] ?? '') !== '') {
         $where[] = '(`customer_name` LIKE :search OR `email` LIKE :search OR `food_service` LIKE :search OR `remark` LIKE :search)';
         $params['search'] = '%' . (string) $filters['search'] . '%';
@@ -263,6 +291,7 @@ function afrisense_remarks_fetch(PDO $pdo, array $filters = [], int $limit = 24,
 
     $sql = 'SELECT * FROM `customer_remarks`';
 
+    // Guard this block so it only runs when the required condition is met.
     if ($where !== []) {
         $sql .= ' WHERE ' . implode(' AND ', $where);
     }
@@ -293,6 +322,7 @@ function afrisense_remarks_submit(PDO $pdo, array $request, ?array $user = null,
     $rating = max(1, min(5, (int) ($request['rating'] ?? 0)));
     $remark = trim((string) ($request['remark'] ?? ''));
 
+    // Guard this block so it only runs when the required condition is met.
     if ($name === '' || !filter_var($email, FILTER_VALIDATE_EMAIL) || $foodService === '' || strlen($remark) < 10) {
         return ['success' => false, 'message' => 'Please provide your name, valid email, food or service, rating, and a remark of at least 10 characters.'];
     }
@@ -318,7 +348,9 @@ function afrisense_remarks_submit(PDO $pdo, array $request, ?array $user = null,
         'source' => $source,
     ]);
 
+    // Guard this block so it only runs when the required condition is met.
     if (function_exists('afrisense_public_create_admin_notifications')) {
+        // Run database/action work inside a guarded block so the page can fail gracefully.
         try {
             afrisense_public_create_admin_notifications(
                 $pdo,

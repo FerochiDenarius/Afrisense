@@ -28,6 +28,7 @@ $supportTopics = [
     'Payment methods',
 ];
 ?>
+<!-- Page section for this part of the AfriSense interface. -->
 <section
     class="af-support-page <?php echo $supportIsGuest ? 'is-guest' : 'is-customer'; ?>"
     data-support-page
@@ -37,6 +38,7 @@ $supportTopics = [
     data-support-received-sound-url="<?php echo htmlspecialchars(($frontendBase ?? '/Afrisense/frontend') . '/assets/audio/receivedSound.wav', ENT_QUOTES, 'UTF-8'); ?>"
     data-support-conversation-id="<?php echo (int) ($supportConversation['id'] ?? 0); ?>"
 >
+    <!-- Header block for this interface section. -->
     <header class="af-support-heading">
         <div>
             <span class="af-support-title-icon"><i class="bi bi-headset" aria-hidden="true"></i></span>
@@ -48,6 +50,7 @@ $supportTopics = [
         <span class="af-agent-online"><i class="bi bi-circle-fill" aria-hidden="true"></i> Agents Online</span>
     </header>
 
+    <?php // Render this conditional/dynamic template block. ?>
     <?php if ($supportFlash !== null): ?>
         <p class="af-support-flash <?php echo ($supportFlash['success'] ?? false) ? 'is-success' : 'is-error'; ?>">
             <?php echo htmlspecialchars((string) ($supportFlash['message'] ?? ''), ENT_QUOTES, 'UTF-8'); ?>
@@ -55,7 +58,9 @@ $supportTopics = [
     <?php endif; ?>
 
     <div class="af-support-grid">
+        <!-- Side panel with supporting information and actions. -->
         <aside class="af-support-conversations" aria-label="Support conversations">
+            <!-- Header block for this interface section. -->
             <header>
                 <h2>Conversations</h2>
             </header>
@@ -96,7 +101,9 @@ $supportTopics = [
             </a>
         </aside>
 
+        <!-- Page section for this part of the AfriSense interface. -->
         <section class="af-support-chat" aria-labelledby="support_chat_title">
+            <!-- Header block for this interface section. -->
             <header class="af-chat-header">
                 <span class="af-agent-avatar"><i class="bi bi-person-headset" aria-hidden="true"></i></span>
                 <div>
@@ -117,7 +124,9 @@ $supportTopics = [
                 </article>
             </div>
 
+            <!-- Form block that submits this page workflow. -->
             <form class="af-support-composer" action="<?php echo htmlspecialchars($supportAction, ENT_QUOTES, 'UTF-8'); ?>" method="post" enctype="multipart/form-data">
+                <?php // Render this conditional/dynamic template block. ?>
                 <?php if ($supportIsGuest): ?>
                     <div class="af-guest-fields">
                         <label>
@@ -146,7 +155,9 @@ $supportTopics = [
             </form>
         </section>
 
+        <!-- Side panel with supporting information and actions. -->
         <aside class="af-support-side">
+            <!-- Page section for this part of the AfriSense interface. -->
             <section class="af-support-info">
                 <h2><i class="bi bi-headset" aria-hidden="true"></i> Support Information</h2>
                 <p>We're here to help you with any issues or questions you may have.</p>
@@ -156,8 +167,10 @@ $supportTopics = [
                 <article><span><i class="bi bi-clock" aria-hidden="true"></i></span><div><strong>Response Time</strong><p>Typically replies in a few minutes</p></div></article>
             </section>
 
+            <!-- Page section for this part of the AfriSense interface. -->
             <section class="af-help-topics">
                 <h2><i class="bi bi-question-circle" aria-hidden="true"></i> Quick Help Topics</h2>
+                <?php // Render this conditional/dynamic template block. ?>
                 <?php foreach ($supportTopics as $topic): ?>
                     <button type="button" data-support-topic="<?php echo htmlspecialchars($topic, ENT_QUOTES, 'UTF-8'); ?>">
                         <i class="bi bi-chevron-right" aria-hidden="true"></i>
@@ -167,10 +180,12 @@ $supportTopics = [
                 <a href="<?php echo htmlspecialchars($frontendBase . '/landing/contact.php', ENT_QUOTES, 'UTF-8'); ?>">View Help Center</a>
             </section>
 
+            <!-- Page section for this part of the AfriSense interface. -->
             <section class="af-rate-support" aria-labelledby="rate_support_title">
                 <h2 id="rate_support_title"><i class="bi bi-stars" aria-hidden="true"></i> Rate Our Support</h2>
                 <p>How was your support experience today?</p>
                 <div class="af-stars" data-support-rating>
+                    <?php // Render this conditional/dynamic template block. ?>
                     <?php for ($i = 1; $i <= 5; $i++): ?>
                         <button type="button" aria-label="Rate <?php echo $i; ?> stars"><i class="bi bi-star" aria-hidden="true"></i></button>
                     <?php endfor; ?>

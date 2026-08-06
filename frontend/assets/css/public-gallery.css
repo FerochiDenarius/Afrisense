@@ -1,3 +1,4 @@
+/* Hero section styling for .af-public-gallery-hero. */
 .af-public-gallery-hero {
     min-height: 340px;
     background:
@@ -9,6 +10,7 @@
     padding: 80px max(24px, calc((100vw - 1180px) / 2)) 64px;
 }
 
+/* Navigation and menu styling for .af-public-gallery-hero nav. */
 .af-public-gallery-hero nav {
     display: inline-flex;
     align-items: center;
@@ -18,12 +20,14 @@
     margin-bottom: 18px;
 }
 
+/* Navigation and menu styling for .af-public-gallery-hero nav a. */
 .af-public-gallery-hero nav a {
     color: inherit;
     text-decoration: none;
 }
 
 .af-public-gallery-hero p,
+/* Hero section styling for .af-public-gallery-hero p, .af-public-gallery-heading p. */
 .af-public-gallery-heading p {
     color: #cc8f25;
     font-size: 12px;
@@ -32,6 +36,7 @@
     text-transform: uppercase;
 }
 
+/* Hero section styling for .af-public-gallery-hero h1. */
 .af-public-gallery-hero h1 {
     max-width: 720px;
     margin: 8px 0 12px;
@@ -40,6 +45,7 @@
     line-height: 1;
 }
 
+/* Hero section styling for .af-public-gallery-hero span. */
 .af-public-gallery-hero span {
     color: rgba(255, 255, 255, 0.88);
     display: block;
@@ -48,16 +54,19 @@
     line-height: 1.7;
 }
 
+/* Styling rules for .af-public-gallery-page. */
 .af-public-gallery-page {
     background: #f8faf9;
     padding: 54px max(24px, calc((100vw - 1180px) / 2)) 70px;
 }
 
+/* Styling rules for .af-public-gallery-heading. */
 .af-public-gallery-heading {
     text-align: center;
     margin-bottom: 26px;
 }
 
+/* Styling rules for .af-public-gallery-heading h2. */
 .af-public-gallery-heading h2 {
     color: #0d241e;
     margin: 8px 0;
@@ -65,12 +74,14 @@
     font-size: clamp(32px, 4vw, 48px);
 }
 
+/* Styling rules for .af-public-gallery-heading small. */
 .af-public-gallery-heading small {
     color: #667085;
     display: block;
     font-size: 14px;
 }
 
+/* Styling rules for .af-public-gallery-toolbar. */
 .af-public-gallery-toolbar {
     border: 1px solid #edf0f3;
     border-radius: 8px;
@@ -83,10 +94,12 @@
     padding: 16px;
 }
 
+/* Styling rules for .af-public-gallery-toolbar label. */
 .af-public-gallery-toolbar label {
     position: relative;
 }
 
+/* Styling rules for .af-public-gallery-toolbar label i. */
 .af-public-gallery-toolbar label i {
     color: #667085;
     left: 14px;
@@ -98,6 +111,7 @@
 .af-public-gallery-toolbar input,
 .af-public-gallery-toolbar select,
 .af-public-gallery-toolbar button,
+/* Form control styling for .af-public-gallery-toolbar input, .af-public-gallery-toolbar select, .af-public-gallery-toolbar button, .af-public-gallery-toolbar a. */
 .af-public-gallery-toolbar a {
     min-height: 46px;
     border: 1px solid #d9dee6;
@@ -107,16 +121,19 @@
     font: inherit;
 }
 
+/* Form control styling for .af-public-gallery-toolbar input. */
 .af-public-gallery-toolbar input {
     width: 100%;
     padding: 0 14px 0 42px;
 }
 
+/* Form control styling for .af-public-gallery-toolbar select. */
 .af-public-gallery-toolbar select {
     padding: 0 12px;
 }
 
 .af-public-gallery-toolbar button,
+/* Button and action control styling for .af-public-gallery-toolbar button, .af-public-gallery-toolbar a. */
 .af-public-gallery-toolbar a {
     display: inline-flex;
     align-items: center;
@@ -128,18 +145,21 @@
     text-decoration: none;
 }
 
+/* Button and action control styling for .af-public-gallery-toolbar button. */
 .af-public-gallery-toolbar button {
     border-color: #0d241e;
     background: linear-gradient(135deg, #06281f, #0d3b2f);
     color: #fff;
 }
 
+/* Styling rules for .af-public-gallery-grid. */
 .af-public-gallery-grid {
     display: grid;
     grid-template-columns: repeat(3, minmax(0, 1fr));
     gap: 22px;
 }
 
+/* Card and panel styling for .af-public-gallery-card. */
 .af-public-gallery-card {
     border: 1px solid #edf0f3;
     border-radius: 8px;
@@ -149,11 +169,13 @@
     transition: transform 0.18s ease, box-shadow 0.18s ease;
 }
 
+/* Card and panel styling for .af-public-gallery-card:hover. */
 .af-public-gallery-card:hover {
     box-shadow: 0 22px 44px rgba(16, 24, 40, 0.12);
     transform: translateY(-3px);
 }
 
+/* Card and panel styling for .af-public-gallery-card img. */
 .af-public-gallery-card img {
     width: 100%;
     aspect-ratio: 1.45 / 1;
@@ -162,12 +184,14 @@
     object-position: center;
 }
 
+/* Card and panel styling for .af-public-gallery-card div. */
 .af-public-gallery-card div {
     display: grid;
     gap: 8px;
     padding: 18px;
 }
 
+/* Card and panel styling for .af-public-gallery-card span. */
 .af-public-gallery-card span {
     width: max-content;
     border-radius: 999px;
@@ -176,41 +200,48 @@
     font-weight: 900;
 }
 
+/* Card and panel styling for .af-public-gallery-card span.food. */
 .af-public-gallery-card span.food {
     background: #e3f6e6;
     color: #087a34;
 }
 
 .af-public-gallery-card span.drinks,
+/* Card and panel styling for .af-public-gallery-card span.drinks, .af-public-gallery-card span.soups. */
 .af-public-gallery-card span.soups {
     background: #fff1db;
     color: #c06f00;
 }
 
 .af-public-gallery-card span.events,
+/* Card and panel styling for .af-public-gallery-card span.events, .af-public-gallery-card span.packages. */
 .af-public-gallery-card span.packages {
     background: #e5f0ff;
     color: #2563eb;
 }
 
+/* Card and panel styling for .af-public-gallery-card h3. */
 .af-public-gallery-card h3 {
     color: #111827;
     font-size: 20px;
     line-height: 1.25;
 }
 
+/* Card and panel styling for .af-public-gallery-card p. */
 .af-public-gallery-card p {
     color: #667085;
     font-size: 14px;
     line-height: 1.6;
 }
 
+/* Card and panel styling for .af-public-gallery-card small. */
 .af-public-gallery-card small {
     color: #98a2b3;
     font-size: 12px;
     font-weight: 800;
 }
 
+/* Styling rules for .af-public-gallery-empty. */
 .af-public-gallery-empty {
     grid-column: 1 / -1;
     border: 1px dashed #d9dee6;
@@ -221,19 +252,24 @@
     text-align: center;
 }
 
+/* Responsive styling rules for @media (max-width: 960px). */
 @media (max-width: 960px) {
     .af-public-gallery-toolbar,
+    /* Styling rules for .af-public-gallery-toolbar, .af-public-gallery-grid. */
     .af-public-gallery-grid {
         grid-template-columns: repeat(2, minmax(0, 1fr));
     }
 }
 
+/* Responsive styling rules for @media (max-width: 640px). */
 @media (max-width: 640px) {
     .af-public-gallery-toolbar,
+    /* Styling rules for .af-public-gallery-toolbar, .af-public-gallery-grid. */
     .af-public-gallery-grid {
         grid-template-columns: 1fr;
     }
 
+    /* Hero section styling for .af-public-gallery-hero. */
     .af-public-gallery-hero {
         min-height: 300px;
         padding-top: 54px;
@@ -247,45 +283,54 @@
     padding-bottom: 38px;
 }
 
+/* Navigation and menu styling for .af-public-gallery-hero nav. */
 .af-public-gallery-hero nav {
     font-size: 11px;
     margin-bottom: 14px;
 }
 
 .af-public-gallery-hero p,
+/* Hero section styling for .af-public-gallery-hero p, .af-public-gallery-heading p. */
 .af-public-gallery-heading p {
     font-size: 11px;
 }
 
+/* Hero section styling for .af-public-gallery-hero h1. */
 .af-public-gallery-hero h1 {
     max-width: 640px;
     font-size: clamp(32px, 4vw, 46px);
     margin: 6px 0 10px;
 }
 
+/* Hero section styling for .af-public-gallery-hero span. */
 .af-public-gallery-hero span {
     max-width: 520px;
     font-size: 13px;
     line-height: 1.55;
 }
 
+/* Styling rules for .af-public-gallery-page. */
 .af-public-gallery-page {
     padding-top: 34px;
     padding-bottom: 48px;
 }
 
+/* Styling rules for .af-public-gallery-heading. */
 .af-public-gallery-heading {
     margin-bottom: 22px;
 }
 
+/* Styling rules for .af-public-gallery-heading h2. */
 .af-public-gallery-heading h2 {
     font-size: clamp(28px, 3.4vw, 36px);
 }
 
+/* Styling rules for .af-public-gallery-heading small. */
 .af-public-gallery-heading small {
     font-size: 12px;
 }
 
+/* Styling rules for .af-public-gallery-toolbar. */
 .af-public-gallery-toolbar {
     grid-template-columns: minmax(220px, 1fr) 180px 104px 90px;
     gap: 10px;
@@ -296,34 +341,41 @@
 .af-public-gallery-toolbar input,
 .af-public-gallery-toolbar select,
 .af-public-gallery-toolbar button,
+/* Form control styling for .af-public-gallery-toolbar input, .af-public-gallery-toolbar select, .af-public-gallery-toolbar button, .af-public-gallery-toolbar a. */
 .af-public-gallery-toolbar a {
     min-height: 38px;
     font-size: 12px;
 }
 
+/* Styling rules for .af-public-gallery-grid. */
 .af-public-gallery-grid {
     gap: 16px;
 }
 
+/* Card and panel styling for .af-public-gallery-card div. */
 .af-public-gallery-card div {
     gap: 6px;
     padding: 14px;
 }
 
+/* Card and panel styling for .af-public-gallery-card span. */
 .af-public-gallery-card span {
     padding: 4px 8px;
     font-size: 10px;
 }
 
+/* Card and panel styling for .af-public-gallery-card h3. */
 .af-public-gallery-card h3 {
     font-size: 16px;
 }
 
+/* Card and panel styling for .af-public-gallery-card p. */
 .af-public-gallery-card p {
     font-size: 12px;
     line-height: 1.5;
 }
 
+/* Card and panel styling for .af-public-gallery-card small. */
 .af-public-gallery-card small {
     font-size: 10.5px;
 }

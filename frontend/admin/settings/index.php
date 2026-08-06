@@ -15,7 +15,9 @@ require __DIR__ . '/controller.php';
 
 ob_start();
 ?>
+<!-- Page section for this part of the AfriSense interface. -->
 <section class="af-admin-menu-page af-settings-page">
+    <!-- Header block for this interface section. -->
     <header class="af-admin-page-heading">
         <div>
             <h1>Website Settings</h1>
@@ -27,13 +29,16 @@ ob_start();
         </button>
     </header>
 
+    <?php // Render this conditional/dynamic template block. ?>
     <?php if ($flashMessage !== ''): ?>
         <div class="af-admin-alert <?php echo htmlspecialchars($flashType, ENT_QUOTES, 'UTF-8'); ?>">
             <?php echo htmlspecialchars($flashMessage, ENT_QUOTES, 'UTF-8'); ?>
         </div>
     <?php endif; ?>
 
+    <!-- Navigation links for this interface. -->
     <nav class="af-settings-tabs" aria-label="Settings sections">
+        <?php // Render this conditional/dynamic template block. ?>
         <?php foreach ($settingTabs as $sectionKey => $tab): ?>
             <a class="<?php echo $activeSettingSection === $sectionKey ? 'active' : ''; ?>" href="index.php?section=<?php echo htmlspecialchars($sectionKey, ENT_QUOTES, 'UTF-8'); ?>">
                 <i class="bi <?php echo htmlspecialchars($tab['icon'], ENT_QUOTES, 'UTF-8'); ?>" aria-hidden="true"></i>
@@ -42,6 +47,7 @@ ob_start();
         <?php endforeach; ?>
     </nav>
 
+    <!-- Form block that submits this page workflow. -->
     <form id="website_settings_form" class="af-settings-grid af-settings-grid-<?php echo htmlspecialchars($activeSettingSection, ENT_QUOTES, 'UTF-8'); ?>" action="index.php?section=<?php echo htmlspecialchars($activeSettingSection, ENT_QUOTES, 'UTF-8'); ?>" method="post" enctype="multipart/form-data">
         <input type="hidden" name="settings_section" value="<?php echo htmlspecialchars($activeSettingSection, ENT_QUOTES, 'UTF-8'); ?>">
         <?php require __DIR__ . '/sections/' . $activeSettingSection . '.php'; ?>

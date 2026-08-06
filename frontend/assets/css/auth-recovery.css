@@ -1,3 +1,4 @@
+/* Styling rules for .af-auth-recovery-page. */
 .af-auth-recovery-page {
     background:
         radial-gradient(circle at 22% 18%, rgba(204, 143, 37, 0.07), transparent 24%),
@@ -6,6 +7,7 @@
     padding: 70px 24px 76px;
 }
 
+/* Card and panel styling for .af-recovery-card. */
 .af-recovery-card {
     width: min(1080px, 100%);
     min-height: 720px;
@@ -18,6 +20,7 @@
     overflow: hidden;
 }
 
+/* Form control styling for .af-recovery-form-panel. */
 .af-recovery-form-panel {
     padding: 88px 54px 54px;
     display: flex;
@@ -25,6 +28,7 @@
     align-items: center;
 }
 
+/* Styling rules for .af-recovery-icon. */
 .af-recovery-icon {
     width: 94px;
     height: 94px;
@@ -38,6 +42,7 @@
     margin-bottom: 26px;
 }
 
+/* Styling rules for .af-recovery-icon > span. */
 .af-recovery-icon > span {
     position: absolute;
     right: 15px;
@@ -54,10 +59,12 @@
     font-weight: 900;
 }
 
+/* Styling rules for .af-recovery-icon.success > span. */
 .af-recovery-icon.success > span {
     background: #159447;
 }
 
+/* Form control styling for .af-recovery-form-panel h1. */
 .af-recovery-form-panel h1 {
     color: var(--af-green);
     font-family: Georgia, "Times New Roman", serif;
@@ -67,10 +74,12 @@
     margin-bottom: 20px;
 }
 
+/* Form control styling for .af-recovery-form-panel h1 span. */
 .af-recovery-form-panel h1 span {
     color: var(--af-gold);
 }
 
+/* Styling rules for .af-recovery-subtitle. */
 .af-recovery-subtitle {
     width: min(460px, 100%);
     color: #4b5563;
@@ -79,6 +88,7 @@
     text-align: center;
 }
 
+/* Styling rules for .af-gold-divider. */
 .af-gold-divider {
     width: 160px;
     height: 1px;
@@ -87,12 +97,14 @@
     margin: 40px auto;
 }
 
+/* Form control styling for .af-recovery-form. */
 .af-recovery-form {
     width: min(470px, 100%);
     display: grid;
     gap: 28px;
 }
 
+/* Styling rules for .auth-message. */
 .auth-message {
     width: min(470px, 100%);
     border-radius: 8px;
@@ -103,35 +115,41 @@
     padding: 12px 14px;
 }
 
+/* Styling rules for .auth-message.error. */
 .auth-message.error {
     background: #fff1f1;
     border: 1px solid #ffd3d3;
     color: #b42318;
 }
 
+/* Styling rules for .auth-message.success. */
 .auth-message.success {
     background: #edfdf3;
     border: 1px solid #b7efc5;
     color: #087443;
 }
 
+/* Form control styling for .af-form-group. */
 .af-form-group {
     display: grid;
     gap: 10px;
 }
 
 .af-form-group label,
+/* Form control styling for .af-form-group label, .af-strength strong. */
 .af-strength strong {
     color: #111827;
     font-size: 14px;
     font-weight: 800;
 }
 
+/* Form control styling for .af-form-group small. */
 .af-form-group small {
     color: #6b7280;
     font-size: 13px;
 }
 
+/* Form control styling for .af-input-icon. */
 .af-input-icon {
     height: 58px;
     border: 1px solid #d9dee6;
@@ -143,17 +161,20 @@
     transition: border-color 160ms ease, box-shadow 160ms ease;
 }
 
+/* Form control styling for .af-input-icon:focus-within. */
 .af-input-icon:focus-within {
     border-color: var(--af-gold-2);
     box-shadow: 0 0 0 3px rgba(204, 143, 37, 0.12);
 }
 
+/* Form control styling for .af-input-icon > i. */
 .af-input-icon > i {
     color: #7a818c;
     justify-self: center;
     font-size: 19px;
 }
 
+/* Form control styling for .af-input-icon input. */
 .af-input-icon input {
     width: 100%;
     min-width: 0;
@@ -163,10 +184,12 @@
     font-size: 15px;
 }
 
+/* Styling rules for .af-password-field. */
 .af-password-field {
     grid-template-columns: 46px 1fr 44px;
 }
 
+/* Button and action control styling for .af-password-field button. */
 .af-password-field button {
     border: 0;
     background: transparent;
@@ -175,6 +198,7 @@
     font-size: 18px;
 }
 
+/* Button and action control styling for .af-submit-btn. */
 .af-submit-btn {
     height: 58px;
     border: 0;
@@ -191,16 +215,19 @@
     transition: background 180ms ease, transform 180ms ease;
 }
 
+/* Button and action control styling for .af-submit-btn:hover. */
 .af-submit-btn:hover {
     background: linear-gradient(135deg, var(--af-gold), var(--af-gold-2));
     transform: translateY(-1px);
 }
 
+/* Button and action control styling for .af-submit-btn i. */
 .af-submit-btn i {
     font-size: 22px;
     justify-self: end;
 }
 
+/* Styling rules for .af-login-note. */
 .af-login-note {
     color: #5f6672;
     font-size: 15px;
@@ -208,11 +235,13 @@
     text-align: center;
 }
 
+/* Styling rules for .af-login-note a. */
 .af-login-note a {
     color: var(--af-gold);
     font-weight: 800;
 }
 
+/* Styling rules for .af-or-divider. */
 .af-or-divider {
     width: min(470px, 100%);
     display: grid;
@@ -222,11 +251,13 @@
     margin: 36px 0;
 }
 
+/* Styling rules for .af-or-divider span. */
 .af-or-divider span {
     height: 1px;
     background: #d9dee6;
 }
 
+/* Styling rules for .af-or-divider em. */
 .af-or-divider em {
     width: 38px;
     height: 38px;
@@ -239,6 +270,7 @@
     font-style: normal;
 }
 
+/* Styling rules for .af-back-login. */
 .af-back-login {
     width: min(470px, 100%);
     height: 58px;
@@ -254,11 +286,13 @@
     transition: background 180ms ease, color 180ms ease;
 }
 
+/* Interactive state styling for .af-back-login:hover. */
 .af-back-login:hover {
     background: var(--af-green);
     color: #fff;
 }
 
+/* Card and panel styling for .af-recovery-info-panel. */
 .af-recovery-info-panel {
     background: var(--af-green);
     color: #fff;
@@ -266,10 +300,12 @@
     grid-template-rows: 310px 1fr;
 }
 
+/* Styling rules for .af-recovery-image. */
 .af-recovery-image {
     min-height: 0;
 }
 
+/* Styling rules for .af-recovery-image img. */
 .af-recovery-image img {
     width: 100%;
     height: 100%;
@@ -277,6 +313,7 @@
     display: block;
 }
 
+/* Styling rules for .af-info-content. */
 .af-info-content {
     background:
         radial-gradient(circle at 92% 85%, rgba(204, 143, 37, 0.1), transparent 28%),
@@ -284,6 +321,7 @@
     padding: 48px 42px;
 }
 
+/* Styling rules for .af-info-lead. */
 .af-info-lead {
     display: grid;
     grid-template-columns: 62px 1fr;
@@ -294,6 +332,7 @@
 }
 
 .af-info-lead > span,
+/* Styling rules for .af-info-lead > span, .af-info-list > li > i. */
 .af-info-list > li > i {
     width: 58px;
     height: 58px;
@@ -305,6 +344,7 @@
     font-size: 26px;
 }
 
+/* Styling rules for .af-info-lead h2. */
 .af-info-lead h2 {
     font-family: Georgia, "Times New Roman", serif;
     font-size: 23px;
@@ -312,12 +352,14 @@
 }
 
 .af-info-lead p,
+/* Styling rules for .af-info-lead p, .af-info-list span. */
 .af-info-list span {
     color: rgba(255, 255, 255, 0.92);
     font-size: 15px;
     line-height: 1.65;
 }
 
+/* Styling rules for .af-info-list. */
 .af-info-list {
     list-style: none;
     display: grid;
@@ -325,6 +367,7 @@
     margin-top: 34px;
 }
 
+/* Styling rules for .af-info-list li. */
 .af-info-list li {
     display: grid;
     grid-template-columns: 44px 1fr;
@@ -332,6 +375,7 @@
     align-items: start;
 }
 
+/* Styling rules for .af-info-list > li > i. */
 .af-info-list > li > i {
     width: 36px;
     height: 36px;
@@ -341,6 +385,7 @@
     font-size: 27px;
 }
 
+/* Styling rules for .af-info-list strong. */
 .af-info-list strong {
     color: #fff;
     display: block;
@@ -348,15 +393,18 @@
     margin-bottom: 4px;
 }
 
+/* Styling rules for .af-tips-list. */
 .af-tips-list {
     gap: 0;
 }
 
+/* Styling rules for .af-tips-list li. */
 .af-tips-list li {
     border-bottom: 1px solid rgba(255, 255, 255, 0.12);
     padding: 20px 0;
 }
 
+/* Styling rules for .af-tips-list > li > i. */
 .af-tips-list > li > i {
     width: 46px;
     height: 46px;
@@ -366,6 +414,7 @@
     font-size: 22px;
 }
 
+/* Styling rules for .af-reset-steps. */
 .af-reset-steps {
     width: min(470px, 100%);
     list-style: none;
@@ -375,6 +424,7 @@
     margin-top: 38px;
 }
 
+/* Styling rules for .af-reset-steps li. */
 .af-reset-steps li {
     color: #333;
     display: grid;
@@ -385,6 +435,7 @@
     text-align: center;
 }
 
+/* Styling rules for .af-reset-steps li:not(:last-child)::after. */
 .af-reset-steps li:not(:last-child)::after {
     content: "";
     width: 66px;
@@ -395,6 +446,7 @@
     left: calc(50% + 34px);
 }
 
+/* Styling rules for .af-reset-steps span. */
 .af-reset-steps span {
     width: 38px;
     height: 38px;
@@ -406,100 +458,123 @@
     font-size: 18px;
 }
 
+/* Styling rules for .af-reset-steps .is-done span. */
 .af-reset-steps .is-done span {
     background: #159447;
     color: #fff;
 }
 
+/* Interactive state styling for .af-reset-steps .is-active. */
 .af-reset-steps .is-active {
     color: var(--af-gold);
 }
 
+/* Interactive state styling for .af-reset-steps .is-active span. */
 .af-reset-steps .is-active span {
     background: var(--af-gold);
     color: #fff;
 }
 
+/* Styling rules for .af-strength. */
 .af-strength {
     display: grid;
     gap: 12px;
 }
 
+/* Styling rules for .af-strength > div:first-child. */
 .af-strength > div:first-child {
     display: flex;
     justify-content: space-between;
     gap: 16px;
 }
 
+/* Styling rules for .af-strength span[data-strength-label]. */
 .af-strength span[data-strength-label] {
     color: #159447;
     font-size: 14px;
     font-weight: 850;
 }
 
+/* Styling rules for .af-strength-bars. */
 .af-strength-bars {
     display: grid;
     grid-template-columns: repeat(4, 1fr);
     gap: 8px;
 }
 
+/* Styling rules for .af-strength-bars span. */
 .af-strength-bars span {
     height: 5px;
     border-radius: 999px;
 }
 
+/* Styling rules for .af-strength-bars .weak. */
 .af-strength-bars .weak {
     background: #f04438;
 }
 
+/* Styling rules for .af-strength-bars .medium. */
 .af-strength-bars .medium {
     background: #f5a400;
 }
 
+/* Styling rules for .af-strength-bars .good. */
 .af-strength-bars .good {
     background: #65a30d;
 }
 
+/* Styling rules for .af-strength-bars .strong. */
 .af-strength-bars .strong {
     background: #159447;
 }
 
+/* Responsive styling rules for @media (max-width: 980px). */
 @media (max-width: 980px) {
+    /* Styling rules for .af-auth-recovery-page. */
     .af-auth-recovery-page {
         padding: 36px 16px 48px;
     }
 
+    /* Card and panel styling for .af-recovery-card. */
     .af-recovery-card {
         grid-template-columns: 1fr;
     }
 
+    /* Card and panel styling for .af-recovery-info-panel. */
     .af-recovery-info-panel {
         grid-template-rows: 260px auto;
     }
 }
 
+/* Responsive styling rules for @media (max-width: 620px). */
 @media (max-width: 620px) {
+    /* Form control styling for .af-recovery-form-panel. */
     .af-recovery-form-panel {
         padding: 48px 20px 34px;
     }
 
+    /* Styling rules for .af-recovery-subtitle. */
     .af-recovery-subtitle {
         font-size: 16px;
     }
 
+    /* Styling rules for .af-info-content. */
     .af-info-content {
         padding: 34px 24px;
     }
 
     .af-info-lead,
+    /* Styling rules for .af-info-lead, .af-info-list li. */
     .af-info-list li {
         grid-template-columns: 1fr;
     }
 
+    /* Styling rules for .af-reset-steps. */
     .af-reset-steps {
         gap: 8px;
     }
 
+    /* Styling rules for .af-reset-steps li:not(:last-child)::after. */
     .af-reset-steps li:not(:last-child)::after {
         display: none;
     }

@@ -15,11 +15,13 @@ require_once __DIR__ . '/../includes/public_settings.php';
 \AfriSense\Backend\Helpers\Session::start();
 $authUser = afrisense_require_customer();
 
+// Defines the afrisense_customer_booking_post helper used by this module.
 function afrisense_customer_booking_post(string $key, string $fallback = ''): string
 {
     return trim((string) ($_POST[$key] ?? $fallback));
 }
 
+// Defines the afrisense_customer_booking_customer helper used by this module.
 function afrisense_customer_booking_customer(PDO $pdo, array $user): ?array
 {
     $email = trim((string) ($user['email'] ?? ''));
@@ -41,10 +43,12 @@ function afrisense_customer_booking_customer(PDO $pdo, array $user): ?array
     return $customer ?: null;
 }
 
+// Defines the afrisense_customer_booking_customer_id helper used by this module.
 function afrisense_customer_booking_customer_id(PDO $pdo, array $user, string $fullname, string $email, string $phone): int
 {
     $existingCustomer = afrisense_customer_booking_customer($pdo, $user);
 
+    // Guard this block so it only runs when the required condition is met.
     if ($existingCustomer !== null) {
         $update = $pdo->prepare(
             'UPDATE `customers`
@@ -78,6 +82,7 @@ function afrisense_customer_booking_customer_id(PDO $pdo, array $user, string $f
     return (int) $pdo->lastInsertId();
 }
 
+// Defines the afrisense_customer_booking_status_class helper used by this module.
 function afrisense_customer_booking_status_class(string $status): string
 {
     return match (strtolower($status)) {
@@ -101,6 +106,7 @@ $counts = [
 $customer = null;
 $loadError = '';
 
+// Run database/action work inside a guarded block so the page can fail gracefully.
 try {
     $pdo = afrisense_pdo();
     $customer = afrisense_customer_booking_customer($pdo, $authUser);
@@ -114,6 +120,7 @@ try {
     $serviceStatement->execute(['availability' => 'Available']);
     $services = $serviceStatement->fetchAll(PDO::FETCH_ASSOC);
 
+    // Handle submitted form actions before rendering the page.
     if (($_SERVER['REQUEST_METHOD'] ?? 'GET') === 'POST') {
         $fullname = afrisense_customer_booking_post('full_name', (string) ($authUser['fullname'] ?? ''));
         $email = afrisense_customer_booking_post('email', (string) ($authUser['email'] ?? ''));
@@ -129,6 +136,7 @@ try {
         $serviceCheck = $pdo->prepare('SELECT `id` FROM `services` WHERE `id` = :id LIMIT 1');
         $serviceCheck->execute(['id' => $serviceId]);
 
+        // Guard this block so it only runs when the required condition is met.
         if ($fullname === '' || !filter_var($email, FILTER_VALIDATE_EMAIL) || $phone === '' || $serviceCheck->fetchColumn() === false || $eventDate === '' || $eventTime === '') {
             $bookingMessage = ['type' => 'error', 'text' => 'Please complete all required booking fields.'];
         } else {
@@ -166,6 +174,7 @@ try {
         }
     }
 
+    // Guard this block so it only runs when the required condition is met.
     if ($customer !== null) {
         $bookingStatement = $pdo->prepare(
             'SELECT
@@ -187,6 +196,7 @@ try {
         $bookingStatement->execute(['customer_id' => (int) $customer['id']]);
         $bookings = $bookingStatement->fetchAll(PDO::FETCH_ASSOC);
 
+        // Iterate through the data needed for this block.
         foreach ($bookings as $booking) {
             $status = (string) ($booking['booking_status'] ?? 'Pending');
             $counts[$status] = ($counts[$status] ?? 0) + 1;
@@ -194,6 +204,7 @@ try {
         }
     }
 } catch (Throwable $exception) {
+    // Guard this block so it only runs when the required condition is met.
     if (isset($pdo) && $pdo->inTransaction()) {
         $pdo->rollBack();
     }
@@ -201,6 +212,7 @@ try {
     $loadError = 'Bookings could not be loaded. Check that MySQL is running.';
 }
 
+// Guard this block so it only runs when the required condition is met.
 if ($services === []) {
     $services = [
         ['id' => 0, 'service_name' => 'Service Unavailable', 'description' => 'Please contact AfriSense to book manually.', 'price' => 0],
@@ -214,7 +226,9 @@ $customerPhone = (string) ($customer['phone_number'] ?? $authUser['phonenumber']
 
 ob_start();
 ?>
+<!-- Page section for this part of the AfriSense interface. -->
 <section class="af-customer-bookings-page">
+    <!-- Header block for this interface section. -->
     <header class="af-customer-bookings-heading">
         <div>
             <h1>My Bookings</h1>
@@ -226,10 +240,12 @@ ob_start();
         </a>
     </header>
 
+    <?php // Render this conditional/dynamic template block. ?>
     <?php if ($loadError !== ''): ?>
         <div class="af-admin-alert error"><?php echo htmlspecialchars($loadError, ENT_QUOTES, 'UTF-8'); ?></div>
     <?php endif; ?>
 
+    <!-- Page section for this part of the AfriSense interface. -->
     <section class="af-customer-booking-metrics">
         <article><span><i class="bi bi-calendar3" aria-hidden="true"></i></span><div><small>Total Bookings</small><strong><?php echo htmlspecialchars((string) $counts['all'], ENT_QUOTES, 'UTF-8'); ?></strong><p>All reservations</p></div></article>
         <article><span><i class="bi bi-clock" aria-hidden="true"></i></span><div><small>Pending</small><strong><?php echo htmlspecialchars((string) $counts['Pending'], ENT_QUOTES, 'UTF-8'); ?></strong><p>Awaiting approval</p></div></article>
@@ -237,12 +253,16 @@ ob_start();
         <article><span><i class="bi bi-x-circle" aria-hidden="true"></i></span><div><small>Cancelled</small><strong><?php echo htmlspecialchars((string) $counts['Cancelled'], ENT_QUOTES, 'UTF-8'); ?></strong><p>Cancelled bookings</p></div></article>
     </section>
 
+    <!-- Page section for this part of the AfriSense interface. -->
     <section class="af-customer-bookings-grid">
+        <!-- Page section for this part of the AfriSense interface. -->
         <section class="af-customer-bookings-list">
+            <!-- Header block for this interface section. -->
             <header>
                 <h2>Recent Bookings</h2>
                 <p>Your latest reservations and catering requests.</p>
             </header>
+            <?php // Render this conditional/dynamic template block. ?>
             <?php if ($bookings === []): ?>
                 <article class="af-customer-empty-bookings">
                     <i class="bi bi-calendar-plus" aria-hidden="true"></i>
@@ -250,6 +270,7 @@ ob_start();
                     <p>Create a booking using the form on this page.</p>
                 </article>
             <?php endif; ?>
+            <?php // Render this conditional/dynamic template block. ?>
             <?php foreach ($bookings as $booking): ?>
                 <?php
                 $bookingDate = strtotime((string) ($booking['event_date'] ?? '')) ?: time();
@@ -274,6 +295,7 @@ ob_start();
             <?php endforeach; ?>
         </section>
 
+        <!-- Side panel with supporting information and actions. -->
         <aside class="af-customer-booking-help">
             <h2>Need Help?</h2>
             <p>Our team can adjust dates, guest count, or special requests before confirmation.</p>
@@ -281,9 +303,12 @@ ob_start();
         </aside>
     </section>
 
+    <!-- Page section for this part of the AfriSense interface. -->
     <section class="af-booking-page af-customer-booking-form-wrap" id="booking_form">
         <div class="af-booking-grid">
+            <!-- Page section for this part of the AfriSense interface. -->
             <section class="af-service-card af-booking-form-card" aria-labelledby="booking_title">
+                <!-- Header block for this interface section. -->
                 <header class="af-section-heading">
                     <span><i class="bi bi-calendar3" aria-hidden="true"></i></span>
                     <div>
@@ -292,9 +317,11 @@ ob_start();
                     </div>
                 </header>
 
+                <!-- Form block that submits this page workflow. -->
                 <form class="af-service-form" action="my-bookings.php#booking_form" method="post" data-booking-form data-enhanced-form>
                     <fieldset class="af-service-types">
                         <legend>Select Service</legend>
+                        <?php // Render this conditional/dynamic template block. ?>
                         <?php foreach ($services as $index => $service): ?>
                             <?php $serviceName = (string) ($service['service_name'] ?? 'Service'); ?>
                             <label class="<?php echo $index === 0 ? 'is-active' : ''; ?>" data-service-option data-price="<?php echo (float) ($service['price'] ?? 0); ?>">
@@ -388,6 +415,7 @@ ob_start();
                         </div>
                     </div>
 
+                    <!-- Page section for this part of the AfriSense interface. -->
                     <section class="af-booking-summary" aria-live="polite">
                         <h3><i class="bi bi-calendar-check" aria-hidden="true"></i> Booking Summary</h3>
                         <div class="af-summary-grid">
@@ -395,6 +423,7 @@ ob_start();
                             <div><span>Date &amp; Time</span><strong data-summary-date>Select date and time</strong></div>
                             <div><span>Guests</span><strong data-summary-guests>4 Guests</strong></div>
                         </div>
+                        <!-- Footer block for this interface section. -->
                         <footer><span>Total Amount</span><strong data-summary-total>GHC 120.00</strong></footer>
                     </section>
 
@@ -409,7 +438,9 @@ ob_start();
                 </form>
             </section>
 
+            <!-- Side panel with supporting information and actions. -->
             <aside class="af-booking-side">
+                <!-- Page section for this part of the AfriSense interface. -->
                 <section class="af-service-card af-benefits-card">
                     <h2>Booking Support</h2>
                     <div class="af-side-list">
@@ -419,6 +450,7 @@ ob_start();
                     </div>
                 </section>
 
+                <!-- Page section for this part of the AfriSense interface. -->
                 <section class="af-service-card af-hours-card">
                     <h2>Opening Hours</h2>
                     <dl>

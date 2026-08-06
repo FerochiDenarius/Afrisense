@@ -13,6 +13,7 @@ require_once __DIR__ . '/../auth/auth_bootstrap.php';
 require_once __DIR__ . '/../includes/public_settings.php';
 
 $ordersCssPath = __DIR__ . '/../assets/css/admin-orders.css';
+// Guard this block so it only runs when the required condition is met.
 if (is_file($ordersCssPath)) {
     $extraStyles[] = $frontendBase . '/assets/css/admin-orders.css?v=' . filemtime($ordersCssPath);
 }
@@ -21,6 +22,8 @@ $adminUser = afrisense_require_admin();
 $adminUserId = (int) ($adminUser['id'] ?? 0);
 $itemsPerPage = min(8, afrisense_admin_items_per_page());
 
+// CSS badge tones are intentionally normalized here so database status labels
+// can stay human-readable while classes remain predictable.
 function afrisense_order_status_class(string $status): string
 {
     return match (strtolower($status)) {
@@ -34,6 +37,7 @@ function afrisense_order_status_class(string $status): string
     };
 }
 
+// Defines the afrisense_payment_status_class helper used by this module.
 function afrisense_payment_status_class(string $status): string
 {
     return match (strtolower($status)) {
@@ -43,15 +47,18 @@ function afrisense_payment_status_class(string $status): string
     };
 }
 
+// Defines the afrisense_order_image helper used by this module.
 function afrisense_order_image(string $frontendBase, ?string $image): string
 {
     $image = trim((string) $image);
     $filename = basename($image);
 
+    // Guard this block so it only runs when the required condition is met.
     if ($image !== '' && is_file(__DIR__ . '/../assets/images/foods/' . $filename)) {
         return $frontendBase . '/assets/images/foods/' . $filename;
     }
 
+    // Guard this block so it only runs when the required condition is met.
     if ($image !== '' && is_file(__DIR__ . '/../uploads/' . $filename)) {
         return $frontendBase . '/uploads/' . $filename;
     }
@@ -59,8 +66,10 @@ function afrisense_order_image(string $frontendBase, ?string $image): string
     return $frontendBase . '/assets/images/foods/jollof-rice.png';
 }
 
+// Defines the afrisense_count_orders helper used by this module.
 function afrisense_count_orders(PDO $pdo, ?string $status = null): int
 {
+    // Guard this block so it only runs when the required condition is met.
     if ($status === null) {
         $statement = $pdo->prepare('SELECT COUNT(*) AS count_value FROM `orders`');
         $statement->execute();
@@ -74,11 +83,15 @@ function afrisense_count_orders(PDO $pdo, ?string $status = null): int
     return (int) ($row['count_value'] ?? 0);
 }
 
+// Defines the afrisense_order_url helper used by this module.
 function afrisense_order_url(array $overrides = [], string $anchor = ''): string
 {
+    // Preserve current filters/search/page while changing one query parameter.
     $params = $_GET;
 
+    // Iterate through the data needed for this block.
     foreach ($overrides as $key => $value) {
+        // Guard this block so it only runs when the required condition is met.
         if ($value === null || $value === '') {
             unset($params[$key]);
         } else {
@@ -91,8 +104,11 @@ function afrisense_order_url(array $overrides = [], string $anchor = ''): string
     return 'orders.php' . ($query !== '' ? '?' . $query : '') . $anchor;
 }
 
+// Defines the afrisense_order_status_actions helper used by this module.
 function afrisense_order_status_actions(string $status): array
 {
+    // Allowed order transitions for the admin action buttons. Keeping this as
+    // data avoids scattering workflow rules through the HTML table.
     return match ($status) {
         'Pending' => [
             ['status' => 'Confirmed', 'icon' => 'bi-check2', 'label' => 'Confirm order', 'class' => 'success'],
@@ -121,8 +137,11 @@ function afrisense_order_status_actions(string $status): array
     };
 }
 
+// Defines the afrisense_order_payment_actions helper used by this module.
 function afrisense_order_payment_actions(string $status): array
 {
+    // Payment transitions are separate from kitchen/delivery transitions so COD
+    // and online payment flows can be managed independently.
     return match ($status) {
         'Pending' => [
             ['status' => 'Paid', 'icon' => 'bi-cash-coin', 'label' => 'Mark payment paid', 'class' => 'success'],
@@ -138,8 +157,11 @@ function afrisense_order_payment_actions(string $status): array
     };
 }
 
+// Defines the afrisense_order_action_form helper used by this module.
 function afrisense_order_action_form(int $orderId, string $action, string $field, array $config): string
 {
+    // Action buttons are rendered as tiny forms so each state change remains a
+    // normal POST, while title/aria-label give hover tooltips and accessibility.
     $class = trim((string) ($config['class'] ?? ''));
     $classAttribute = $class !== '' ? ' class="' . htmlspecialchars($class, ENT_QUOTES, 'UTF-8') . '"' : '';
 
@@ -157,8 +179,11 @@ function afrisense_order_action_form(int $orderId, string $action, string $field
     );
 }
 
+// Defines the afrisense_order_customer_user_id helper used by this module.
 function afrisense_order_customer_user_id(PDO $pdo, int $orderId): ?int
 {
+    // Guest orders may not have a user account, but registered customers can be
+    // matched through the customer contact record for dashboard notifications.
     $statement = $pdo->prepare(
         'SELECT u.`id`
          FROM `orders` o
@@ -176,8 +201,10 @@ function afrisense_order_customer_user_id(PDO $pdo, int $orderId): ?int
     return $userId !== false ? (int) $userId : null;
 }
 
+// Defines the afrisense_order_customer_contact helper used by this module.
 function afrisense_order_customer_contact(PDO $pdo, int $orderId): ?array
 {
+    // Central contact lookup for both email and notification messages.
     $statement = $pdo->prepare(
         'SELECT
             o.`id`,
@@ -201,18 +228,23 @@ function afrisense_order_customer_contact(PDO $pdo, int $orderId): ?array
     return $contact !== false ? $contact : null;
 }
 
+// Defines the afrisense_order_email_customer helper used by this module.
 function afrisense_order_email_customer(array $contact, string $title, string $message): array
 {
     $email = trim((string) ($contact['email'] ?? ''));
 
+    // Email delivery is optional and controlled from system settings; failures
+    // are returned to the caller instead of blocking the order status update.
     if (!afrisense_public_setting_bool('email_notifications', true)) {
         return ['success' => false, 'message' => 'Email notifications are disabled in settings.'];
     }
 
+    // Guard this block so it only runs when the required condition is met.
     if ($email === '' || !filter_var($email, FILTER_VALIDATE_EMAIL)) {
         return ['success' => false, 'message' => 'Customer email is missing or invalid.'];
     }
 
+    // Guard this block so it only runs when the required condition is met.
     if (!function_exists('afrisense_send_email')) {
         return ['success' => false, 'message' => 'Email sender is unavailable.'];
     }
@@ -244,15 +276,20 @@ function afrisense_order_email_customer(array $contact, string $title, string $m
     return afrisense_send_email($email, $customerName, $title, $html, $text);
 }
 
+// Defines the afrisense_order_notify_customer helper used by this module.
 function afrisense_order_notify_customer(PDO $pdo, int $orderId, string $title, string $message, int $createdBy): array
 {
+    // Guard this block so it only runs when the required condition is met.
     if (!afrisense_public_setting_bool('order_notifications', true)) {
         return ['success' => false, 'message' => 'Order notifications are disabled in settings.'];
     }
 
+    // Notification and email share the same message content, but account
+    // notifications are skipped when the order came from a pure guest checkout.
     $userId = afrisense_order_customer_user_id($pdo, $orderId);
     $contact = afrisense_order_customer_contact($pdo, $orderId);
 
+    // Guard this block so it only runs when the required condition is met.
     if ($userId !== null && $userId > 0) {
         $statement = $pdo->prepare(
             'INSERT INTO `notifications`
@@ -270,6 +307,7 @@ function afrisense_order_notify_customer(PDO $pdo, int $orderId, string $title, 
         ]);
     }
 
+    // Guard this block so it only runs when the required condition is met.
     if ($contact === null) {
         return ['success' => false, 'message' => 'Order customer details could not be found.'];
     }
@@ -295,18 +333,22 @@ $activeAdminPage = match ($statusFilter) {
     default => 'orders_all',
 };
 
+// Run database/action work inside a guarded block so the page can fail gracefully.
 try {
     $pdo = afrisense_pdo();
     $where = [];
     $params = [];
 
+    // Handle submitted form actions before rendering the page.
     if (($_SERVER['REQUEST_METHOD'] ?? 'GET') === 'POST') {
         $action = (string) ($_POST['action'] ?? '');
         $orderId = (int) ($_POST['order_id'] ?? 0);
 
+        // Guard this block so it only runs when the required condition is met.
         if ($action === 'update_order_status') {
             $nextStatus = (string) ($_POST['order_status'] ?? '');
 
+            // Guard this block so it only runs when the required condition is met.
             if ($orderId <= 0 || !in_array($nextStatus, $validStatuses, true)) {
                 $flashType = 'error';
                 $flashMessage = 'Order status could not be updated.';
@@ -326,6 +368,7 @@ try {
                     ? 'Order #' . str_pad((string) $orderId, 5, '0', STR_PAD_LEFT) . ' updated to ' . $nextStatus . '.'
                     : 'Order was not changed.';
 
+                // Guard this block so it only runs when the required condition is met.
                 if ($update->rowCount() > 0) {
                     $emailResult = afrisense_order_notify_customer(
                         $pdo,
@@ -334,6 +377,7 @@ try {
                         'Your order #' . str_pad((string) $orderId, 5, '0', STR_PAD_LEFT) . ' is now ' . $nextStatus . '.',
                         $adminUserId
                     );
+                    // Guard this block so it only runs when the required condition is met.
                     if (!$emailResult['success']) {
                         $flashMessage .= ' Email not sent: ' . (string) ($emailResult['message'] ?? 'Unknown email error.');
                     }
@@ -341,9 +385,11 @@ try {
             }
         }
 
+        // Guard this block so it only runs when the required condition is met.
         if ($action === 'update_payment_status') {
             $nextPaymentStatus = (string) ($_POST['payment_status'] ?? '');
 
+            // Guard this block so it only runs when the required condition is met.
             if ($orderId <= 0 || !in_array($nextPaymentStatus, $validPaymentStatuses, true)) {
                 $flashType = 'error';
                 $flashMessage = 'Payment status could not be updated.';
@@ -363,6 +409,7 @@ try {
                     ? 'Payment for order #' . str_pad((string) $orderId, 5, '0', STR_PAD_LEFT) . ' updated to ' . $nextPaymentStatus . '.'
                     : 'Payment was not changed.';
 
+                // Guard this block so it only runs when the required condition is met.
                 if ($update->rowCount() > 0) {
                     $emailResult = afrisense_order_notify_customer(
                         $pdo,
@@ -371,6 +418,7 @@ try {
                         'Payment for your order #' . str_pad((string) $orderId, 5, '0', STR_PAD_LEFT) . ' is now ' . $nextPaymentStatus . '.',
                         $adminUserId
                     );
+                    // Guard this block so it only runs when the required condition is met.
                     if (!$emailResult['success']) {
                         $flashMessage .= ' Email not sent: ' . (string) ($emailResult['message'] ?? 'Unknown email error.');
                     }
@@ -379,11 +427,13 @@ try {
         }
     }
 
+    // Guard this block so it only runs when the required condition is met.
     if (in_array($statusFilter, $validStatuses, true)) {
         $where[] = 'o.`order_status` = :status';
         $params['status'] = $statusFilter;
     }
 
+    // Guard this block so it only runs when the required condition is met.
     if ($search !== '') {
         $where[] = '(CAST(o.`id` AS CHAR) LIKE :search OR c.`fullname` LIKE :search OR c.`email` LIKE :search OR c.`phone_number` LIKE :search OR f.`food_name` LIKE :search)';
         $params['search'] = '%' . $search . '%';
@@ -424,6 +474,7 @@ try {
     $orders = $statement->fetchAll(PDO::FETCH_ASSOC);
     $selectedOrder = null;
 
+    // Guard this block so it only runs when the required condition is met.
     if ($viewOrderId > 0) {
         $selectedStatement = $pdo->prepare(
             'SELECT
@@ -489,7 +540,9 @@ try {
 
 ob_start();
 ?>
+<!-- Page section for this part of the AfriSense interface. -->
 <section class="af-admin-menu-page af-orders-page">
+    <!-- Header block for this interface section. -->
     <header class="af-admin-page-heading">
         <div>
             <h1>All Orders</h1>
@@ -501,13 +554,16 @@ ob_start();
         </a>
     </header>
 
+    <?php // Render this conditional/dynamic template block. ?>
     <?php if ($loadError !== ''): ?>
         <div class="af-admin-alert error"><?php echo htmlspecialchars($loadError, ENT_QUOTES, 'UTF-8'); ?></div>
     <?php endif; ?>
+    <?php // Render this conditional/dynamic template block. ?>
     <?php if ($flashMessage !== ''): ?>
         <div class="af-admin-alert <?php echo htmlspecialchars($flashType, ENT_QUOTES, 'UTF-8'); ?>"><?php echo htmlspecialchars($flashMessage, ENT_QUOTES, 'UTF-8'); ?></div>
     <?php endif; ?>
 
+    <!-- Page section for this part of the AfriSense interface. -->
     <section class="af-menu-metrics af-order-metrics" aria-label="Order summary">
         <article class="green">
             <span><i class="bi bi-cart3" aria-hidden="true"></i></span>
@@ -531,8 +587,11 @@ ob_start();
         </article>
     </section>
 
+    <!-- Page section for this part of the AfriSense interface. -->
     <section class="af-orders-workspace">
+        <!-- Page section for this part of the AfriSense interface. -->
         <section class="af-menu-table-card" id="orders-table">
+            <!-- Form block that submits this page workflow. -->
             <form class="af-menu-filters af-orders-filters" action="orders.php" method="get">
                 <label class="af-menu-search" for="order_search">
                     <i class="bi bi-search" aria-hidden="true"></i>
@@ -542,6 +601,7 @@ ob_start();
                     <span>Status</span>
                     <select id="order_status_filter" name="status" onchange="this.form.submit()">
                         <option value="">All Status</option>
+                        <?php // Render this conditional/dynamic template block. ?>
                         <?php foreach ($validStatuses as $status): ?>
                             <option value="<?php echo htmlspecialchars($status, ENT_QUOTES, 'UTF-8'); ?>" <?php echo $statusFilter === $status ? 'selected' : ''; ?>>
                                 <?php echo htmlspecialchars($status, ENT_QUOTES, 'UTF-8'); ?>
@@ -565,6 +625,7 @@ ob_start();
             </form>
 
             <div class="af-menu-table af-orders-table">
+                <!-- Table block for displaying structured records. -->
                 <table>
                     <thead>
                         <tr>
@@ -580,11 +641,13 @@ ob_start();
                         </tr>
                     </thead>
                     <tbody>
+                        <?php // Render this conditional/dynamic template block. ?>
                         <?php if ($orders === []): ?>
                             <tr>
                                 <td colspan="9"><div class="af-empty-state">No orders found.</div></td>
                             </tr>
                         <?php endif; ?>
+                        <?php // Render this conditional/dynamic template block. ?>
                         <?php foreach ($orders as $order): ?>
                             <?php
                             $orderedAt = strtotime((string) ($order['ordered_at'] ?? '')) ?: time();
@@ -606,6 +669,7 @@ ob_start();
                                     </span>
                                 </td>
                                 <td>
+                                    <?php // Render this conditional/dynamic template block. ?>
                                     <?php if (trim((string) ($order['email'] ?? '')) !== ''): ?>
                                         <a class="af-order-email" href="mailto:<?php echo htmlspecialchars((string) ($order['email'] ?? ''), ENT_QUOTES, 'UTF-8'); ?>"><?php echo htmlspecialchars((string) ($order['email'] ?? ''), ENT_QUOTES, 'UTF-8'); ?></a>
                                     <?php else: ?>
@@ -633,9 +697,11 @@ ob_start();
                                 <td>
                                     <div class="af-row-actions af-order-row-actions">
                                         <a href="orders.php?view=<?php echo htmlspecialchars((string) ($order['id'] ?? 0), ENT_QUOTES, 'UTF-8'); ?>#order-row-<?php echo htmlspecialchars((string) ($order['id'] ?? 0), ENT_QUOTES, 'UTF-8'); ?>" title="View order details" aria-label="View order <?php echo htmlspecialchars((string) ($order['id'] ?? ''), ENT_QUOTES, 'UTF-8'); ?>"><i class="bi bi-eye" aria-hidden="true"></i></a>
+                                        <?php // Render this conditional/dynamic template block. ?>
                                         <?php foreach (afrisense_order_status_actions($orderStatus) as $actionConfig): ?>
                                             <?php echo afrisense_order_action_form((int) ($order['id'] ?? 0), 'update_order_status', 'order_status', $actionConfig); ?>
                                         <?php endforeach; ?>
+                                        <?php // Render this conditional/dynamic template block. ?>
                                         <?php foreach (afrisense_order_payment_actions($paymentStatus) as $actionConfig): ?>
                                             <?php echo afrisense_order_action_form((int) ($order['id'] ?? 0), 'update_payment_status', 'payment_status', $actionConfig); ?>
                                         <?php endforeach; ?>
@@ -647,13 +713,17 @@ ob_start();
                 </table>
             </div>
 
+            <!-- Footer block for this interface section. -->
             <footer class="af-menu-pagination">
                 <p>Showing <?php echo htmlspecialchars((string) ($filteredOrderCount > 0 ? $offset + 1 : 0), ENT_QUOTES, 'UTF-8'); ?> to <?php echo htmlspecialchars((string) min($offset + count($orders), $filteredOrderCount), ENT_QUOTES, 'UTF-8'); ?> of <?php echo htmlspecialchars((string) $filteredOrderCount, ENT_QUOTES, 'UTF-8'); ?> orders</p>
+                <!-- Navigation links for this interface. -->
                 <nav aria-label="Orders pagination">
                     <a class="<?php echo $page <= 1 ? 'is-disabled' : ''; ?>" href="<?php echo htmlspecialchars($page <= 1 ? '#' : afrisense_order_url(['page' => (string) ($page - 1), 'view' => null], '#orders-table'), ENT_QUOTES, 'UTF-8'); ?>" aria-label="Previous page" title="Previous page"><i class="bi bi-chevron-left" aria-hidden="true"></i></a>
+                    <?php // Render this conditional/dynamic template block. ?>
                     <?php for ($number = max(1, $page - 1); $number <= min($totalPages, $page + 1); $number++): ?>
                         <a class="<?php echo $number === $page ? 'active' : ''; ?>" href="<?php echo htmlspecialchars(afrisense_order_url(['page' => (string) $number, 'view' => null], '#orders-table'), ENT_QUOTES, 'UTF-8'); ?>"><?php echo htmlspecialchars((string) $number, ENT_QUOTES, 'UTF-8'); ?></a>
                     <?php endfor; ?>
+                    <?php // Render this conditional/dynamic template block. ?>
                     <?php if ($totalPages > $page + 1): ?>
                         <span>...</span>
                         <a href="<?php echo htmlspecialchars(afrisense_order_url(['page' => (string) $totalPages, 'view' => null], '#orders-table'), ENT_QUOTES, 'UTF-8'); ?>"><?php echo htmlspecialchars((string) $totalPages, ENT_QUOTES, 'UTF-8'); ?></a>
@@ -663,8 +733,11 @@ ob_start();
             </footer>
         </section>
 
+        <!-- Side panel with supporting information and actions. -->
         <aside class="af-orders-side">
+            <?php // Render this conditional/dynamic template block. ?>
             <?php if ($selectedOrder !== null): ?>
+                <!-- Page section for this part of the AfriSense interface. -->
                 <section class="af-menu-panel af-selected-order-panel" id="order-details">
                     <h2>Order Details</h2>
                     <strong>ORD-<?php echo htmlspecialchars(str_pad((string) ($selectedOrder['id'] ?? 0), 5, '0', STR_PAD_LEFT), ENT_QUOTES, 'UTF-8'); ?></strong>
@@ -678,12 +751,14 @@ ob_start();
                         <div><dt>Payment</dt><dd><?php echo htmlspecialchars((string) ($selectedOrder['payment_status'] ?? 'Pending'), ENT_QUOTES, 'UTF-8'); ?> / <?php echo htmlspecialchars((string) ($selectedOrder['payment_method'] ?? 'Cash'), ENT_QUOTES, 'UTF-8'); ?></dd></div>
                     </dl>
                     <p><b>Delivery:</b> <?php echo htmlspecialchars((string) ($selectedOrder['delivery_address'] ?? ''), ENT_QUOTES, 'UTF-8'); ?></p>
+                    <?php // Render this conditional/dynamic template block. ?>
                     <?php if (trim((string) ($selectedOrder['special_instructions'] ?? '')) !== ''): ?>
                         <p><b>Note:</b> <?php echo htmlspecialchars((string) ($selectedOrder['special_instructions'] ?? ''), ENT_QUOTES, 'UTF-8'); ?></p>
                     <?php endif; ?>
                 </section>
             <?php endif; ?>
 
+            <!-- Page section for this part of the AfriSense interface. -->
             <section class="af-menu-panel">
                 <h2>Order Pipeline</h2>
                 <ul class="af-order-pipeline">
@@ -695,6 +770,7 @@ ob_start();
                 </ul>
             </section>
 
+            <!-- Page section for this part of the AfriSense interface. -->
             <section class="af-menu-panel af-food-help">
                 <h2><i class="bi bi-question-circle" aria-hidden="true"></i> Help</h2>
                 <p>Orders use the existing `orders` table. Each order currently contains one food item and quantity.</p>

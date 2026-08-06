@@ -14,11 +14,13 @@ require_once __DIR__ . '/../auth/auth_bootstrap.php';
 \AfriSense\Backend\Helpers\Session::start();
 $authUser = afrisense_require_customer();
 
+// Defines the afrisense_customer_settings_phone helper used by this module.
 function afrisense_customer_settings_phone(array $user): string
 {
     return (string) ($user['phonenumber'] ?? $user['phone'] ?? '');
 }
 
+// Defines the afrisense_customer_settings_customer helper used by this module.
 function afrisense_customer_settings_customer(PDO $pdo, array $user): ?array
 {
     $email = (string) ($user['email'] ?? '');
@@ -39,11 +41,13 @@ function afrisense_customer_settings_customer(PDO $pdo, array $user): ?array
     return $customer ?: null;
 }
 
+// Defines the afrisense_customer_settings_sync_customer helper used by this module.
 function afrisense_customer_settings_sync_customer(PDO $pdo, array $user, string $fullname, string $phone): void
 {
     $email = (string) ($user['email'] ?? '');
     $customer = afrisense_customer_settings_customer($pdo, $user);
 
+    // Guard this block so it only runs when the required condition is met.
     if ($customer !== null) {
         $update = $pdo->prepare(
             'UPDATE `customers`
@@ -85,21 +89,26 @@ $preferences = $_SESSION['customer_settings_preferences'] ?? [
     'login_alerts' => true,
 ];
 
+// Run database/action work inside a guarded block so the page can fail gracefully.
 try {
     $pdo = afrisense_pdo();
     $userStatement = $pdo->prepare('SELECT * FROM `users` WHERE `id` = :id LIMIT 1');
     $userStatement->execute(['id' => (int) ($authUser['id'] ?? 0)]);
     $user = $userStatement->fetch(PDO::FETCH_ASSOC);
 
+    // Guard this block so it only runs when the required condition is met.
     if ($user === false) {
         header('Location: /Afrisense/frontend/auth/logout.php');
         exit;
     }
 
+    // Handle submitted form actions before rendering the page.
     if (($_SERVER['REQUEST_METHOD'] ?? 'GET') === 'POST') {
         $action = (string) ($_POST['action'] ?? '');
 
+        // Guard this block so it only runs when the required condition is met.
         if ($action === 'send_verification') {
+            // Guard this block so it only runs when the required condition is met.
             if ((int) ($user['email_verified'] ?? 0) === 1) {
                 $flashMessage = 'Your email address is already verified.';
             } else {
@@ -137,11 +146,13 @@ try {
             }
         }
 
+        // Guard this block so it only runs when the required condition is met.
         if ($action === 'change_password') {
             $currentPassword = (string) ($_POST['current_password'] ?? '');
             $newPassword = (string) ($_POST['new_password'] ?? '');
             $confirmPassword = (string) ($_POST['confirm_password'] ?? '');
 
+            // Guard this block so it only runs when the required condition is met.
             if (!password_verify($currentPassword, (string) ($user['password'] ?? ''))) {
                 $flashType = 'error';
                 $flashMessage = 'Current password is incorrect.';
@@ -161,10 +172,12 @@ try {
             }
         }
 
+        // Guard this block so it only runs when the required condition is met.
         if ($action === 'update_profile') {
             $fullname = trim((string) ($_POST['fullname'] ?? ''));
             $phone = preg_replace('/\s+/', '', trim((string) ($_POST['phonenumber'] ?? '')));
 
+            // Guard this block so it only runs when the required condition is met.
             if ($fullname === '' || strlen($fullname) < 2 || $phone === '') {
                 $flashType = 'error';
                 $flashMessage = 'Full name and phone number are required.';
@@ -178,6 +191,7 @@ try {
                     'id' => (int) $user['id'],
                 ]);
 
+                // Guard this block so it only runs when the required condition is met.
                 if (((int) ($duplicate->fetch(PDO::FETCH_ASSOC)['count_value'] ?? 0)) > 0) {
                     $flashType = 'error';
                     $flashMessage = 'That phone number is already used by another account.';
@@ -200,6 +214,7 @@ try {
             }
         }
 
+        // Guard this block so it only runs when the required condition is met.
         if ($action === 'save_preferences') {
             $preferences = [
                 'email_notifications' => isset($_POST['email_notifications']),
@@ -223,6 +238,7 @@ try {
     $bookingsCount = 0;
     $totalSpent = 0.00;
 
+    // Guard this block so it only runs when the required condition is met.
     if ($customerId > 0) {
         $ordersStatement = $pdo->prepare('SELECT COUNT(*) AS count_value, COALESCE(SUM(`total_price`), 0) AS total_spent FROM `orders` WHERE `customer_id` = :customer_id');
         $ordersStatement->execute(['customer_id' => $customerId]);
@@ -250,12 +266,15 @@ $memberSince = strtotime((string) ($user['created_at'] ?? '')) ?: time();
 
 ob_start();
 ?>
+<!-- Page section for this part of the AfriSense interface. -->
 <section class="af-admin-menu-page af-customer-settings-page">
+    <!-- Header block for this interface section. -->
     <header class="af-admin-page-heading af-customer-settings-heading">
         <div>
             <h1>Customer Settings</h1>
             <p>Manage your account preferences and security settings.</p>
         </div>
+        <!-- Navigation links for this interface. -->
         <nav aria-label="Breadcrumb">
             <a href="dashboard.php">Home</a>
             <i class="bi bi-chevron-right" aria-hidden="true"></i>
@@ -263,21 +282,28 @@ ob_start();
         </nav>
     </header>
 
+    <?php // Render this conditional/dynamic template block. ?>
     <?php if ($loadError !== ''): ?>
         <div class="af-admin-alert error"><?php echo htmlspecialchars($loadError, ENT_QUOTES, 'UTF-8'); ?></div>
     <?php endif; ?>
+    <?php // Render this conditional/dynamic template block. ?>
     <?php if ($flashMessage !== ''): ?>
         <div class="af-admin-alert <?php echo htmlspecialchars($flashType, ENT_QUOTES, 'UTF-8'); ?>"><?php echo htmlspecialchars($flashMessage, ENT_QUOTES, 'UTF-8'); ?></div>
     <?php endif; ?>
 
+    <!-- Page section for this part of the AfriSense interface. -->
     <section class="af-customer-settings-grid">
+        <!-- Page section for this part of the AfriSense interface. -->
         <section class="af-customer-setting-card">
+            <!-- Header block for this interface section. -->
             <header><span><i class="bi bi-envelope" aria-hidden="true"></i></span><div><h2>Email Verification</h2><p>Verify your email address to unlock all features and account recovery.</p></div></header>
             <div class="af-settings-readonly-field"><i class="bi bi-envelope" aria-hidden="true"></i><strong><?php echo htmlspecialchars((string) ($user['email'] ?? ''), ENT_QUOTES, 'UTF-8'); ?></strong><em class="<?php echo $isVerified ? 'verified' : 'pending'; ?>"><?php echo $isVerified ? 'Verified' : 'Pending'; ?> <i class="bi <?php echo $isVerified ? 'bi-check' : 'bi-clock'; ?>" aria-hidden="true"></i></em></div>
             <p class="af-settings-meta"><?php echo $isVerified ? 'Verified email addresses can request password resets.' : 'Verification is required before password reset will work.'; ?></p>
+            <?php // Render this conditional/dynamic template block. ?>
             <?php if ($isVerified): ?>
                 <p class="af-settings-success"><i class="bi bi-check-circle" aria-hidden="true"></i> Your email is verified. Thank you!</p>
             <?php else: ?>
+                <!-- Form block that submits this page workflow. -->
                 <form action="settings.php" method="post">
                     <input type="hidden" name="action" value="send_verification">
                     <button class="af-settings-primary" type="submit"><i class="bi bi-send" aria-hidden="true"></i> Send Verification Email</button>
@@ -285,8 +311,11 @@ ob_start();
             <?php endif; ?>
         </section>
 
+        <!-- Page section for this part of the AfriSense interface. -->
         <section class="af-customer-setting-card">
+            <!-- Header block for this interface section. -->
             <header><span><i class="bi bi-lock" aria-hidden="true"></i></span><div><h2>Change Password</h2><p>Use a long, unique password to keep your account secure.</p></div></header>
+            <!-- Form block that submits this page workflow. -->
             <form class="af-customer-settings-form" action="settings.php" method="post">
                 <input type="hidden" name="action" value="change_password">
                 <label><span>Current Password</span><em><i class="bi bi-lock" aria-hidden="true"></i><input type="password" name="current_password" placeholder="Enter your current password" required></em></label>
@@ -296,8 +325,11 @@ ob_start();
             </form>
         </section>
 
+        <!-- Side panel with supporting information and actions. -->
         <aside class="af-customer-setting-card af-security-card">
+            <!-- Header block for this interface section. -->
             <header><span class="green"><i class="bi bi-shield-check" aria-hidden="true"></i></span><div><h2>Account Security</h2></div></header>
+            <!-- Form block that submits this page workflow. -->
             <form action="settings.php" method="post" class="af-security-list">
                 <input type="hidden" name="action" value="save_preferences">
                 <label><i class="bi bi-shield-lock" aria-hidden="true"></i><span><strong>Two-Factor Authentication</strong><small>Add an extra layer of security</small></span><input type="checkbox" disabled></label>
@@ -306,8 +338,11 @@ ob_start();
             </form>
         </aside>
 
+        <!-- Page section for this part of the AfriSense interface. -->
         <section class="af-customer-setting-card">
+            <!-- Header block for this interface section. -->
             <header><span><i class="bi bi-person" aria-hidden="true"></i></span><div><h2>Profile Information</h2><p>Update your personal information and customer account details.</p></div></header>
+            <!-- Form block that submits this page workflow. -->
             <form class="af-customer-settings-form" action="settings.php" method="post">
                 <input type="hidden" name="action" value="update_profile">
                 <label><span>Full Name</span><em><i class="bi bi-person" aria-hidden="true"></i><input type="text" name="fullname" value="<?php echo htmlspecialchars((string) ($user['fullname'] ?? ''), ENT_QUOTES, 'UTF-8'); ?>" required></em></label>
@@ -317,8 +352,11 @@ ob_start();
             </form>
         </section>
 
+        <!-- Page section for this part of the AfriSense interface. -->
         <section class="af-customer-setting-card">
+            <!-- Header block for this interface section. -->
             <header><span><i class="bi bi-bell" aria-hidden="true"></i></span><div><h2>Notification Preferences</h2><p>Choose how you want to receive updates and notifications.</p></div></header>
+            <!-- Form block that submits this page workflow. -->
             <form class="af-preference-list" action="settings.php" method="post">
                 <input type="hidden" name="action" value="save_preferences">
                 <?php
@@ -330,6 +368,7 @@ ob_start();
                     'promotions' => ['Promotions & Offers', 'Receive offers and promotions', 'bi-tags'],
                 ];
                 ?>
+                <?php // Render this conditional/dynamic template block. ?>
                 <?php foreach ($preferenceLabels as $key => $item): ?>
                     <label><i class="bi <?php echo htmlspecialchars($item[2], ENT_QUOTES, 'UTF-8'); ?>" aria-hidden="true"></i><span><strong><?php echo htmlspecialchars($item[0], ENT_QUOTES, 'UTF-8'); ?></strong><small><?php echo htmlspecialchars($item[1], ENT_QUOTES, 'UTF-8'); ?></small></span><input type="checkbox" name="<?php echo htmlspecialchars($key, ENT_QUOTES, 'UTF-8'); ?>" <?php echo !empty($preferences[$key]) ? 'checked' : ''; ?>></label>
                 <?php endforeach; ?>
@@ -337,8 +376,11 @@ ob_start();
             </form>
         </section>
 
+        <!-- Side panel with supporting information and actions. -->
         <aside class="af-customer-side-stack">
+            <!-- Page section for this part of the AfriSense interface. -->
             <section class="af-customer-setting-card">
+                <!-- Header block for this interface section. -->
                 <header><span class="blue"><i class="bi bi-person" aria-hidden="true"></i></span><div><h2>Account Summary</h2></div></header>
                 <dl class="af-account-summary">
                     <div><dt>Member Since</dt><dd><?php echo htmlspecialchars(date('j M Y', $memberSince), ENT_QUOTES, 'UTF-8'); ?></dd></div>
@@ -349,7 +391,9 @@ ob_start();
                 </dl>
             </section>
 
+            <!-- Page section for this part of the AfriSense interface. -->
             <section class="af-customer-setting-card af-delete-card">
+                <!-- Header block for this interface section. -->
                 <header><span class="red"><i class="bi bi-trash" aria-hidden="true"></i></span><div><h2>Delete Account</h2><p>Account deletion is intentionally disabled for this exam build.</p></div></header>
                 <button type="button" disabled>Delete My Account</button>
             </section>

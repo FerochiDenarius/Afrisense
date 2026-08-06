@@ -1,5 +1,6 @@
 <?php
 
+// Legacy constants kept for older pages that still include config/constants.php.
 define('SITE_NAME', 'AfriSense');
 
 define('SITE_URL', 'http://localhost/Afrisense');

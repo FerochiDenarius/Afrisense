@@ -36,6 +36,7 @@ class AdminMiddleware
         $role = $this->users->getRole((int) $user['id']);
         $roleName = strtolower((string) ($role['name'] ?? $role['slug'] ?? $role['rolename'] ?? $user['role'] ?? ''));
 
+        // Guard this block so it only runs when the required condition is met.
         if ($roleName === 'admin' || $roleName === 'administrator') {
             return $user;
         }

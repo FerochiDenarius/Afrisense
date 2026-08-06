@@ -5,8 +5,17 @@ declare(strict_types=1);
 require_once __DIR__ . '/../auth/auth_bootstrap.php';
 require_once __DIR__ . '/public_settings.php';
 
+/**
+ * Support chat data helpers shared by guest, customer, and admin support pages.
+ *
+ * The helpers keep chat table creation, conversation lookup, attachment upload,
+ * and notification writes in one place so every support entry point behaves the
+ * same way.
+ */
 function afrisense_support_tables(PDO $pdo): void
 {
+    // Support tables are created defensively because this feature was added
+    // after the original schema and may be missing on older local databases.
     $pdo->exec(
         'CREATE TABLE IF NOT EXISTS `support_conversations` (
             `id` INT AUTO_INCREMENT PRIMARY KEY,
@@ -64,8 +73,11 @@ function afrisense_support_tables(PDO $pdo): void
     );
 }
 
+// Defines the afrisense_support_default_agent helper used by this module.
 function afrisense_support_default_agent(PDO $pdo): ?array
 {
+    // Prefer a real support-agent account, but fall back to the first admin so
+    // guest/customer chats are still assigned on small demo installations.
     $statement = $pdo->prepare(
         'SELECT u.`id`, u.`fullname`, u.`email`, r.`rolename`
          FROM `users` u
@@ -77,6 +89,7 @@ function afrisense_support_default_agent(PDO $pdo): ?array
     $statement->execute();
     $agent = $statement->fetch(PDO::FETCH_ASSOC);
 
+    // Guard this block so it only runs when the required condition is met.
     if ($agent !== false) {
         return $agent;
     }
@@ -95,8 +108,10 @@ function afrisense_support_default_agent(PDO $pdo): ?array
     return $admin !== false ? $admin : null;
 }
 
+// Defines the afrisense_support_is_agent helper used by this module.
 function afrisense_support_is_agent(?array $user): bool
 {
+    // Guard this block so it only runs when the required condition is met.
     if ($user === null || !isset($user['id'])) {
         return false;
     }
@@ -104,8 +119,11 @@ function afrisense_support_is_agent(?array $user): bool
     return in_array(afrisense_role_name($user), ['support agent', 'agent', 'customer support', 'support'], true);
 }
 
+// Defines the afrisense_support_customer_for_user helper used by this module.
 function afrisense_support_customer_for_user(PDO $pdo, array $user): ?array
 {
+    // Customers can exist as both auth users and customer records; match by
+    // email first and phone second to connect chat history to order history.
     $email = trim((string) ($user['email'] ?? ''));
     $phone = preg_replace('/\s+/', '', trim((string) ($user['phonenumber'] ?? $user['phone'] ?? '')));
 
@@ -122,12 +140,16 @@ function afrisense_support_customer_for_user(PDO $pdo, array $user): ?array
     return $customer !== false ? $customer : null;
 }
 
+// Defines the afrisense_support_guest_token helper used by this module.
 function afrisense_support_guest_token(): string
 {
     \AfriSense\Backend\Helpers\Session::start();
     $token = (string) ($_SESSION['afrisense_support_guest_token'] ?? '');
 
+    // Guard this block so it only runs when the required condition is met.
     if ($token === '') {
+        // Guest conversations do not have a user id, so a private session token
+        // prevents another guest from loading the same conversation.
         $token = bin2hex(random_bytes(24));
         $_SESSION['afrisense_support_guest_token'] = $token;
     }
@@ -135,15 +157,18 @@ function afrisense_support_guest_token(): string
     return $token;
 }
 
+// Defines the afrisense_support_unique_token helper used by this module.
 function afrisense_support_unique_token(PDO $pdo, string $token): string
 {
     $candidate = $token !== '' ? $token : bin2hex(random_bytes(24));
     $statement = $pdo->prepare('SELECT COUNT(*) AS count_value FROM `support_conversations` WHERE `public_token` = :token');
 
+    // Iterate through the data needed for this block.
     while (true) {
         $statement->execute(['token' => $candidate]);
         $count = (int) ($statement->fetch(PDO::FETCH_ASSOC)['count_value'] ?? 0);
 
+        // Guard this block so it only runs when the required condition is met.
         if ($count === 0) {
             return $candidate;
         }
@@ -152,9 +177,13 @@ function afrisense_support_unique_token(PDO $pdo, string $token): string
     }
 }
 
+// Defines the afrisense_support_find_conversation helper used by this module.
 function afrisense_support_find_conversation(PDO $pdo, ?array $user, string $token): ?array
 {
+    // Guard this block so it only runs when the required condition is met.
     if ($user !== null && isset($user['id'])) {
+        // Logged-in customers should continue their latest open conversation
+        // regardless of the browser session they are using.
         $statement = $pdo->prepare(
             'SELECT *
              FROM `support_conversations`
@@ -164,6 +193,7 @@ function afrisense_support_find_conversation(PDO $pdo, ?array $user, string $tok
         );
         $statement->execute(['user_id' => (int) $user['id']]);
     } else {
+        // Guests can only continue the conversation tied to their session token.
         $statement = $pdo->prepare(
             'SELECT *
              FROM `support_conversations`
@@ -179,6 +209,7 @@ function afrisense_support_find_conversation(PDO $pdo, ?array $user, string $tok
     return $conversation !== false ? $conversation : null;
 }
 
+// Defines the afrisense_support_create_conversation helper used by this module.
 function afrisense_support_create_conversation(PDO $pdo, ?array $user, string $token, array $request = []): array
 {
     $token = afrisense_support_unique_token($pdo, $token);
@@ -189,6 +220,7 @@ function afrisense_support_create_conversation(PDO $pdo, ?array $user, string $t
     $phone = trim((string) ($request['guest_phone'] ?? $user['phonenumber'] ?? $user['phone'] ?? ''));
     $subject = trim((string) ($request['subject'] ?? 'General Support'));
 
+    // Guard this block so it only runs when the required condition is met.
     if ($subject === '') {
         $subject = 'General Support';
     }
@@ -227,6 +259,7 @@ function afrisense_support_create_conversation(PDO $pdo, ?array $user, string $t
     return afrisense_support_get_conversation($pdo, $conversationId) ?? [];
 }
 
+// Defines the afrisense_support_get_conversation helper used by this module.
 function afrisense_support_get_conversation(PDO $pdo, int $conversationId): ?array
 {
     $statement = $pdo->prepare(
@@ -243,6 +276,7 @@ function afrisense_support_get_conversation(PDO $pdo, int $conversationId): ?arr
     return $conversation !== false ? $conversation : null;
 }
 
+// Defines the afrisense_support_add_message helper used by this module.
 function afrisense_support_add_message(PDO $pdo, int $conversationId, string $senderType, ?int $senderUserId, string $senderName, string $body): int
 {
     $insert = $pdo->prepare(
@@ -278,12 +312,15 @@ function afrisense_support_add_message(PDO $pdo, int $conversationId, string $se
     return $messageId;
 }
 
+// Defines the afrisense_support_upload_attachment helper used by this module.
 function afrisense_support_upload_attachment(PDO $pdo, int $messageId, array $file): array
 {
+    // Guard this block so it only runs when the required condition is met.
     if (($file['error'] ?? UPLOAD_ERR_NO_FILE) === UPLOAD_ERR_NO_FILE) {
         return ['success' => true, 'message' => 'No attachment selected.'];
     }
 
+    // Guard this block so it only runs when the required condition is met.
     if (($file['error'] ?? UPLOAD_ERR_OK) !== UPLOAD_ERR_OK) {
         return ['success' => false, 'message' => 'Attachment could not be uploaded.'];
     }
@@ -293,16 +330,19 @@ function afrisense_support_upload_attachment(PDO $pdo, int $messageId, array $fi
     $extension = strtolower(pathinfo($originalName, PATHINFO_EXTENSION));
     $allowedExtensions = ['jpg', 'jpeg', 'png', 'gif', 'webp', 'mp4', 'webm', 'mov', 'm4v', 'pdf', 'doc', 'docx', 'txt'];
 
+    // Guard this block so it only runs when the required condition is met.
     if ($size > 25 * 1024 * 1024) {
         return ['success' => false, 'message' => 'Attachment is too large. Maximum size is 25MB.'];
     }
 
+    // Guard this block so it only runs when the required condition is met.
     if ($extension === '' || !in_array($extension, $allowedExtensions, true)) {
         return ['success' => false, 'message' => 'Attachment type is not allowed.'];
     }
 
     $uploadDir = __DIR__ . '/../uploads/support';
 
+    // Guard this block so it only runs when the required condition is met.
     if (!is_dir($uploadDir) && !mkdir($uploadDir, 0775, true) && !is_dir($uploadDir)) {
         return ['success' => false, 'message' => 'Attachment folder could not be created.'];
     }
@@ -310,6 +350,7 @@ function afrisense_support_upload_attachment(PDO $pdo, int $messageId, array $fi
     $storedName = 'support-' . bin2hex(random_bytes(10)) . '.' . $extension;
     $targetPath = $uploadDir . '/' . $storedName;
 
+    // Guard this block so it only runs when the required condition is met.
     if (!move_uploaded_file((string) ($file['tmp_name'] ?? ''), $targetPath)) {
         return ['success' => false, 'message' => 'Attachment could not be saved.'];
     }
@@ -332,15 +373,18 @@ function afrisense_support_upload_attachment(PDO $pdo, int $messageId, array $fi
     return ['success' => true, 'message' => 'Attachment uploaded.'];
 }
 
+// Defines the afrisense_support_attachment_kind helper used by this module.
 function afrisense_support_attachment_kind(array $attachment): string
 {
     $mimeType = strtolower((string) ($attachment['mime_type'] ?? ''));
     $extension = strtolower(pathinfo((string) ($attachment['original_name'] ?? $attachment['file_path'] ?? ''), PATHINFO_EXTENSION));
 
+    // Guard this block so it only runs when the required condition is met.
     if (str_starts_with($mimeType, 'image/') || in_array($extension, ['jpg', 'jpeg', 'png', 'gif', 'webp'], true)) {
         return 'image';
     }
 
+    // Guard this block so it only runs when the required condition is met.
     if (str_starts_with($mimeType, 'video/') || in_array($extension, ['mp4', 'webm', 'mov', 'm4v'], true)) {
         return 'video';
     }
@@ -348,6 +392,7 @@ function afrisense_support_attachment_kind(array $attachment): string
     return 'file';
 }
 
+// Defines the afrisense_support_attachment_html helper used by this module.
 function afrisense_support_attachment_html(array $attachment): string
 {
     $path = (string) ($attachment['file_path'] ?? '#');
@@ -356,10 +401,12 @@ function afrisense_support_attachment_html(array $attachment): string
     $safeName = htmlspecialchars($name !== '' ? $name : 'Attachment', ENT_QUOTES, 'UTF-8');
     $kind = afrisense_support_attachment_kind($attachment);
 
+    // Guard this block so it only runs when the required condition is met.
     if ($kind === 'image') {
         return '<a class="af-media-attachment is-image" href="' . $safePath . '" target="_blank" rel="noopener"><img src="' . $safePath . '" alt="' . $safeName . '"><span>' . $safeName . '</span></a>';
     }
 
+    // Guard this block so it only runs when the required condition is met.
     if ($kind === 'video') {
         return '<div class="af-media-attachment is-video"><video controls preload="metadata"><source src="' . $safePath . '"></video><a href="' . $safePath . '" target="_blank" rel="noopener">' . $safeName . '</a></div>';
     }
@@ -367,6 +414,7 @@ function afrisense_support_attachment_html(array $attachment): string
     return '<a class="af-file-attachment" href="' . $safePath . '" target="_blank" rel="noopener"><i class="bi bi-paperclip" aria-hidden="true"></i>' . $safeName . '</a>';
 }
 
+// Defines the afrisense_support_message_html helper used by this module.
 function afrisense_support_message_html(array $message, array $ownSenderTypes): string
 {
     $senderType = (string) ($message['sender_type'] ?? 'system');
@@ -378,14 +426,17 @@ function afrisense_support_message_html(array $message, array $ownSenderTypes): 
     $safeTime = htmlspecialchars(afrisense_support_time((string) ($message['created_at'] ?? '')), ENT_QUOTES, 'UTF-8');
     $html = '<article class="af-chat-message ' . $class . '" data-message-id="' . $messageId . '" data-sender-type="' . htmlspecialchars($senderType, ENT_QUOTES, 'UTF-8') . '">';
 
+    // Guard this block so it only runs when the required condition is met.
     if (!$isOwn) {
         $html .= '<span class="af-message-avatar"><i class="bi ' . $avatarIcon . '" aria-hidden="true"></i></span>';
     }
 
     $html .= '<div><p>' . $safeBody . '</p>';
 
+    // Guard this block so it only runs when the required condition is met.
     if (!empty($message['attachments']) && is_array($message['attachments'])) {
         $html .= '<div class="af-message-attachments">';
+        // Iterate through the data needed for this block.
         foreach ($message['attachments'] as $attachment) {
             $html .= afrisense_support_attachment_html($attachment);
         }
@@ -397,11 +448,13 @@ function afrisense_support_message_html(array $message, array $ownSenderTypes): 
     return $html;
 }
 
+// Defines the afrisense_support_messages_html helper used by this module.
 function afrisense_support_messages_html(array $conversation, array $messages, array $ownSenderTypes): string
 {
     $label = $conversation !== [] ? afrisense_support_conversation_label($conversation) : 'Today';
     $html = '<time class="af-chat-date">' . htmlspecialchars($label, ENT_QUOTES, 'UTF-8') . '</time>';
 
+    // Iterate through the data needed for this block.
     foreach ($messages as $message) {
         $html .= afrisense_support_message_html($message, $ownSenderTypes);
     }
@@ -409,10 +462,12 @@ function afrisense_support_messages_html(array $conversation, array $messages, a
     return $html;
 }
 
+// Defines the afrisense_support_last_message_id helper used by this module.
 function afrisense_support_last_message_id(array $messages): int
 {
     $lastId = 0;
 
+    // Iterate through the data needed for this block.
     foreach ($messages as $message) {
         $lastId = max($lastId, (int) ($message['id'] ?? 0));
     }
@@ -420,12 +475,15 @@ function afrisense_support_last_message_id(array $messages): int
     return $lastId;
 }
 
+// Defines the afrisense_support_last_incoming_message_id helper used by this module.
 function afrisense_support_last_incoming_message_id(array $messages, array $ownSenderTypes): int
 {
     $lastId = 0;
 
+    // Iterate through the data needed for this block.
     foreach ($messages as $message) {
         $senderType = (string) ($message['sender_type'] ?? 'system');
+        // Guard this block so it only runs when the required condition is met.
         if (!in_array($senderType, $ownSenderTypes, true)) {
             $lastId = max($lastId, (int) ($message['id'] ?? 0));
         }
@@ -434,10 +492,12 @@ function afrisense_support_last_incoming_message_id(array $messages, array $ownS
     return $lastId;
 }
 
+// Defines the afrisense_support_notify_customer_reply helper used by this module.
 function afrisense_support_notify_customer_reply(PDO $pdo, array $conversation, string $message, int $adminUserId): void
 {
     $userId = (int) ($conversation['user_id'] ?? 0);
 
+    // Guard this block so it only runs when the required condition is met.
     if ($userId <= 0) {
         return;
     }
@@ -458,10 +518,12 @@ function afrisense_support_notify_customer_reply(PDO $pdo, array $conversation, 
     ]);
 }
 
+// Defines the afrisense_support_notify_agent helper used by this module.
 function afrisense_support_notify_agent(PDO $pdo, array $conversation, string $customerName): void
 {
     $agentId = (int) ($conversation['agent_user_id'] ?? 0);
 
+    // Guard this block so it only runs when the required condition is met.
     if ($agentId <= 0) {
         return;
     }
@@ -482,6 +544,7 @@ function afrisense_support_notify_agent(PDO $pdo, array $conversation, string $c
     ]);
 }
 
+// Defines the afrisense_support_messages helper used by this module.
 function afrisense_support_messages(PDO $pdo, int $conversationId): array
 {
     $statement = $pdo->prepare(
@@ -496,11 +559,13 @@ function afrisense_support_messages(PDO $pdo, int $conversationId): array
     $messageIds = array_map(static fn (array $message): int => (int) ($message['id'] ?? 0), $messages);
     $messageIds = array_values(array_filter($messageIds, static fn (int $id): bool => $id > 0));
 
+    // Iterate through the data needed for this block.
     foreach ($messages as &$message) {
         $message['attachments'] = [];
     }
     unset($message);
 
+    // Guard this block so it only runs when the required condition is met.
     if ($messageIds === []) {
         return $messages;
     }
@@ -515,12 +580,15 @@ function afrisense_support_messages(PDO $pdo, int $conversationId): array
     $attachmentsStatement->execute($messageIds);
 
     $messageIndex = [];
+    // Iterate through the data needed for this block.
     foreach ($messages as $index => $message) {
         $messageIndex[(int) $message['id']] = $index;
     }
 
+    // Iterate through the data needed for this block.
     foreach ($attachmentsStatement->fetchAll(PDO::FETCH_ASSOC) as $attachment) {
         $messageId = (int) ($attachment['message_id'] ?? 0);
+        // Guard this block so it only runs when the required condition is met.
         if (isset($messageIndex[$messageId])) {
             $messages[$messageIndex[$messageId]]['attachments'][] = $attachment;
         }
@@ -529,6 +597,7 @@ function afrisense_support_messages(PDO $pdo, int $conversationId): array
     return $messages;
 }
 
+// Defines the afrisense_support_conversation_label helper used by this module.
 function afrisense_support_conversation_label(array $conversation): string
 {
     $id = (int) ($conversation['id'] ?? 0);
@@ -536,6 +605,7 @@ function afrisense_support_conversation_label(array $conversation): string
     return '#SUP' . str_pad((string) $id, 4, '0', STR_PAD_LEFT);
 }
 
+// Defines the afrisense_support_time helper used by this module.
 function afrisense_support_time(?string $value): string
 {
     $timestamp = strtotime((string) $value);

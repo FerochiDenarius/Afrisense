@@ -34,6 +34,7 @@ class AuditLog extends BaseModel
         string $tableName = 'users',
         ?int $recordId = null
     ): ?int {
+        // Guard this block so it only runs when the required condition is met.
         if ($userId === null || $userId <= 0) {
             return null;
         }
@@ -66,6 +67,7 @@ class AuditLog extends BaseModel
      */
     public function all(int $limit = 100): array
     {
+        // Guard this block so it only runs when the required condition is met.
         if (!$this->tableExists($this->table)) {
             return [];
         }
@@ -84,6 +86,7 @@ class AuditLog extends BaseModel
      */
     public function deleteOlderThan(string $date): int
     {
+        // Guard this block so it only runs when the required condition is met.
         if (!$this->tableExists($this->table) || !$this->columnExists($this->table, 'created_at')) {
             return 0;
         }

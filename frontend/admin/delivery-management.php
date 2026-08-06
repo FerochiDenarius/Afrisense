@@ -13,6 +13,7 @@ $extraStyles = [
     $frontendBase . '/assets/css/admin-users-settings.css',
 ];
 
+// Guard this block so it only runs when the required condition is met.
 if (is_file($deliveryCssPath)) {
     $extraStyles[] = $frontendBase . '/assets/css/admin-delivery.css?v=' . filemtime($deliveryCssPath);
 }
@@ -24,6 +25,12 @@ $authUser = afrisense_require_admin();
 $adminUserId = (int) ($authUser['id'] ?? 0);
 $itemsPerPage = min(10, afrisense_admin_items_per_page());
 
+/**
+ * Delivery management links orders to riders and payment-on-delivery records.
+ *
+ * The table is created defensively so older local databases can use the page
+ * without a manual migration.
+ */
 function afrisense_delivery_tables(PDO $pdo): void
 {
     $pdo->exec(
@@ -51,6 +58,7 @@ function afrisense_delivery_tables(PDO $pdo): void
     );
 }
 
+// Defines the afrisense_delivery_status_class helper used by this module.
 function afrisense_delivery_status_class(string $status): string
 {
     return match (strtolower($status)) {
@@ -64,6 +72,7 @@ function afrisense_delivery_status_class(string $status): string
     };
 }
 
+// Defines the afrisense_delivery_payment_class helper used by this module.
 function afrisense_delivery_payment_class(string $method): string
 {
     return match (strtolower($method)) {
@@ -73,13 +82,18 @@ function afrisense_delivery_payment_class(string $method): string
     };
 }
 
+// Defines the afrisense_delivery_money helper used by this module.
 function afrisense_delivery_money(float $value): string
 {
     return 'GH₵ ' . number_format($value, 2);
 }
 
+// Defines the afrisense_delivery_effective_status_sql helper used by this module.
 function afrisense_delivery_effective_status_sql(): string
 {
+    // Orders created before a delivery assignment still need to appear in the
+    // list, so derive a display status from the order status when no assignment
+    // row exists yet.
     return 'COALESCE(
         da.`delivery_status`,
         CASE
@@ -92,11 +106,15 @@ function afrisense_delivery_effective_status_sql(): string
     )';
 }
 
+// Defines the afrisense_delivery_url helper used by this module.
 function afrisense_delivery_url(array $overrides = [], string $anchor = ''): string
 {
+    // Preserve filters/search/page state when opening details or paging.
     $params = $_GET;
 
+    // Iterate through the data needed for this block.
     foreach ($overrides as $key => $value) {
+        // Guard this block so it only runs when the required condition is met.
         if ($value === null || $value === '') {
             unset($params[$key]);
         } else {
@@ -109,12 +127,16 @@ function afrisense_delivery_url(array $overrides = [], string $anchor = ''): str
     return 'delivery-management.php' . ($query !== '' ? '?' . $query : '') . $anchor;
 }
 
+// Defines the afrisense_delivery_notify helper used by this module.
 function afrisense_delivery_notify(PDO $pdo, int $userId, string $title, string $message, string $actionUrl, int $createdBy): void
 {
+    // Guard this block so it only runs when the required condition is met.
     if ($userId <= 0) {
         return;
     }
 
+    // Delivery notifications are written to the same notifications table used
+    // by orders, so riders and customers see updates through existing UI.
     $statement = $pdo->prepare(
         'INSERT INTO `notifications`
             (`user_id`, `title`, `message`, `notification_type`, `action_url`, `created_by`)
@@ -131,8 +153,11 @@ function afrisense_delivery_notify(PDO $pdo, int $userId, string $title, string 
     ]);
 }
 
+// Defines the afrisense_delivery_customer_user_id helper used by this module.
 function afrisense_delivery_customer_user_id(PDO $pdo, int $orderId): ?int
 {
+    // Guest orders may not map to a user account; registered customers are
+    // matched by the customer contact attached to the order.
     $statement = $pdo->prepare(
         'SELECT u.`id`
          FROM `orders` o
@@ -150,8 +175,11 @@ function afrisense_delivery_customer_user_id(PDO $pdo, int $orderId): ?int
     return $userId !== false ? (int) $userId : null;
 }
 
+// Defines the afrisense_delivery_assignment helper used by this module.
 function afrisense_delivery_assignment(PDO $pdo, int $orderId, ?int $riderId, string $status, string $deliveryType, float $amountCollected, float $changeGiven, string $notes): void
 {
+    // One assignment row belongs to one order. Reassigning or updating delivery
+    // status uses ON DUPLICATE KEY UPDATE so admin actions stay idempotent.
     $statement = $pdo->prepare(
         'INSERT INTO `delivery_assignments`
             (`order_id`, `rider_user_id`, `delivery_status`, `delivery_type`, `amount_collected`, `change_given`, `assigned_at`, `picked_up_at`, `delivered_at`, `notes`)
@@ -187,8 +215,11 @@ function afrisense_delivery_assignment(PDO $pdo, int $orderId, ?int $riderId, st
     ]);
 }
 
+// Defines the afrisense_delivery_order_status_for_delivery helper used by this module.
 function afrisense_delivery_order_status_for_delivery(string $deliveryStatus, string $currentOrderStatus): string
 {
+    // Keep the order page and delivery page aligned: delivery progress updates
+    // the parent order status, but neutral statuses keep the current order state.
     return match ($deliveryStatus) {
         'Assigned', 'Picked Up', 'In Transit' => 'Out for Delivery',
         'Delivered' => 'Delivered',
@@ -210,10 +241,12 @@ $offset = ($page - 1) * $itemsPerPage;
 $flashMessage = '';
 $flashType = 'success';
 
+// Run database/action work inside a guarded block so the page can fail gracefully.
 try {
     $pdo = afrisense_pdo();
     afrisense_delivery_tables($pdo);
 
+    // Guard this block so it only runs when the required condition is met.
     if (($_GET['export'] ?? '') === 'csv') {
         $exportRows = $pdo->query(
             'SELECT
@@ -236,8 +269,10 @@ try {
         header('Content-Type: text/csv; charset=UTF-8');
         header('Content-Disposition: attachment; filename="afrisense-deliveries-' . date('Y-m-d') . '.csv"');
         $output = fopen('php://output', 'w');
+        // Guard this block so it only runs when the required condition is met.
         if ($output !== false) {
             fputcsv($output, ['Order ID', 'Customer', 'Phone', 'Address', 'Rider', 'Delivery Status', 'Payment Method', 'Amount', 'Ordered At']);
+            // Iterate through the data needed for this block.
             foreach ($exportRows as $row) {
                 fputcsv($output, [
                     'AFR' . str_pad((string) ($row['id'] ?? 0), 4, '0', STR_PAD_LEFT),
@@ -255,6 +290,7 @@ try {
         exit;
     }
 
+    // Guard this block so it only runs when the required condition is met.
     if (($_GET['invoice'] ?? '') !== '') {
         $invoiceOrderId = (int) $_GET['invoice'];
         $invoiceStatement = $pdo->prepare(
@@ -279,6 +315,7 @@ try {
         $invoiceStatement->execute(['id' => $invoiceOrderId]);
         $invoice = $invoiceStatement->fetch(PDO::FETCH_ASSOC);
 
+        // Guard this block so it only runs when the required condition is met.
         if ($invoice !== false) {
             header('Content-Type: text/plain; charset=UTF-8');
             header('Content-Disposition: attachment; filename="afrisense-invoice-' . str_pad((string) $invoiceOrderId, 5, '0', STR_PAD_LEFT) . '.txt"');
@@ -314,6 +351,7 @@ try {
     $ridersStatement->execute();
     $riders = $ridersStatement->fetchAll(PDO::FETCH_ASSOC);
 
+    // Handle submitted form actions before rendering the page.
     if (($_SERVER['REQUEST_METHOD'] ?? 'GET') === 'POST') {
         $action = (string) ($_POST['action'] ?? '');
         $orderId = (int) ($_POST['order_id'] ?? 0);
@@ -322,6 +360,7 @@ try {
         $orderStatement->execute(['id' => $orderId]);
         $targetOrder = $orderStatement->fetch(PDO::FETCH_ASSOC) ?: null;
 
+        // Guard this block so it only runs when the required condition is met.
         if ($targetOrder === null) {
             $flashType = 'error';
             $flashMessage = 'Delivery order could not be found.';
@@ -330,11 +369,13 @@ try {
             $deliveryType = (string) ($_POST['delivery_type'] ?? 'Standard Delivery');
             $notes = trim((string) ($_POST['notes'] ?? ''));
 
+            // Guard this block so it only runs when the required condition is met.
             if ($riderId <= 0 || !in_array($deliveryType, $validDeliveryTypes, true)) {
                 $flashType = 'error';
                 $flashMessage = 'Choose a rider and valid delivery type.';
             } else {
                 afrisense_delivery_assignment($pdo, $orderId, $riderId, 'Assigned', $deliveryType, 0.00, 0.00, $notes);
+                // Guard this block so it only runs when the required condition is met.
                 if (!in_array((string) $targetOrder['order_status'], ['Delivered', 'Cancelled'], true)) {
                     $update = $pdo->prepare('UPDATE `orders` SET `order_status` = :status, `updated_at` = NOW() WHERE `id` = :id');
                     $update->execute(['status' => 'Out for Delivery', 'id' => $orderId]);
@@ -351,16 +392,19 @@ try {
             $deliveryType = (string) ($_POST['delivery_type'] ?? 'Standard Delivery');
             $notes = trim((string) ($_POST['notes'] ?? ''));
 
+            // Guard this block so it only runs when the required condition is met.
             if (!in_array($nextStatus, $validDeliveryStatuses, true)) {
                 $flashType = 'error';
                 $flashMessage = 'Delivery status could not be updated.';
             } else {
+                // Guard this block so it only runs when the required condition is met.
                 if ($riderId <= 0) {
                     $riderLookup = $pdo->prepare('SELECT `rider_user_id` FROM `delivery_assignments` WHERE `order_id` = :order_id LIMIT 1');
                     $riderLookup->execute(['order_id' => $orderId]);
                     $riderId = (int) ($riderLookup->fetchColumn() ?: 0);
                 }
 
+                // Guard this block so it only runs when the required condition is met.
                 if ($nextStatus === 'Delivered' && (string) $targetOrder['payment_method'] === 'Cash' && $amountCollected <= 0) {
                     $amountCollected = (float) $targetOrder['total_price'];
                 }
@@ -372,6 +416,7 @@ try {
                 $update->execute(['order_status' => $nextOrderStatus, 'payment_status' => $nextPaymentStatus, 'id' => $orderId]);
 
                 $customerUserId = afrisense_delivery_customer_user_id($pdo, $orderId);
+                // Guard this block so it only runs when the required condition is met.
                 if ($customerUserId !== null) {
                     afrisense_delivery_notify($pdo, $customerUserId, 'Delivery Status Updated', 'Your order #AFR' . str_pad((string) $orderId, 4, '0', STR_PAD_LEFT) . ' is now ' . $nextStatus . '.', '/Afrisense/frontend/customer/my-orders.php?view=' . $orderId . '#order-details', $adminUserId);
                 }
@@ -386,26 +431,31 @@ try {
     $where = [];
     $params = [];
 
+    // Guard this block so it only runs when the required condition is met.
     if ($search !== '') {
         $where[] = '(CAST(o.`id` AS CHAR) LIKE :search OR c.`fullname` LIKE :search OR c.`phone_number` LIKE :search OR c.`email` LIKE :search OR o.`delivery_address` LIKE :search OR r.`fullname` LIKE :search)';
         $params['search'] = '%' . $search . '%';
     }
 
+    // Guard this block so it only runs when the required condition is met.
     if (in_array($statusFilter, $validDeliveryStatuses, true)) {
         $where[] = $statusExpression . ' = :status';
         $params['status'] = $statusFilter;
     }
 
+    // Guard this block so it only runs when the required condition is met.
     if (in_array($paymentFilter, ['Cash', 'Mobile Money', 'Card'], true)) {
         $where[] = 'o.`payment_method` = :payment';
         $params['payment'] = $paymentFilter;
     }
 
+    // Guard this block so it only runs when the required condition is met.
     if ($riderFilter > 0) {
         $where[] = 'da.`rider_user_id` = :rider_id';
         $params['rider_id'] = $riderFilter;
     }
 
+    // Guard this block so it only runs when the required condition is met.
     if ($rangeFilter === 'today') {
         $where[] = 'DATE(o.`ordered_at`) = CURDATE()';
     } elseif ($rangeFilter === 'week') {
@@ -460,11 +510,13 @@ try {
     $statement->execute($params);
     $deliveries = $statement->fetchAll(PDO::FETCH_ASSOC);
 
+    // Guard this block so it only runs when the required condition is met.
     if ($viewOrderId <= 0 && $deliveries !== []) {
         $viewOrderId = (int) $deliveries[0]['id'];
     }
 
     $selectedDelivery = null;
+    // Guard this block so it only runs when the required condition is met.
     if ($viewOrderId > 0) {
         $selectedStatement = $pdo->prepare(
             'SELECT
@@ -535,7 +587,9 @@ $selectedDeliveryType = (string) ($selectedDelivery['delivery_type'] ?? 'Standar
 
 ob_start();
 ?>
+<!-- Page section for this part of the AfriSense interface. -->
 <section class="af-admin-delivery-page">
+    <!-- Header block for this interface section. -->
     <header class="af-admin-page-heading af-delivery-heading">
         <div>
             <h1>Food Delivery Management</h1>
@@ -553,13 +607,16 @@ ob_start();
         </div>
     </header>
 
+    <?php // Render this conditional/dynamic template block. ?>
     <?php if ($loadError !== ''): ?>
         <div class="af-admin-alert error"><?php echo htmlspecialchars($loadError, ENT_QUOTES, 'UTF-8'); ?></div>
     <?php endif; ?>
+    <?php // Render this conditional/dynamic template block. ?>
     <?php if ($flashMessage !== ''): ?>
         <div class="af-admin-alert <?php echo htmlspecialchars($flashType, ENT_QUOTES, 'UTF-8'); ?>"><?php echo htmlspecialchars($flashMessage, ENT_QUOTES, 'UTF-8'); ?></div>
     <?php endif; ?>
 
+    <!-- Page section for this part of the AfriSense interface. -->
     <section class="af-delivery-metrics" aria-label="Delivery summary">
         <article>
             <span class="green"><i class="bi bi-truck" aria-hidden="true"></i></span>
@@ -583,8 +640,11 @@ ob_start();
         </article>
     </section>
 
+    <!-- Page section for this part of the AfriSense interface. -->
     <section class="af-delivery-layout">
+        <!-- Page section for this part of the AfriSense interface. -->
         <section class="af-delivery-main">
+            <!-- Form block that submits this page workflow. -->
             <form class="af-delivery-filters" action="delivery-management.php" method="get">
                 <label class="af-delivery-search">
                     <i class="bi bi-search" aria-hidden="true"></i>
@@ -593,6 +653,7 @@ ob_start();
                 <label>
                     <select name="status" onchange="this.form.submit()">
                         <option value="">All Status</option>
+                        <?php // Render this conditional/dynamic template block. ?>
                         <?php foreach ($validDeliveryStatuses as $status): ?>
                             <option value="<?php echo htmlspecialchars($status, ENT_QUOTES, 'UTF-8'); ?>" <?php echo $statusFilter === $status ? 'selected' : ''; ?>><?php echo htmlspecialchars($status, ENT_QUOTES, 'UTF-8'); ?></option>
                         <?php endforeach; ?>
@@ -601,6 +662,7 @@ ob_start();
                 <label>
                     <select name="payment" onchange="this.form.submit()">
                         <option value="">All Payment Methods</option>
+                        <?php // Render this conditional/dynamic template block. ?>
                         <?php foreach (['Cash', 'Mobile Money', 'Card'] as $paymentMethod): ?>
                             <option value="<?php echo htmlspecialchars($paymentMethod, ENT_QUOTES, 'UTF-8'); ?>" <?php echo $paymentFilter === $paymentMethod ? 'selected' : ''; ?>><?php echo htmlspecialchars(afrisense_public_payment_method_label($paymentMethod), ENT_QUOTES, 'UTF-8'); ?></option>
                         <?php endforeach; ?>
@@ -609,6 +671,7 @@ ob_start();
                 <label>
                     <select name="rider" onchange="this.form.submit()">
                         <option value="">All Riders</option>
+                        <?php // Render this conditional/dynamic template block. ?>
                         <?php foreach ($riders as $rider): ?>
                             <option value="<?php echo (int) $rider['id']; ?>" <?php echo $riderFilter === (int) $rider['id'] ? 'selected' : ''; ?>><?php echo htmlspecialchars((string) $rider['fullname'], ENT_QUOTES, 'UTF-8'); ?></option>
                         <?php endforeach; ?>
@@ -627,6 +690,7 @@ ob_start();
             </form>
 
             <div class="af-delivery-table-wrap">
+                <!-- Table block for displaying structured records. -->
                 <table>
                     <thead>
                         <tr>
@@ -644,9 +708,11 @@ ob_start();
                         </tr>
                     </thead>
                     <tbody>
+                        <?php // Render this conditional/dynamic template block. ?>
                         <?php if ($deliveries === []): ?>
                             <tr><td colspan="11"><div class="af-empty-state">No deliveries found.</div></td></tr>
                         <?php endif; ?>
+                        <?php // Render this conditional/dynamic template block. ?>
                         <?php foreach ($deliveries as $index => $delivery): ?>
                             <?php
                             $deliveryId = (int) ($delivery['id'] ?? 0);
@@ -678,6 +744,7 @@ ob_start();
                                 <td>
                                     <div class="af-row-actions af-delivery-row-actions">
                                         <a href="<?php echo htmlspecialchars($deliveryDetailUrl, ENT_QUOTES, 'UTF-8'); ?>" title="View delivery details" aria-label="View delivery details"><i class="bi bi-eye" aria-hidden="true"></i></a>
+                                        <!-- Form block that submits this page workflow. -->
                                         <form action="<?php echo htmlspecialchars(afrisense_delivery_url(['view' => (string) $deliveryId], '#delivery-details'), ENT_QUOTES, 'UTF-8'); ?>" method="post">
                                             <input type="hidden" name="action" value="update_delivery_status">
                                             <input type="hidden" name="order_id" value="<?php echo $deliveryId; ?>">
@@ -695,21 +762,28 @@ ob_start();
                 </table>
             </div>
 
+            <!-- Footer block for this interface section. -->
             <footer class="af-delivery-pagination">
                 <p>Showing <?php echo htmlspecialchars((string) ($totalDeliveries > 0 ? $offset + 1 : 0), ENT_QUOTES, 'UTF-8'); ?> to <?php echo htmlspecialchars((string) min($offset + count($deliveries), $totalDeliveries), ENT_QUOTES, 'UTF-8'); ?> of <?php echo htmlspecialchars((string) $totalDeliveries, ENT_QUOTES, 'UTF-8'); ?> deliveries</p>
+                <!-- Navigation links for this interface. -->
                 <nav aria-label="Delivery pagination">
                     <a class="<?php echo $page <= 1 ? 'is-disabled' : ''; ?>" href="<?php echo htmlspecialchars($page <= 1 ? '#' : afrisense_delivery_url(['page' => (string) ($page - 1)]), ENT_QUOTES, 'UTF-8'); ?>" title="Previous page" aria-label="Previous page"><i class="bi bi-chevron-left" aria-hidden="true"></i></a>
+                    <?php // Render this conditional/dynamic template block. ?>
                     <?php for ($number = max(1, $page - 1); $number <= min($totalPages, $page + 1); $number++): ?>
                         <a class="<?php echo $number === $page ? 'is-active' : ''; ?>" href="<?php echo htmlspecialchars(afrisense_delivery_url(['page' => (string) $number]), ENT_QUOTES, 'UTF-8'); ?>"><?php echo $number; ?></a>
                     <?php endfor; ?>
+                    <?php // Render this conditional/dynamic template block. ?>
                     <?php if ($totalPages > $page + 1): ?><span>...</span><a href="<?php echo htmlspecialchars(afrisense_delivery_url(['page' => (string) $totalPages]), ENT_QUOTES, 'UTF-8'); ?>"><?php echo $totalPages; ?></a><?php endif; ?>
                     <a class="<?php echo $page >= $totalPages ? 'is-disabled' : ''; ?>" href="<?php echo htmlspecialchars($page >= $totalPages ? '#' : afrisense_delivery_url(['page' => (string) ($page + 1)]), ENT_QUOTES, 'UTF-8'); ?>" title="Next page" aria-label="Next page"><i class="bi bi-chevron-right" aria-hidden="true"></i></a>
                 </nav>
             </footer>
         </section>
 
+        <!-- Side panel with supporting information and actions. -->
         <aside class="af-delivery-details" id="delivery-details">
+            <?php // Render this conditional/dynamic template block. ?>
             <?php if ($selectedDelivery === null): ?>
+                <!-- Page section for this part of the AfriSense interface. -->
                 <section class="af-delivery-side-card"><h2>Delivery Details</h2><p>Select a delivery to view details.</p></section>
             <?php else: ?>
                 <?php
@@ -717,7 +791,9 @@ ob_start();
                 $subtotal = max(0.00, (float) ($selectedDelivery['total_price'] ?? 0) - afrisense_public_delivery_fee((float) ($selectedDelivery['total_price'] ?? 0), (string) ($selectedDelivery['delivery_address'] ?? '')));
                 $deliveryFee = max(0.00, (float) ($selectedDelivery['total_price'] ?? 0) - $subtotal);
                 ?>
+                <!-- Page section for this part of the AfriSense interface. -->
                 <section class="af-delivery-side-card">
+                    <!-- Header block for this interface section. -->
                     <header>
                         <span><i class="bi bi-receipt" aria-hidden="true"></i></span>
                         <button type="button" title="Close details" onclick="window.location.href='delivery-management.php'"><i class="bi bi-x-lg" aria-hidden="true"></i></button>
@@ -726,6 +802,7 @@ ob_start();
                     <h2>Order #AFR<?php echo htmlspecialchars(str_pad((string) $selectedOrderId, 4, '0', STR_PAD_LEFT), ENT_QUOTES, 'UTF-8'); ?> <span class="af-delivery-status <?php echo htmlspecialchars(afrisense_delivery_status_class($selectedDeliveryStatus), ENT_QUOTES, 'UTF-8'); ?>"><?php echo htmlspecialchars($selectedDeliveryStatus, ENT_QUOTES, 'UTF-8'); ?></span></h2>
                     <time><?php echo htmlspecialchars(date('d M Y • h:i A', strtotime((string) ($selectedDelivery['ordered_at'] ?? 'now'))), ENT_QUOTES, 'UTF-8'); ?></time>
 
+                    <!-- Navigation links for this interface. -->
                     <nav class="af-delivery-detail-tabs" aria-label="Delivery detail sections">
                         <a href="#delivery-overview">Overview</a>
                         <a href="#delivery-items">Items</a>
@@ -733,6 +810,7 @@ ob_start();
                         <a href="#delivery-history">History</a>
                     </nav>
 
+                    <!-- Page section for this part of the AfriSense interface. -->
                     <section id="delivery-overview">
                         <h3><i class="bi bi-person" aria-hidden="true"></i> Customer Information</h3>
                         <strong><?php echo htmlspecialchars((string) ($selectedDelivery['fullname'] ?? 'Customer'), ENT_QUOTES, 'UTF-8'); ?></strong>
@@ -740,8 +818,10 @@ ob_start();
                         <p><?php echo htmlspecialchars((string) ($selectedDelivery['delivery_address'] ?? ''), ENT_QUOTES, 'UTF-8'); ?></p>
                     </section>
 
+                    <!-- Page section for this part of the AfriSense interface. -->
                     <section id="delivery-assignment-panel">
                         <h3><i class="bi bi-truck" aria-hidden="true"></i> Delivery Information</h3>
+                        <!-- Form block that submits this page workflow. -->
                         <form class="af-delivery-assign-form" action="<?php echo htmlspecialchars(afrisense_delivery_url(['view' => (string) $selectedOrderId], '#delivery-details'), ENT_QUOTES, 'UTF-8'); ?>" method="post">
                             <input type="hidden" name="action" value="assign_delivery">
                             <input type="hidden" name="order_id" value="<?php echo $selectedOrderId; ?>">
@@ -749,6 +829,7 @@ ob_start();
                                 <span>Rider</span>
                                 <select name="rider_user_id" required>
                                     <option value="">Choose rider</option>
+                                    <?php // Render this conditional/dynamic template block. ?>
                                     <?php foreach ($riders as $rider): ?>
                                         <option value="<?php echo (int) $rider['id']; ?>" <?php echo $selectedRiderId === (int) $rider['id'] ? 'selected' : ''; ?>>
                                             <?php echo htmlspecialchars((string) $rider['fullname'] . ' • ' . (string) $rider['rolename'], ENT_QUOTES, 'UTF-8'); ?>
@@ -759,6 +840,7 @@ ob_start();
                             <label>
                                 <span>Delivery Type</span>
                                 <select name="delivery_type">
+                                    <?php // Render this conditional/dynamic template block. ?>
                                     <?php foreach ($validDeliveryTypes as $type): ?>
                                         <option value="<?php echo htmlspecialchars($type, ENT_QUOTES, 'UTF-8'); ?>" <?php echo $selectedDeliveryType === $type ? 'selected' : ''; ?>><?php echo htmlspecialchars($type, ENT_QUOTES, 'UTF-8'); ?></option>
                                     <?php endforeach; ?>
@@ -778,8 +860,10 @@ ob_start();
                         </dl>
                     </section>
 
+                    <!-- Page section for this part of the AfriSense interface. -->
                     <section>
                         <h3><i class="bi bi-cash-coin" aria-hidden="true"></i> Payment on Delivery</h3>
+                        <!-- Form block that submits this page workflow. -->
                         <form class="af-delivery-status-form" action="<?php echo htmlspecialchars(afrisense_delivery_url(['view' => (string) $selectedOrderId], '#delivery-details'), ENT_QUOTES, 'UTF-8'); ?>" method="post">
                             <input type="hidden" name="action" value="update_delivery_status">
                             <input type="hidden" name="order_id" value="<?php echo $selectedOrderId; ?>">
@@ -788,6 +872,7 @@ ob_start();
                             <label>
                                 <span>Status</span>
                                 <select name="delivery_status">
+                                    <?php // Render this conditional/dynamic template block. ?>
                                     <?php foreach ($validDeliveryStatuses as $status): ?>
                                         <option value="<?php echo htmlspecialchars($status, ENT_QUOTES, 'UTF-8'); ?>" <?php echo $selectedDeliveryStatus === $status ? 'selected' : ''; ?>><?php echo htmlspecialchars($status, ENT_QUOTES, 'UTF-8'); ?></option>
                                     <?php endforeach; ?>
@@ -799,6 +884,7 @@ ob_start();
                         </form>
                     </section>
 
+                    <!-- Page section for this part of the AfriSense interface. -->
                     <section id="delivery-items">
                         <h3><i class="bi bi-basket" aria-hidden="true"></i> Order Summary</h3>
                         <dl>
@@ -810,6 +896,7 @@ ob_start();
                         </dl>
                     </section>
 
+                    <!-- Page section for this part of the AfriSense interface. -->
                     <section id="delivery-timeline">
                         <h3><i class="bi bi-clock-history" aria-hidden="true"></i> Timeline</h3>
                         <ul class="af-delivery-timeline">
@@ -820,11 +907,13 @@ ob_start();
                         </ul>
                     </section>
 
+                    <!-- Page section for this part of the AfriSense interface. -->
                     <section id="delivery-history">
                         <h3><i class="bi bi-journal-text" aria-hidden="true"></i> History</h3>
                         <p><?php echo trim((string) ($selectedDelivery['notes'] ?? '')) !== '' ? htmlspecialchars((string) $selectedDelivery['notes'], ENT_QUOTES, 'UTF-8') : 'No delivery notes recorded.'; ?></p>
                     </section>
 
+                    <!-- Footer block for this interface section. -->
                     <footer>
                         <button type="button" onclick="window.print()" title="Print receipt"><i class="bi bi-printer" aria-hidden="true"></i> Print Receipt</button>
                         <a href="<?php echo htmlspecialchars(afrisense_delivery_url(['invoice' => (string) $selectedOrderId]), ENT_QUOTES, 'UTF-8'); ?>" title="Download invoice"><i class="bi bi-download" aria-hidden="true"></i> Download Invoice</a>

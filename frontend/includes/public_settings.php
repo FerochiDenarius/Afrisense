@@ -11,6 +11,7 @@ function afrisense_public_settings(): array
 {
     static $settings = null;
 
+    // Guard this block so it only runs when the required condition is met.
     if (is_array($settings)) {
         return $settings;
     }
@@ -87,14 +88,17 @@ function afrisense_public_settings(): array
         ],
     ];
 
+    // Run database/action work inside a guarded block so the page can fail gracefully.
     try {
         $pdo = afrisense_pdo();
 
+        // Iterate through the data needed for this block.
         foreach (['website' => 'website_settings', 'company' => 'company_information', 'system' => 'system_settings'] as $key => $table) {
             $statement = $pdo->prepare(sprintf('SELECT * FROM `%s` ORDER BY `id` ASC LIMIT 1', $table));
             $statement->execute();
             $row = $statement->fetch(PDO::FETCH_ASSOC);
 
+            // Guard this block so it only runs when the required condition is met.
             if (is_array($row)) {
                 $settings[$key] = array_replace($settings[$key], array_filter(
                     $row,
@@ -109,6 +113,7 @@ function afrisense_public_settings(): array
     return $settings;
 }
 
+// Defines the afrisense_public_setting helper used by this module.
 function afrisense_public_setting(string $group, string $key, string $fallback = ''): string
 {
     $settings = afrisense_public_settings();
@@ -116,20 +121,24 @@ function afrisense_public_setting(string $group, string $key, string $fallback =
     return (string) ($settings[$group][$key] ?? $fallback);
 }
 
+// Defines the afrisense_public_upload_url helper used by this module.
 function afrisense_public_upload_url(string $frontendBase, ?string $path): string
 {
     $path = trim((string) $path);
 
+    // Guard this block so it only runs when the required condition is met.
     if ($path === '') {
         return '';
     }
 
+    // Guard this block so it only runs when the required condition is met.
     if (filter_var($path, FILTER_VALIDATE_URL)) {
         return $path;
     }
 
     $relativePath = ltrim(str_replace('\\', '/', $path), '/');
 
+    // Guard this block so it only runs when the required condition is met.
     if ($relativePath !== '' && is_file(__DIR__ . '/../uploads/' . $relativePath)) {
         return rtrim($frontendBase, '/') . '/uploads/' . $relativePath;
     }
@@ -137,20 +146,24 @@ function afrisense_public_upload_url(string $frontendBase, ?string $path): strin
     return '';
 }
 
+// Defines the afrisense_public_logo_url helper used by this module.
 function afrisense_public_logo_url(string $frontendBase): string
 {
     return afrisense_public_upload_url($frontendBase, afrisense_public_setting('website', 'logo'));
 }
 
+// Defines the afrisense_public_favicon_url helper used by this module.
 function afrisense_public_favicon_url(string $frontendBase): string
 {
     return afrisense_public_upload_url($frontendBase, afrisense_public_setting('website', 'favicon'));
 }
 
+// Defines the afrisense_public_brand_icon_html helper used by this module.
 function afrisense_public_brand_icon_html(string $frontendBase, string $fallbackIcon = 'bi-cup-hot'): string
 {
     $logoUrl = afrisense_public_logo_url($frontendBase);
 
+    // Guard this block so it only runs when the required condition is met.
     if ($logoUrl !== '') {
         return '<img src="' . htmlspecialchars($logoUrl, ENT_QUOTES, 'UTF-8') . '" alt="">';
     }
@@ -158,18 +171,22 @@ function afrisense_public_brand_icon_html(string $frontendBase, string $fallback
     return '<i class="bi ' . htmlspecialchars($fallbackIcon, ENT_QUOTES, 'UTF-8') . '" aria-hidden="true"></i>';
 }
 
+// Defines the afrisense_public_safe_map_embed helper used by this module.
 function afrisense_public_safe_map_embed(string $value): string
 {
     $value = trim($value);
 
+    // Guard this block so it only runs when the required condition is met.
     if ($value === '') {
         return '';
     }
 
+    // Guard this block so it only runs when the required condition is met.
     if (preg_match('/<iframe[^>]+src=["\']([^"\']+)["\']/i', $value, $matches) === 1) {
         $value = html_entity_decode($matches[1], ENT_QUOTES, 'UTF-8');
     }
 
+    // Guard this block so it only runs when the required condition is met.
     if (!filter_var($value, FILTER_VALIDATE_URL)) {
         return '';
     }
@@ -177,6 +194,7 @@ function afrisense_public_safe_map_embed(string $value): string
     $host = strtolower((string) parse_url($value, PHP_URL_HOST));
     $allowedHosts = ['google.com', 'www.google.com', 'maps.google.com', 'maps.app.goo.gl'];
 
+    // Guard this block so it only runs when the required condition is met.
     if (!in_array($host, $allowedHosts, true) && !str_ends_with($host, '.google.com')) {
         return '';
     }
@@ -187,17 +205,21 @@ function afrisense_public_safe_map_embed(string $value): string
     );
 }
 
+// Defines the afrisense_public_site_in_maintenance helper used by this module.
 function afrisense_public_site_in_maintenance(): bool
 {
     return strtolower(afrisense_public_setting('system', 'site_status', 'Online')) === 'maintenance';
 }
 
+// Defines the afrisense_enforce_public_site_status helper used by this module.
 function afrisense_enforce_public_site_status(string $frontendBase = '/Afrisense/frontend'): void
 {
+    // Guard this block so it only runs when the required condition is met.
     if (!afrisense_public_site_in_maintenance()) {
         return;
     }
 
+    // Guard this block so it only runs when the required condition is met.
     if (!headers_sent()) {
         http_response_code(503);
         header('Retry-After: 3600');
@@ -212,6 +234,7 @@ function afrisense_enforce_public_site_status(string $frontendBase = '/Afrisense
 
     echo '<!DOCTYPE html><html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">';
     echo '<meta name="robots" content="noindex"><meta name="theme-color" content="' . $primaryColor . '">';
+    // Guard this block so it only runs when the required condition is met.
     if ($faviconUrl !== '') {
         echo '<link rel="icon" href="' . htmlspecialchars($faviconUrl, ENT_QUOTES, 'UTF-8') . '">';
     }
@@ -225,6 +248,7 @@ function afrisense_enforce_public_site_status(string $frontendBase = '/Afrisense
     exit;
 }
 
+// Defines the afrisense_public_currency helper used by this module.
 function afrisense_public_currency(): string
 {
     return match (afrisense_public_setting('system', 'default_currency', 'GHS')) {
@@ -233,11 +257,13 @@ function afrisense_public_currency(): string
     };
 }
 
+// Defines the afrisense_public_money helper used by this module.
 function afrisense_public_money(float $amount): string
 {
     return afrisense_public_currency() . ' ' . number_format($amount, 2);
 }
 
+// Defines the afrisense_public_setting_bool helper used by this module.
 function afrisense_public_setting_bool(string $key, bool $fallback = false): bool
 {
     $value = afrisense_public_settings()['system'][$key] ?? $fallback;
@@ -245,6 +271,7 @@ function afrisense_public_setting_bool(string $key, bool $fallback = false): boo
     return in_array((string) $value, ['1', 'true', 'yes', 'on'], true);
 }
 
+// Defines the afrisense_public_setting_float helper used by this module.
 function afrisense_public_setting_float(string $key, float $fallback): float
 {
     $value = afrisense_public_settings()['system'][$key] ?? $fallback;
@@ -252,10 +279,12 @@ function afrisense_public_setting_float(string $key, float $fallback): float
     return is_numeric($value) ? (float) $value : $fallback;
 }
 
+// Defines the afrisense_public_delivery_zones helper used by this module.
 function afrisense_public_delivery_zones(): array
 {
     $zones = json_decode(afrisense_public_setting('system', 'delivery_zones'), true);
 
+    // Guard this block so it only runs when the required condition is met.
     if (!is_array($zones)) {
         return [];
     }
@@ -263,25 +292,32 @@ function afrisense_public_delivery_zones(): array
     return array_values(array_filter($zones, static fn (mixed $zone): bool => is_array($zone)));
 }
 
+// Defines the afrisense_public_delivery_fee helper used by this module.
 function afrisense_public_delivery_fee(float $subtotal = 0.00, string $address = ''): float
 {
     $freeDeliveryOver = afrisense_public_setting_float('free_delivery_over', 275.00);
 
+    // Guard this block so it only runs when the required condition is met.
     if ($freeDeliveryOver > 0 && $subtotal >= $freeDeliveryOver) {
         return 0.00;
     }
 
     $normalizedAddress = strtolower($address);
 
+    // Guard this block so it only runs when the required condition is met.
     if ($normalizedAddress !== '') {
+        // Iterate through the data needed for this block.
         foreach (afrisense_public_delivery_zones() as $zone) {
+            // Guard this block so it only runs when the required condition is met.
             if ((string) ($zone['status'] ?? 'Active') !== 'Active') {
                 continue;
             }
 
             $areas = array_filter(array_map('trim', explode(',', strtolower((string) ($zone['areas'] ?? '')))));
 
+            // Iterate through the data needed for this block.
             foreach ($areas as $area) {
+                // Guard this block so it only runs when the required condition is met.
                 if ($area !== '' && str_contains($normalizedAddress, $area)) {
                     return max(0.00, (float) ($zone['fee'] ?? 0.00));
                 }
@@ -292,52 +328,63 @@ function afrisense_public_delivery_fee(float $subtotal = 0.00, string $address =
     return max(0.00, afrisense_public_setting_float('delivery_fee', 10.00));
 }
 
+// Defines the afrisense_public_service_fee helper used by this module.
 function afrisense_public_service_fee(): float
 {
     return max(0.00, afrisense_public_setting_float('service_fee', 5.00));
 }
 
+// Defines the afrisense_public_free_delivery_over helper used by this module.
 function afrisense_public_free_delivery_over(): float
 {
     return max(0.00, afrisense_public_setting_float('free_delivery_over', 275.00));
 }
 
+// Defines the afrisense_public_delivery_time helper used by this module.
 function afrisense_public_delivery_time(): string
 {
     return afrisense_public_setting('system', 'default_delivery_time', '30 - 45 minutes');
 }
 
+// Defines the afrisense_public_delivery_instructions helper used by this module.
 function afrisense_public_delivery_instructions(): string
 {
     return afrisense_public_setting('system', 'delivery_instructions', 'Please ensure someone is available to receive the order at the delivery address. We will contact you when we are on our way.');
 }
 
+// Defines the afrisense_public_delivery_block_reason helper used by this module.
 function afrisense_public_delivery_block_reason(): string
 {
+    // Guard this block so it only runs when the required condition is met.
     if (!afrisense_public_setting_bool('standard_delivery_enabled', true)) {
         return 'Delivery ordering is currently unavailable.';
     }
 
+    // Guard this block so it only runs when the required condition is met.
     if (!afrisense_public_setting_bool('same_day_delivery', true)) {
         return 'Same-day delivery is currently unavailable. Please contact AfriSense before placing an order.';
     }
 
     $timezone = afrisense_public_setting('system', 'timezone', 'Africa/Accra');
 
+    // Run database/action work inside a guarded block so the page can fail gracefully.
     try {
         $now = new DateTimeImmutable('now', new DateTimeZone($timezone));
     } catch (Throwable $exception) {
         $now = new DateTimeImmutable('now', new DateTimeZone('Africa/Accra'));
     }
 
+    // Guard this block so it only runs when the required condition is met.
     if (!afrisense_public_setting_bool('weekend_delivery', true) && in_array($now->format('N'), ['6', '7'], true)) {
         return 'Weekend delivery is currently unavailable.';
     }
 
     $cutoff = trim(afrisense_public_setting('system', 'order_cutoff_time', '22:00'));
+    // Guard this block so it only runs when the required condition is met.
     if (preg_match('/^\d{2}:\d{2}$/', $cutoff) === 1) {
         $cutoffTime = $now->setTime((int) substr($cutoff, 0, 2), (int) substr($cutoff, 3, 2));
 
+        // Guard this block so it only runs when the required condition is met.
         if ($now > $cutoffTime) {
             return 'Online orders are closed for today. Please order again during business hours.';
         }
@@ -346,19 +393,23 @@ function afrisense_public_delivery_block_reason(): string
     return '';
 }
 
+// Defines the afrisense_public_delivery_available helper used by this module.
 function afrisense_public_delivery_available(): bool
 {
     return afrisense_public_delivery_block_reason() === '';
 }
 
+// Defines the afrisense_enforce_public_delivery_available helper used by this module.
 function afrisense_enforce_public_delivery_available(): void
 {
     $reason = afrisense_public_delivery_block_reason();
 
+    // Guard this block so it only runs when the required condition is met.
     if ($reason === '') {
         return;
     }
 
+    // Guard this block so it only runs when the required condition is met.
     if (!headers_sent()) {
         http_response_code(503);
     }
@@ -380,14 +431,17 @@ function afrisense_public_payment_methods(): array
     $hasCardGateway = afrisense_public_setting_bool('paystack_enabled', true)
         || afrisense_public_setting_bool('flutterwave_enabled', true);
 
+    // Guard this block so it only runs when the required condition is met.
     if (afrisense_public_setting_bool('mobile_money_enabled', true) && $hasMobileGateway) {
         $methods[] = 'Mobile Money';
     }
 
+    // Guard this block so it only runs when the required condition is met.
     if (afrisense_public_setting_bool('card_payment_enabled', true) && $hasCardGateway) {
         $methods[] = 'Card';
     }
 
+    // Guard this block so it only runs when the required condition is met.
     if (afrisense_public_setting_bool('cash_payment_enabled', true)) {
         $methods[] = 'Cash';
     }
@@ -395,11 +449,13 @@ function afrisense_public_payment_methods(): array
     return $methods !== [] ? $methods : ['Cash'];
 }
 
+// Defines the afrisense_public_payment_method_allowed helper used by this module.
 function afrisense_public_payment_method_allowed(string $method): bool
 {
     return in_array($method, afrisense_public_payment_methods(), true);
 }
 
+// Defines the afrisense_public_paid_order_status helper used by this module.
 function afrisense_public_paid_order_status(string $paymentMethod): string
 {
     return $paymentMethod !== 'Cash' && afrisense_public_setting_bool('auto_confirm_paid_orders', true)
@@ -407,22 +463,27 @@ function afrisense_public_paid_order_status(string $paymentMethod): string
         : 'Pending';
 }
 
+// Defines the afrisense_public_payment_instruction helper used by this module.
 function afrisense_public_payment_instruction(): string
 {
     return afrisense_public_setting('system', 'payment_instruction', 'You can make payments securely using any of the available payment methods. Your payment is protected with 256-bit SSL encryption.');
 }
 
+// Defines the afrisense_public_guest_checkout_enabled helper used by this module.
 function afrisense_public_guest_checkout_enabled(): bool
 {
     return afrisense_public_setting_bool('guest_checkout_enabled', true);
 }
 
+// Defines the afrisense_public_order_url helper used by this module.
 function afrisense_public_order_url(string $frontendBase = '/Afrisense/frontend'): string
 {
     $base = rtrim($frontendBase, '/');
     $user = null;
 
+    // Guard this block so it only runs when the required condition is met.
     if (function_exists('afrisense_current_user')) {
+        // Run database/action work inside a guarded block so the page can fail gracefully.
         try {
             $user = afrisense_current_user();
         } catch (Throwable) {
@@ -430,6 +491,7 @@ function afrisense_public_order_url(string $frontendBase = '/Afrisense/frontend'
         }
     }
 
+    // Guard this block so it only runs when the required condition is met.
     if ($user !== null && function_exists('afrisense_is_customer') && afrisense_is_customer($user)) {
         return $base . '/customer/orders.php';
     }
@@ -437,12 +499,15 @@ function afrisense_public_order_url(string $frontendBase = '/Afrisense/frontend'
     return $base . '/landing/order.php';
 }
 
+// Defines the afrisense_public_cart_url helper used by this module.
 function afrisense_public_cart_url(string $frontendBase = '/Afrisense/frontend'): string
 {
     $base = rtrim($frontendBase, '/');
     $user = null;
 
+    // Guard this block so it only runs when the required condition is met.
     if (function_exists('afrisense_current_user')) {
+        // Run database/action work inside a guarded block so the page can fail gracefully.
         try {
             $user = afrisense_current_user();
         } catch (Throwable) {
@@ -450,6 +515,7 @@ function afrisense_public_cart_url(string $frontendBase = '/Afrisense/frontend')
         }
     }
 
+    // Guard this block so it only runs when the required condition is met.
     if ($user !== null && function_exists('afrisense_is_customer') && afrisense_is_customer($user)) {
         return $base . '/customer/cart.php';
     }
@@ -457,12 +523,15 @@ function afrisense_public_cart_url(string $frontendBase = '/Afrisense/frontend')
     return $base . '/landing/cart.php';
 }
 
+// Defines the afrisense_public_booking_url helper used by this module.
 function afrisense_public_booking_url(string $frontendBase = '/Afrisense/frontend'): string
 {
     $base = rtrim($frontendBase, '/');
     $user = null;
 
+    // Guard this block so it only runs when the required condition is met.
     if (function_exists('afrisense_current_user')) {
+        // Run database/action work inside a guarded block so the page can fail gracefully.
         try {
             $user = afrisense_current_user();
         } catch (Throwable) {
@@ -470,6 +539,7 @@ function afrisense_public_booking_url(string $frontendBase = '/Afrisense/fronten
         }
     }
 
+    // Guard this block so it only runs when the required condition is met.
     if ($user !== null && function_exists('afrisense_is_customer') && afrisense_is_customer($user)) {
         return $base . '/customer/my-bookings.php#booking_form';
     }
@@ -477,12 +547,15 @@ function afrisense_public_booking_url(string $frontendBase = '/Afrisense/fronten
     return $base . '/landing/booking.php';
 }
 
+// Defines the afrisense_public_support_url helper used by this module.
 function afrisense_public_support_url(string $frontendBase = '/Afrisense/frontend'): string
 {
     $base = rtrim($frontendBase, '/');
     $user = null;
 
+    // Guard this block so it only runs when the required condition is met.
     if (function_exists('afrisense_current_user')) {
+        // Run database/action work inside a guarded block so the page can fail gracefully.
         try {
             $user = afrisense_current_user();
         } catch (Throwable) {
@@ -490,6 +563,7 @@ function afrisense_public_support_url(string $frontendBase = '/Afrisense/fronten
         }
     }
 
+    // Guard this block so it only runs when the required condition is met.
     if ($user !== null && function_exists('afrisense_is_customer') && afrisense_is_customer($user)) {
         return $base . '/customer/support.php';
     }
@@ -497,18 +571,22 @@ function afrisense_public_support_url(string $frontendBase = '/Afrisense/fronten
     return $base . '/landing/support.php';
 }
 
+// Defines the afrisense_enforce_guest_checkout_enabled helper used by this module.
 function afrisense_enforce_guest_checkout_enabled(string $frontendBase = '/Afrisense/frontend'): void
 {
+    // Guard this block so it only runs when the required condition is met.
     if (afrisense_public_guest_checkout_enabled()) {
         return;
     }
 
+    // Guard this block so it only runs when the required condition is met.
     if (!headers_sent()) {
         header('Location: ' . rtrim($frontendBase, '/') . '/auth/login.php?next=' . rawurlencode($_SERVER['REQUEST_URI'] ?? '/Afrisense/frontend/landing/order.php'));
         exit;
     }
 }
 
+// Defines the afrisense_public_payment_method_icon helper used by this module.
 function afrisense_public_payment_method_icon(string $method): string
 {
     return match ($method) {
@@ -518,6 +596,7 @@ function afrisense_public_payment_method_icon(string $method): string
     };
 }
 
+// Defines the afrisense_public_payment_method_label helper used by this module.
 function afrisense_public_payment_method_label(string $method): string
 {
     return match ($method) {
@@ -527,6 +606,7 @@ function afrisense_public_payment_method_label(string $method): string
     };
 }
 
+// Defines the afrisense_public_payment_method_hint helper used by this module.
 function afrisense_public_payment_method_hint(string $method): string
 {
     return match ($method) {
@@ -543,18 +623,22 @@ function afrisense_public_mobile_money_networks(): array
 {
     $networks = [];
 
+    // Guard this block so it only runs when the required condition is met.
     if (afrisense_public_setting_bool('mtn_momo_enabled', true)) {
         $networks[] = 'MTN Mobile Money';
     }
 
+    // Guard this block so it only runs when the required condition is met.
     if (afrisense_public_setting_bool('vodafone_cash_enabled', false)) {
         $networks[] = 'Vodafone Cash';
     }
 
+    // Guard this block so it only runs when the required condition is met.
     if (afrisense_public_setting_bool('paystack_enabled', true)) {
         $networks[] = 'Paystack Mobile Money';
     }
 
+    // Guard this block so it only runs when the required condition is met.
     if (afrisense_public_setting_bool('flutterwave_enabled', true)) {
         $networks[] = 'Flutterwave Mobile Money';
     }
@@ -562,6 +646,7 @@ function afrisense_public_mobile_money_networks(): array
     return array_values(array_unique($networks));
 }
 
+// Defines the afrisense_public_create_admin_notifications helper used by this module.
 function afrisense_public_create_admin_notifications(
     PDO $pdo,
     string $settingKey,
@@ -571,6 +656,7 @@ function afrisense_public_create_admin_notifications(
     string $actionUrl,
     ?int $createdBy = null
 ): void {
+    // Guard this block so it only runs when the required condition is met.
     if (!afrisense_public_setting_bool($settingKey, true)) {
         return;
     }
@@ -584,6 +670,7 @@ function afrisense_public_create_admin_notifications(
     $admins->execute();
     $adminIds = $admins->fetchAll(PDO::FETCH_COLUMN);
 
+    // Guard this block so it only runs when the required condition is met.
     if ($adminIds === []) {
         return;
     }
@@ -595,6 +682,7 @@ function afrisense_public_create_admin_notifications(
             (:user_id, :title, :message, :notification_type, :action_url, :created_by)'
     );
 
+    // Iterate through the data needed for this block.
     foreach ($adminIds as $adminId) {
         $notification->execute([
             'user_id' => (int) $adminId,
@@ -607,6 +695,7 @@ function afrisense_public_create_admin_notifications(
     }
 }
 
+// Defines the afrisense_public_order_customer_contact helper used by this module.
 function afrisense_public_order_customer_contact(PDO $pdo, int $orderId): ?array
 {
     $statement = $pdo->prepare(
@@ -632,22 +721,27 @@ function afrisense_public_order_customer_contact(PDO $pdo, int $orderId): ?array
     return $contact !== false ? $contact : null;
 }
 
+// Defines the afrisense_public_send_order_customer_email helper used by this module.
 function afrisense_public_send_order_customer_email(array $contact, string $title, string $message): array
 {
+    // Guard this block so it only runs when the required condition is met.
     if (!afrisense_public_setting_bool('order_notifications', true)) {
         return ['success' => false, 'message' => 'Order notifications are disabled in settings.'];
     }
 
+    // Guard this block so it only runs when the required condition is met.
     if (!afrisense_public_setting_bool('email_notifications', true)) {
         return ['success' => false, 'message' => 'Email notifications are disabled in settings.'];
     }
 
     $email = trim((string) ($contact['email'] ?? ''));
 
+    // Guard this block so it only runs when the required condition is met.
     if ($email === '' || !filter_var($email, FILTER_VALIDATE_EMAIL)) {
         return ['success' => false, 'message' => 'Customer email is missing or invalid.'];
     }
 
+    // Guard this block so it only runs when the required condition is met.
     if (!function_exists('afrisense_send_email')) {
         return ['success' => false, 'message' => 'Email sender is unavailable.'];
     }
@@ -679,10 +773,12 @@ function afrisense_public_send_order_customer_email(array $contact, string $titl
     return afrisense_send_email($email, $customerName, $title, $html, $text);
 }
 
+// Defines the afrisense_public_send_order_customer_email_for_order helper used by this module.
 function afrisense_public_send_order_customer_email_for_order(PDO $pdo, int $orderId, string $title, string $message): array
 {
     $contact = afrisense_public_order_customer_contact($pdo, $orderId);
 
+    // Guard this block so it only runs when the required condition is met.
     if ($contact === null) {
         return ['success' => false, 'message' => 'Order customer details could not be found.'];
     }
@@ -690,6 +786,7 @@ function afrisense_public_send_order_customer_email_for_order(PDO $pdo, int $ord
     return afrisense_public_send_order_customer_email($contact, $title, $message);
 }
 
+// Defines the afrisense_public_tel_href helper used by this module.
 function afrisense_public_tel_href(string $phone): string
 {
     $digits = preg_replace('/\D+/', '', $phone);
@@ -713,9 +810,11 @@ function afrisense_public_social_links(): array
     ];
     $result = [];
 
+    // Iterate through the data needed for this block.
     foreach ($links as $key => $meta) {
         $url = trim((string) ($company[$key] ?? ''));
 
+        // Guard this block so it only runs when the required condition is met.
         if ($url !== '') {
             $result[$key] = [
                 'url' => $url,

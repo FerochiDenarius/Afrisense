@@ -16,11 +16,13 @@ require_once __DIR__ . '/../auth/auth_bootstrap.php';
 $authUser = afrisense_require_admin();
 $itemsPerPage = afrisense_admin_items_per_page(60);
 
+// Defines the afrisense_gallery_post helper used by this module.
 function afrisense_gallery_post(string $key, string $fallback = ''): string
 {
     return trim((string) ($_POST[$key] ?? $fallback));
 }
 
+// Defines the afrisense_gallery_category_class helper used by this module.
 function afrisense_gallery_category_class(string $category): string
 {
     return match (strtolower($category)) {
@@ -44,6 +46,7 @@ function afrisense_gallery_image_info(string $frontendBase, ?string $image): arr
     $filename = basename($relativeImage);
     $candidates = [];
 
+    // Guard this block so it only runs when the required condition is met.
     if ($relativeImage !== '') {
         $candidates[] = [
             'path' => __DIR__ . '/../uploads/' . $relativeImage,
@@ -63,7 +66,9 @@ function afrisense_gallery_image_info(string $frontendBase, ?string $image): arr
         ];
     }
 
+    // Iterate through the data needed for this block.
     foreach ($candidates as $candidate) {
+        // Guard this block so it only runs when the required condition is met.
         if (is_file($candidate['path'])) {
             return [
                 'url' => $candidate['url'],
@@ -82,16 +87,20 @@ function afrisense_gallery_image_info(string $frontendBase, ?string $image): arr
     ];
 }
 
+// Defines the afrisense_gallery_upload_image helper used by this module.
 function afrisense_gallery_upload_image(array $file): string
 {
+    // Guard this block so it only runs when the required condition is met.
     if ((int) ($file['error'] ?? UPLOAD_ERR_NO_FILE) === UPLOAD_ERR_NO_FILE) {
         throw new RuntimeException('Choose an image to upload.');
     }
 
+    // Guard this block so it only runs when the required condition is met.
     if ((int) ($file['error'] ?? UPLOAD_ERR_OK) !== UPLOAD_ERR_OK) {
         throw new RuntimeException('One of the gallery images could not be uploaded.');
     }
 
+    // Guard this block so it only runs when the required condition is met.
     if ((int) ($file['size'] ?? 0) > 6 * 1024 * 1024) {
         throw new RuntimeException('Gallery images must be 6MB or smaller.');
     }
@@ -100,6 +109,7 @@ function afrisense_gallery_upload_image(array $file): string
     $finfo = finfo_open(FILEINFO_MIME_TYPE);
     $mimeType = $finfo !== false ? (string) finfo_file($finfo, $temporaryName) : '';
 
+    // Guard this block so it only runs when the required condition is met.
     if ($finfo !== false) {
         finfo_close($finfo);
     }
@@ -111,12 +121,14 @@ function afrisense_gallery_upload_image(array $file): string
         'image/gif' => 'gif',
     ];
 
+    // Guard this block so it only runs when the required condition is met.
     if (!isset($allowedMimeTypes[$mimeType])) {
         throw new RuntimeException('Gallery images must be JPG, PNG, WebP or GIF.');
     }
 
     $uploadDirectory = __DIR__ . '/../uploads/gallery';
 
+    // Guard this block so it only runs when the required condition is met.
     if (!is_dir($uploadDirectory) && !mkdir($uploadDirectory, 0755, true)) {
         throw new RuntimeException('Gallery upload folder could not be created.');
     }
@@ -124,6 +136,7 @@ function afrisense_gallery_upload_image(array $file): string
     $filename = 'gallery-' . bin2hex(random_bytes(12)) . '.' . $allowedMimeTypes[$mimeType];
     $destination = $uploadDirectory . DIRECTORY_SEPARATOR . $filename;
 
+    // Guard this block so it only runs when the required condition is met.
     if (!move_uploaded_file($temporaryName, $destination)) {
         throw new RuntimeException('Gallery image could not be saved.');
     }
@@ -138,10 +151,12 @@ function afrisense_gallery_uploaded_files(): array
 {
     $files = $_FILES['gallery_images'] ?? null;
 
+    // Guard this block so it only runs when the required condition is met.
     if (!is_array($files) || !isset($files['name'])) {
         return [];
     }
 
+    // Guard this block so it only runs when the required condition is met.
     if (!is_array($files['name'])) {
         return [[
             'name' => (string) ($files['name'] ?? ''),
@@ -153,6 +168,7 @@ function afrisense_gallery_uploaded_files(): array
 
     $normalized = [];
 
+    // Iterate through the data needed for this block.
     foreach ($files['name'] as $index => $name) {
         $normalized[] = [
             'name' => (string) $name,
@@ -165,16 +181,20 @@ function afrisense_gallery_uploaded_files(): array
     return $normalized;
 }
 
+// Defines the afrisense_gallery_format_size helper used by this module.
 function afrisense_gallery_format_size(int $bytes): string
 {
+    // Guard this block so it only runs when the required condition is met.
     if ($bytes >= 1024 * 1024 * 1024) {
         return number_format($bytes / (1024 * 1024 * 1024), 2) . ' GB';
     }
 
+    // Guard this block so it only runs when the required condition is met.
     if ($bytes >= 1024 * 1024) {
         return number_format($bytes / (1024 * 1024), 1) . ' MB';
     }
 
+    // Guard this block so it only runs when the required condition is met.
     if ($bytes >= 1024) {
         return number_format($bytes / 1024, 0) . ' KB';
     }
@@ -182,11 +202,14 @@ function afrisense_gallery_format_size(int $bytes): string
     return $bytes . ' B';
 }
 
+// Defines the afrisense_gallery_url helper used by this module.
 function afrisense_gallery_url(array $overrides = [], string $anchor = ''): string
 {
     $params = $_GET;
 
+    // Iterate through the data needed for this block.
     foreach ($overrides as $key => $value) {
+        // Guard this block so it only runs when the required condition is met.
         if ($value === null || $value === '') {
             unset($params[$key]);
         } else {
@@ -207,28 +230,34 @@ $offset = ($page - 1) * $itemsPerPage;
 $flashMessage = '';
 $flashType = 'success';
 
+// Run database/action work inside a guarded block so the page can fail gracefully.
 try {
     $pdo = afrisense_pdo();
 
+    // Handle submitted form actions before rendering the page.
     if (($_SERVER['REQUEST_METHOD'] ?? 'GET') === 'POST' && ($_POST['action'] ?? '') === 'upload_images') {
         $title = afrisense_gallery_post('title');
         $description = afrisense_gallery_post('description');
         $category = afrisense_gallery_post('category', 'Food');
         $validCategories = ['Food', 'Events', 'Services', 'Team'];
 
+        // Guard this block so it only runs when the required condition is met.
         if (!in_array($category, $validCategories, true)) {
             $category = 'Food';
         }
 
         $files = afrisense_gallery_uploaded_files();
 
+        // Guard this block so it only runs when the required condition is met.
         if ($files === []) {
             $flashType = 'error';
             $flashMessage = 'Choose at least one gallery image.';
         } else {
             $created = 0;
 
+            // Iterate through the data needed for this block.
             foreach ($files as $index => $file) {
+                // Guard this block so it only runs when the required condition is met.
                 if ((int) $file['error'] === UPLOAD_ERR_NO_FILE) {
                     continue;
                 }
@@ -236,6 +265,7 @@ try {
                 $imagePath = afrisense_gallery_upload_image($file);
                 $imageTitle = $title !== '' ? $title : pathinfo((string) $file['name'], PATHINFO_FILENAME);
 
+                // Guard this block so it only runs when the required condition is met.
                 if (count($files) > 1 && $title !== '') {
                     $imageTitle .= ' ' . ($index + 1);
                 }
@@ -264,11 +294,13 @@ try {
     $where = [];
     $params = [];
 
+    // Guard this block so it only runs when the required condition is met.
     if ($search !== '') {
         $where[] = '(g.`title` LIKE :search OR g.`description` LIKE :search OR g.`category` LIKE :search)';
         $params['search'] = '%' . $search . '%';
     }
 
+    // Guard this block so it only runs when the required condition is met.
     if ($categoryFilter !== '') {
         $where[] = 'g.`category` = :category';
         $params['category'] = $categoryFilter;
@@ -298,11 +330,13 @@ try {
     $foodParams = [];
     $foodWhere = ['1 = 1'];
 
+    // Guard this block so it only runs when the required condition is met.
     if ($search !== '') {
         $foodWhere[] = '(f.`food_name` LIKE :food_search OR f.`description` LIKE :food_search OR COALESCE(c.`category_name`, "") LIKE :food_search)';
         $foodParams['food_search'] = '%' . $search . '%';
     }
 
+    // Guard this block so it only runs when the required condition is met.
     if ($categoryFilter === 'Food') {
         $foodWhere[] = '1 = 1';
     } elseif ($categoryFilter !== '') {
@@ -343,11 +377,13 @@ try {
 
     $combinedItems = [];
 
+    // Iterate through the data needed for this block.
     foreach ($galleryItems as $item) {
         $item['source'] = 'Gallery';
         $combinedItems[] = $item;
     }
 
+    // Iterate through the data needed for this block.
     foreach ($foodItems as $item) {
         $item['source'] = 'Food Menu';
         $combinedItems[] = $item;
@@ -362,6 +398,7 @@ try {
     $tags = count($categories);
     $storageBytes = 0;
 
+    // Iterate through the data needed for this block.
     foreach ($combinedItems as $item) {
         $storageBytes += afrisense_gallery_image_info($frontendBase, (string) ($item['image'] ?? ''))['size'];
     }
@@ -382,7 +419,9 @@ try {
 
 ob_start();
 ?>
+<!-- Page section for this part of the AfriSense interface. -->
 <section class="af-admin-menu-page af-gallery-page">
+    <!-- Header block for this interface section. -->
     <header class="af-admin-page-heading af-gallery-heading">
         <div>
             <h1>Gallery</h1>
@@ -394,16 +433,19 @@ ob_start();
         </div>
     </header>
 
+    <?php // Render this conditional/dynamic template block. ?>
     <?php if ($loadError !== ''): ?>
         <div class="af-admin-alert error"><?php echo htmlspecialchars($loadError, ENT_QUOTES, 'UTF-8'); ?></div>
     <?php endif; ?>
 
+    <?php // Render this conditional/dynamic template block. ?>
     <?php if ($flashMessage !== ''): ?>
         <div class="af-admin-alert <?php echo htmlspecialchars($flashType, ENT_QUOTES, 'UTF-8'); ?>">
             <?php echo htmlspecialchars($flashMessage, ENT_QUOTES, 'UTF-8'); ?>
         </div>
     <?php endif; ?>
 
+    <!-- Page section for this part of the AfriSense interface. -->
     <section class="af-menu-metrics af-gallery-metrics" aria-label="Gallery summary">
         <article class="green">
             <span><i class="bi bi-images" aria-hidden="true"></i></span>
@@ -423,11 +465,14 @@ ob_start();
         </article>
     </section>
 
+    <!-- Page section for this part of the AfriSense interface. -->
     <section class="af-menu-table-card af-gallery-upload-card" id="gallery_upload_form">
+        <!-- Header block for this interface section. -->
         <header class="af-table-toolbar">
             <h2>Upload Gallery Images</h2>
             <p>Add food, service, event or team images without changing the database structure.</p>
         </header>
+        <!-- Form block that submits this page workflow. -->
         <form class="af-food-management-form af-gallery-upload-form" action="gallery.php#gallery_upload_form" method="post" enctype="multipart/form-data">
             <input type="hidden" name="action" value="upload_images">
             <label>
@@ -456,7 +501,9 @@ ob_start();
         </form>
     </section>
 
+    <!-- Page section for this part of the AfriSense interface. -->
     <section class="af-menu-table-card" id="gallery-table">
+        <!-- Form block that submits this page workflow. -->
         <form class="af-menu-filters af-gallery-filters" action="gallery.php" method="get">
             <label class="af-menu-search" for="gallery_search">
                 <i class="bi bi-search" aria-hidden="true"></i>
@@ -465,6 +512,7 @@ ob_start();
             <label class="af-menu-select" for="gallery_category">
                 <select id="gallery_category" name="category">
                     <option value="">All Categories</option>
+                    <?php // Render this conditional/dynamic template block. ?>
                     <?php foreach ($categories as $category): ?>
                         <?php $categoryName = (string) ($category['category_name'] ?? 'Food'); ?>
                         <option value="<?php echo htmlspecialchars($categoryName, ENT_QUOTES, 'UTF-8'); ?>" <?php echo $categoryFilter === $categoryName ? 'selected' : ''; ?>>
@@ -485,11 +533,14 @@ ob_start();
             <a href="gallery.php"><i class="bi bi-arrow-repeat" aria-hidden="true"></i> Reset</a>
         </form>
 
+        <!-- Page section for this part of the AfriSense interface. -->
         <section class="af-gallery-grid" aria-label="Gallery images">
+            <?php // Render this conditional/dynamic template block. ?>
             <?php if ($displayItems === []): ?>
                 <div class="af-empty-state">No gallery images found.</div>
             <?php endif; ?>
 
+            <?php // Render this conditional/dynamic template block. ?>
             <?php foreach ($displayItems as $item): ?>
                 <?php
                 $imageInfo = afrisense_gallery_image_info($frontendBase, (string) ($item['image'] ?? ''));
@@ -513,13 +564,17 @@ ob_start();
             <?php endforeach; ?>
         </section>
 
+        <!-- Footer block for this interface section. -->
         <footer class="af-menu-pagination">
             <p>Showing <?php echo htmlspecialchars((string) ($totalGalleryImages > 0 ? $offset + 1 : 0), ENT_QUOTES, 'UTF-8'); ?> to <?php echo htmlspecialchars((string) min($offset + count($displayItems), $totalGalleryImages), ENT_QUOTES, 'UTF-8'); ?> of <?php echo htmlspecialchars((string) $totalGalleryImages, ENT_QUOTES, 'UTF-8'); ?> images</p>
+            <!-- Navigation links for this interface. -->
             <nav aria-label="Gallery pagination">
                 <a class="<?php echo $page <= 1 ? 'is-disabled' : ''; ?>" href="<?php echo htmlspecialchars($page <= 1 ? '#' : afrisense_gallery_url(['page' => (string) ($page - 1)], '#gallery-table'), ENT_QUOTES, 'UTF-8'); ?>" aria-label="Previous page" title="Previous page"><i class="bi bi-chevron-left" aria-hidden="true"></i></a>
+                <?php // Render this conditional/dynamic template block. ?>
                 <?php for ($number = max(1, $page - 1); $number <= min($totalPages, $page + 1); $number++): ?>
                     <a class="<?php echo $number === $page ? 'active' : ''; ?>" href="<?php echo htmlspecialchars(afrisense_gallery_url(['page' => (string) $number], '#gallery-table'), ENT_QUOTES, 'UTF-8'); ?>"><?php echo htmlspecialchars((string) $number, ENT_QUOTES, 'UTF-8'); ?></a>
                 <?php endfor; ?>
+                <?php // Render this conditional/dynamic template block. ?>
                 <?php if ($totalPages > $page + 1): ?>
                     <span>...</span>
                     <a href="<?php echo htmlspecialchars(afrisense_gallery_url(['page' => (string) $totalPages], '#gallery-table'), ENT_QUOTES, 'UTF-8'); ?>"><?php echo htmlspecialchars((string) $totalPages, ENT_QUOTES, 'UTF-8'); ?></a>

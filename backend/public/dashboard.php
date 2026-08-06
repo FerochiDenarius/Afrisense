@@ -25,6 +25,7 @@ $counts = $response['data']['counts'] ?? [];
     <title>AfriSense Dashboard</title>
 </head>
 <body>
+    <!-- Main content area for this page. -->
     <main>
         <h1>Dashboard</h1>
         <p>Welcome, <?= Security::sanitizeString((string) ($user['fullname'] ?? $user['email'] ?? 'User')) ?>.</p>

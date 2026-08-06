@@ -34,6 +34,7 @@ class PermissionMiddleware
     {
         $user = $this->authMiddleware->handle();
 
+        // Guard this block so it only runs when the required condition is met.
         if ($this->users->hasPermission((int) $user['id'], $permission)) {
             return $user;
         }

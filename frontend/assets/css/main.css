@@ -2,12 +2,14 @@
 @import url("./components.css");
 @import url("./responsive.css");
 
+/* Styling rules for *. */
 * {
     margin: 0;
     padding: 0;
     box-sizing: border-box;
 }
 
+/* Styling rules for body. */
 body {
     min-height: 100vh;
     background: var(--af-bg);
@@ -15,6 +17,7 @@ body {
     font-family: var(--af-font);
 }
 
+/* Styling rules for a. */
 a {
     color: inherit;
 }
@@ -22,10 +25,12 @@ a {
 button,
 input,
 select,
+/* Form control styling for button, input, select, textarea. */
 textarea {
     font: inherit;
 }
 
+/* Styling rules for .sr-only. */
 .sr-only {
     position: absolute;
     width: 1px;
@@ -38,28 +43,34 @@ textarea {
     border: 0;
 }
 
+/* Styling rules for .af-page. */
 .af-page {
     min-height: 100vh;
 }
 
+/* Styling rules for .af-public-page. */
 .af-public-page {
     background: #fff;
 }
 
+/* Styling rules for .af-dashboard-page. */
 .af-dashboard-page {
     background: var(--af-bg);
 }
 
+/* Styling rules for .af-dashboard-shell. */
 .af-dashboard-shell {
     min-height: 100vh;
     margin-left: 318px;
     transition: margin-left 220ms ease;
 }
 
+/* Styling rules for .af-dashboard-content. */
 .af-dashboard-content {
     padding: 26px 28px 36px;
 }
 
+/* Button and action control styling for .af-btn. */
 .af-btn {
     min-height: 42px;
     border: 0;
@@ -75,25 +86,30 @@ textarea {
     transition: background var(--af-transition), color var(--af-transition), border-color var(--af-transition), transform var(--af-transition);
 }
 
+/* Button and action control styling for .af-btn:hover. */
 .af-btn:hover {
     transform: translateY(-1px);
 }
 
+/* Button and action control styling for .af-btn-primary. */
 .af-btn-primary {
     background: var(--af-green);
     color: #fff;
 }
 
+/* Button and action control styling for .af-btn-primary:hover. */
 .af-btn-primary:hover {
     background: var(--af-gold);
 }
 
+/* Button and action control styling for .af-btn-outline. */
 .af-btn-outline {
     border: 1px solid var(--af-line);
     background: #fff;
     color: var(--af-text);
 }
 
+/* Button and action control styling for .af-btn-danger. */
 .af-btn-danger {
     background: var(--af-error);
     color: #fff;

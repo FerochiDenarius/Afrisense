@@ -1,3 +1,4 @@
+/* Hero section styling for .af-service-hero. */
 .af-service-hero {
     min-height: 340px;
     background:
@@ -9,16 +10,19 @@
     padding: 48px 24px;
 }
 
+/* Hero section styling for .af-service-hero-inner. */
 .af-service-hero-inner {
     width: min(1180px, 100%);
     margin: 0 auto;
 }
 
+/* Hero section styling for .af-service-hero .af-breadcrumb. */
 .af-service-hero .af-breadcrumb {
     justify-content: flex-start;
     margin-bottom: 22px;
 }
 
+/* Hero section styling for .af-hero-kicker. */
 .af-hero-kicker {
     color: var(--af-gold-2);
     font-size: 13px;
@@ -28,6 +32,7 @@
     text-transform: uppercase;
 }
 
+/* Hero section styling for .af-service-hero h1. */
 .af-service-hero h1 {
     font-family: Georgia, "Times New Roman", serif;
     font-size: clamp(38px, 5vw, 64px);
@@ -36,16 +41,19 @@
     max-width: 760px;
 }
 
+/* Hero section styling for .af-service-hero h1 span. */
 .af-service-hero h1 span {
     color: var(--af-gold-2);
 }
 
+/* Hero section styling for .af-service-hero p:not(.af-hero-kicker). */
 .af-service-hero p:not(.af-hero-kicker) {
     font-size: 17px;
     line-height: 1.65;
     max-width: 560px;
 }
 
+/* Hero section styling for .af-hero-actions. */
 .af-hero-actions {
     display: flex;
     flex-wrap: wrap;
@@ -55,6 +63,7 @@
 
 .af-hero-primary,
 .af-hero-secondary,
+/* Hero section styling for .af-hero-primary, .af-hero-secondary, .af-outline-link. */
 .af-outline-link {
     min-height: 48px;
     border-radius: 6px;
@@ -68,11 +77,13 @@
     transition: transform var(--af-transition), background var(--af-transition), border-color var(--af-transition);
 }
 
+/* Hero section styling for .af-hero-primary. */
 .af-hero-primary {
     background: linear-gradient(135deg, var(--af-gold), var(--af-gold-2));
     color: #fff;
 }
 
+/* Hero section styling for .af-hero-secondary. */
 .af-hero-secondary {
     border: 1px solid rgba(255, 255, 255, 0.55);
     color: #fff;
@@ -81,11 +92,13 @@
 
 .af-hero-primary:hover,
 .af-hero-secondary:hover,
+/* Hero section styling for .af-hero-primary:hover, .af-hero-secondary:hover, .af-outline-link:hover. */
 .af-outline-link:hover {
     transform: translateY(-1px);
 }
 
 .af-booking-page,
+/* Styling rules for .af-booking-page, .af-contact-page. */
 .af-contact-page {
     background: #fafafa;
     padding: 34px 24px 42px;
@@ -93,6 +106,7 @@
 
 .af-booking-grid,
 .af-contact-grid,
+/* Styling rules for .af-booking-grid, .af-contact-grid, .af-contact-bottom-grid. */
 .af-contact-bottom-grid {
     width: min(1240px, 100%);
     margin: 0 auto;
@@ -102,15 +116,18 @@
 }
 
 .af-booking-grid,
+/* Styling rules for .af-booking-grid, .af-contact-grid. */
 .af-contact-grid {
     grid-template-columns: minmax(0, 1fr) 390px;
 }
 
+/* Styling rules for .af-contact-bottom-grid. */
 .af-contact-bottom-grid {
     grid-template-columns: minmax(0, 1fr) minmax(360px, 0.95fr);
     margin-top: 28px;
 }
 
+/* Card and panel styling for .af-service-card. */
 .af-service-card {
     background: #fff;
     border: 1px solid #e4e7ec;
@@ -123,15 +140,18 @@
 .af-contact-info-card,
 .af-benefits-card,
 .af-hours-card,
+/* Form control styling for .af-booking-form-card, .af-contact-form-card, .af-contact-info-card, .af-benefits-card, .af-hours-card, .af-faq-card. */
 .af-faq-card {
     padding: 30px 28px;
 }
 
+/* Form control styling for .af-service-form. */
 .af-service-form {
     display: grid;
     gap: 22px;
 }
 
+/* Styling rules for .af-section-heading. */
 .af-section-heading {
     display: flex;
     align-items: flex-start;
@@ -139,6 +159,7 @@
     margin-bottom: 24px;
 }
 
+/* Styling rules for .af-section-heading > span. */
 .af-section-heading > span {
     width: 36px;
     height: 36px;
@@ -151,6 +172,7 @@
     font-size: 21px;
 }
 
+/* Styling rules for .af-section-heading h2. */
 .af-section-heading h2 {
     color: #111827;
     font-size: 23px;
@@ -162,24 +184,28 @@
 .af-field-hint,
 .af-field-error,
 .af-form-status,
+/* Form control styling for .af-section-heading p, .af-field-hint, .af-field-error, .af-form-status, .af-privacy-line. */
 .af-privacy-line {
     color: #667085;
     font-size: 13px;
     line-height: 1.55;
 }
 
+/* Styling rules for .af-field-grid. */
 .af-field-grid {
     display: grid;
     grid-template-columns: repeat(2, minmax(0, 1fr));
     gap: 22px 24px;
 }
 
+/* Form control styling for .af-form-group. */
 .af-form-group {
     min-width: 0;
     display: grid;
     gap: 8px;
 }
 
+/* Form control styling for .af-form-group label. */
 .af-form-group label {
     color: #111827;
     display: flex;
@@ -189,15 +215,18 @@
     font-weight: 850;
 }
 
+/* Form control styling for .af-form-group label strong. */
 .af-form-group label strong {
     color: #dc2626;
 }
 
+/* Styling rules for .af-field-error. */
 .af-field-error {
     color: #b42318;
     display: none;
 }
 
+/* Form control styling for .af-form-group.is-invalid .af-field-error. */
 .af-form-group.is-invalid .af-field-error {
     display: block;
 }
@@ -205,6 +234,7 @@
 .af-form-group.is-invalid .af-input-icon,
 .af-form-group.is-invalid .af-select-wrap,
 .af-form-group.is-invalid .af-phone-field,
+/* Form control styling for .af-form-group.is-invalid .af-input-icon, .af-form-group.is-invalid .af-select-wrap, .af-form-group.is-invalid .af-phone-field, .af-form-group.is-invalid .af-textarea-wrap. */
 .af-form-group.is-invalid .af-textarea-wrap {
     border-color: #dc2626;
     box-shadow: 0 0 0 3px rgba(220, 38, 38, 0.1);
@@ -213,6 +243,7 @@
 .af-service-form .af-input-icon,
 .af-service-form .af-select-wrap,
 .af-phone-field,
+/* Form control styling for .af-service-form .af-input-icon, .af-service-form .af-select-wrap, .af-phone-field, .af-service-form .af-textarea-wrap. */
 .af-service-form .af-textarea-wrap {
     border: 1px solid #d9dee6;
     border-radius: 6px;
@@ -223,6 +254,7 @@
 .af-service-form .af-input-icon:focus-within,
 .af-service-form .af-select-wrap:focus-within,
 .af-phone-field:focus-within,
+/* Form control styling for .af-service-form .af-input-icon:focus-within, .af-service-form .af-select-wrap:focus-within, .af-phone-field:focus-within, .af-service-form .af-textarea-wrap:focus-within. */
 .af-service-form .af-textarea-wrap:focus-within {
     border-color: var(--af-gold-2);
     box-shadow: 0 0 0 3px rgba(204, 143, 37, 0.12);
@@ -230,16 +262,19 @@
 
 .af-service-form .af-input-icon,
 .af-service-form .af-select-wrap,
+/* Form control styling for .af-service-form .af-input-icon, .af-service-form .af-select-wrap, .af-phone-field. */
 .af-phone-field {
     height: 54px;
     display: grid;
     align-items: center;
 }
 
+/* Form control styling for .af-service-form .af-input-icon. */
 .af-service-form .af-input-icon {
     grid-template-columns: 46px minmax(0, 1fr);
 }
 
+/* Form control styling for .af-service-form .af-input-icon > i. */
 .af-service-form .af-input-icon > i {
     color: #98a2b3;
     display: grid;
@@ -249,6 +284,7 @@
 
 .af-service-form input,
 .af-service-form select,
+/* Form control styling for .af-service-form input, .af-service-form select, .af-service-form textarea. */
 .af-service-form textarea {
     width: 100%;
     min-width: 0;
@@ -260,29 +296,35 @@
 }
 
 .af-service-form input,
+/* Form control styling for .af-service-form input, .af-service-form select. */
 .af-service-form select {
     height: 100%;
 }
 
+/* Form control styling for .af-service-form .af-input-icon input. */
 .af-service-form .af-input-icon input {
     padding: 0 14px 0 0;
 }
 
 .af-service-form input::placeholder,
+/* Form control styling for .af-service-form input::placeholder, .af-service-form textarea::placeholder. */
 .af-service-form textarea::placeholder {
     color: #8a94a6;
 }
 
+/* Form control styling for .af-service-form .af-select-wrap. */
 .af-service-form .af-select-wrap {
     position: relative;
 }
 
+/* Form control styling for .af-service-form .af-select-wrap select. */
 .af-service-form .af-select-wrap select {
     appearance: none;
     cursor: pointer;
     padding: 0 46px 0 14px;
 }
 
+/* Form control styling for .af-service-form .af-select-wrap > i. */
 .af-service-form .af-select-wrap > i {
     color: #667085;
     pointer-events: none;
@@ -290,10 +332,12 @@
     right: 16px;
 }
 
+/* Styling rules for .af-phone-field. */
 .af-phone-field {
     grid-template-columns: 112px minmax(0, 1fr);
 }
 
+/* Styling rules for .af-country-code. */
 .af-country-code {
     height: 100%;
     border-right: 1px solid #d9dee6;
@@ -306,6 +350,7 @@
     font-weight: 800;
 }
 
+/* Styling rules for .af-gh-flag. */
 .af-gh-flag {
     width: 22px;
     height: 14px;
@@ -313,21 +358,25 @@
     background: linear-gradient(#ce1126 0 33.33%, #fcd116 33.33% 66.66%, #006b3f 66.66%);
 }
 
+/* Form control styling for .af-phone-field input. */
 .af-phone-field input {
     padding: 0 14px;
 }
 
+/* Form control styling for .af-service-form .af-textarea-wrap. */
 .af-service-form .af-textarea-wrap {
     position: relative;
     display: block;
 }
 
+/* Form control styling for .af-service-form .af-textarea-wrap textarea. */
 .af-service-form .af-textarea-wrap textarea {
     min-height: 128px;
     padding: 16px 16px 34px;
     resize: vertical;
 }
 
+/* Styling rules for .af-character-count. */
 .af-character-count {
     position: absolute;
     right: 14px;
@@ -336,10 +385,12 @@
     font-size: 12px;
 }
 
+/* Styling rules for .af-full-field. */
 .af-full-field {
     grid-column: 1 / -1;
 }
 
+/* Styling rules for .af-service-types. */
 .af-service-types {
     border: 0;
     display: grid;
@@ -347,6 +398,7 @@
     gap: 14px;
 }
 
+/* Styling rules for .af-service-types legend. */
 .af-service-types legend {
     grid-column: 1 / -1;
     color: #111827;
@@ -355,6 +407,7 @@
     margin-bottom: 2px;
 }
 
+/* Styling rules for .af-service-types label. */
 .af-service-types label {
     min-height: 132px;
     border: 1px solid #d9dee6;
@@ -369,38 +422,45 @@
     transition: border-color var(--af-transition), background var(--af-transition), color var(--af-transition);
 }
 
+/* Form control styling for .af-service-types label input. */
 .af-service-types label input {
     position: absolute;
     opacity: 0;
     pointer-events: none;
 }
 
+/* Styling rules for .af-service-types label > i. */
 .af-service-types label > i {
     color: #111827;
     font-size: 29px;
 }
 
+/* Styling rules for .af-service-types label strong. */
 .af-service-types label strong {
     color: #111827;
     font-size: 14px;
 }
 
+/* Styling rules for .af-service-types label small. */
 .af-service-types label small {
     color: #5b6471;
     font-size: 12px;
     line-height: 1.45;
 }
 
+/* Interactive state styling for .af-service-types label.is-active. */
 .af-service-types label.is-active {
     border-color: var(--af-gold-2);
     background: #fffaf3;
 }
 
 .af-service-types label.is-active > i,
+/* Interactive state styling for .af-service-types label.is-active > i, .af-service-types label.is-active strong. */
 .af-service-types label.is-active strong {
     color: var(--af-gold);
 }
 
+/* Styling rules for .af-service-types .af-type-check. */
 .af-service-types .af-type-check {
     width: 22px;
     height: 22px;
@@ -414,10 +474,12 @@
     right: -1px;
 }
 
+/* Interactive state styling for .af-service-types label.is-active .af-type-check. */
 .af-service-types label.is-active .af-type-check {
     display: grid;
 }
 
+/* Styling rules for .af-booking-summary. */
 .af-booking-summary {
     border: 1px solid #f0ddbf;
     border-radius: 8px;
@@ -428,10 +490,12 @@
 }
 
 .af-booking-summary h3,
+/* Footer styling for .af-booking-summary h3, .af-booking-summary footer. */
 .af-booking-summary footer {
     grid-column: 1 / -1;
 }
 
+/* Styling rules for .af-booking-summary h3. */
 .af-booking-summary h3 {
     color: var(--af-gold);
     display: flex;
@@ -440,12 +504,14 @@
     font-size: 16px;
 }
 
+/* Styling rules for .af-summary-grid. */
 .af-summary-grid {
     display: grid;
     grid-template-columns: repeat(3, minmax(0, 1fr));
     gap: 16px;
 }
 
+/* Styling rules for .af-summary-grid > div. */
 .af-summary-grid > div {
     min-width: 0;
     border: 1px solid rgba(234, 217, 194, 0.78);
@@ -454,12 +520,14 @@
     padding: 13px 14px;
 }
 
+/* Styling rules for .af-booking-summary span. */
 .af-booking-summary span {
     color: #6b7280;
     display: block;
     font-size: 12px;
 }
 
+/* Styling rules for .af-booking-summary strong. */
 .af-booking-summary strong {
     display: block;
     margin-top: 7px;
@@ -468,6 +536,7 @@
     overflow-wrap: anywhere;
 }
 
+/* Footer styling for .af-booking-summary footer. */
 .af-booking-summary footer {
     border-top: 1px solid #ead9c2;
     display: flex;
@@ -476,11 +545,13 @@
     padding-top: 16px;
 }
 
+/* Footer styling for .af-booking-summary footer strong. */
 .af-booking-summary footer strong {
     color: var(--af-gold);
     font-size: 26px;
 }
 
+/* Button and action control styling for .af-send-btn. */
 .af-send-btn {
     width: 100%;
     min-height: 54px;
@@ -497,31 +568,38 @@
     transition: transform var(--af-transition), box-shadow var(--af-transition), background var(--af-transition);
 }
 
+/* Button and action control styling for .af-send-btn:hover. */
 .af-send-btn:hover {
     box-shadow: 0 12px 24px rgba(13, 36, 30, 0.18);
     transform: translateY(-1px);
 }
 
+/* Button and action control styling for .af-send-btn i. */
 .af-send-btn i {
     font-size: 17px;
 }
 
+/* Form control styling for .af-form-status. */
 .af-form-status {
     text-align: center;
 }
 
+/* Form control styling for .af-form-status:empty. */
 .af-form-status:empty {
     display: none;
 }
 
+/* Form control styling for .af-form-status.is-error. */
 .af-form-status.is-error {
     color: #b42318;
 }
 
+/* Form control styling for .af-form-status.is-success. */
 .af-form-status.is-success {
     color: var(--af-success);
 }
 
+/* Styling rules for .af-privacy-line. */
 .af-privacy-line {
     display: flex;
     justify-content: center;
@@ -530,6 +608,7 @@
     text-align: center;
 }
 
+/* Styling rules for .af-booking-side. */
 .af-booking-side {
     display: grid;
     gap: 22px;
@@ -537,6 +616,7 @@
 
 .af-contact-info-card h2,
 .af-benefits-card h2,
+/* Card and panel styling for .af-contact-info-card h2, .af-benefits-card h2, .af-hours-card h2. */
 .af-hours-card h2 {
     color: var(--af-green);
     font-family: Georgia, "Times New Roman", serif;
@@ -545,11 +625,13 @@
     margin-bottom: 24px;
 }
 
+/* Styling rules for .af-side-list. */
 .af-side-list {
     display: grid;
     gap: 24px;
 }
 
+/* Styling rules for .af-side-list article. */
 .af-side-list article {
     display: grid;
     grid-template-columns: 54px 1fr;
@@ -557,6 +639,7 @@
 }
 
 .af-side-list article > span,
+/* Styling rules for .af-side-list article > span, .af-feature-strip article > span. */
 .af-feature-strip article > span {
     width: 54px;
     height: 54px;
@@ -569,6 +652,7 @@
 }
 
 .af-side-list h3,
+/* Styling rules for .af-side-list h3, .af-feature-strip h3. */
 .af-feature-strip h3 {
     color: #111827;
     font-size: 15px;
@@ -578,35 +662,41 @@
 .af-side-list p,
 .af-feature-strip p,
 .af-hours-card dd,
+/* Card and panel styling for .af-side-list p, .af-feature-strip p, .af-hours-card dd, .af-help-cta p. */
 .af-help-cta p {
     color: #4b5563;
     font-size: 14px;
     line-height: 1.6;
 }
 
+/* Card and panel styling for .af-hours-card dl. */
 .af-hours-card dl {
     display: grid;
     gap: 18px;
 }
 
+/* Card and panel styling for .af-hours-card dl div. */
 .af-hours-card dl div {
     display: flex;
     justify-content: space-between;
     gap: 16px;
 }
 
+/* Card and panel styling for .af-hours-card dt. */
 .af-hours-card dt {
     color: #111827;
     font-size: 14px;
     font-weight: 850;
 }
 
+/* Card and panel styling for .af-hours-card dd. */
 .af-hours-card dd {
     margin: 0;
     text-align: right;
 }
 
 .af-event-card,
+/* Card and panel styling for .af-event-card, .af-help-cta. */
 .af-help-cta {
     border-radius: 10px;
     color: #fff;
@@ -619,6 +709,7 @@
 }
 
 .af-event-card h2,
+/* Card and panel styling for .af-event-card h2, .af-help-cta h2. */
 .af-help-cta h2 {
     color: var(--af-gold-2);
     font-family: Georgia, "Times New Roman", serif;
@@ -627,6 +718,7 @@
 }
 
 .af-event-card p,
+/* Card and panel styling for .af-event-card p, .af-help-cta p. */
 .af-help-cta p {
     color: rgba(255, 255, 255, 0.9);
     margin-bottom: 24px;
@@ -634,6 +726,7 @@
 }
 
 .af-event-card a,
+/* Card and panel styling for .af-event-card a, .af-help-cta a. */
 .af-help-cta a {
     min-height: 46px;
     border-radius: 6px;
@@ -648,6 +741,7 @@
     text-decoration: none;
 }
 
+/* Styling rules for .af-feature-strip. */
 .af-feature-strip {
     width: min(1240px, 100%);
     margin: 28px auto 0;
@@ -661,6 +755,7 @@
     box-shadow: 0 12px 32px rgba(15, 23, 42, 0.05);
 }
 
+/* Styling rules for .af-feature-strip article. */
 .af-feature-strip article {
     display: grid;
     grid-template-columns: 54px 1fr;
@@ -668,6 +763,7 @@
     align-items: center;
 }
 
+/* Card and panel styling for .af-location-card. */
 .af-location-card {
     width: min(1240px, 100%);
     margin: 28px auto 0;
@@ -677,6 +773,7 @@
     padding: 30px 28px;
 }
 
+/* Styling rules for .af-check-list. */
 .af-check-list {
     display: grid;
     gap: 14px;
@@ -684,6 +781,7 @@
     margin-top: 22px;
 }
 
+/* Styling rules for .af-check-list li. */
 .af-check-list li {
     color: #4b5563;
     display: flex;
@@ -692,10 +790,12 @@
     font-size: 14px;
 }
 
+/* Styling rules for .af-check-list i. */
 .af-check-list i {
     color: var(--af-gold);
 }
 
+/* Styling rules for .af-map-preview. */
 .af-map-preview {
     min-height: 260px;
     border-radius: 10px;
@@ -708,10 +808,12 @@
         linear-gradient(#ebe4dc 0 0);
 }
 
+/* Styling rules for .af-map-preview:has(iframe). */
 .af-map-preview:has(iframe) {
     background: #e5e7eb;
 }
 
+/* Styling rules for .af-map-preview iframe. */
 .af-map-preview iframe {
     position: relative;
     z-index: 1;
@@ -722,10 +824,12 @@
     display: block;
 }
 
+/* Styling rules for .af-map-preview:has(iframe)::before. */
 .af-map-preview:has(iframe)::before {
     content: none;
 }
 
+/* Styling rules for .af-map-preview::before. */
 .af-map-preview::before {
     content: "";
     position: absolute;
@@ -737,6 +841,7 @@
     transform: rotate(-8deg);
 }
 
+/* Styling rules for .af-map-pin. */
 .af-map-pin {
     position: absolute;
     top: 92px;
@@ -752,24 +857,28 @@
     box-shadow: 0 14px 28px rgba(0, 0, 0, 0.2);
 }
 
+/* Styling rules for .af-map-pin i. */
 .af-map-pin i {
     grid-row: span 2;
     color: var(--af-gold-2);
     font-size: 30px;
 }
 
+/* Styling rules for .af-map-pin span. */
 .af-map-pin span {
     color: rgba(255, 255, 255, 0.84);
     font-size: 12px;
     line-height: 1.4;
 }
 
+/* Styling rules for .af-help-socials. */
 .af-help-socials {
     display: flex;
     gap: 12px;
     margin-top: 8px;
 }
 
+/* Styling rules for .af-help-socials a. */
 .af-help-socials a {
     width: 30px;
     height: 30px;
@@ -781,16 +890,19 @@
     text-decoration: none;
 }
 
+/* Styling rules for .af-faq-list. */
 .af-faq-list {
     border-top: 1px solid #e4e7ec;
     margin: 22px 0;
 }
 
+/* Styling rules for .af-faq-list details. */
 .af-faq-list details {
     border-bottom: 1px solid #e4e7ec;
     padding: 15px 0;
 }
 
+/* Styling rules for .af-faq-list summary. */
 .af-faq-list summary {
     color: #111827;
     cursor: pointer;
@@ -798,6 +910,7 @@
     font-weight: 800;
 }
 
+/* Styling rules for .af-faq-list p. */
 .af-faq-list p {
     color: #4b5563;
     font-size: 14px;
@@ -805,6 +918,7 @@
     margin-top: 10px;
 }
 
+/* Styling rules for .af-outline-link. */
 .af-outline-link {
     width: 100%;
     border: 1px solid var(--af-gold-2);
@@ -812,37 +926,45 @@
     background: #fff;
 }
 
+/* Styling rules for .af-help-cta. */
 .af-help-cta {
     min-height: 100%;
 }
 
+/* Styling rules for .af-help-cta div. */
 .af-help-cta div {
     display: flex;
     flex-wrap: wrap;
     gap: 12px;
 }
 
+/* Styling rules for .af-help-cta div a + a. */
 .af-help-cta div a + a {
     border: 1px solid rgba(255, 255, 255, 0.55);
     background: rgba(0, 0, 0, 0.2);
 }
 
+/* Responsive styling rules for @media (max-width: 1080px). */
 @media (max-width: 1080px) {
     .af-booking-grid,
     .af-contact-grid,
     .af-contact-bottom-grid,
+    /* Card and panel styling for .af-booking-grid, .af-contact-grid, .af-contact-bottom-grid, .af-location-card. */
     .af-location-card {
         grid-template-columns: 1fr;
     }
 
+    /* Styling rules for .af-feature-strip. */
     .af-feature-strip {
         grid-template-columns: repeat(2, minmax(0, 1fr));
     }
 }
 
+/* Responsive styling rules for @media (max-width: 760px). */
 @media (max-width: 760px) {
     .af-booking-page,
     .af-contact-page,
+    /* Hero section styling for .af-booking-page, .af-contact-page, .af-service-hero. */
     .af-service-hero {
         padding-left: 16px;
         padding-right: 16px;
@@ -851,21 +973,25 @@
     .af-service-types,
     .af-field-grid,
     .af-summary-grid,
+    /* Styling rules for .af-service-types, .af-field-grid, .af-summary-grid, .af-feature-strip. */
     .af-feature-strip {
         grid-template-columns: 1fr;
     }
 
+    /* Styling rules for .af-phone-field. */
     .af-phone-field {
         grid-template-columns: 1fr;
         height: auto;
     }
 
+    /* Styling rules for .af-country-code. */
     .af-country-code {
         height: 44px;
         border-right: 0;
         border-bottom: 1px solid #d9dee6;
     }
 
+    /* Form control styling for .af-phone-field input. */
     .af-phone-field input {
         height: 50px;
     }
@@ -876,29 +1002,35 @@
     .af-benefits-card,
     .af-hours-card,
     .af-faq-card,
+    /* Form control styling for .af-booking-form-card, .af-contact-form-card, .af-contact-info-card, .af-benefits-card, .af-hours-card, .af-faq-card, .af-location-card. */
     .af-location-card {
         padding: 24px 18px;
     }
 
     .af-hours-card dl div,
+    /* Card and panel styling for .af-hours-card dl div, .af-booking-summary footer. */
     .af-booking-summary footer {
         display: grid;
         gap: 6px;
     }
 
+    /* Card and panel styling for .af-hours-card dd. */
     .af-hours-card dd {
         text-align: left;
     }
 
+    /* Styling rules for .af-map-pin. */
     .af-map-pin {
         left: 18px;
         right: 18px;
     }
 
+    /* Styling rules for .af-section-heading. */
     .af-section-heading {
         gap: 12px;
     }
 
+    /* Styling rules for .af-section-heading h2. */
     .af-section-heading h2 {
         font-size: 20px;
     }
@@ -912,27 +1044,32 @@
     padding-bottom: 38px;
 }
 
+/* Hero section styling for .af-service-hero .af-breadcrumb. */
 .af-service-hero .af-breadcrumb {
     margin-bottom: 16px;
 }
 
+/* Hero section styling for .af-hero-kicker. */
 .af-hero-kicker {
     font-size: 11px;
     margin-bottom: 8px;
 }
 
+/* Hero section styling for .af-service-hero h1. */
 .af-service-hero h1 {
     font-size: clamp(32px, 4vw, 46px);
     margin-bottom: 12px;
     max-width: 650px;
 }
 
+/* Hero section styling for .af-service-hero p:not(.af-hero-kicker). */
 .af-service-hero p:not(.af-hero-kicker) {
     font-size: 13px;
     line-height: 1.55;
     max-width: 520px;
 }
 
+/* Hero section styling for .af-hero-actions. */
 .af-hero-actions {
     gap: 10px;
     margin-top: 18px;
@@ -940,6 +1077,7 @@
 
 .af-hero-primary,
 .af-hero-secondary,
+/* Hero section styling for .af-hero-primary, .af-hero-secondary, .af-outline-link. */
 .af-outline-link {
     min-height: 36px;
     gap: 7px;
@@ -948,18 +1086,21 @@
 }
 
 .af-booking-page,
+/* Styling rules for .af-booking-page, .af-contact-page. */
 .af-contact-page {
     padding-top: 26px;
     padding-bottom: 34px;
 }
 
 .af-booking-grid,
+/* Styling rules for .af-booking-grid, .af-contact-grid. */
 .af-contact-grid {
     grid-template-columns: minmax(0, 1fr) 340px;
 }
 
 .af-booking-grid,
 .af-contact-grid,
+/* Styling rules for .af-booking-grid, .af-contact-grid, .af-contact-bottom-grid. */
 .af-contact-bottom-grid {
     gap: 20px;
 }
@@ -969,26 +1110,31 @@
 .af-contact-info-card,
 .af-benefits-card,
 .af-hours-card,
+/* Form control styling for .af-booking-form-card, .af-contact-form-card, .af-contact-info-card, .af-benefits-card, .af-hours-card, .af-faq-card. */
 .af-faq-card {
     padding: 22px 20px;
 }
 
 .af-service-form,
+/* Form control styling for .af-service-form, .af-side-list. */
 .af-side-list {
     gap: 16px;
 }
 
+/* Styling rules for .af-section-heading. */
 .af-section-heading {
     gap: 10px;
     margin-bottom: 18px;
 }
 
+/* Styling rules for .af-section-heading > span. */
 .af-section-heading > span {
     width: 30px;
     height: 30px;
     font-size: 17px;
 }
 
+/* Styling rules for .af-section-heading h2. */
 .af-section-heading h2 {
     font-size: 19px;
     margin-bottom: 4px;
@@ -1002,29 +1148,35 @@
 .af-side-list p,
 .af-feature-strip p,
 .af-hours-card dd,
+/* Form control styling for .af-section-heading p, .af-field-hint, .af-field-error, .af-form-status, .af-privacy-line, .af-side-list p, .af-feature-strip p, .af-hours-card dd, .af-help-cta p. */
 .af-help-cta p {
     font-size: 11.5px;
     line-height: 1.5;
 }
 
+/* Styling rules for .af-field-grid. */
 .af-field-grid {
     gap: 16px;
 }
 
+/* Form control styling for .af-form-group. */
 .af-form-group {
     gap: 6px;
 }
 
+/* Form control styling for .af-form-group label. */
 .af-form-group label {
     font-size: 11.5px;
 }
 
 .af-service-form .af-input-icon,
 .af-service-form .af-select-wrap,
+/* Form control styling for .af-service-form .af-input-icon, .af-service-form .af-select-wrap, .af-phone-field. */
 .af-phone-field {
     height: 42px;
 }
 
+/* Form control styling for .af-service-form .af-input-icon. */
 .af-service-form .af-input-icon {
     grid-template-columns: 36px minmax(0, 1fr);
 }
@@ -1032,74 +1184,91 @@
 .af-service-form input,
 .af-service-form select,
 .af-service-form textarea,
+/* Form control styling for .af-service-form input, .af-service-form select, .af-service-form textarea, .af-country-code. */
 .af-country-code {
     font-size: 12px;
 }
 
+/* Styling rules for .af-phone-field. */
 .af-phone-field {
     grid-template-columns: 92px minmax(0, 1fr);
 }
 
+/* Styling rules for .af-service-types. */
 .af-service-types {
     gap: 10px;
 }
 
+/* Styling rules for .af-service-types legend. */
 .af-service-types legend {
     font-size: 12px;
 }
 
+/* Styling rules for .af-service-types label. */
 .af-service-types label {
     min-height: 100px;
     gap: 6px;
     padding: 12px 8px;
 }
 
+/* Styling rules for .af-service-types label > i. */
 .af-service-types label > i {
     font-size: 22px;
 }
 
+/* Styling rules for .af-service-types label strong. */
 .af-service-types label strong {
     font-size: 12px;
 }
 
+/* Styling rules for .af-service-types label small. */
 .af-service-types label small {
     font-size: 10.5px;
 }
 
+/* Form control styling for .af-service-form .af-textarea-wrap textarea. */
 .af-service-form .af-textarea-wrap textarea {
     min-height: 104px;
     padding: 12px 12px 30px;
 }
 
+/* Styling rules for .af-booking-summary. */
 .af-booking-summary {
     gap: 12px;
     padding: 16px;
 }
 
+/* Styling rules for .af-booking-summary h3. */
 .af-booking-summary h3 {
     font-size: 14px;
 }
 
+/* Styling rules for .af-summary-grid. */
 .af-summary-grid {
     gap: 10px;
 }
 
+/* Styling rules for .af-summary-grid > div. */
 .af-summary-grid > div {
     padding: 10px;
 }
 
+/* Styling rules for .af-booking-summary span. */
 .af-booking-summary span {
     font-size: 10.5px;
 }
 
+/* Styling rules for .af-booking-summary strong. */
 .af-booking-summary strong {
     font-size: 12px;
 }
 
+/* Footer styling for .af-booking-summary footer strong. */
 .af-booking-summary footer strong {
     font-size: 21px;
 }
 
+/* Button and action control styling for .af-send-btn. */
 .af-send-btn {
     min-height: 42px;
     font-size: 12px;
@@ -1107,17 +1276,20 @@
 
 .af-contact-info-card h2,
 .af-benefits-card h2,
+/* Card and panel styling for .af-contact-info-card h2, .af-benefits-card h2, .af-hours-card h2. */
 .af-hours-card h2 {
     font-size: 21px;
     margin-bottom: 18px;
 }
 
+/* Styling rules for .af-side-list article. */
 .af-side-list article {
     grid-template-columns: 42px 1fr;
     gap: 12px;
 }
 
 .af-side-list article > span,
+/* Styling rules for .af-side-list article > span, .af-feature-strip article > span. */
 .af-feature-strip article > span {
     width: 42px;
     height: 42px;
@@ -1125,6 +1297,7 @@
 }
 
 .af-side-list h3,
+/* Styling rules for .af-side-list h3, .af-feature-strip h3. */
 .af-feature-strip h3 {
     font-size: 13px;
 }

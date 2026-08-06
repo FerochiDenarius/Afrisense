@@ -1,3 +1,4 @@
+/* Hero section styling for .af-enquiry-hero. */
 .af-enquiry-hero {
     min-height: 300px;
     background:
@@ -10,10 +11,12 @@
     text-align: center;
 }
 
+/* Hero section styling for .af-enquiry-hero-inner. */
 .af-enquiry-hero-inner {
     width: min(760px, 100%);
 }
 
+/* Styling rules for .af-breadcrumb. */
 .af-breadcrumb {
     display: inline-flex;
     align-items: center;
@@ -24,27 +27,32 @@
     margin-bottom: 20px;
 }
 
+/* Styling rules for .af-breadcrumb a. */
 .af-breadcrumb a {
     color: #fff;
     text-decoration: none;
 }
 
 .af-breadcrumb span,
+/* Styling rules for .af-breadcrumb span, .af-breadcrumb i:last-of-type + span. */
 .af-breadcrumb i:last-of-type + span {
     color: var(--af-gold-2);
     font-weight: 800;
 }
 
+/* Hero section styling for .af-enquiry-hero h1. */
 .af-enquiry-hero h1 {
     font-family: Georgia, "Times New Roman", serif;
     font-size: clamp(40px, 5vw, 58px);
     line-height: 1.05;
 }
 
+/* Hero section styling for .af-enquiry-hero h1 span. */
 .af-enquiry-hero h1 span {
     color: var(--af-gold-2);
 }
 
+/* Styling rules for .af-title-divider. */
 .af-title-divider {
     display: inline-grid;
     grid-template-columns: 72px 34px 72px;
@@ -54,25 +62,30 @@
     margin: 18px 0;
 }
 
+/* Styling rules for .af-title-divider span. */
 .af-title-divider span {
     height: 2px;
     background: var(--af-gold-2);
 }
 
+/* Styling rules for .af-title-divider i. */
 .af-title-divider i {
     font-size: 24px;
 }
 
+/* Hero section styling for .af-enquiry-hero p. */
 .af-enquiry-hero p {
     font-size: 17px;
     line-height: 1.65;
 }
 
+/* Styling rules for .af-enquiry-section. */
 .af-enquiry-section {
     background: #fafafa;
     padding: 34px 24px 32px;
 }
 
+/* Styling rules for .af-enquiry-grid. */
 .af-enquiry-grid {
     width: min(1240px, 100%);
     margin: 0 auto;
@@ -82,6 +95,7 @@
     align-items: start;
 }
 
+/* Card and panel styling for .af-enquiry-card. */
 .af-enquiry-card {
     background: #fff;
     border: 1px solid #e4e7ec;
@@ -89,10 +103,12 @@
     box-shadow: 0 12px 32px rgba(15, 23, 42, 0.06);
 }
 
+/* Form control styling for .af-form-card. */
 .af-form-card {
     padding: 30px 28px;
 }
 
+/* Styling rules for .af-section-heading. */
 .af-section-heading {
     display: flex;
     align-items: flex-start;
@@ -100,6 +116,7 @@
     margin-bottom: 30px;
 }
 
+/* Styling rules for .af-section-heading > span. */
 .af-section-heading > span {
     width: 38px;
     height: 38px;
@@ -111,6 +128,7 @@
 }
 
 .af-section-heading h2,
+/* Card and panel styling for .af-section-heading h2, .af-help-card h2. */
 .af-help-card h2 {
     color: var(--af-green);
     font-family: Georgia, "Times New Roman", serif;
@@ -122,17 +140,20 @@
 .af-help-intro,
 .af-help-list p,
 .af-response-card p,
+/* Card and panel styling for .af-section-heading p, .af-help-intro, .af-help-list p, .af-response-card p, .af-privacy-line. */
 .af-privacy-line {
     color: #4b5563;
     font-size: 14px;
     line-height: 1.65;
 }
 
+/* Form control styling for .af-enquiry-form. */
 .af-enquiry-form {
     display: grid;
     gap: 24px;
 }
 
+/* Form control styling for .af-form-status. */
 .af-form-status {
     border-radius: 7px;
     display: block;
@@ -143,44 +164,52 @@
     padding: 12px 14px;
 }
 
+/* Form control styling for .af-form-status:empty. */
 .af-form-status:empty {
     display: none;
 }
 
+/* Form control styling for .af-form-status.is-error. */
 .af-form-status.is-error {
     background: #fff1f1;
     color: #b42318;
 }
 
+/* Form control styling for .af-form-status.is-success. */
 .af-form-status.is-success {
     background: #eef8f0;
     color: #137333;
 }
 
+/* Styling rules for .af-field-grid. */
 .af-field-grid {
     display: grid;
     grid-template-columns: repeat(2, minmax(0, 1fr));
     gap: 22px 32px;
 }
 
+/* Form control styling for .af-form-group. */
 .af-form-group {
     display: grid;
     gap: 10px;
 }
 
 .af-form-group label,
+/* Form control styling for .af-form-group label, .af-enquiry-types legend. */
 .af-enquiry-types legend {
     color: #111827;
     font-size: 14px;
     font-weight: 800;
 }
 
+/* Form control styling for .af-form-group strong. */
 .af-form-group strong {
     color: #d92d20;
 }
 
 .af-input-icon,
 .af-select-wrap,
+/* Form control styling for .af-input-icon, .af-select-wrap, .af-textarea-wrap. */
 .af-textarea-wrap {
     border: 1px solid #d9dee6;
     border-radius: 6px;
@@ -189,23 +218,27 @@
 }
 
 .af-input-icon,
+/* Form control styling for .af-input-icon, .af-select-wrap. */
 .af-select-wrap {
     height: 54px;
     display: grid;
     align-items: center;
 }
 
+/* Form control styling for .af-input-icon. */
 .af-input-icon {
     grid-template-columns: 42px 1fr;
 }
 
 .af-input-icon:focus-within,
 .af-select-wrap:focus-within,
+/* Form control styling for .af-input-icon:focus-within, .af-select-wrap:focus-within, .af-textarea-wrap:focus-within. */
 .af-textarea-wrap:focus-within {
     border-color: var(--af-gold-2);
     box-shadow: 0 0 0 3px rgba(204, 143, 37, 0.12);
 }
 
+/* Form control styling for .af-input-icon i. */
 .af-input-icon i {
     color: #747b86;
     justify-self: center;
@@ -213,6 +246,7 @@
 
 .af-input-icon input,
 .af-select-wrap select,
+/* Form control styling for .af-input-icon input, .af-select-wrap select, .af-textarea-wrap textarea. */
 .af-textarea-wrap textarea {
     width: 100%;
     min-width: 0;
@@ -222,21 +256,25 @@
     font-size: 14px;
 }
 
+/* Form control styling for .af-select-wrap. */
 .af-select-wrap {
     grid-template-columns: 1fr 42px;
 }
 
+/* Form control styling for .af-select-wrap select. */
 .af-select-wrap select {
     appearance: none;
     background: transparent;
     padding-left: 16px;
 }
 
+/* Form control styling for .af-select-wrap i. */
 .af-select-wrap i {
     color: #111827;
     justify-self: center;
 }
 
+/* Styling rules for .af-enquiry-types. */
 .af-enquiry-types {
     border: 0;
     display: grid;
@@ -244,11 +282,13 @@
     gap: 18px;
 }
 
+/* Styling rules for .af-enquiry-types legend. */
 .af-enquiry-types legend {
     grid-column: 1 / -1;
     margin-bottom: 2px;
 }
 
+/* Styling rules for .af-enquiry-types label. */
 .af-enquiry-types label {
     min-height: 98px;
     border: 1px solid #d9dee6;
@@ -263,21 +303,25 @@
     transition: border-color 160ms ease, background 160ms ease, color 160ms ease;
 }
 
+/* Form control styling for .af-enquiry-types label > input. */
 .af-enquiry-types label > input {
     position: absolute;
     opacity: 0;
     pointer-events: none;
 }
 
+/* Styling rules for .af-enquiry-types label > i. */
 .af-enquiry-types label > i {
     color: #111827;
     font-size: 28px;
 }
 
+/* Styling rules for .af-enquiry-types label strong. */
 .af-enquiry-types label strong {
     font-size: 13px;
 }
 
+/* Styling rules for .af-type-check. */
 .af-type-check {
     width: 22px;
     height: 22px;
@@ -291,42 +335,50 @@
     right: -1px;
 }
 
+/* Interactive state styling for .af-enquiry-types label.is-active. */
 .af-enquiry-types label.is-active {
     border-color: var(--af-gold);
     background: #fffaf3;
     color: var(--af-gold);
 }
 
+/* Interactive state styling for .af-enquiry-types label.is-active > i. */
 .af-enquiry-types label.is-active > i {
     color: var(--af-gold);
 }
 
+/* Interactive state styling for .af-enquiry-types label.is-active .af-type-check. */
 .af-enquiry-types label.is-active .af-type-check {
     display: grid;
 }
 
+/* Styling rules for .af-message-group. */
 .af-message-group {
     gap: 10px;
 }
 
+/* Form control styling for .af-textarea-wrap. */
 .af-textarea-wrap {
     display: grid;
     grid-template-columns: 1fr 42px;
     align-items: end;
 }
 
+/* Form control styling for .af-textarea-wrap textarea. */
 .af-textarea-wrap textarea {
     min-height: 108px;
     resize: vertical;
     padding: 18px 0 18px 16px;
 }
 
+/* Form control styling for .af-textarea-wrap i. */
 .af-textarea-wrap i {
     color: #747b86;
     padding-bottom: 18px;
     justify-self: center;
 }
 
+/* Button and action control styling for .af-send-btn. */
 .af-send-btn {
     height: 54px;
     border: 0;
@@ -343,24 +395,29 @@
     transition: background 180ms ease, transform 180ms ease;
 }
 
+/* Button and action control styling for .af-send-btn:hover. */
 .af-send-btn:hover {
     background: linear-gradient(135deg, var(--af-gold), var(--af-gold-2));
     transform: translateY(-1px);
 }
 
+/* Styling rules for .af-privacy-line. */
 .af-privacy-line {
     text-align: center;
 }
 
+/* Styling rules for .af-privacy-line i. */
 .af-privacy-line i {
     color: #747b86;
     margin-right: 8px;
 }
 
+/* Card and panel styling for .af-help-card. */
 .af-help-card {
     padding: 34px 28px 28px;
 }
 
+/* Styling rules for .af-help-line. */
 .af-help-line {
     width: 28px;
     height: 2px;
@@ -369,21 +426,25 @@
     margin: 14px 0 18px;
 }
 
+/* Styling rules for .af-help-intro. */
 .af-help-intro {
     margin-bottom: 30px;
 }
 
+/* Styling rules for .af-help-list. */
 .af-help-list {
     display: grid;
     gap: 24px;
 }
 
+/* Styling rules for .af-help-list article. */
 .af-help-list article {
     display: grid;
     grid-template-columns: 54px 1fr;
     gap: 16px;
 }
 
+/* Styling rules for .af-help-list article > span. */
 .af-help-list article > span {
     width: 54px;
     height: 54px;
@@ -397,18 +458,21 @@
 }
 
 .af-help-list h3,
+/* Card and panel styling for .af-help-list h3, .af-response-card h3. */
 .af-response-card h3 {
     color: #111827;
     font-size: 15px;
     margin-bottom: 4px;
 }
 
+/* Styling rules for .af-help-socials. */
 .af-help-socials {
     display: flex;
     gap: 14px;
     margin-top: 8px;
 }
 
+/* Styling rules for .af-help-socials a. */
 .af-help-socials a {
     width: 28px;
     height: 28px;
@@ -420,6 +484,7 @@
     text-decoration: none;
 }
 
+/* Card and panel styling for .af-response-card. */
 .af-response-card {
     background: linear-gradient(135deg, #fff8ee, #f6efe6);
     border-radius: 8px;
@@ -431,6 +496,7 @@
     margin-top: 34px;
 }
 
+/* Card and panel styling for .af-response-card > span. */
 .af-response-card > span {
     width: 58px;
     height: 58px;
@@ -442,23 +508,29 @@
     font-size: 34px;
 }
 
+/* Responsive styling rules for @media (max-width: 1080px). */
 @media (max-width: 1080px) {
+    /* Styling rules for .af-enquiry-grid. */
     .af-enquiry-grid {
         grid-template-columns: 1fr;
     }
 }
 
+/* Responsive styling rules for @media (max-width: 760px). */
 @media (max-width: 760px) {
     .af-field-grid,
+    /* Styling rules for .af-field-grid, .af-enquiry-types. */
     .af-enquiry-types {
         grid-template-columns: 1fr;
     }
 
+    /* Hero section styling for .af-enquiry-hero. */
     .af-enquiry-hero {
         min-height: 260px;
     }
 
     .af-form-card,
+    /* Form control styling for .af-form-card, .af-help-card. */
     .af-help-card {
         padding: 24px 18px;
     }
@@ -471,52 +543,63 @@
     padding-bottom: 36px;
 }
 
+/* Hero section styling for .af-enquiry-hero-inner. */
 .af-enquiry-hero-inner {
     width: min(680px, 100%);
 }
 
+/* Styling rules for .af-breadcrumb. */
 .af-breadcrumb {
     gap: 8px;
     font-size: 11px;
     margin-bottom: 14px;
 }
 
+/* Hero section styling for .af-enquiry-hero h1. */
 .af-enquiry-hero h1 {
     font-size: clamp(32px, 4vw, 44px);
 }
 
+/* Styling rules for .af-title-divider. */
 .af-title-divider {
     grid-template-columns: 54px 26px 54px;
     margin: 12px 0;
 }
 
+/* Styling rules for .af-title-divider i. */
 .af-title-divider i {
     font-size: 19px;
 }
 
+/* Hero section styling for .af-enquiry-hero p. */
 .af-enquiry-hero p {
     font-size: 13px;
     line-height: 1.55;
 }
 
+/* Styling rules for .af-enquiry-section. */
 .af-enquiry-section {
     padding-top: 26px;
 }
 
+/* Styling rules for .af-enquiry-grid. */
 .af-enquiry-grid {
     grid-template-columns: minmax(0, 1fr) 340px;
     gap: 20px;
 }
 
+/* Form control styling for .af-form-card. */
 .af-form-card {
     padding: 22px 20px;
 }
 
+/* Styling rules for .af-section-heading. */
 .af-section-heading {
     gap: 10px;
     margin-bottom: 20px;
 }
 
+/* Styling rules for .af-section-heading > span. */
 .af-section-heading > span {
     width: 32px;
     height: 32px;
@@ -524,6 +607,7 @@
 }
 
 .af-section-heading h2,
+/* Card and panel styling for .af-section-heading h2, .af-help-card h2. */
 .af-help-card h2 {
     font-size: 21px;
 }
@@ -532,90 +616,109 @@
 .af-help-intro,
 .af-help-list p,
 .af-response-card p,
+/* Card and panel styling for .af-section-heading p, .af-help-intro, .af-help-list p, .af-response-card p, .af-privacy-line. */
 .af-privacy-line {
     font-size: 12px;
     line-height: 1.5;
 }
 
+/* Form control styling for .af-enquiry-form. */
 .af-enquiry-form {
     gap: 16px;
 }
 
+/* Styling rules for .af-field-grid. */
 .af-field-grid {
     gap: 16px;
 }
 
+/* Form control styling for .af-form-group. */
 .af-form-group {
     gap: 7px;
 }
 
 .af-form-group label,
+/* Form control styling for .af-form-group label, .af-enquiry-types legend. */
 .af-enquiry-types legend {
     font-size: 12px;
 }
 
 .af-input-icon,
+/* Form control styling for .af-input-icon, .af-select-wrap. */
 .af-select-wrap {
     height: 42px;
 }
 
+/* Form control styling for .af-input-icon. */
 .af-input-icon {
     grid-template-columns: 36px 1fr;
 }
 
 .af-input-icon input,
 .af-select-wrap select,
+/* Form control styling for .af-input-icon input, .af-select-wrap select, .af-textarea-wrap textarea. */
 .af-textarea-wrap textarea {
     font-size: 12px;
 }
 
+/* Styling rules for .af-enquiry-types. */
 .af-enquiry-types {
     gap: 10px;
 }
 
+/* Styling rules for .af-enquiry-types label. */
 .af-enquiry-types label {
     min-height: 82px;
     gap: 6px;
     padding: 12px 8px;
 }
 
+/* Styling rules for .af-enquiry-types label > i. */
 .af-enquiry-types label > i {
     font-size: 22px;
 }
 
+/* Styling rules for .af-enquiry-types label strong. */
 .af-enquiry-types label strong {
     font-size: 12px;
 }
 
+/* Form control styling for .af-textarea-wrap textarea. */
 .af-textarea-wrap textarea {
     min-height: 96px;
     padding-top: 12px;
     padding-bottom: 12px;
 }
 
+/* Button and action control styling for .af-send-btn. */
 .af-send-btn {
     height: 42px;
     gap: 10px;
     font-size: 12px;
 }
 
+/* Card and panel styling for .af-help-card. */
 .af-help-card {
     padding: 24px 20px;
 }
 
+/* Styling rules for .af-help-intro. */
 .af-help-intro {
     margin-bottom: 20px;
 }
 
+/* Styling rules for .af-help-list. */
 .af-help-list {
     gap: 16px;
 }
 
+/* Styling rules for .af-help-list article. */
 .af-help-list article {
     grid-template-columns: 42px 1fr;
     gap: 12px;
 }
 
+/* Styling rules for .af-help-list article > span. */
 .af-help-list article > span {
     width: 42px;
     height: 42px;
@@ -623,6 +726,7 @@
 }
 
 .af-help-list h3,
+/* Card and panel styling for .af-help-list h3, .af-response-card h3. */
 .af-response-card h3 {
     font-size: 13px;
 }

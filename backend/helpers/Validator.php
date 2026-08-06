@@ -15,10 +15,12 @@ class Validator
     {
         $this->errors = [];
 
+        // Iterate through the data needed for this block.
         foreach ($rules as $field => $fieldRules) {
             $ruleList = is_array($fieldRules) ? $fieldRules : explode('|', (string) $fieldRules);
             $value = $data[$field] ?? null;
 
+            // Iterate through the data needed for this block.
             foreach ($ruleList as $rule) {
                 $this->applyRule((string) $field, $value, (string) $rule);
             }
@@ -39,6 +41,7 @@ class Validator
     {
         [$ruleName, $parameter] = array_pad(explode(':', $rule, 2), 2, null);
 
+        // Guard this block so it only runs when the required condition is met.
         if ($ruleName !== 'required' && ($value === null || $value === '')) {
             return;
         }
@@ -56,6 +59,7 @@ class Validator
 
     private function validateRequired(string $field, mixed $value): void
     {
+        // Guard this block so it only runs when the required condition is met.
         if ($value === null || trim((string) $value) === '') {
             $this->addError($field, sprintf('%s is required.', $field));
         }
@@ -63,6 +67,7 @@ class Validator
 
     private function validateEmail(string $field, mixed $value): void
     {
+        // Guard this block so it only runs when the required condition is met.
         if (!filter_var((string) $value, FILTER_VALIDATE_EMAIL)) {
             $this->addError($field, sprintf('%s must be a valid email address.', $field));
         }
@@ -72,6 +77,7 @@ class Validator
     {
         $password = (string) $value;
 
+        // Guard this block so it only runs when the required condition is met.
         if (
             strlen($password) < 8
             || !preg_match('/[A-Z]/', $password)
@@ -87,6 +93,7 @@ class Validator
 
     private function validatePhone(string $field, mixed $value): void
     {
+        // Guard this block so it only runs when the required condition is met.
         if (!preg_match('/^\+?[0-9\s\-()]{7,20}$/', (string) $value)) {
             $this->addError($field, sprintf('%s must be a valid phone number.', $field));
         }
@@ -94,6 +101,7 @@ class Validator
 
     private function validateMinLength(string $field, mixed $value, int $length): void
     {
+        // Guard this block so it only runs when the required condition is met.
         if (mb_strlen((string) $value) < $length) {
             $this->addError($field, sprintf('%s must be at least %d characters.', $field, $length));
         }
@@ -101,6 +109,7 @@ class Validator
 
     private function validateMaxLength(string $field, mixed $value, int $length): void
     {
+        // Guard this block so it only runs when the required condition is met.
         if (mb_strlen((string) $value) > $length) {
             $this->addError($field, sprintf('%s must not exceed %d characters.', $field, $length));
         }

@@ -28,17 +28,20 @@ $homepageOrderHref = afrisense_public_order_url($frontendBase);
 $homepageBookingHref = afrisense_public_booking_url($frontendBase);
 $homepageSupportHref = afrisense_public_support_url($frontendBase);
 
+// Run database/action work inside a guarded block so the page can fail gracefully.
 try {
     $pdo = afrisense_pdo();
     afrisense_remarks_seed_samples($pdo);
     $homepageFoodOptions = afrisense_remarks_food_options($pdo);
 
+    // Run database/action work inside a guarded block so the page can fail gracefully.
     try {
         $homepageUser = afrisense_current_user();
     } catch (Throwable) {
         $homepageUser = null;
     }
 
+    // Handle submitted form actions before rendering the page.
     if (($_SERVER['REQUEST_METHOD'] ?? 'GET') === 'POST' && ($_POST['action'] ?? '') === 'submit_home_remark') {
         $homepageRemarkMessage = afrisense_remarks_submit($pdo, $_POST, $homepageUser, $homepageUser !== null ? 'Customer' : 'Guest');
     }
@@ -58,6 +61,7 @@ afrisense_enforce_public_site_status($frontendBase);
     <meta name="description" content="<?php echo htmlspecialchars($heroSubtitle !== '' ? $heroSubtitle : $siteTagline, ENT_QUOTES, 'UTF-8'); ?>">
     <meta name="theme-color" content="<?php echo htmlspecialchars($primaryColor, ENT_QUOTES, 'UTF-8'); ?>">
     <link rel="canonical" href="/Afrisense/frontend/landing/index.php">
+    <?php // Render this conditional/dynamic template block. ?>
     <?php if ($faviconUrl !== ''): ?>
         <link rel="icon" href="<?php echo htmlspecialchars($faviconUrl, ENT_QUOTES, 'UTF-8'); ?>">
     <?php endif; ?>
@@ -68,6 +72,7 @@ afrisense_enforce_public_site_status($frontendBase);
     <?php afrisense_print_theme_style(); ?>
 </head>
 <body>
+    <!-- Header block for this interface section. -->
     <header class="site-header">
         <a class="brand" href="index.php" aria-label="AfriSense home">
             <span class="brand-icon" aria-hidden="true"><?php echo afrisense_public_brand_icon_html($frontendBase); ?></span>
@@ -77,6 +82,7 @@ afrisense_enforce_public_site_status($frontendBase);
             </span>
         </a>
 
+        <!-- Navigation links for this interface. -->
         <nav class="site-nav" aria-label="Primary navigation">
             <ul>
                 <li><a class="active" href="index.php">Home</a></li>
@@ -97,6 +103,7 @@ afrisense_enforce_public_site_status($frontendBase);
                 <b><?php echo htmlspecialchars($primaryPhone, ENT_QUOTES, 'UTF-8'); ?></b>
             </a>
             <a class="order-link" href="<?php echo htmlspecialchars($homepageOrderHref, ENT_QUOTES, 'UTF-8'); ?>">Order Now</a>
+            <?php // Render this conditional/dynamic template block. ?>
             <?php if ($homepageUser === null): ?>
                 <a class="auth-link" href="../auth/login.php">Login</a>
                 <a class="auth-link register" href="../auth/register.php">Register</a>
@@ -106,12 +113,15 @@ afrisense_enforce_public_site_status($frontendBase);
         </div>
     </header>
 
+    <!-- Main content area for this page. -->
     <main>
+        <!-- Page section for this part of the AfriSense interface. -->
         <section class="hero-section" aria-labelledby="hero-title">
             <div class="hero-copy">
                 <p class="eyebrow">Taste. Quality. Excellence</p>
                 <h1 id="hero-title">
                     <?php echo htmlspecialchars($heroTitleStart !== '' ? $heroTitleStart : $heroTitle, ENT_QUOTES, 'UTF-8'); ?>
+                    <?php // Render this conditional/dynamic template block. ?>
                     <?php if ($heroTitleHighlight !== ''): ?><span><?php echo htmlspecialchars($heroTitleHighlight, ENT_QUOTES, 'UTF-8'); ?></span><?php endif; ?>
                 </h1>
                 <p class="hero-description">
@@ -164,6 +174,7 @@ afrisense_enforce_public_site_status($frontendBase);
                 </div>
             </div>
 
+            <!-- Form block that submits this page workflow. -->
             <form class="booking-card" id="booking" action="<?php echo htmlspecialchars($homepageBookingHref, ENT_QUOTES, 'UTF-8'); ?>" method="get">
                 <h2>Book Your Service</h2>
                 <span class="gold-line" aria-hidden="true"></span>
@@ -198,6 +209,7 @@ afrisense_enforce_public_site_status($frontendBase);
             </form>
         </section>
 
+        <!-- Page section for this part of the AfriSense interface. -->
         <section class="stats-panel" aria-label="AfriSense achievements">
             <article>
                 <i class="bi bi-people" aria-hidden="true"></i>
@@ -221,6 +233,7 @@ afrisense_enforce_public_site_status($frontendBase);
             </article>
         </section>
 
+        <!-- Page section for this part of the AfriSense interface. -->
         <section class="services-section" id="services" aria-labelledby="services-title">
             <div class="section-heading">
                 <p>What We Offer</p>
@@ -274,6 +287,7 @@ afrisense_enforce_public_site_status($frontendBase);
             </div>
         </section>
 
+        <!-- Page section for this part of the AfriSense interface. -->
         <section class="steps-section" aria-labelledby="steps-title">
             <div class="section-heading dark">
                 <p>How It Works</p>
@@ -309,6 +323,7 @@ afrisense_enforce_public_site_status($frontendBase);
             </div>
         </section>
 
+        <!-- Page section for this part of the AfriSense interface. -->
         <section class="popular-section" id="popular-meals" aria-labelledby="popular-title">
             <div class="popular-heading">
                 <div>
@@ -343,6 +358,7 @@ afrisense_enforce_public_site_status($frontendBase);
             </div>
         </section>
 
+        <!-- Page section for this part of the AfriSense interface. -->
         <section class="reviews-section" aria-labelledby="reviews-title">
             <div class="reviews-section-heading">
                 <div>
@@ -356,16 +372,19 @@ afrisense_enforce_public_site_status($frontendBase);
                 </a>
             </div>
             <div class="home-review-grid">
+                <?php // Render this conditional/dynamic template block. ?>
                 <?php if ($homepageRemarks === []): ?>
                     <article class="home-review-empty">
                         <strong>No published remarks yet</strong>
                         <span>Be the first to give feedback.</span>
                     </article>
                 <?php endif; ?>
+                <?php // Render this conditional/dynamic template block. ?>
                 <?php foreach ($homepageRemarks as $remark): ?>
                     <article class="home-review-card">
                         <img src="<?php echo htmlspecialchars(afrisense_remarks_image($frontendBase, (string) ($remark['image'] ?? '')), ENT_QUOTES, 'UTF-8'); ?>" alt="">
                         <div>
+                            <!-- Header block for this interface section. -->
                             <header>
                                 <strong><?php echo htmlspecialchars((string) ($remark['customer_name'] ?? 'Customer'), ENT_QUOTES, 'UTF-8'); ?></strong>
                                 <?php echo afrisense_remarks_stars((float) ($remark['rating'] ?? 0)); ?>
@@ -376,12 +395,15 @@ afrisense_enforce_public_site_status($frontendBase);
                     </article>
                 <?php endforeach; ?>
             </div>
+            <!-- Form block that submits this page workflow. -->
             <form class="home-remark-form" id="landing-remark-form" action="index.php#landing-remark-form" method="post">
                 <input type="hidden" name="action" value="submit_home_remark">
+                <!-- Header block for this interface section. -->
                 <header>
                     <strong>Give a Remark</strong>
                     <span>Submitted remarks appear publicly after saving.</span>
                 </header>
+                <?php // Render this conditional/dynamic template block. ?>
                 <?php if ($homepageRemarkMessage !== null): ?>
                     <p class="home-remark-alert <?php echo $homepageRemarkMessage['success'] ? 'success' : 'error'; ?>">
                         <?php echo htmlspecialchars($homepageRemarkMessage['message'], ENT_QUOTES, 'UTF-8'); ?>
@@ -400,6 +422,7 @@ afrisense_enforce_public_site_status($frontendBase);
                         <span>Food / Service</span>
                         <select name="food_service" required>
                             <option value="">Select</option>
+                            <?php // Render this conditional/dynamic template block. ?>
                             <?php foreach ($homepageFoodOptions as $option): ?>
                                 <option value="<?php echo htmlspecialchars($option, ENT_QUOTES, 'UTF-8'); ?>" <?php echo (string) ($_POST['food_service'] ?? '') === $option ? 'selected' : ''; ?>>
                                     <?php echo htmlspecialchars($option, ENT_QUOTES, 'UTF-8'); ?>
@@ -410,6 +433,7 @@ afrisense_enforce_public_site_status($frontendBase);
                     <label>
                         <span>Rating</span>
                         <select name="rating" required>
+                            <?php // Render this conditional/dynamic template block. ?>
                             <?php for ($rating = 5; $rating >= 1; $rating--): ?>
                                 <option value="<?php echo $rating; ?>" <?php echo (string) ($_POST['rating'] ?? '5') === (string) $rating ? 'selected' : ''; ?>><?php echo $rating; ?> Stars</option>
                             <?php endfor; ?>
@@ -425,15 +449,18 @@ afrisense_enforce_public_site_status($frontendBase);
         </section>
     </main>
 
+    <!-- Footer block for this interface section. -->
     <footer class="site-footer">
         <p><?php echo htmlspecialchars($footerText, ENT_QUOTES, 'UTF-8'); ?></p>
         <div class="site-footer-social" aria-label="Social media links">
+            <?php // Render this conditional/dynamic template block. ?>
             <?php foreach (afrisense_public_social_links() as $social): ?>
                 <a href="<?php echo htmlspecialchars($social['url'], ENT_QUOTES, 'UTF-8'); ?>" aria-label="<?php echo htmlspecialchars($social['label'], ENT_QUOTES, 'UTF-8'); ?>">
                     <i class="bi <?php echo htmlspecialchars($social['icon'], ENT_QUOTES, 'UTF-8'); ?>" aria-hidden="true"></i>
                 </a>
             <?php endforeach; ?>
         </div>
+        <!-- Navigation links for this interface. -->
         <nav aria-label="Footer links">
             <a href="privacy.php">Privacy Policy</a>
             <a href="terms.php">Terms &amp; Conditions</a>
@@ -441,6 +468,7 @@ afrisense_enforce_public_site_status($frontendBase);
         </nav>
     </footer>
 
+    <?php // Render this conditional/dynamic template block. ?>
     <?php if ($homepageUser === null): ?>
         <a class="guest-support-float" href="<?php echo htmlspecialchars($homepageSupportHref, ENT_QUOTES, 'UTF-8'); ?>" aria-label="Chat with support as a guest">
             <i class="bi bi-headset" aria-hidden="true"></i>

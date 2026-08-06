@@ -41,12 +41,14 @@ class Role extends BaseModel
      */
     public function findByName(string $name): ?array
     {
+        // Guard this block so it only runs when the required condition is met.
         if (!$this->tableExists($this->table)) {
             return null;
         }
 
         $column = $this->nameColumn();
 
+        // Guard this block so it only runs when the required condition is met.
         if ($column === null) {
             return null;
         }
@@ -68,6 +70,7 @@ class Role extends BaseModel
     {
         $data = $this->normalizeData($data);
 
+        // Guard this block so it only runs when the required condition is met.
         if ($this->columnExists($this->table, 'created_at') && !isset($data['created_at'])) {
             $data['created_at'] = date('Y-m-d H:i:s');
         }
@@ -82,6 +85,7 @@ class Role extends BaseModel
     {
         $data = $this->normalizeData($data);
 
+        // Guard this block so it only runs when the required condition is met.
         if ($this->columnExists($this->table, 'updated_at')) {
             $data['updated_at'] = date('Y-m-d H:i:s');
         }
@@ -102,6 +106,7 @@ class Role extends BaseModel
      */
     public function assignPermission(int $roleId, int $permissionId): bool
     {
+        // Guard this block so it only runs when the required condition is met.
         if (
             !$this->tableExists('role_permissions')
             || !$this->columnExists('role_permissions', 'role_id')
@@ -118,6 +123,7 @@ class Role extends BaseModel
         );
         $row = $statement->fetch();
 
+        // Guard this block so it only runs when the required condition is met.
         if (((int) ($row['count_value'] ?? 0)) > 0) {
             return true;
         }
@@ -136,6 +142,7 @@ class Role extends BaseModel
      */
     public function removePermission(int $roleId, int $permissionId): bool
     {
+        // Guard this block so it only runs when the required condition is met.
         if (
             !$this->tableExists('role_permissions')
             || !$this->columnExists('role_permissions', 'role_id')
@@ -158,6 +165,7 @@ class Role extends BaseModel
      */
     public function getPermissions(int $roleId): array
     {
+        // Guard this block so it only runs when the required condition is met.
         if (
             !$this->tableExists('role_permissions')
             || !$this->tableExists('permissions')
@@ -181,7 +189,9 @@ class Role extends BaseModel
 
     private function nameColumn(): ?string
     {
+        // Iterate through the data needed for this block.
         foreach (['slug', 'name', 'rolename'] as $column) {
+            // Guard this block so it only runs when the required condition is met.
             if ($this->columnExists($this->table, $column)) {
                 return $column;
             }
@@ -192,6 +202,7 @@ class Role extends BaseModel
 
     private function normalizeData(array $data): array
     {
+        // Guard this block so it only runs when the required condition is met.
         if (isset($data['name']) && $this->columnExists($this->table, 'rolename')) {
             $data['rolename'] = $data['name'];
             unset($data['name']);

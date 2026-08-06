@@ -36,6 +36,7 @@ class User extends BaseModel
      */
     public function findByEmail(string $email): ?array
     {
+        // Guard this block so it only runs when the required condition is met.
         if (!$this->tableExists($this->table) || !$this->columnExists($this->table, 'email')) {
             return null;
         }
@@ -73,10 +74,12 @@ class User extends BaseModel
     {
         $data = $this->normalizeData($data);
 
+        // Guard this block so it only runs when the required condition is met.
         if (isset($data['password']) && $data['password'] !== '') {
             $data['password'] = Security::hashPassword((string) $data['password']);
         }
 
+        // Guard this block so it only runs when the required condition is met.
         if ($this->columnExists($this->table, 'created_at') && !isset($data['created_at'])) {
             $data['created_at'] = date('Y-m-d H:i:s');
         }
@@ -91,7 +94,9 @@ class User extends BaseModel
     {
         $data = $this->normalizeData($data);
 
+        // Guard this block so it only runs when the required condition is met.
         if (array_key_exists('password', $data)) {
+            // Guard this block so it only runs when the required condition is met.
             if ($data['password'] === '' || $data['password'] === null) {
                 unset($data['password']);
             } else {
@@ -99,6 +104,7 @@ class User extends BaseModel
             }
         }
 
+        // Guard this block so it only runs when the required condition is met.
         if ($this->columnExists($this->table, 'updated_at')) {
             $data['updated_at'] = date('Y-m-d H:i:s');
         }
@@ -119,6 +125,7 @@ class User extends BaseModel
      */
     public function updateLastLogin(int $id): bool
     {
+        // Guard this block so it only runs when the required condition is met.
         if (!$this->columnExists($this->table, 'last_login')) {
             return false;
         }
@@ -131,6 +138,7 @@ class User extends BaseModel
      */
     public function hasPermission(int $userId, string $permission): bool
     {
+        // Guard this block so it only runs when the required condition is met.
         if (
             !$this->tableExists('users')
             || !$this->tableExists('roles')
@@ -143,6 +151,7 @@ class User extends BaseModel
 
         $permissionColumn = $this->columnExists('permissions', 'slug') ? 'slug' : 'name';
 
+        // Guard this block so it only runs when the required condition is met.
         if (!$this->columnExists('permissions', $permissionColumn)) {
             return false;
         }
@@ -169,6 +178,7 @@ class User extends BaseModel
      */
     public function getRole(int $userId): ?array
     {
+        // Guard this block so it only runs when the required condition is met.
         if (
             !$this->tableExists('users')
             || !$this->tableExists('roles')
@@ -193,6 +203,7 @@ class User extends BaseModel
 
     private function normalizeData(array $data): array
     {
+        // Guard this block so it only runs when the required condition is met.
         if (isset($data['phone']) && $this->columnExists($this->table, 'phonenumber')) {
             $data['phonenumber'] = $data['phone'];
             unset($data['phone']);

@@ -28,8 +28,10 @@ $reasons = [
 
 ob_start();
 ?>
+<!-- Page section for this part of the AfriSense interface. -->
 <section class="af-services-hero">
     <div class="af-services-hero-inner">
+        <!-- Navigation links for this interface. -->
         <nav aria-label="Breadcrumb">
             <a href="index.php">Home</a>
             <i class="bi bi-chevron-right" aria-hidden="true"></i>
@@ -42,7 +44,9 @@ ob_start();
     </div>
 </section>
 
+<!-- Page section for this part of the AfriSense interface. -->
 <section class="af-services-page">
+    <!-- Header block for this interface section. -->
     <header class="af-page-heading">
         <p>What We Offer</p>
         <h2>Our Services</h2>
@@ -50,6 +54,7 @@ ob_start();
     </header>
 
     <div class="af-service-card-grid">
+        <?php // Render this conditional/dynamic template block. ?>
         <?php foreach ($services as $service): ?>
             <article class="af-public-service-card">
                 <div class="af-service-image">
@@ -65,10 +70,12 @@ ob_start();
         <?php endforeach; ?>
     </div>
 
+    <!-- Page section for this part of the AfriSense interface. -->
     <section class="af-why-band">
         <p class="af-kicker">Why Choose Us</p>
         <h2>Why Choose AfriSense?</h2>
         <div class="af-why-grid">
+            <?php // Render this conditional/dynamic template block. ?>
             <?php foreach ($reasons as $reason): ?>
                 <article>
                     <i class="bi <?php echo htmlspecialchars($reason['icon'], ENT_QUOTES, 'UTF-8'); ?>" aria-hidden="true"></i>
@@ -79,6 +86,7 @@ ob_start();
         </div>
     </section>
 
+    <!-- Page section for this part of the AfriSense interface. -->
     <section class="af-catering-band">
         <p class="af-kicker">Planning an Event?</p>
         <h2>Let Us Cater Your <span>Special Day</span></h2>
@@ -87,6 +95,7 @@ ob_start();
     </section>
 </section>
 
+<!-- Page section for this part of the AfriSense interface. -->
 <section class="af-services-final">
     <h2>Ready to Enjoy Our Services?</h2>
     <p>Book a service or place an order and let AfriSense handle the food experience.</p>

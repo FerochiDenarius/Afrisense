@@ -8,11 +8,13 @@
             ['key' => 'tiktok_url', 'name' => 'TikTok', 'hint' => 'TikTok Profile URL', 'icon' => 'bi-tiktok', 'class' => 'tiktok', 'placeholder' => 'https://tiktok.com/@afrisense_gh'],
         ];
         ?>
+        <!-- Page section for this part of the AfriSense interface. -->
         <section class="af-settings-card af-settings-card-wide af-social-accounts-card" id="social-media">
             <h2>Social Media Accounts</h2>
             <p>Add and manage your social media profiles. These links display on the public website footer.</p>
 
             <div class="af-social-account-list">
+                <?php // Render this conditional/dynamic template block. ?>
                 <?php foreach ($socialRows as $row): ?>
                     <?php $socialValue = (string) ($company[$row['key']] ?? ''); ?>
                     <?php $socialDisabled = (bool) ($row['disabled'] ?? false); ?>
@@ -42,6 +44,7 @@
             </div>
         </section>
 
+        <!-- Page section for this part of the AfriSense interface. -->
         <section class="af-settings-card af-social-preview-card">
             <h2>Social Media Preview</h2>
             <p>This is how your social media links will appear on your website.</p>
@@ -49,6 +52,7 @@
                 <strong>Follow Us</strong>
                 <small>Stay connected with us on social media for updates and offers.</small>
                 <div data-social-preview>
+                    <?php // Render this conditional/dynamic template block. ?>
                     <?php foreach (afrisense_public_social_links() as $social): ?>
                         <span title="<?php echo htmlspecialchars($social['label'], ENT_QUOTES, 'UTF-8'); ?>"><i class="bi <?php echo htmlspecialchars($social['icon'], ENT_QUOTES, 'UTF-8'); ?>" aria-hidden="true"></i></span>
                     <?php endforeach; ?>
@@ -82,6 +86,7 @@
             </label>
         </section>
 
+        <!-- Page section for this part of the AfriSense interface. -->
         <section class="af-settings-card">
             <h2>Social Share Settings</h2>
             <p>Allow users to share your content on social media.</p>
@@ -91,6 +96,7 @@
             <label class="af-toggle-row"><input type="checkbox" checked disabled><span class="af-switch" aria-hidden="true"></span><strong>Share on WhatsApp</strong><small>Allow sharing on WhatsApp.</small></label>
         </section>
 
+        <!-- Page section for this part of the AfriSense interface. -->
         <section class="af-settings-card af-settings-card-wide">
             <h2>Custom Links</h2>
             <p>Add any additional social media or custom links.</p>

@@ -13,6 +13,7 @@ $extraStyles = [
     $frontendBase . '/assets/css/admin-users-settings.css',
 ];
 
+// Guard this block so it only runs when the required condition is met.
 if (is_file($permissionsCssPath)) {
     $extraStyles[] = $frontendBase . '/assets/css/admin-permissions.css?v=' . filemtime($permissionsCssPath);
 }
@@ -21,6 +22,12 @@ require_once __DIR__ . '/../auth/auth_bootstrap.php';
 
 $authUser = afrisense_require_admin();
 
+/**
+ * Complete permission catalog used by the permissions UI.
+ *
+ * The database stores slugs, but the page owns the human labels, grouping,
+ * icons, and descriptions so new modules can be added in one place.
+ */
 function afrisense_permissions_catalog(): array
 {
     return [
@@ -137,8 +144,11 @@ function afrisense_permissions_catalog(): array
     ];
 }
 
+// Defines the afrisense_permission_tables helper used by this module.
 function afrisense_permission_tables(PDO $pdo): void
 {
+    // These tables are safe to create at runtime because permissions were added
+    // after the original app schema and may be missing on older installations.
     $pdo->exec(
         'CREATE TABLE IF NOT EXISTS `permissions` (
             `id` INT AUTO_INCREMENT PRIMARY KEY,
@@ -168,8 +178,11 @@ function afrisense_permission_tables(PDO $pdo): void
     );
 }
 
+// Defines the afrisense_permission_seed helper used by this module.
 function afrisense_permission_seed(PDO $pdo): void
 {
+    // Seed/update by slug so editing labels or descriptions in the catalog
+    // updates existing installs without duplicating permissions.
     $insert = $pdo->prepare(
         'INSERT INTO `permissions` (`module`, `name`, `slug`, `description`)
          VALUES (:module, :name, :slug, :description)
@@ -179,7 +192,9 @@ function afrisense_permission_seed(PDO $pdo): void
             `description` = VALUES(`description`)'
     );
 
+    // Iterate through the data needed for this block.
     foreach (afrisense_permissions_catalog() as $module) {
+        // Iterate through the data needed for this block.
         foreach ($module[3] as $permission) {
             $insert->execute([
                 'module' => $module[0],
@@ -191,6 +206,7 @@ function afrisense_permission_seed(PDO $pdo): void
     }
 }
 
+// Defines the afrisense_permission_icon helper used by this module.
 function afrisense_permission_icon(string $roleName): string
 {
     $roleName = strtolower($roleName);
@@ -207,6 +223,7 @@ function afrisense_permission_icon(string $roleName): string
     };
 }
 
+// Defines the afrisense_permission_tone helper used by this module.
 function afrisense_permission_tone(string $value): string
 {
     $value = strtolower($value);
@@ -222,10 +239,12 @@ function afrisense_permission_tone(string $value): string
     };
 }
 
+// Defines the afrisense_permission_default_slugs helper used by this module.
 function afrisense_permission_default_slugs(string $roleName, array $allSlugs): array
 {
     $roleName = strtolower($roleName);
 
+    // Guard this block so it only runs when the required condition is met.
     if (str_contains($roleName, 'admin') || str_contains($roleName, 'super')) {
         return $allSlugs;
     }
@@ -241,7 +260,9 @@ function afrisense_permission_default_slugs(string $roleName, array $allSlugs): 
     };
 
     return array_values(array_filter($allSlugs, static function (string $slug) use ($prefixes): bool {
+        // Iterate through the data needed for this block.
         foreach ($prefixes as $prefix) {
+            // Guard this block so it only runs when the required condition is met.
             if ($slug === $prefix || str_starts_with($slug, $prefix)) {
                 return true;
             }
@@ -251,11 +272,14 @@ function afrisense_permission_default_slugs(string $roleName, array $allSlugs): 
     }));
 }
 
+// Defines the afrisense_permission_url helper used by this module.
 function afrisense_permission_url(array $overrides = [], string $anchor = ''): string
 {
     $params = $_GET;
 
+    // Iterate through the data needed for this block.
     foreach ($overrides as $key => $value) {
+        // Guard this block so it only runs when the required condition is met.
         if ($value === null || $value === '') {
             unset($params[$key]);
         } else {
@@ -275,28 +299,34 @@ $flashMessage = '';
 $flashType = 'success';
 $explicitlySavedRoleIds = [];
 
+// Run database/action work inside a guarded block so the page can fail gracefully.
 try {
     $pdo = afrisense_pdo();
     afrisense_delivery_rider_role_id($pdo);
     afrisense_permission_tables($pdo);
     afrisense_permission_seed($pdo);
 
+    // Handle submitted form actions before rendering the page.
     if (($_SERVER['REQUEST_METHOD'] ?? 'GET') === 'POST') {
         $action = (string) ($_POST['action'] ?? '');
         $postedRoleId = (int) ($_POST['role_id'] ?? 0);
 
+        // Guard this block so it only runs when the required condition is met.
         if ($action === 'save_permissions' && $postedRoleId > 0) {
             $permissionIds = array_values(array_unique(array_filter(array_map('intval', (array) ($_POST['permission_ids'] ?? [])))));
             $pdo->beginTransaction();
             $delete = $pdo->prepare('DELETE FROM `role_permissions` WHERE `role_id` = :role_id');
             $delete->execute(['role_id' => $postedRoleId]);
 
+            // Guard this block so it only runs when the required condition is met.
             if ($permissionIds !== []) {
                 $validStatement = $pdo->query('SELECT `id` FROM `permissions`');
                 $validIds = array_flip(array_map('intval', $validStatement->fetchAll(PDO::FETCH_COLUMN)));
                 $insert = $pdo->prepare('INSERT INTO `role_permissions` (`role_id`, `permission_id`) VALUES (:role_id, :permission_id)');
 
+                // Iterate through the data needed for this block.
                 foreach ($permissionIds as $permissionId) {
+                    // Guard this block so it only runs when the required condition is met.
                     if (isset($validIds[$permissionId])) {
                         $insert->execute(['role_id' => $postedRoleId, 'permission_id' => $permissionId]);
                     }
@@ -309,6 +339,7 @@ try {
             $flashMessage = 'Permissions saved successfully.';
         }
 
+        // Guard this block so it only runs when the required condition is met.
         if ($action === 'create_custom_permission') {
             $customModule = trim((string) ($_POST['module'] ?? 'Custom Permissions'));
             $customName = trim((string) ($_POST['name'] ?? ''));
@@ -316,6 +347,7 @@ try {
             $customSlug = strtolower(preg_replace('/[^a-z0-9]+/', '_', $customName));
             $customSlug = trim((string) $customSlug, '_');
 
+            // Guard this block so it only runs when the required condition is met.
             if ($customName === '' || $customSlug === '') {
                 $flashType = 'error';
                 $flashMessage = 'Permission name is required.';
@@ -338,6 +370,7 @@ try {
 
     $roleWhere = '';
     $roleParams = [];
+    // Guard this block so it only runs when the required condition is met.
     if ($roleSearch !== '') {
         $roleWhere = 'WHERE r.`rolename` LIKE :search OR r.`description` LIKE :search';
         $roleParams['search'] = '%' . $roleSearch . '%';
@@ -359,6 +392,7 @@ try {
     $roleStatement->execute($roleParams);
     $roles = $roleStatement->fetchAll(PDO::FETCH_ASSOC);
 
+    // Guard this block so it only runs when the required condition is met.
     if ($selectedRoleId <= 0 && $roles !== []) {
         $selectedRoleId = (int) $roles[0]['id'];
     }
@@ -367,21 +401,28 @@ try {
     $allPermissionIds = array_map(static fn (array $row): int => (int) $row['id'], $permissionRows);
     $allPermissionSlugs = array_map(static fn (array $row): string => (string) $row['slug'], $permissionRows);
     $slugToId = [];
+    // Iterate through the data needed for this block.
     foreach ($permissionRows as $row) {
         $slugToId[(string) $row['slug']] = (int) $row['id'];
     }
 
+    // Iterate through the data needed for this block.
     foreach ($roles as $role) {
         $roleId = (int) $role['id'];
+        // Guard this block so it only runs when the required condition is met.
         if (isset($explicitlySavedRoleIds[$roleId])) {
             continue;
         }
         $count = (int) $pdo->query('SELECT COUNT(*) FROM `role_permissions` WHERE `role_id` = ' . $roleId)->fetchColumn();
+        // Guard this block so it only runs when the required condition is met.
         if ($count === 0) {
             $defaultSlugs = afrisense_permission_default_slugs((string) $role['rolename'], $allPermissionSlugs);
+            // Guard this block so it only runs when the required condition is met.
             if ($defaultSlugs !== []) {
                 $insert = $pdo->prepare('INSERT IGNORE INTO `role_permissions` (`role_id`, `permission_id`) VALUES (:role_id, :permission_id)');
+                // Iterate through the data needed for this block.
                 foreach ($defaultSlugs as $slug) {
+                    // Guard this block so it only runs when the required condition is met.
                     if (isset($slugToId[$slug])) {
                         $insert->execute(['role_id' => $roleId, 'permission_id' => $slugToId[$slug]]);
                     }
@@ -391,7 +432,9 @@ try {
     }
 
     $selectedRole = null;
+    // Iterate through the data needed for this block.
     foreach ($roles as $role) {
+        // Guard this block so it only runs when the required condition is met.
         if ((int) $role['id'] === $selectedRoleId) {
             $selectedRole = $role;
             break;
@@ -406,9 +449,12 @@ try {
     $assignedLookup = array_flip($assignedPermissionIds);
 
     $permissionModules = [];
+    // Iterate through the data needed for this block.
     foreach ($permissionRows as $row) {
+        // Guard this block so it only runs when the required condition is met.
         if ($permissionSearch !== '') {
             $haystack = strtolower((string) $row['module'] . ' ' . (string) $row['name'] . ' ' . (string) $row['description'] . ' ' . (string) $row['slug']);
+            // Guard this block so it only runs when the required condition is met.
             if (!str_contains($haystack, strtolower($permissionSearch))) {
                 continue;
             }
@@ -421,6 +467,7 @@ try {
     $unassignedCount = max(0, $totalPermissions - $assignedCount);
     $loadError = '';
 } catch (Throwable $exception) {
+    // Guard this block so it only runs when the required condition is met.
     if (isset($pdo) && $pdo->inTransaction()) {
         $pdo->rollBack();
     }
@@ -441,7 +488,9 @@ $updatedAt = date('d M Y');
 
 ob_start();
 ?>
+<!-- Page section for this part of the AfriSense interface. -->
 <section class="af-permissions-page">
+    <!-- Header block for this interface section. -->
     <header class="af-admin-page-heading af-permissions-heading">
         <div>
             <h1>Permissions Management</h1>
@@ -453,25 +502,33 @@ ob_start();
         </a>
     </header>
 
+    <?php // Render this conditional/dynamic template block. ?>
     <?php if ($loadError !== ''): ?>
         <div class="af-admin-alert error"><?php echo htmlspecialchars($loadError, ENT_QUOTES, 'UTF-8'); ?></div>
     <?php endif; ?>
+    <?php // Render this conditional/dynamic template block. ?>
     <?php if ($flashMessage !== ''): ?>
         <div class="af-admin-alert <?php echo htmlspecialchars($flashType, ENT_QUOTES, 'UTF-8'); ?>"><?php echo htmlspecialchars($flashMessage, ENT_QUOTES, 'UTF-8'); ?></div>
     <?php endif; ?>
 
+    <!-- Page section for this part of the AfriSense interface. -->
     <section class="af-permissions-layout">
+        <!-- Side panel with supporting information and actions. -->
         <aside class="af-permission-roles-card">
+            <!-- Header block for this interface section. -->
             <header>
                 <h2>Roles</h2>
                 <a href="<?php echo htmlspecialchars($frontendBase . '/admin/roles.php#add_role_form', ENT_QUOTES, 'UTF-8'); ?>" title="Add new role"><i class="bi bi-plus-circle" aria-hidden="true"></i></a>
             </header>
+            <!-- Form block that submits this page workflow. -->
             <form class="af-permission-role-search" action="permissions.php" method="get">
+                <?php // Render this conditional/dynamic template block. ?>
                 <?php if ($selectedRoleId > 0): ?><input type="hidden" name="role" value="<?php echo htmlspecialchars((string) $selectedRoleId, ENT_QUOTES, 'UTF-8'); ?>"><?php endif; ?>
                 <input type="search" name="role_search" value="<?php echo htmlspecialchars($roleSearch, ENT_QUOTES, 'UTF-8'); ?>" placeholder="Search roles...">
                 <button type="submit" title="Search roles"><i class="bi bi-search" aria-hidden="true"></i></button>
             </form>
             <div class="af-permission-role-list">
+                <?php // Render this conditional/dynamic template block. ?>
                 <?php foreach ($roles as $role): ?>
                     <?php
                     $listRoleId = (int) $role['id'];
@@ -486,6 +543,7 @@ ob_start();
                     </a>
                 <?php endforeach; ?>
             </div>
+            <!-- Footer block for this interface section. -->
             <footer>
                 <strong>Total Roles: <?php echo htmlspecialchars((string) count($roles), ENT_QUOTES, 'UTF-8'); ?></strong>
                 <span><i class="bi bi-chevron-left" aria-hidden="true"></i></span>
@@ -494,10 +552,13 @@ ob_start();
             </footer>
         </aside>
 
+        <!-- Form block that submits this page workflow. -->
         <form class="af-permission-editor" id="permission-editor" action="<?php echo htmlspecialchars(afrisense_permission_url(['role' => (string) $selectedRoleId]), ENT_QUOTES, 'UTF-8'); ?>" method="post">
             <input type="hidden" name="action" value="save_permissions">
             <input type="hidden" name="role_id" value="<?php echo htmlspecialchars((string) $selectedRoleId, ENT_QUOTES, 'UTF-8'); ?>">
+            <!-- Page section for this part of the AfriSense interface. -->
             <section class="af-permission-main-card">
+                <!-- Header block for this interface section. -->
                 <header class="af-permission-selected-role">
                     <span class="<?php echo htmlspecialchars(afrisense_permission_tone($roleName), ENT_QUOTES, 'UTF-8'); ?>"><i class="bi <?php echo htmlspecialchars(afrisense_permission_icon($roleName), ENT_QUOTES, 'UTF-8'); ?>" aria-hidden="true"></i></span>
                     <div>
@@ -511,11 +572,13 @@ ob_start();
                     </dl>
                 </header>
 
+                <!-- Navigation links for this interface. -->
                 <nav class="af-permission-tabs">
                     <button class="active" type="button" data-permission-no-jump>Module Permissions</button>
                     <button type="button" data-permission-custom-focus>Custom Permissions</button>
                 </nav>
 
+                <!-- Page section for this part of the AfriSense interface. -->
                 <section class="af-permission-tools">
                     <label>
                         <input type="search" name="permission_search" value="<?php echo htmlspecialchars($permissionSearch, ENT_QUOTES, 'UTF-8'); ?>" placeholder="Search permissions...">
@@ -526,7 +589,9 @@ ob_start();
                     <button type="button" data-permission-collapse><i class="bi bi-chevron-up" aria-hidden="true"></i> Collapse All</button>
                 </section>
 
+                <!-- Page section for this part of the AfriSense interface. -->
                 <section class="af-permission-modules" id="module-permissions">
+                    <?php // Render this conditional/dynamic template block. ?>
                     <?php foreach ($permissionModules as $moduleName => $modulePermissions): ?>
                         <?php
                         $moduleAssigned = count(array_filter($modulePermissions, static fn (array $permission): bool => isset($assignedLookup[(int) $permission['id']])));
@@ -548,6 +613,7 @@ ob_start();
                                 <i class="bi bi-chevron-down" aria-hidden="true"></i>
                             </summary>
                             <div>
+                                <?php // Render this conditional/dynamic template block. ?>
                                 <?php foreach ($modulePermissions as $permission): ?>
                                     <?php $permissionId = (int) $permission['id']; ?>
                                     <label class="af-permission-check">
@@ -562,6 +628,7 @@ ob_start();
                     <?php endforeach; ?>
                 </section>
 
+                <!-- Footer block for this interface section. -->
                 <footer>
                     <a href="<?php echo htmlspecialchars(afrisense_permission_url(['role' => (string) $selectedRoleId, 'permission_search' => null]), ENT_QUOTES, 'UTF-8'); ?>"><i class="bi bi-arrow-clockwise" aria-hidden="true"></i> Reset Changes</a>
                     <button type="submit"><i class="bi bi-floppy" aria-hidden="true"></i> Save Permissions</button>
@@ -569,7 +636,9 @@ ob_start();
             </section>
         </form>
 
+        <!-- Side panel with supporting information and actions. -->
         <aside class="af-permission-side">
+            <!-- Page section for this part of the AfriSense interface. -->
             <section class="af-permission-side-card">
                 <h2>Permission Summary</h2>
                 <div class="af-permission-donut" style="--assigned: <?php echo htmlspecialchars((string) $assignedRate, ENT_QUOTES, 'UTF-8'); ?>%;">
@@ -582,6 +651,7 @@ ob_start();
                 </ul>
             </section>
 
+            <!-- Page section for this part of the AfriSense interface. -->
             <section class="af-permission-side-card">
                 <h2>Role Information</h2>
                 <dl>
@@ -594,12 +664,14 @@ ob_start();
                 </dl>
             </section>
 
+            <!-- Page section for this part of the AfriSense interface. -->
             <section class="af-permission-side-card af-permission-quick">
                 <h2>Quick Actions</h2>
                 <a href="<?php echo htmlspecialchars($frontendBase . '/admin/roles.php#add_role_form', ENT_QUOTES, 'UTF-8'); ?>"><i class="bi bi-plus-lg" aria-hidden="true"></i> Add New Role</a>
                 <a href="#" data-permission-custom-focus><i class="bi bi-shield-plus" aria-hidden="true"></i> Add Custom Permission</a>
                 <a href="<?php echo htmlspecialchars(afrisense_permission_url(['role' => (string) $selectedRoleId]), ENT_QUOTES, 'UTF-8'); ?>"><i class="bi bi-copy" aria-hidden="true"></i> Clone Role Permissions</a>
                 <a href="<?php echo htmlspecialchars($frontendBase . '/admin/roles.php', ENT_QUOTES, 'UTF-8'); ?>"><i class="bi bi-diagram-3" aria-hidden="true"></i> View Role Hierarchy</a>
+                <!-- Form block that submits this page workflow. -->
                 <form id="custom-permission-form" action="<?php echo htmlspecialchars(afrisense_permission_url(['role' => (string) $selectedRoleId]), ENT_QUOTES, 'UTF-8'); ?>" method="post">
                     <input type="hidden" name="action" value="create_custom_permission">
                     <input type="text" name="name" placeholder="Custom permission name">
@@ -609,6 +681,7 @@ ob_start();
                 </form>
             </section>
 
+            <!-- Page section for this part of the AfriSense interface. -->
             <section class="af-permission-side-card af-permission-legend">
                 <h2>Permission Legend</h2>
                 <p><i class="granted"></i><strong>Granted</strong><span>Permission is allowed</span></p>

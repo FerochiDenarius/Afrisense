@@ -26,9 +26,11 @@ $deliveryAddress = trim((string) ($_POST['delivery_address'] ?? ''));
 $specialInstructions = trim((string) ($_POST['special_instructions'] ?? ''));
 $paymentMethod = trim((string) ($_POST['payment_method'] ?? 'Cash'));
 
+// Run database/action work inside a guarded block so the page can fail gracefully.
 try {
     $pdo = afrisense_pdo();
 
+    // Handle submitted form actions before rendering the page.
     if (($_SERVER['REQUEST_METHOD'] ?? 'GET') === 'POST') {
         $customerStatement = $pdo->prepare('SELECT * FROM `customers` WHERE `id` = :id LIMIT 1');
         $customerStatement->execute(['id' => $selectedCustomerId]);
@@ -38,6 +40,7 @@ try {
         $foodStatement->execute(['id' => $selectedFoodId]);
         $food = $foodStatement->fetch(PDO::FETCH_ASSOC) ?: null;
 
+        // Guard this block so it only runs when the required condition is met.
         if ($customer === null || $food === null || $deliveryAddress === '' || !afrisense_public_payment_method_allowed($paymentMethod)) {
             $message = ['type' => 'error', 'text' => 'Choose a customer, food item, delivery address, and valid payment method.'];
         } else {
@@ -85,6 +88,7 @@ try {
             ]);
             $customerUserId = (int) ($notificationUser->fetchColumn() ?: 0);
 
+            // Guard this block so it only runs when the required condition is met.
             if ($customerUserId > 0) {
                 $notify = $pdo->prepare(
                     'INSERT INTO `notifications`
@@ -118,7 +122,9 @@ try {
 
 ob_start();
 ?>
+<!-- Page section for this part of the AfriSense interface. -->
 <section class="af-admin-menu-page af-orders-page">
+    <!-- Header block for this interface section. -->
     <header class="af-admin-page-heading">
         <div>
             <h1>New Order</h1>
@@ -127,9 +133,12 @@ ob_start();
         <a class="af-add-menu-btn" href="orders.php"><i class="bi bi-arrow-left" aria-hidden="true"></i> Back to Orders</a>
     </header>
 
+    <?php // Render this conditional/dynamic template block. ?>
     <?php if ($loadError !== ''): ?><div class="af-admin-alert error"><?php echo htmlspecialchars($loadError, ENT_QUOTES, 'UTF-8'); ?></div><?php endif; ?>
+    <?php // Render this conditional/dynamic template block. ?>
     <?php if ($message !== null): ?><div class="af-admin-alert <?php echo htmlspecialchars($message['type'], ENT_QUOTES, 'UTF-8'); ?>"><?php echo htmlspecialchars($message['text'], ENT_QUOTES, 'UTF-8'); ?></div><?php endif; ?>
 
+    <!-- Page section for this part of the AfriSense interface. -->
     <section class="af-menu-table-card af-user-create-card">
         <div class="af-table-toolbar">
             <div>
@@ -137,11 +146,13 @@ ob_start();
                 <p>Select an existing customer and available menu item.</p>
             </div>
         </div>
+        <!-- Form block that submits this page workflow. -->
         <form class="af-food-management-form af-user-create-form" action="new-order.php" method="post">
             <label>
                 <span>Customer</span>
                 <select name="customer_id" required>
                     <option value="">Select customer</option>
+                    <?php // Render this conditional/dynamic template block. ?>
                     <?php foreach ($customers as $customer): ?>
                         <option value="<?php echo (int) $customer['id']; ?>" <?php echo $selectedCustomerId === (int) $customer['id'] ? 'selected' : ''; ?>>
                             <?php echo htmlspecialchars((string) $customer['fullname'] . ' - ' . (string) $customer['email'], ENT_QUOTES, 'UTF-8'); ?>
@@ -153,6 +164,7 @@ ob_start();
                 <span>Food Item</span>
                 <select name="food_id" required>
                     <option value="">Select food</option>
+                    <?php // Render this conditional/dynamic template block. ?>
                     <?php foreach ($foods as $food): ?>
                         <option value="<?php echo (int) $food['id']; ?>" <?php echo $selectedFoodId === (int) $food['id'] ? 'selected' : ''; ?>>
                             <?php echo htmlspecialchars((string) $food['food_name'] . ' - ' . afrisense_public_money((float) $food['price']), ENT_QUOTES, 'UTF-8'); ?>
@@ -167,6 +179,7 @@ ob_start();
             <label>
                 <span>Payment Method</span>
                 <select name="payment_method" required>
+                    <?php // Render this conditional/dynamic template block. ?>
                     <?php foreach (afrisense_public_payment_methods() as $method): ?>
                         <option value="<?php echo htmlspecialchars($method, ENT_QUOTES, 'UTF-8'); ?>" <?php echo $paymentMethod === $method ? 'selected' : ''; ?>><?php echo htmlspecialchars(afrisense_public_payment_method_label($method), ENT_QUOTES, 'UTF-8'); ?></option>
                     <?php endforeach; ?>

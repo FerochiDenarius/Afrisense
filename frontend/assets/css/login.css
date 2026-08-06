@@ -1,9 +1,11 @@
+/* Styling rules for *. */
 * {
     margin: 0;
     padding: 0;
     box-sizing: border-box;
 }
 
+/* Global design tokens and CSS custom properties. */
 :root {
     --primary-gold: #b77b1a;
     --secondary-gold: #cc8f25;
@@ -15,6 +17,7 @@
     --surface: #fff;
 }
 
+/* Styling rules for body. */
 body {
     min-height: 100vh;
     background: #fff;
@@ -23,10 +26,12 @@ body {
     overflow-x: hidden;
 }
 
+/* Styling rules for a. */
 a {
     color: inherit;
 }
 
+/* Header layout and controls for .site-header. */
 .site-header {
     min-height: 84px;
     background: var(--primary-green);
@@ -38,6 +43,7 @@ a {
     min-width: 0;
 }
 
+/* Styling rules for .brand. */
 .brand {
     color: #fff;
     display: inline-flex;
@@ -47,6 +53,7 @@ a {
     flex-shrink: 0;
 }
 
+/* Styling rules for .brand-icon. */
 .brand-icon {
     color: var(--secondary-gold);
     font-size: 42px;
@@ -54,20 +61,24 @@ a {
 }
 
 .brand strong,
+/* Styling rules for .brand strong, .brand small. */
 .brand small {
     display: block;
 }
 
+/* Styling rules for .brand strong. */
 .brand strong {
     color: #fff;
     font-size: 31px;
     line-height: 1;
 }
 
+/* Styling rules for .brand strong::first-letter. */
 .brand strong::first-letter {
     color: var(--secondary-gold);
 }
 
+/* Styling rules for .brand small. */
 .brand small {
     color: rgba(255, 255, 255, 0.86);
     font-size: 10px;
@@ -77,6 +88,7 @@ a {
     margin-top: 4px;
 }
 
+/* Navigation and menu styling for .site-nav ul. */
 .site-nav ul {
     display: flex;
     align-items: center;
@@ -85,6 +97,7 @@ a {
     min-width: 0;
 }
 
+/* Navigation and menu styling for .site-nav a. */
 .site-nav a {
     color: #fff;
     font-size: 14px;
@@ -94,10 +107,12 @@ a {
 }
 
 .site-nav a:hover,
+/* Navigation and menu styling for .site-nav a:hover, .site-nav a:focus-visible. */
 .site-nav a:focus-visible {
     color: var(--secondary-gold);
 }
 
+/* Header layout and controls for .header-actions. */
 .header-actions {
     display: flex;
     align-items: center;
@@ -106,6 +121,7 @@ a {
     min-width: 0;
 }
 
+/* Styling rules for .phone-link. */
 .phone-link {
     color: #fff;
     display: inline-flex;
@@ -116,6 +132,7 @@ a {
     text-decoration: none;
 }
 
+/* Styling rules for .phone-link span. */
 .phone-link span {
     width: 36px;
     height: 36px;
@@ -128,6 +145,7 @@ a {
 }
 
 .header-actions button,
+/* Header layout and controls for .header-actions button, .order-button-link. */
 .order-button-link {
     min-width: 128px;
     height: 44px;
@@ -148,11 +166,13 @@ a {
 .header-actions button:hover,
 .header-actions button:focus-visible,
 .order-button-link:hover,
+/* Header layout and controls for .header-actions button:hover, .header-actions button:focus-visible, .order-button-link:hover, .order-button-link:focus-visible. */
 .order-button-link:focus-visible {
     background: var(--primary-gold);
     transform: translateY(-1px);
 }
 
+/* Styling rules for .auth-message. */
 .auth-message {
     border-radius: 8px;
     font-size: 14px;
@@ -162,18 +182,21 @@ a {
     padding: 12px 14px;
 }
 
+/* Styling rules for .auth-message.error. */
 .auth-message.error {
     background: #fff1f1;
     border: 1px solid #ffd3d3;
     color: #b42318;
 }
 
+/* Styling rules for .auth-message.success. */
 .auth-message.success {
     background: #edfdf3;
     border: 1px solid #b7efc5;
     color: #087443;
 }
 
+/* Hero section styling for .login-hero. */
 .login-hero {
     min-height: calc(100vh - 84px - 128px);
     display: grid;
@@ -182,6 +205,7 @@ a {
     min-width: 0;
 }
 
+/* Card and panel styling for .hero-panel. */
 .hero-panel {
     min-height: 690px;
     position: relative;
@@ -195,6 +219,7 @@ a {
     min-width: 0;
 }
 
+/* Hero section styling for .hero-overlay. */
 .hero-overlay {
     position: absolute;
     inset: 0;
@@ -202,6 +227,7 @@ a {
     z-index: -1;
 }
 
+/* Card and panel styling for .hero-panel::after. */
 .hero-panel::after {
     content: "";
     position: absolute;
@@ -213,6 +239,7 @@ a {
     opacity: 0.9;
 }
 
+/* Hero section styling for .hero-copy. */
 .hero-copy {
     width: min(440px, calc(100% - 72px));
     padding: 72px 0 44px 60px;
@@ -220,6 +247,7 @@ a {
     min-width: 0;
 }
 
+/* Styling rules for .eyebrow. */
 .eyebrow {
     color: var(--secondary-gold);
     display: flex;
@@ -232,6 +260,7 @@ a {
     margin-bottom: 18px;
 }
 
+/* Styling rules for .eyebrow::before. */
 .eyebrow::before {
     content: "";
     width: 22px;
@@ -240,6 +269,7 @@ a {
     display: inline-block;
 }
 
+/* Hero section styling for .hero-copy h1. */
 .hero-copy h1 {
     color: #fff;
     font-family: Georgia, "Times New Roman", serif;
@@ -247,10 +277,12 @@ a {
     line-height: 1.12;
 }
 
+/* Hero section styling for .hero-copy h1 span. */
 .hero-copy h1 span {
     color: var(--secondary-gold);
 }
 
+/* Hero section styling for .hero-description. */
 .hero-description {
     color: rgba(255, 255, 255, 0.92);
     font-size: 16px;
@@ -260,6 +292,7 @@ a {
     max-width: 430px;
 }
 
+/* Hero section styling for .hero-features. */
 .hero-features {
     display: flex;
     flex-direction: column;
@@ -267,6 +300,7 @@ a {
     margin-top: 34px;
 }
 
+/* Hero section styling for .hero-feature. */
 .hero-feature {
     display: flex;
     align-items: center;
@@ -274,6 +308,7 @@ a {
     min-width: 0;
 }
 
+/* Styling rules for .feature-icon. */
 .feature-icon {
     width: 57px;
     height: 57px;
@@ -287,19 +322,23 @@ a {
     flex-shrink: 0;
 }
 
+/* Styling rules for .feature-icon i. */
 .feature-icon i {
     font-size: 27px;
 }
 
 .hero-feature strong,
+/* Hero section styling for .hero-feature strong, .hero-feature small. */
 .hero-feature small {
     display: block;
 }
 
+/* Hero section styling for .hero-feature span:last-child. */
 .hero-feature span:last-child {
     min-width: 0;
 }
 
+/* Hero section styling for .hero-feature strong. */
 .hero-feature strong {
     color: #fff;
     font-size: 16px;
@@ -307,6 +346,7 @@ a {
     margin-bottom: 5px;
 }
 
+/* Hero section styling for .hero-feature small. */
 .hero-feature small {
     color: rgba(255, 255, 255, 0.86);
     font-size: 13px;
@@ -315,6 +355,7 @@ a {
     max-width: 300px;
 }
 
+/* Card and panel styling for .login-panel. */
 .login-panel {
     min-height: 690px;
     display: flex;
@@ -325,6 +366,7 @@ a {
     min-width: 0;
 }
 
+/* Card and panel styling for .login-panel::before. */
 .login-panel::before {
     content: "";
     position: absolute;
@@ -335,6 +377,7 @@ a {
     pointer-events: none;
 }
 
+/* Card and panel styling for .login-card. */
 .login-card {
     width: min(520px, 100%);
     background: var(--surface);
@@ -345,11 +388,13 @@ a {
     z-index: 1;
 }
 
+/* Header layout and controls for .card-header. */
 .card-header {
     text-align: center;
     margin-bottom: 30px;
 }
 
+/* Card and panel styling for .card-icon. */
 .card-icon {
     width: 58px;
     height: 58px;
@@ -362,10 +407,12 @@ a {
     margin-bottom: 16px;
 }
 
+/* Card and panel styling for .card-icon i. */
 .card-icon i {
     font-size: 31px;
 }
 
+/* Header layout and controls for .card-header h2. */
 .card-header h2 {
     color: #111;
     font-family: Georgia, "Times New Roman", serif;
@@ -373,6 +420,7 @@ a {
     line-height: 1.2;
 }
 
+/* Header layout and controls for .card-header p. */
 .card-header p {
     color: var(--text-muted);
     font-size: 14px;
@@ -380,6 +428,7 @@ a {
     margin-top: 9px;
 }
 
+/* Styling rules for .gold-line. */
 .gold-line {
     display: block;
     width: 46px;
@@ -389,17 +438,20 @@ a {
     margin: 14px auto 0;
 }
 
+/* Form control styling for .login-form. */
 .login-form {
     display: flex;
     flex-direction: column;
     gap: 20px;
 }
 
+/* Form control styling for .form-group. */
 .form-group {
     display: flex;
     flex-direction: column;
 }
 
+/* Form control styling for .form-group label. */
 .form-group label {
     color: var(--text-dark);
     font-size: 14px;
@@ -407,6 +459,7 @@ a {
     margin-bottom: 8px;
 }
 
+/* Form control styling for .input-shell. */
 .input-shell {
     height: 49px;
     border: 1px solid var(--border);
@@ -418,11 +471,13 @@ a {
     transition: border-color 0.2s ease, box-shadow 0.2s ease;
 }
 
+/* Form control styling for .input-shell:focus-within. */
 .input-shell:focus-within {
     border-color: var(--secondary-gold);
     box-shadow: 0 0 0 3px rgba(183, 123, 26, 0.12);
 }
 
+/* Form control styling for .input-icon. */
 .input-icon {
     width: 48px;
     color: #5f6675;
@@ -432,10 +487,12 @@ a {
     flex-shrink: 0;
 }
 
+/* Form control styling for .input-icon i. */
 .input-icon i {
     font-size: 18px;
 }
 
+/* Form control styling for .input-shell input. */
 .input-shell input {
     width: 100%;
     height: 100%;
@@ -447,10 +504,12 @@ a {
     padding: 0 14px 0 0;
 }
 
+/* Form control styling for .password-shell input. */
 .password-shell input {
     padding-right: 0;
 }
 
+/* Styling rules for .password-toggle. */
 .password-toggle {
     width: 44px;
     height: 100%;
@@ -466,10 +525,12 @@ a {
 }
 
 .password-toggle:hover,
+/* Interactive state styling for .password-toggle:hover, .password-toggle:focus-visible. */
 .password-toggle:focus-visible {
     color: var(--primary-gold);
 }
 
+/* Form control styling for .form-options. */
 .form-options {
     display: flex;
     align-items: center;
@@ -478,6 +539,7 @@ a {
     margin-top: -4px;
 }
 
+/* Styling rules for .remember-option. */
 .remember-option {
     color: var(--text-muted);
     display: inline-flex;
@@ -488,6 +550,7 @@ a {
     font-weight: 600;
 }
 
+/* Form control styling for .remember-option input. */
 .remember-option input {
     width: 18px;
     height: 18px;
@@ -495,6 +558,7 @@ a {
 }
 
 .form-options a,
+/* Form control styling for .form-options a, .register-link a. */
 .register-link a {
     color: var(--primary-gold);
     font-size: 14px;
@@ -505,11 +569,13 @@ a {
 .form-options a:hover,
 .form-options a:focus-visible,
 .register-link a:hover,
+/* Form control styling for .form-options a:hover, .form-options a:focus-visible, .register-link a:hover, .register-link a:focus-visible. */
 .register-link a:focus-visible {
     text-decoration: underline;
 }
 
 .login-button,
+/* Button and action control styling for .login-button, .google-button. */
 .google-button {
     width: 100%;
     height: 50px;
@@ -525,28 +591,33 @@ a {
     transition: background 0.2s ease, color 0.2s ease, transform 0.2s ease, border-color 0.2s ease;
 }
 
+/* Button and action control styling for .login-button. */
 .login-button {
     border: 0;
     background: var(--primary-green);
     color: #fff;
 }
 
+/* Button and action control styling for .login-button i. */
 .login-button i {
     color: var(--secondary-gold);
     font-size: 21px;
 }
 
 .login-button:hover,
+/* Button and action control styling for .login-button:hover, .login-button:focus-visible. */
 .login-button:focus-visible {
     background: var(--primary-gold);
     transform: translateY(-1px);
 }
 
 .login-button:hover i,
+/* Button and action control styling for .login-button:hover i, .login-button:focus-visible i. */
 .login-button:focus-visible i {
     color: #fff;
 }
 
+/* Styling rules for .divider. */
 .divider {
     display: grid;
     grid-template-columns: 1fr auto 1fr;
@@ -554,17 +625,20 @@ a {
     gap: 20px;
 }
 
+/* Styling rules for .divider span. */
 .divider span {
     height: 1px;
     background: var(--border);
 }
 
+/* Styling rules for .divider small. */
 .divider small {
     color: var(--text-muted);
     font-size: 13px;
     font-weight: 600;
 }
 
+/* Button and action control styling for .google-button. */
 .google-button {
     border: 1px solid #6f7b75;
     background: #fff;
@@ -572,18 +646,21 @@ a {
 }
 
 .google-button:hover,
+/* Button and action control styling for .google-button:hover, .google-button:focus-visible. */
 .google-button:focus-visible {
     border-color: var(--primary-gold);
     color: var(--primary-gold);
     transform: translateY(-1px);
 }
 
+/* Styling rules for .google-mark. */
 .google-mark {
     color: #4285f4;
     font-size: 20px;
     font-weight: 900;
 }
 
+/* Styling rules for .register-link. */
 .register-link {
     color: var(--text-muted);
     font-size: 14px;
@@ -591,12 +668,14 @@ a {
     text-align: center;
 }
 
+/* Footer styling for .login-footer. */
 .login-footer {
     background: var(--primary-green);
     color: #fff;
     padding: 24px 52px 14px;
 }
 
+/* Styling rules for .trust-items. */
 .trust-items {
     display: grid;
     grid-template-columns: repeat(4, 1fr);
@@ -604,6 +683,7 @@ a {
     margin: 0 auto;
 }
 
+/* Styling rules for .trust-item. */
 .trust-item {
     display: flex;
     align-items: center;
@@ -613,10 +693,12 @@ a {
     border-right: 1px solid rgba(255, 255, 255, 0.22);
 }
 
+/* Styling rules for .trust-item:last-child. */
 .trust-item:last-child {
     border-right: 0;
 }
 
+/* Styling rules for .trust-item > span. */
 .trust-item > span {
     color: var(--secondary-gold);
     font-size: 34px;
@@ -624,15 +706,18 @@ a {
 }
 
 .trust-item strong,
+/* Styling rules for .trust-item strong, .trust-item small. */
 .trust-item small {
     display: block;
 }
 
+/* Styling rules for .trust-item strong. */
 .trust-item strong {
     font-size: 15px;
     line-height: 1.3;
 }
 
+/* Styling rules for .trust-item small. */
 .trust-item small {
     color: rgba(255, 255, 255, 0.78);
     font-size: 12px;
@@ -641,6 +726,7 @@ a {
     margin-top: 4px;
 }
 
+/* Footer styling for .login-footer p. */
 .login-footer p {
     border-top: 1px solid rgba(255, 255, 255, 0.12);
     color: rgba(255, 255, 255, 0.9);
@@ -652,74 +738,92 @@ a {
     text-align: center;
 }
 
+/* Responsive styling rules for @media (max-width: 1180px). */
 @media (max-width: 1180px) {
+    /* Header layout and controls for .site-header. */
     .site-header {
         padding: 16px 28px;
     }
 
+    /* Navigation and menu styling for .site-nav ul. */
     .site-nav ul {
         gap: 18px;
     }
 
+    /* Card and panel styling for .login-panel. */
     .login-panel {
         padding: 48px 38px;
     }
 
+    /* Card and panel styling for .login-card. */
     .login-card {
         padding: 34px;
     }
 }
 
+/* Responsive styling rules for @media (max-width: 980px). */
 @media (max-width: 980px) {
+    /* Header layout and controls for .site-header. */
     .site-header {
         flex-wrap: wrap;
     }
 
+    /* Navigation and menu styling for .site-nav. */
     .site-nav {
         order: 3;
         width: 100%;
     }
 
+    /* Navigation and menu styling for .site-nav ul. */
     .site-nav ul {
         justify-content: center;
         flex-wrap: wrap;
     }
 
+    /* Hero section styling for .login-hero. */
     .login-hero {
         grid-template-columns: 1fr;
     }
 
+    /* Card and panel styling for .hero-panel. */
     .hero-panel {
         min-height: auto;
         border-radius: 0;
     }
 
+    /* Card and panel styling for .hero-panel::after. */
     .hero-panel::after {
         display: none;
     }
 
+    /* Hero section styling for .hero-copy. */
     .hero-copy {
         width: 100%;
         max-width: 720px;
         padding: 54px 34px;
     }
 
+    /* Card and panel styling for .login-panel. */
     .login-panel {
         min-height: auto;
         padding: 46px 28px 56px;
     }
 
+    /* Styling rules for .trust-items. */
     .trust-items {
         grid-template-columns: repeat(2, 1fr);
         gap: 24px 0;
     }
 
+    /* Styling rules for .trust-item:nth-child(2). */
     .trust-item:nth-child(2) {
         border-right: 0;
     }
 }
 
+/* Responsive styling rules for @media (max-width: 680px). */
 @media (max-width: 680px) {
+    /* Header layout and controls for .site-header. */
     .site-header {
         display: grid;
         grid-template-columns: minmax(0, 1fr);
@@ -727,31 +831,37 @@ a {
         padding: 18px 22px;
     }
 
+    /* Styling rules for .brand strong. */
     .brand strong {
         font-size: 30px;
     }
 
+    /* Header layout and controls for .header-actions. */
     .header-actions {
         justify-content: space-between;
         flex-wrap: wrap;
         width: 100%;
     }
 
+    /* Styling rules for .phone-link. */
     .phone-link {
         font-size: 14px;
         width: 100%;
     }
 
     .header-actions button,
+    /* Header layout and controls for .header-actions button, .order-button-link. */
     .order-button-link {
         width: 100%;
         max-width: 100%;
     }
 
+    /* Navigation and menu styling for .site-nav. */
     .site-nav {
         order: 0;
     }
 
+    /* Navigation and menu styling for .site-nav ul. */
     .site-nav ul {
         display: grid;
         grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
@@ -760,76 +870,92 @@ a {
         min-width: 0;
     }
 
+    /* Navigation and menu styling for .site-nav a. */
     .site-nav a {
         font-size: 14px;
         overflow-wrap: anywhere;
     }
 
+    /* Hero section styling for .hero-copy h1. */
     .hero-copy h1 {
         font-size: 30px;
         overflow-wrap: anywhere;
     }
 
+    /* Hero section styling for .hero-copy h1 span. */
     .hero-copy h1 span {
         display: block;
     }
 
+    /* Hero section styling for .hero-description. */
     .hero-description {
         max-width: 300px;
     }
 
+    /* Hero section styling for .hero-feature small. */
     .hero-feature small {
         max-width: none;
     }
 
     .hero-feature strong,
+    /* Hero section styling for .hero-feature strong, .hero-feature small. */
     .hero-feature small {
         font-size: 13px;
         overflow-wrap: anywhere;
     }
 
+    /* Hero section styling for .hero-feature span:last-child. */
     .hero-feature span:last-child {
         max-width: 230px;
     }
 
+    /* Card and panel styling for .login-card. */
     .login-card {
         padding: 28px 22px;
     }
 
+    /* Header layout and controls for .card-header h2. */
     .card-header h2 {
         font-size: 22px;
         overflow-wrap: anywhere;
     }
 
+    /* Form control styling for .form-options. */
     .form-options {
         align-items: flex-start;
         flex-direction: column;
         gap: 12px;
     }
 
+    /* Footer styling for .login-footer. */
     .login-footer {
         padding: 24px 22px 14px;
     }
 
+    /* Styling rules for .trust-items. */
     .trust-items {
         grid-template-columns: 1fr;
         gap: 22px;
     }
 
     .trust-item,
+    /* Styling rules for .trust-item, .trust-item:nth-child(2). */
     .trust-item:nth-child(2) {
         border-right: 0;
         padding: 0;
     }
 }
 
+/* Responsive styling rules for @media (max-width: 430px). */
 @media (max-width: 430px) {
     .header-actions button,
+    /* Header layout and controls for .header-actions button, .order-button-link. */
     .order-button-link {
         min-width: 112px;
         max-width: 100%;
     }
 
+    /* Hero section styling for .hero-copy. */
     .hero-copy {
         width: 100%;
         max-width: 100%;
@@ -837,28 +963,34 @@ a {
         overflow: hidden;
     }
 
+    /* Hero section styling for .hero-copy h1. */
     .hero-copy h1 {
         font-size: 29px;
     }
 
+    /* Hero section styling for .hero-copy h1 span. */
     .hero-copy h1 span {
         display: block;
     }
 
+    /* Hero section styling for .hero-feature span:last-child. */
     .hero-feature span:last-child {
         max-width: calc(100vw - 132px);
     }
 
     .hero-feature strong,
+    /* Hero section styling for .hero-feature strong, .hero-feature small. */
     .hero-feature small {
         font-size: 13px;
     }
 
+    /* Header layout and controls for .card-header h2. */
     .card-header h2 {
         font-size: 22px;
         overflow-wrap: anywhere;
     }
 
+    /* Card and panel styling for .login-panel. */
     .login-panel {
         padding: 34px 18px 44px;
     }

@@ -1,3 +1,4 @@
+/* Styling rules for .af-admin-alert. */
 .af-admin-alert {
     border: 1px solid #bbf7d0;
     border-radius: 8px;
@@ -8,40 +9,48 @@
     font-weight: 700;
 }
 
+/* Styling rules for .af-admin-alert.error. */
 .af-admin-alert.error {
     border-color: #fecaca;
     background: #fef2f2;
     color: #b42318;
 }
 
+/* Styling rules for .af-user-metrics. */
 .af-user-metrics {
     grid-template-columns: repeat(5, minmax(0, 1fr));
 }
 
+/* Card and panel styling for .af-user-create-card. */
 .af-user-create-card {
     margin-bottom: 22px;
 }
 
+/* Card and panel styling for .af-user-create-card .af-table-toolbar. */
 .af-user-create-card .af-table-toolbar {
     align-items: start;
 }
 
+/* Card and panel styling for .af-user-create-card .af-table-toolbar p. */
 .af-user-create-card .af-table-toolbar p {
     color: #667085;
     margin: 6px 0 0;
     font-size: 13px;
 }
 
+/* Form control styling for .af-user-create-form. */
 .af-user-create-form {
     grid-template-columns: repeat(4, minmax(0, 1fr));
     align-items: end;
     padding: 18px 24px 24px;
 }
 
+/* Form control styling for .af-user-create-form button. */
 .af-user-create-form button {
     min-height: 40px;
 }
 
+/* Styling rules for .af-user-verify-check. */
 .af-user-verify-check {
     min-height: 40px;
     border: 1px solid #d9dee6;
@@ -52,23 +61,27 @@
     padding: 0 12px;
 }
 
+/* Form control styling for .af-user-verify-check input. */
 .af-user-verify-check input {
     width: 16px !important;
     min-height: 16px !important;
     accent-color: var(--af-gold);
 }
 
+/* Navigation and menu styling for .af-menu-metrics .red > span. */
 .af-menu-metrics .red > span {
     background: #ffe4e6;
     color: #dc2626;
 }
 
 .af-gallery-heading,
+/* Styling rules for .af-gallery-heading, .af-customers-page .af-admin-page-heading. */
 .af-customers-page .af-admin-page-heading {
     align-items: center;
 }
 
 .af-gallery-actions,
+/* Styling rules for .af-gallery-actions, .af-customer-date-actions. */
 .af-customer-date-actions {
     display: flex;
     flex-wrap: wrap;
@@ -77,6 +90,7 @@
 }
 
 .af-gallery-actions a,
+/* Styling rules for .af-gallery-actions a, .af-customer-date-actions a. */
 .af-customer-date-actions a {
     min-height: 44px;
     border: 1px solid #d9dee6;
@@ -94,29 +108,35 @@
 }
 
 .af-gallery-actions .af-add-menu-btn,
+/* Button and action control styling for .af-gallery-actions .af-add-menu-btn, .af-customer-date-actions .af-add-menu-btn. */
 .af-customer-date-actions .af-add-menu-btn {
     border-color: #082c22;
     background: linear-gradient(135deg, #06281f, #0d3b2f);
     color: #fff;
 }
 
+/* Styling rules for .af-gallery-metrics. */
 .af-gallery-metrics {
     grid-template-columns: repeat(4, minmax(0, 1fr));
 }
 
+/* Styling rules for .af-customer-metrics. */
 .af-customer-metrics {
     grid-template-columns: repeat(5, minmax(0, 1fr));
 }
 
+/* Card and panel styling for .af-gallery-upload-card. */
 .af-gallery-upload-card {
     padding: 0;
 }
 
+/* Form control styling for .af-gallery-upload-form. */
 .af-gallery-upload-form {
     grid-template-columns: minmax(180px, 0.8fr) 160px minmax(220px, 1fr) minmax(260px, 1.2fr) 150px;
     padding: 18px;
 }
 
+/* Styling rules for .af-gallery-file-picker. */
 .af-gallery-file-picker {
     min-height: 86px;
     border: 1px dashed #cfd6df;
@@ -130,6 +150,7 @@
     text-align: center;
 }
 
+/* Form control styling for .af-gallery-file-picker input[type="file"]. */
 .af-gallery-file-picker input[type="file"] {
     height: 1px;
     opacity: 0;
@@ -138,6 +159,7 @@
     width: 1px;
 }
 
+/* Styling rules for .af-gallery-file-picker strong. */
 .af-gallery-file-picker strong {
     color: #0d241e;
     display: inline-flex;
@@ -147,20 +169,24 @@
     font-weight: 900;
 }
 
+/* Styling rules for .af-gallery-file-picker strong i. */
 .af-gallery-file-picker strong i {
     color: var(--af-gold);
     font-size: 22px;
 }
 
+/* Styling rules for .af-gallery-file-picker small. */
 .af-gallery-file-picker small {
     color: #667085;
     font-size: 12px;
 }
 
+/* Styling rules for .af-gallery-filters. */
 .af-gallery-filters {
     grid-template-columns: minmax(280px, 1fr) 200px 180px 110px 110px;
 }
 
+/* Styling rules for .af-gallery-grid. */
 .af-gallery-grid {
     display: grid;
     grid-template-columns: repeat(4, minmax(0, 1fr));
@@ -168,6 +194,7 @@
     padding: 18px;
 }
 
+/* Card and panel styling for .af-gallery-card. */
 .af-gallery-card {
     border: 1px solid #edf0f3;
     border-radius: 8px;
@@ -177,17 +204,20 @@
     transition: transform 0.18s ease, box-shadow 0.18s ease;
 }
 
+/* Card and panel styling for .af-gallery-card:hover. */
 .af-gallery-card:hover {
     box-shadow: 0 18px 38px rgba(16, 24, 40, 0.1);
     transform: translateY(-2px);
 }
 
+/* Styling rules for .af-gallery-image-wrap. */
 .af-gallery-image-wrap {
     aspect-ratio: 1.55 / 1;
     background: #f2f4f7;
     position: relative;
 }
 
+/* Styling rules for .af-gallery-image-wrap img. */
 .af-gallery-image-wrap img {
     display: block;
     height: 100%;
@@ -197,11 +227,13 @@
 }
 
 .af-gallery-image-wrap input,
+/* Form control styling for .af-gallery-image-wrap input, .af-gallery-image-wrap button. */
 .af-gallery-image-wrap button {
     position: absolute;
     top: 10px;
 }
 
+/* Form control styling for .af-gallery-image-wrap input. */
 .af-gallery-image-wrap input {
     left: 10px;
     width: 18px;
@@ -209,6 +241,7 @@
     accent-color: var(--af-gold);
 }
 
+/* Button and action control styling for .af-gallery-image-wrap button. */
 .af-gallery-image-wrap button {
     right: 10px;
     width: 30px;
@@ -222,24 +255,28 @@
     cursor: pointer;
 }
 
+/* Card and panel styling for .af-gallery-card-body. */
 .af-gallery-card-body {
     display: grid;
     gap: 6px;
     padding: 14px;
 }
 
+/* Card and panel styling for .af-gallery-card-body strong. */
 .af-gallery-card-body strong {
     color: #111827;
     font-size: 14px;
     line-height: 1.35;
 }
 
+/* Card and panel styling for .af-gallery-card-body small. */
 .af-gallery-card-body small {
     color: #667085;
     font-size: 12px;
 }
 
 .af-gallery-tag,
+/* Styling rules for .af-gallery-tag, .af-customer-status. */
 .af-customer-status {
     width: max-content;
     max-width: 100%;
@@ -257,6 +294,7 @@
 
 .af-gallery-tag.food,
 .af-customer-status.delivered,
+/* Styling rules for .af-gallery-tag.food, .af-customer-status.delivered, .af-customer-status.confirmed. */
 .af-customer-status.confirmed {
     background: #e3f6e6;
     color: #087a34;
@@ -264,11 +302,13 @@
 
 .af-gallery-tag.events,
 .af-gallery-tag.packages,
+/* Ordering and cart interface styling for .af-gallery-tag.events, .af-gallery-tag.packages, .af-customer-status.order. */
 .af-customer-status.order {
     background: #fff1db;
     color: #c06f00;
 }
 
+/* Styling rules for .af-gallery-tag.services. */
 .af-gallery-tag.services {
     background: #e5f0ff;
     color: #2563eb;
@@ -277,32 +317,38 @@
 .af-gallery-tag.team,
 .af-gallery-tag.drinks,
 .af-gallery-tag.soups,
+/* Styling rules for .af-gallery-tag.team, .af-gallery-tag.drinks, .af-gallery-tag.soups, .af-customer-status.pending. */
 .af-customer-status.pending {
     background: #f1e4ff;
     color: #7a35c8;
 }
 
 .af-gallery-tag.neutral,
+/* Styling rules for .af-gallery-tag.neutral, .af-customer-status.neutral. */
 .af-customer-status.neutral {
     background: #f2f4f7;
     color: #475467;
 }
 
+/* Styling rules for .af-customers-filters. */
 .af-customers-filters {
     grid-template-columns: minmax(300px, 1fr) 240px 190px 110px 110px;
 }
 
+/* Styling rules for .af-customer-date-filter. */
 .af-customer-date-filter {
     display: grid;
     gap: 7px;
 }
 
+/* Styling rules for .af-customer-date-filter span. */
 .af-customer-date-filter span {
     color: #111827;
     font-size: 12px;
     font-weight: 850;
 }
 
+/* Form control styling for .af-customer-date-filter input. */
 .af-customer-date-filter input {
     min-height: 44px;
     border: 1px solid #d9dee6;
@@ -312,6 +358,7 @@
     padding: 0 12px;
 }
 
+/* Styling rules for .af-customer-date-summary. */
 .af-customer-date-summary {
     border-top: 1px solid #edf0f3;
     border-bottom: 1px solid #edf0f3;
@@ -322,6 +369,7 @@
     padding: 18px 22px;
 }
 
+/* Styling rules for .af-customer-date-summary small. */
 .af-customer-date-summary small {
     color: #c06f00;
     font-size: 11px;
@@ -329,6 +377,7 @@
     text-transform: uppercase;
 }
 
+/* Styling rules for .af-customer-date-summary strong. */
 .af-customer-date-summary strong {
     color: #0d241e;
     display: block;
@@ -337,12 +386,14 @@
     font-size: 24px;
 }
 
+/* Styling rules for .af-customer-date-summary p. */
 .af-customer-date-summary p {
     color: #667085;
     margin: 4px 0 0;
     font-size: 13px;
 }
 
+/* Styling rules for .af-customer-date-summary > span. */
 .af-customer-date-summary > span {
     border-radius: 999px;
     padding: 8px 12px;
@@ -350,31 +401,37 @@
     font-weight: 900;
 }
 
+/* Styling rules for .af-customer-date-summary .past. */
 .af-customer-date-summary .past {
     background: #f2f4f7;
     color: #475467;
 }
 
+/* Styling rules for .af-customer-date-summary .today. */
 .af-customer-date-summary .today {
     background: #e3f6e6;
     color: #087a34;
 }
 
+/* Styling rules for .af-customer-date-summary .future. */
 .af-customer-date-summary .future {
     background: #fff1db;
     color: #c06f00;
 }
 
+/* Table layout styling for .af-customers-table table. */
 .af-customers-table table {
     min-width: 1120px;
 }
 
 .af-customers-table th:nth-child(1),
+/* Table layout styling for .af-customers-table th:nth-child(1), .af-customers-table td:nth-child(1). */
 .af-customers-table td:nth-child(1) {
     width: 22%;
 }
 
 .af-customers-table th:nth-child(2),
+/* Table layout styling for .af-customers-table th:nth-child(2), .af-customers-table td:nth-child(2). */
 .af-customers-table td:nth-child(2) {
     width: 22%;
 }
@@ -390,10 +447,12 @@
 .af-customers-table th:nth-child(7),
 .af-customers-table td:nth-child(7),
 .af-customers-table th:nth-child(8),
+/* Table layout styling for .af-customers-table th:nth-child(3), .af-customers-table td:nth-child(3), .af-customers-table th:nth-child(4), .af-customers-table td:nth-child(4), .af-customers-table th:nth-child(5), .af-customers-table td:nth-child(5), .af-customers-table th:nth-child(6), .af-customers-table td:nth-child(6), .af-customers-table th:nth-child(7), .af-customers-table td:nth-child(7), .af-customers-table th:nth-child(8), .af-customers-table td:nth-child(8). */
 .af-customers-table td:nth-child(8) {
     width: 9.3%;
 }
 
+/* Styling rules for .af-customer-avatar. */
 .af-customer-avatar {
     width: 46px;
     height: 46px;
@@ -406,30 +465,36 @@
     place-items: center;
 }
 
+/* Styling rules for .af-customer-booking-stack. */
 .af-customer-booking-stack {
     display: grid;
     gap: 4px;
 }
 
+/* Styling rules for .af-customer-booking-stack strong. */
 .af-customer-booking-stack strong {
     color: #111827;
     font-size: 14px;
 }
 
 .af-customer-booking-stack small,
+/* Styling rules for .af-customer-booking-stack small, .af-muted. */
 .af-muted {
     color: #667085;
     font-size: 12px;
 }
 
+/* Card and panel styling for .af-customer-activity-card. */
 .af-customer-activity-card {
     padding: 0;
 }
 
+/* Styling rules for .af-customer-activity-list. */
 .af-customer-activity-list {
     display: grid;
 }
 
+/* Styling rules for .af-customer-activity-list article. */
 .af-customer-activity-list article {
     border-top: 1px solid #edf0f3;
     display: grid;
@@ -439,6 +504,7 @@
     padding: 16px 22px;
 }
 
+/* Styling rules for .af-customer-activity-icon. */
 .af-customer-activity-icon {
     width: 44px;
     height: 44px;
@@ -450,42 +516,50 @@
     font-size: 18px;
 }
 
+/* Styling rules for .af-customer-activity-list strong. */
 .af-customer-activity-list strong {
     color: #111827;
 }
 
+/* Styling rules for .af-customer-activity-list small. */
 .af-customer-activity-list small {
     color: #667085;
     display: block;
     margin-top: 4px;
 }
 
+/* Styling rules for .af-users-filters. */
 .af-users-filters {
     grid-template-columns: minmax(260px, 1fr) 170px 170px 170px 120px 120px;
     padding: 22px;
     border-bottom: 1px solid #edf0f3;
 }
 
+/* Table layout styling for .af-users-table table. */
 .af-users-table table {
     min-width: 1120px;
 }
 
 .af-users-table th:nth-child(1),
+/* Table layout styling for .af-users-table th:nth-child(1), .af-users-table td:nth-child(1). */
 .af-users-table td:nth-child(1) {
     width: 5%;
 }
 
 .af-users-table th:nth-child(2),
+/* Table layout styling for .af-users-table th:nth-child(2), .af-users-table td:nth-child(2). */
 .af-users-table td:nth-child(2) {
     width: 20%;
 }
 
 .af-users-table th:nth-child(3),
+/* Table layout styling for .af-users-table th:nth-child(3), .af-users-table td:nth-child(3). */
 .af-users-table td:nth-child(3) {
     width: 13%;
 }
 
 .af-users-table th:nth-child(4),
+/* Table layout styling for .af-users-table th:nth-child(4), .af-users-table td:nth-child(4). */
 .af-users-table td:nth-child(4) {
     width: 22%;
 }
@@ -497,10 +571,12 @@
 .af-users-table th:nth-child(7),
 .af-users-table td:nth-child(7),
 .af-users-table th:nth-child(8),
+/* Table layout styling for .af-users-table th:nth-child(5), .af-users-table td:nth-child(5), .af-users-table th:nth-child(6), .af-users-table td:nth-child(6), .af-users-table th:nth-child(7), .af-users-table td:nth-child(7), .af-users-table th:nth-child(8), .af-users-table td:nth-child(8). */
 .af-users-table td:nth-child(8) {
     width: 10%;
 }
 
+/* Styling rules for .af-user-cell. */
 .af-user-cell {
     display: grid;
     grid-template-columns: 48px minmax(0, 1fr);
@@ -508,6 +584,7 @@
     align-items: center;
 }
 
+/* Styling rules for .af-user-avatar. */
 .af-user-avatar {
     width: 48px;
     height: 48px;
@@ -517,6 +594,7 @@
 
 .af-user-meta,
 .af-user-contact,
+/* Styling rules for .af-user-meta, .af-user-contact, .af-user-date. */
 .af-user-date {
     min-width: 0;
     display: grid;
@@ -525,6 +603,7 @@
 
 .af-user-meta strong,
 .af-user-contact strong,
+/* Styling rules for .af-user-meta strong, .af-user-contact strong, .af-user-date strong. */
 .af-user-date strong {
     color: #111827;
     font-size: 13px;
@@ -535,11 +614,13 @@
 
 .af-user-meta small,
 .af-user-contact small,
+/* Styling rules for .af-user-meta small, .af-user-contact small, .af-user-date small. */
 .af-user-date small {
     color: #667085;
     font-size: 12px;
 }
 
+/* Styling rules for .af-user-role. */
 .af-user-role {
     min-height: 26px;
     border-radius: 5px;
@@ -550,31 +631,37 @@
     font-weight: 800;
 }
 
+/* Styling rules for .af-user-role.customer. */
 .af-user-role.customer {
     background: #e3f6e6;
     color: #137a39;
 }
 
+/* Styling rules for .af-user-role.staff. */
 .af-user-role.staff {
     background: #e5f0ff;
     color: #2563eb;
 }
 
+/* Styling rules for .af-user-role.rider. */
 .af-user-role.rider {
     background: #f1e4ff;
     color: #7a35c8;
 }
 
+/* Styling rules for .af-user-role.admin. */
 .af-user-role.admin {
     background: #ffe8ea;
     color: #d92d20;
 }
 
+/* Styling rules for .af-status i. */
 .af-status i {
     margin-right: 6px;
     font-size: 8px;
 }
 
+/* Styling rules for .af-verified-stack. */
 .af-verified-stack {
     color: #11823b;
     display: inline-flex;
@@ -583,11 +670,13 @@
     font-size: 18px;
 }
 
+/* Styling rules for .af-verified-stack small. */
 .af-verified-stack small {
     color: #667085;
     font-size: 12px;
 }
 
+/* Styling rules for .af-empty-state. */
 .af-empty-state {
     color: #667085;
     font-size: 14px;
@@ -595,6 +684,7 @@
     text-align: center;
 }
 
+/* Styling rules for .af-settings-tabs. */
 .af-settings-tabs {
     border: 1px solid #e5e7eb;
     border-radius: 8px;
@@ -605,6 +695,7 @@
     box-shadow: 0 8px 24px rgba(15, 23, 42, 0.05);
 }
 
+/* Styling rules for .af-settings-tabs a. */
 .af-settings-tabs a {
     min-height: 52px;
     border-bottom: 2px solid transparent;
@@ -619,35 +710,42 @@
     white-space: nowrap;
 }
 
+/* Interactive state styling for .af-settings-tabs a.active. */
 .af-settings-tabs a.active {
     border-color: #159447;
     color: #137a39;
 }
 
+/* Styling rules for .af-settings-grid. */
 .af-settings-grid {
     display: grid;
     grid-template-columns: repeat(3, minmax(0, 1fr));
     gap: 18px;
 }
 
+/* Styling rules for .af-settings-grid > *. */
 .af-settings-grid > * {
     min-width: 0;
 }
 
+/* Card and panel styling for .af-settings-card-wide. */
 .af-settings-card-wide {
     grid-column: span 2;
 }
 
 .af-settings-grid-delivery .af-settings-card-wide,
+/* Delivery management interface styling for .af-settings-grid-delivery .af-settings-card-wide, .af-settings-grid-seo .af-settings-card-wide. */
 .af-settings-grid-seo .af-settings-card-wide {
     grid-column: 1 / -1;
 }
 
 .af-settings-grid-email,
+/* Styling rules for .af-settings-grid-email, .af-settings-grid-maintenance. */
 .af-settings-grid-maintenance {
     grid-template-columns: minmax(360px, 680px);
 }
 
+/* Card and panel styling for .af-settings-card. */
 .af-settings-card {
     min-width: 0;
     border: 1px solid #e5e7eb;
@@ -660,24 +758,28 @@
     padding: 22px;
 }
 
+/* Card and panel styling for .af-settings-card h2. */
 .af-settings-card h2 {
     color: #111827;
     font-size: 18px;
     margin: 0;
 }
 
+/* Card and panel styling for .af-settings-card p. */
 .af-settings-card p {
     color: #667085;
     font-size: 13px;
     margin: -8px 0 2px;
 }
 
+/* Styling rules for .af-settings-field. */
 .af-settings-field {
     display: grid;
     gap: 7px;
 }
 
 .af-settings-two,
+/* Styling rules for .af-settings-two, .af-settings-color-grid. */
 .af-settings-color-grid {
     display: grid;
     grid-template-columns: repeat(2, minmax(0, 1fr));
@@ -685,6 +787,7 @@
 }
 
 .af-settings-field span,
+/* Styling rules for .af-settings-field span, .af-toggle-row strong. */
 .af-toggle-row strong {
     color: #111827;
     font-size: 13px;
@@ -693,6 +796,7 @@
 
 .af-settings-field input,
 .af-settings-field select,
+/* Form control styling for .af-settings-field input, .af-settings-field select, .af-settings-field textarea. */
 .af-settings-field textarea {
     width: 100%;
     min-height: 42px;
@@ -706,22 +810,26 @@
     padding: 10px 12px;
 }
 
+/* Form control styling for .af-settings-field input[type="color"]. */
 .af-settings-field input[type="color"] {
     min-height: 44px;
     padding: 5px;
 }
 
+/* Form control styling for .af-settings-field textarea. */
 .af-settings-field textarea {
     resize: vertical;
 }
 
 .af-settings-field input:focus,
 .af-settings-field select:focus,
+/* Form control styling for .af-settings-field input:focus, .af-settings-field select:focus, .af-settings-field textarea:focus. */
 .af-settings-field textarea:focus {
     border-color: var(--af-gold);
     box-shadow: 0 0 0 3px rgba(190, 124, 15, 0.12);
 }
 
+/* Styling rules for .af-toggle-row. */
 .af-toggle-row {
     display: grid;
     grid-template-columns: 44px 1fr;
@@ -729,18 +837,21 @@
     align-items: center;
 }
 
+/* Form control styling for .af-toggle-row input. */
 .af-toggle-row input {
     position: absolute;
     opacity: 0;
     pointer-events: none;
 }
 
+/* Styling rules for .af-toggle-row small. */
 .af-toggle-row small {
     color: #667085;
     font-size: 12px;
     grid-column: 2;
 }
 
+/* Styling rules for .af-switch. */
 .af-switch {
     width: 42px;
     height: 24px;
@@ -750,6 +861,7 @@
     transition: background 0.2s ease;
 }
 
+/* Styling rules for .af-switch::after. */
 .af-switch::after {
     content: "";
     width: 18px;
@@ -763,22 +875,27 @@
     transition: transform 0.2s ease;
 }
 
+/* Form control styling for .af-toggle-row input:checked + .af-switch. */
 .af-toggle-row input:checked + .af-switch {
     background: #159447;
 }
 
+/* Form control styling for .af-toggle-row input:checked + .af-switch::after. */
 .af-toggle-row input:checked + .af-switch::after {
     transform: translateX(18px);
 }
 
+/* Styling rules for .af-switch.is-on. */
 .af-switch.is-on {
     background: #159447;
 }
 
+/* Styling rules for .af-switch.is-on::after. */
 .af-switch.is-on::after {
     transform: translateX(18px);
 }
 
+/* Styling rules for .af-logo-preview. */
 .af-logo-preview {
     min-height: 112px;
     border: 1px dashed #cfd6df;
@@ -792,21 +909,25 @@
 }
 
 .af-logo-preview .af-brand-icon,
+/* Styling rules for .af-logo-preview .af-brand-icon, .af-favicon-preview .af-brand-icon. */
 .af-favicon-preview .af-brand-icon {
     color: var(--af-gold);
     font-size: 34px;
 }
 
+/* Styling rules for .af-logo-preview strong. */
 .af-logo-preview strong {
     color: #0d241e;
     font-size: 28px;
     line-height: 1;
 }
 
+/* Styling rules for .af-logo-preview strong span. */
 .af-logo-preview strong span {
     color: var(--af-gold);
 }
 
+/* Styling rules for .af-logo-preview small. */
 .af-logo-preview small {
     color: #111827;
     font-size: 10px;
@@ -815,6 +936,7 @@
     text-transform: uppercase;
 }
 
+/* Styling rules for .af-settings-actions. */
 .af-settings-actions {
     display: flex;
     flex-wrap: wrap;
@@ -825,6 +947,7 @@
 .af-settings-upload-btn,
 .af-settings-add-line,
 .af-icon-action,
+/* Button and action control styling for .af-settings-actions button, .af-settings-upload-btn, .af-settings-add-line, .af-icon-action, .af-test-connection-btn. */
 .af-test-connection-btn {
     min-height: 38px;
     border: 1px solid #cfd6df;
@@ -840,25 +963,30 @@
     cursor: pointer;
 }
 
+/* Form control styling for .af-settings-actions input[type="file"]. */
 .af-settings-actions input[type="file"] {
     display: none;
 }
 
+/* Button and action control styling for .af-settings-actions button.danger. */
 .af-settings-actions button.danger {
     border-color: #fecaca;
     color: #dc2626;
 }
 
+/* Card and panel styling for .af-company-assets-card. */
 .af-company-assets-card {
     gap: 14px;
 }
 
+/* Styling rules for .af-logo-preview img. */
 .af-logo-preview img {
     max-width: min(100%, 320px);
     max-height: 98px;
     object-fit: contain;
 }
 
+/* Styling rules for .af-favicon-preview. */
 .af-favicon-preview {
     width: 72px;
     height: 72px;
@@ -869,18 +997,21 @@
     padding: 8px;
 }
 
+/* Styling rules for .af-favicon-preview img. */
 .af-favicon-preview img {
     width: 48px;
     height: 48px;
     object-fit: contain;
 }
 
+/* Styling rules for .af-business-hours-editor. */
 .af-business-hours-editor {
     display: grid;
     grid-template-columns: minmax(0, 1fr) minmax(260px, 0.55fr);
     gap: 16px;
 }
 
+/* Form control styling for .af-business-hours-editor textarea. */
 .af-business-hours-editor textarea {
     width: 100%;
     min-height: 170px;
@@ -893,6 +1024,7 @@
     resize: vertical;
 }
 
+/* Styling rules for .af-business-hours-guide. */
 .af-business-hours-guide {
     border: 1px solid #edf0f4;
     border-radius: 9px;
@@ -902,6 +1034,7 @@
     padding: 14px;
 }
 
+/* Styling rules for .af-business-hours-guide span. */
 .af-business-hours-guide span {
     display: flex;
     justify-content: space-between;
@@ -910,16 +1043,19 @@
     font-size: 13px;
 }
 
+/* Styling rules for .af-business-hours-guide strong. */
 .af-business-hours-guide strong {
     color: #111827;
 }
 
+/* Styling rules for .af-business-hours-guide em. */
 .af-business-hours-guide em {
     color: #667085;
     font-style: normal;
     text-align: right;
 }
 
+/* Payment interface styling for .af-payment-settings-layout. */
 .af-payment-settings-layout {
     display: grid;
     grid-template-columns: minmax(0, 1.1fr) minmax(280px, 0.9fr);
@@ -927,6 +1063,7 @@
 }
 
 .af-payment-gateways,
+/* Payment interface styling for .af-payment-gateways, .af-payment-config. */
 .af-payment-config {
     border: 1px solid #edf0f4;
     border-radius: 10px;
@@ -936,12 +1073,14 @@
 }
 
 .af-payment-gateways h3,
+/* Payment interface styling for .af-payment-gateways h3, .af-payment-config h3. */
 .af-payment-config h3 {
     color: #111827;
     font-size: 16px;
     margin: 0;
 }
 
+/* Payment interface styling for .af-payment-gateways article. */
 .af-payment-gateways article {
     border: 1px solid #e5e7eb;
     border-radius: 9px;
@@ -952,6 +1091,7 @@
     padding: 13px;
 }
 
+/* Payment interface styling for .af-payment-logo. */
 .af-payment-logo {
     width: 36px;
     height: 36px;
@@ -961,27 +1101,32 @@
     font-weight: 900;
 }
 
+/* Payment interface styling for .af-payment-logo.paystack. */
 .af-payment-logo.paystack {
     background: #e0f2fe;
     color: #0284c7;
 }
 
+/* Payment interface styling for .af-payment-logo.card. */
 .af-payment-logo.card {
     background: #fff7ed;
     color: #c76a00;
 }
 
+/* Payment interface styling for .af-payment-logo.cash. */
 .af-payment-logo.cash {
     background: #eef8ef;
     color: #137a39;
 }
 
+/* Payment interface styling for .af-payment-gateways strong. */
 .af-payment-gateways strong {
     color: #111827;
     display: block;
     font-size: 14px;
 }
 
+/* Payment interface styling for .af-payment-gateways small. */
 .af-payment-gateways small {
     color: #667085;
     display: block;
@@ -989,6 +1134,7 @@
     line-height: 1.5;
 }
 
+/* Payment interface styling for .af-payment-gateways em. */
 .af-payment-gateways em {
     border-radius: 999px;
     background: #dcfce7;
@@ -999,18 +1145,21 @@
     padding: 5px 10px;
 }
 
+/* Card and panel styling for .af-social-accounts-card. */
 .af-social-accounts-card {
     grid-column: 1 / -1;
     position: relative;
     z-index: 2;
 }
 
+/* Card and panel styling for .af-social-preview-card. */
 .af-social-preview-card {
     grid-column: 1 / -1;
     position: relative;
     z-index: 1;
 }
 
+/* Styling rules for .af-social-account-list. */
 .af-social-account-list {
     display: grid;
     gap: 0;
@@ -1019,6 +1168,7 @@
     padding-bottom: 2px;
 }
 
+/* Styling rules for .af-social-account. */
 .af-social-account {
     border-bottom: 1px solid #edf0f4;
     display: grid;
@@ -1030,6 +1180,7 @@
     padding: 10px 0;
 }
 
+/* Form control styling for .af-social-platform. */
 .af-social-platform {
     width: 32px;
     height: 32px;
@@ -1040,34 +1191,42 @@
     font-size: 18px;
 }
 
+/* Form control styling for .af-social-platform.facebook. */
 .af-social-platform.facebook {
     background: #1877f2;
 }
 
+/* Form control styling for .af-social-platform.instagram. */
 .af-social-platform.instagram {
     background: linear-gradient(135deg, #f58529, #dd2a7b, #8134af);
 }
 
+/* Form control styling for .af-social-platform.twitter. */
 .af-social-platform.twitter {
     background: #000;
 }
 
+/* Form control styling for .af-social-platform.linkedin. */
 .af-social-platform.linkedin {
     background: #0a66c2;
 }
 
+/* Form control styling for .af-social-platform.youtube. */
 .af-social-platform.youtube {
     background: #ff0000;
 }
 
+/* Form control styling for .af-social-platform.tiktok. */
 .af-social-platform.tiktok {
     background: #111827;
 }
 
+/* Interactive state styling for .af-social-account.is-disabled. */
 .af-social-account.is-disabled {
     opacity: 0.68;
 }
 
+/* Form control styling for .af-social-account.is-disabled input. */
 .af-social-account.is-disabled input {
     background: #f9fafb;
 }
@@ -1075,32 +1234,38 @@
 .af-social-clear:disabled,
 .af-icon-action:disabled,
 .af-test-connection-btn:disabled,
+/* Button and action control styling for .af-social-clear:disabled, .af-icon-action:disabled, .af-test-connection-btn:disabled, .af-settings-add-line:disabled. */
 .af-settings-add-line:disabled {
     cursor: not-allowed;
     opacity: 0.7;
 }
 
 .af-social-meta strong,
+/* Styling rules for .af-social-meta strong, .af-social-meta small. */
 .af-social-meta small {
     display: block;
 }
 
+/* Styling rules for .af-social-meta. */
 .af-social-meta {
     min-width: 0;
 }
 
+/* Styling rules for .af-social-meta strong. */
 .af-social-meta strong {
     color: #111827;
     font-size: 13px;
     font-weight: 850;
 }
 
+/* Styling rules for .af-social-meta small. */
 .af-social-meta small {
     color: #667085;
     font-size: 12px;
     margin-top: 3px;
 }
 
+/* Form control styling for .af-social-account input[type="url"]. */
 .af-social-account input[type="url"] {
     min-width: 0;
     width: 100%;
@@ -1113,12 +1278,14 @@
     padding: 9px 12px;
 }
 
+/* Form control styling for .af-social-account input[type="url"]:focus. */
 .af-social-account input[type="url"]:focus {
     border-color: var(--af-gold);
     box-shadow: 0 0 0 3px rgba(190, 124, 15, 0.12);
     outline: 0;
 }
 
+/* Styling rules for .af-social-toggle. */
 .af-social-toggle {
     display: grid;
     width: 48px;
@@ -1126,28 +1293,34 @@
     justify-self: center;
 }
 
+/* Form control styling for .af-social-toggle input. */
 .af-social-toggle input {
     position: absolute;
     opacity: 0;
     pointer-events: none;
 }
 
+/* Form control styling for .af-social-toggle input:checked + .af-switch. */
 .af-social-toggle input:checked + .af-switch {
     background: #159447;
 }
 
+/* Form control styling for .af-social-toggle input:checked + .af-switch::after. */
 .af-social-toggle input:checked + .af-switch::after {
     transform: translateX(18px);
 }
 
+/* Styling rules for .af-social-account .af-switch.is-on. */
 .af-social-account .af-switch.is-on {
     background: #159447;
 }
 
+/* Styling rules for .af-social-account .af-switch.is-on::after. */
 .af-social-account .af-switch.is-on::after {
     transform: translateX(18px);
 }
 
+/* Styling rules for .af-social-clear. */
 .af-social-clear {
     width: 36px;
     height: 36px;
@@ -1161,16 +1334,19 @@
     justify-self: center;
 }
 
+/* Card and panel styling for .af-social-preview-card h2. */
 .af-social-preview-card h2 {
     color: #111827;
     font-size: 16px;
     margin: 0;
 }
 
+/* Card and panel styling for .af-social-preview-card p. */
 .af-social-preview-card p {
     margin: -10px 0 0;
 }
 
+/* Styling rules for .af-social-preview-box. */
 .af-social-preview-box {
     border: 1px solid #e5e7eb;
     border-radius: 9px;
@@ -1180,10 +1356,12 @@
 }
 
 .af-social-preview-box strong,
+/* Styling rules for .af-social-preview-box strong, .af-social-preview-box small. */
 .af-social-preview-box small {
     display: block;
 }
 
+/* Styling rules for .af-social-preview-box div. */
 .af-social-preview-box div {
     display: flex;
     flex-wrap: wrap;
@@ -1191,6 +1369,7 @@
     margin-top: 6px;
 }
 
+/* Styling rules for .af-social-preview-box span. */
 .af-social-preview-box span {
     width: 36px;
     height: 36px;
@@ -1202,11 +1381,13 @@
     font-size: 18px;
 }
 
+/* Styling rules for .af-social-preview-box div > small. */
 .af-social-preview-box div > small {
     color: #667085;
     font-size: 13px;
 }
 
+/* Styling rules for .af-settings-add-line. */
 .af-settings-add-line {
     width: 100%;
     justify-content: center;
@@ -1214,12 +1395,14 @@
     color: #c76a00;
 }
 
+/* Table layout styling for .af-custom-social-table. */
 .af-custom-social-table {
     border: 1px solid #edf0f4;
     border-radius: 9px;
     overflow-x: auto;
 }
 
+/* Table layout styling for .af-custom-social-table > div. */
 .af-custom-social-table > div {
     min-width: 760px;
     display: grid;
@@ -1229,12 +1412,14 @@
     padding: 12px;
 }
 
+/* Table layout styling for .af-custom-social-table > div:first-child. */
 .af-custom-social-table > div:first-child {
     background: #fbfcfd;
     color: #111827;
     font-size: 12px;
 }
 
+/* Form control styling for .af-custom-social-table input. */
 .af-custom-social-table input {
     width: 100%;
     border: 1px solid #d9dee6;
@@ -1245,14 +1430,17 @@
     padding: 8px 10px;
 }
 
+/* Payment interface styling for .af-payment-gateways-card. */
 .af-payment-gateways-card {
     grid-column: span 2;
 }
 
+/* Payment interface styling for .af-payment-config-card. */
 .af-payment-config-card {
     grid-column: span 1;
 }
 
+/* Payment interface styling for .af-payment-gateway-list. */
 .af-payment-gateway-list {
     border: 1px solid #edf0f4;
     border-radius: 10px;
@@ -1260,6 +1448,7 @@
     overflow: hidden;
 }
 
+/* Payment interface styling for .af-payment-gateway-list article. */
 .af-payment-gateway-list article {
     display: grid;
     grid-template-columns: 44px minmax(220px, 1fr) auto 52px 44px;
@@ -1269,41 +1458,49 @@
     padding: 12px 16px;
 }
 
+/* Styling rules for .af-settings-inline-switch. */
 .af-settings-inline-switch {
     display: inline-flex;
     align-items: center;
     justify-content: center;
 }
 
+/* Form control styling for .af-settings-inline-switch input. */
 .af-settings-inline-switch input {
     position: absolute;
     opacity: 0;
     pointer-events: none;
 }
 
+/* Form control styling for .af-settings-inline-switch input:checked + .af-switch. */
 .af-settings-inline-switch input:checked + .af-switch {
     background: #00533f;
 }
 
+/* Form control styling for .af-settings-inline-switch input:checked + .af-switch::after. */
 .af-settings-inline-switch input:checked + .af-switch::after {
     transform: translateX(18px);
 }
 
+/* Payment interface styling for .af-payment-gateway-list article + article. */
 .af-payment-gateway-list article + article {
     border-top: 1px solid #edf0f4;
 }
 
 .af-payment-gateway-list strong,
+/* Payment interface styling for .af-payment-gateway-list strong, .af-payment-gateway-list small. */
 .af-payment-gateway-list small {
     display: block;
 }
 
+/* Payment interface styling for .af-payment-gateway-list strong. */
 .af-payment-gateway-list strong {
     color: #111827;
     font-size: 14px;
     font-weight: 850;
 }
 
+/* Payment interface styling for .af-payment-gateway-list small. */
 .af-payment-gateway-list small {
     color: #667085;
     font-size: 12px;
@@ -1312,6 +1509,7 @@
 }
 
 .af-payment-gateway-list em,
+/* Payment interface styling for .af-payment-gateway-list em, .af-recent-transactions em. */
 .af-recent-transactions em {
     border-radius: 999px;
     background: #dcfce7;
@@ -1323,39 +1521,46 @@
 }
 
 .af-payment-gateway-list em.muted,
+/* Payment interface styling for .af-payment-gateway-list em.muted, .af-recent-transactions em.muted. */
 .af-recent-transactions em.muted {
     background: #f2f4f7;
     color: #475467;
 }
 
+/* Payment interface styling for .af-payment-logo.mtn. */
 .af-payment-logo.mtn {
     background: #facc15;
     color: #075985;
     font-size: 10px;
 }
 
+/* Payment interface styling for .af-payment-logo.vodafone. */
 .af-payment-logo.vodafone {
     background: #fee2e2;
     color: #e60000;
 }
 
+/* Payment interface styling for .af-payment-logo.flutterwave. */
 .af-payment-logo.flutterwave {
     background: #111827;
     color: #f59e0b;
 }
 
+/* Styling rules for .af-icon-action. */
 .af-icon-action {
     width: 38px;
     padding: 0;
     justify-content: center;
 }
 
+/* Button and action control styling for .af-test-connection-btn. */
 .af-test-connection-btn {
     justify-self: end;
     border-color: #b7e4c7;
     color: #137a39;
 }
 
+/* Payment interface styling for .af-payment-radio-row. */
 .af-payment-radio-row {
     display: grid;
     gap: 9px;
@@ -1363,22 +1568,26 @@
     font-size: 13px;
 }
 
+/* Payment interface styling for .af-payment-radio-row span. */
 .af-payment-radio-row span {
     color: #111827;
     font-weight: 850;
 }
 
+/* Payment interface styling for .af-payment-radio-row label. */
 .af-payment-radio-row label {
     display: inline-flex;
     align-items: center;
     gap: 8px;
 }
 
+/* Styling rules for .af-recent-transactions. */
 .af-recent-transactions {
     display: grid;
     gap: 10px;
 }
 
+/* Styling rules for .af-recent-transactions article. */
 .af-recent-transactions article {
     border: 1px solid #edf0f4;
     border-radius: 8px;
@@ -1389,25 +1598,30 @@
     padding: 12px;
 }
 
+/* Styling rules for .af-recent-transactions span. */
 .af-recent-transactions span {
     color: #667085;
     font-size: 12px;
 }
 
+/* Styling rules for .af-recent-transactions strong. */
 .af-recent-transactions strong {
     color: #111827;
     font-size: 13px;
 }
 
+/* Styling rules for .af-recent-transactions em. */
 .af-recent-transactions em {
     grid-row: span 2;
 }
 
+/* Styling rules for .af-recent-transactions em.pending. */
 .af-recent-transactions em.pending {
     background: #fff7ed;
     color: #c76a00;
 }
 
+/* Delivery management interface styling for .af-delivery-settings-layout. */
 .af-delivery-settings-layout {
     display: grid;
     grid-template-columns: minmax(0, 1.15fr) minmax(320px, 0.85fr);
@@ -1416,6 +1630,7 @@
 
 .af-delivery-zones,
 .af-delivery-options,
+/* Delivery management interface styling for .af-delivery-zones, .af-delivery-options, .af-delivery-mini-card. */
 .af-delivery-mini-card {
     border: 1px solid #edf0f4;
     border-radius: 10px;
@@ -1424,6 +1639,7 @@
     padding: 16px;
 }
 
+/* Styling rules for .af-settings-section-heading. */
 .af-settings-section-heading {
     display: flex;
     align-items: center;
@@ -1433,12 +1649,14 @@
 
 .af-settings-section-heading h3,
 .af-delivery-options h3,
+/* Delivery management interface styling for .af-settings-section-heading h3, .af-delivery-options h3, .af-delivery-mini-card h3. */
 .af-delivery-mini-card h3 {
     color: #111827;
     font-size: 16px;
     margin: 0;
 }
 
+/* Button and action control styling for .af-settings-section-heading button. */
 .af-settings-section-heading button {
     min-height: 36px;
     border: 1px solid #fed7aa;
@@ -1453,12 +1671,14 @@
     font-weight: 850;
 }
 
+/* Delivery management interface styling for .af-delivery-zone-table. */
 .af-delivery-zone-table {
     border: 1px solid #e5e7eb;
     border-radius: 9px;
     overflow-x: auto;
 }
 
+/* Delivery management interface styling for .af-delivery-zone-table > div. */
 .af-delivery-zone-table > div {
     min-width: 980px;
     display: grid;
@@ -1469,6 +1689,7 @@
 }
 
 .af-delivery-zone-table input,
+/* Delivery management interface styling for .af-delivery-zone-table input, .af-delivery-zone-table select. */
 .af-delivery-zone-table select {
     width: 100%;
     border: 1px solid #d9dee6;
@@ -1479,26 +1700,31 @@
     padding: 7px 9px;
 }
 
+/* Styling rules for .af-icon-action.danger. */
 .af-icon-action.danger {
     border-color: #fecaca;
     color: #dc2626;
 }
 
+/* Delivery management interface styling for .af-delivery-zone-table > div:first-child. */
 .af-delivery-zone-table > div:first-child {
     background: #fbfcfd;
     color: #111827;
     font-size: 12px;
 }
 
+/* Delivery management interface styling for .af-delivery-zone-table > div + div. */
 .af-delivery-zone-table > div + div {
     border-top: 1px solid #edf0f4;
 }
 
 .af-delivery-zone-table span,
+/* Delivery management interface styling for .af-delivery-zone-table span, .af-delivery-zone-table small. */
 .af-delivery-zone-table small {
     display: block;
 }
 
+/* Delivery management interface styling for .af-delivery-zone-table span. */
 .af-delivery-zone-table span {
     color: #111827;
     font-size: 13px;
@@ -1506,12 +1732,14 @@
     line-height: 1.45;
 }
 
+/* Delivery management interface styling for .af-delivery-zone-table small. */
 .af-delivery-zone-table small {
     color: #667085;
     font-size: 11px;
     margin-top: 2px;
 }
 
+/* Delivery management interface styling for .af-delivery-zone-table em. */
 .af-delivery-zone-table em {
     justify-self: start;
     border-radius: 999px;
@@ -1523,21 +1751,25 @@
     padding: 5px 10px;
 }
 
+/* Delivery management interface styling for .af-delivery-zone-table em.muted. */
 .af-delivery-zone-table em.muted {
     background: #f2f4f7;
     color: #475467;
 }
 
 .af-delivery-options .af-toggle-row input:disabled + .af-switch,
+/* Delivery management interface styling for .af-delivery-options .af-toggle-row input:disabled + .af-switch, .af-social-preview-card .af-toggle-row input:disabled + .af-switch. */
 .af-social-preview-card .af-toggle-row input:disabled + .af-switch {
     background: #159447;
 }
 
 .af-delivery-options .af-toggle-row input:disabled + .af-switch::after,
+/* Delivery management interface styling for .af-delivery-options .af-toggle-row input:disabled + .af-switch::after, .af-social-preview-card .af-toggle-row input:disabled + .af-switch::after. */
 .af-social-preview-card .af-toggle-row input:disabled + .af-switch::after {
     transform: translateX(18px);
 }
 
+/* Delivery management interface styling for .af-delivery-mini-card textarea. */
 .af-delivery-mini-card textarea {
     width: 100%;
     border: 1px solid #d9dee6;
@@ -1550,6 +1782,7 @@
     resize: none;
 }
 
+/* Styling rules for .af-settings-note. */
 .af-settings-note {
     border-radius: 8px;
     background: #fff7e8;
@@ -1562,6 +1795,7 @@
     padding: 12px 14px;
 }
 
+/* Styling rules for .af-seo-settings-layout. */
 .af-seo-settings-layout {
     display: grid;
     grid-template-columns: minmax(0, 1.15fr) minmax(360px, 0.85fr);
@@ -1569,6 +1803,7 @@
 }
 
 .af-seo-form-panel,
+/* Form control styling for .af-seo-form-panel, .af-seo-analytics-panel. */
 .af-seo-analytics-panel {
     border: 1px solid #edf0f4;
     border-radius: 10px;
@@ -1579,24 +1814,28 @@
 }
 
 .af-seo-form-panel h3,
+/* Form control styling for .af-seo-form-panel h3, .af-seo-analytics-panel h3. */
 .af-seo-analytics-panel h3 {
     color: #111827;
     font-size: 16px;
     margin: 0;
 }
 
+/* Styling rules for .af-settings-field small. */
 .af-settings-field small {
     color: #667085;
     font-size: 11px;
     line-height: 1.45;
 }
 
+/* Styling rules for .af-seo-stats. */
 .af-seo-stats {
     display: grid;
     grid-template-columns: repeat(2, minmax(0, 1fr));
     gap: 12px;
 }
 
+/* Styling rules for .af-seo-stats article. */
 .af-seo-stats article {
     border: 1px solid #e5e7eb;
     border-radius: 9px;
@@ -1605,6 +1844,7 @@
     padding: 14px;
 }
 
+/* Styling rules for .af-seo-stats i. */
 .af-seo-stats i {
     width: 30px;
     height: 30px;
@@ -1615,18 +1855,21 @@
     place-items: center;
 }
 
+/* Styling rules for .af-seo-stats strong. */
 .af-seo-stats strong {
     color: #111827;
     font-size: 24px;
     line-height: 1;
 }
 
+/* Styling rules for .af-seo-stats span. */
 .af-seo-stats span {
     color: #667085;
     font-size: 12px;
     font-weight: 750;
 }
 
+/* Styling rules for .af-seo-chart-placeholder. */
 .af-seo-chart-placeholder {
     min-height: 180px;
     border: 1px dashed #cfd6df;
@@ -1640,11 +1883,13 @@
     padding: 24px;
 }
 
+/* Styling rules for .af-seo-chart-placeholder i. */
 .af-seo-chart-placeholder i {
     color: var(--af-gold);
     font-size: 30px;
 }
 
+/* Styling rules for .af-favicon-preview. */
 .af-favicon-preview {
     width: 64px;
     height: 64px;
@@ -1654,18 +1899,21 @@
     place-items: center;
 }
 
+/* Styling rules for .af-theme-grid. */
 .af-theme-grid {
     display: grid;
     grid-template-columns: repeat(3, 1fr);
     gap: 12px;
 }
 
+/* Form control styling for .af-theme-grid label input. */
 .af-theme-grid label input {
     position: absolute;
     opacity: 0;
     pointer-events: none;
 }
 
+/* Styling rules for .af-theme-grid span. */
 .af-theme-grid span {
     min-height: 92px;
     border: 1px solid #d9dee6;
@@ -1677,6 +1925,7 @@
     cursor: pointer;
 }
 
+/* Styling rules for .af-theme-grid i. */
 .af-theme-grid i {
     width: 64px;
     height: 44px;
@@ -1684,19 +1933,23 @@
     background: linear-gradient(#f8fafc 0 50%, #e5e7eb 50% 100%);
 }
 
+/* Styling rules for .af-theme-grid label:nth-child(2) i. */
 .af-theme-grid label:nth-child(2) i {
     background: linear-gradient(#111827 0 50%, #374151 50% 100%);
 }
 
+/* Styling rules for .af-theme-grid label:nth-child(3) i. */
 .af-theme-grid label:nth-child(3) i {
     background: linear-gradient(135deg, #f8fafc 0 50%, #111827 50% 100%);
 }
 
+/* Form control styling for .af-theme-grid input:checked + span. */
 .af-theme-grid input:checked + span {
     border-color: #159447;
     box-shadow: 0 0 0 3px rgba(21, 148, 71, 0.12);
 }
 
+/* Styling rules for .af-roles-workspace. */
 .af-roles-workspace {
     display: grid;
     grid-template-columns: minmax(0, 1fr) 320px;
@@ -1704,26 +1957,31 @@
     align-items: start;
 }
 
+/* Card and panel styling for .af-role-create-card. */
 .af-role-create-card {
     margin-bottom: 24px;
 }
 
+/* Card and panel styling for .af-role-create-card .af-table-toolbar. */
 .af-role-create-card .af-table-toolbar {
     align-items: start;
 }
 
+/* Card and panel styling for .af-role-create-card .af-table-toolbar p. */
 .af-role-create-card .af-table-toolbar p {
     color: #667085;
     margin: 6px 0 0;
     font-size: 13px;
 }
 
+/* Form control styling for .af-role-create-form. */
 .af-role-create-form {
     grid-template-columns: minmax(180px, 240px) minmax(260px, 1fr) 150px;
     align-items: end;
     padding: 18px 24px 24px;
 }
 
+/* Table layout styling for .af-table-toolbar. */
 .af-table-toolbar {
     min-height: 74px;
     border-bottom: 1px solid #edf0f3;
@@ -1736,18 +1994,21 @@
 
 .af-table-toolbar h2,
 .af-role-details-card h2,
+/* Card and panel styling for .af-table-toolbar h2, .af-role-details-card h2, .af-role-help-card h2. */
 .af-role-help-card h2 {
     color: #111827;
     font-size: 19px;
     margin: 0;
 }
 
+/* Styling rules for .af-role-search. */
 .af-role-search {
     display: grid;
     grid-template-columns: 260px 118px;
     gap: 12px;
 }
 
+/* Button and action control styling for .af-role-search button. */
 .af-role-search button {
     height: 44px;
     border: 1px solid #d9dee6;
@@ -1762,21 +2023,25 @@
     cursor: pointer;
 }
 
+/* Table layout styling for .af-roles-table table. */
 .af-roles-table table {
     min-width: 860px;
 }
 
 .af-roles-table th:nth-child(1),
+/* Table layout styling for .af-roles-table th:nth-child(1), .af-roles-table td:nth-child(1). */
 .af-roles-table td:nth-child(1) {
     width: 7%;
 }
 
 .af-roles-table th:nth-child(2),
+/* Table layout styling for .af-roles-table th:nth-child(2), .af-roles-table td:nth-child(2). */
 .af-roles-table td:nth-child(2) {
     width: 22%;
 }
 
 .af-roles-table th:nth-child(3),
+/* Table layout styling for .af-roles-table th:nth-child(3), .af-roles-table td:nth-child(3). */
 .af-roles-table td:nth-child(3) {
     width: 28%;
 }
@@ -1788,10 +2053,12 @@
 .af-roles-table th:nth-child(6),
 .af-roles-table td:nth-child(6),
 .af-roles-table th:nth-child(7),
+/* Table layout styling for .af-roles-table th:nth-child(4), .af-roles-table td:nth-child(4), .af-roles-table th:nth-child(5), .af-roles-table td:nth-child(5), .af-roles-table th:nth-child(6), .af-roles-table td:nth-child(6), .af-roles-table th:nth-child(7), .af-roles-table td:nth-child(7). */
 .af-roles-table td:nth-child(7) {
     width: 11%;
 }
 
+/* Styling rules for .af-role-name. */
 .af-role-name {
     display: grid;
     grid-template-columns: 40px auto auto;
@@ -1801,6 +2068,7 @@
 }
 
 .af-role-name > span,
+/* Styling rules for .af-role-name > span, .af-role-detail-head > span. */
 .af-role-detail-head > span {
     width: 42px;
     height: 42px;
@@ -1811,47 +2079,55 @@
 }
 
 .af-role-name .green,
+/* Styling rules for .af-role-name .green, .af-role-detail-head .green. */
 .af-role-detail-head .green {
     background: #dff7e7;
     color: #159447;
 }
 
 .af-role-name .gold,
+/* Styling rules for .af-role-name .gold, .af-role-detail-head .gold. */
 .af-role-detail-head .gold {
     background: #fff1d7;
     color: #c06f00;
 }
 
 .af-role-name .blue,
+/* Styling rules for .af-role-name .blue, .af-role-detail-head .blue. */
 .af-role-detail-head .blue {
     background: #dcecff;
     color: #2f78d4;
 }
 
 .af-role-name .purple,
+/* Styling rules for .af-role-name .purple, .af-role-detail-head .purple. */
 .af-role-detail-head .purple {
     background: #f0dcff;
     color: #9254de;
 }
 
 .af-role-name .mint,
+/* Styling rules for .af-role-name .mint, .af-role-detail-head .mint. */
 .af-role-detail-head .mint {
     background: #dff7f1;
     color: #0f766e;
 }
 
 .af-role-name .red,
+/* Styling rules for .af-role-name .red, .af-role-detail-head .red. */
 .af-role-detail-head .red {
     background: #ffe4e6;
     color: #e11d48;
 }
 
+/* Styling rules for .af-role-name strong. */
 .af-role-name strong {
     color: #111827;
     font-size: 13px;
 }
 
 .af-role-name small,
+/* Styling rules for .af-role-name small, .af-permission-level. */
 .af-permission-level {
     min-height: 24px;
     border-radius: 5px;
@@ -1863,38 +2139,45 @@
 }
 
 .af-role-name small,
+/* Styling rules for .af-role-name small, .af-permission-level.all. */
 .af-permission-level.all {
     background: #e3f6e6;
     color: #159447;
 }
 
+/* Styling rules for .af-permission-count. */
 .af-permission-count {
     color: #111827;
     font-weight: 850;
     margin-right: 8px;
 }
 
+/* Styling rules for .af-permission-level.high. */
 .af-permission-level.high {
     background: #e5f0ff;
     color: #2563eb;
 }
 
+/* Styling rules for .af-permission-level.medium. */
 .af-permission-level.medium {
     background: #fff1db;
     color: #c06f00;
 }
 
+/* Styling rules for .af-permission-level.low. */
 .af-permission-level.low {
     background: #f1e4ff;
     color: #7a35c8;
 }
 
+/* Styling rules for .af-roles-side. */
 .af-roles-side {
     display: grid;
     gap: 18px;
 }
 
 .af-role-details-card,
+/* Card and panel styling for .af-role-details-card, .af-role-help-card. */
 .af-role-help-card {
     border: 1px solid #e5e7eb;
     border-radius: 10px;
@@ -1905,6 +2188,7 @@
     padding: 24px;
 }
 
+/* Styling rules for .af-role-detail-head. */
 .af-role-detail-head {
     display: grid;
     grid-template-columns: 48px 1fr auto;
@@ -1912,11 +2196,13 @@
     align-items: center;
 }
 
+/* Styling rules for .af-role-detail-head strong. */
 .af-role-detail-head strong {
     color: #111827;
     font-size: 16px;
 }
 
+/* Styling rules for .af-role-detail-head em. */
 .af-role-detail-head em {
     min-height: 30px;
     border-radius: 6px;
@@ -1931,24 +2217,28 @@
 }
 
 .af-role-details-card p,
+/* Card and panel styling for .af-role-details-card p, .af-role-help-card p. */
 .af-role-help-card p {
     color: #4b5563;
     font-size: 14px;
     line-height: 1.7;
 }
 
+/* Card and panel styling for .af-role-details-card hr. */
 .af-role-details-card hr {
     width: 100%;
     border: 0;
     border-top: 1px solid #edf0f3;
 }
 
+/* Card and panel styling for .af-role-details-card h3. */
 .af-role-details-card h3 {
     color: #111827;
     font-size: 14px;
     margin: 0;
 }
 
+/* Card and panel styling for .af-role-details-card ul. */
 .af-role-details-card ul {
     color: #344054;
     display: grid;
@@ -1957,6 +2247,7 @@
     margin-left: 16px;
 }
 
+/* Button and action control styling for .af-role-details-card button. */
 .af-role-details-card button {
     min-height: 40px;
     border: 1px solid var(--af-gold);
@@ -1967,6 +2258,7 @@
     cursor: pointer;
 }
 
+/* Card and panel styling for .af-role-details-card .af-role-permission-link. */
 .af-role-details-card .af-role-permission-link {
     min-height: 40px;
     border: 1px solid var(--af-gold);
@@ -1981,6 +2273,7 @@
     text-decoration: none;
 }
 
+/* Card and panel styling for .af-role-help-card h2. */
 .af-role-help-card h2 {
     display: flex;
     align-items: center;
@@ -1988,10 +2281,12 @@
 }
 
 .af-role-help-card h2 i,
+/* Card and panel styling for .af-role-help-card h2 i, .af-role-help-card a. */
 .af-role-help-card a {
     color: var(--af-gold);
 }
 
+/* Card and panel styling for .af-role-help-card a. */
 .af-role-help-card a {
     display: inline-flex;
     align-items: center;
@@ -2001,10 +2296,12 @@
     text-decoration: none;
 }
 
+/* Styling rules for .af-food-metrics. */
 .af-food-metrics {
     grid-template-columns: repeat(5, minmax(0, 1fr));
 }
 
+/* Styling rules for .af-foods-workspace. */
 .af-foods-workspace {
     display: grid;
     grid-template-columns: minmax(0, 1fr) 330px;
@@ -2012,27 +2309,32 @@
     align-items: start;
 }
 
+/* Styling rules for .af-foods-filters. */
 .af-foods-filters {
     grid-template-columns: minmax(230px, 1fr) 170px 170px 170px 110px 110px;
     padding: 18px;
     border-bottom: 1px solid #edf0f3;
 }
 
+/* Table layout styling for .af-foods-table table. */
 .af-foods-table table {
     min-width: 980px;
 }
 
 .af-foods-table th:nth-child(1),
+/* Table layout styling for .af-foods-table th:nth-child(1), .af-foods-table td:nth-child(1). */
 .af-foods-table td:nth-child(1) {
     width: 5%;
 }
 
 .af-foods-table th:nth-child(2),
+/* Table layout styling for .af-foods-table th:nth-child(2), .af-foods-table td:nth-child(2). */
 .af-foods-table td:nth-child(2) {
     width: 28%;
 }
 
 .af-foods-table th:nth-child(3),
+/* Table layout styling for .af-foods-table th:nth-child(3), .af-foods-table td:nth-child(3). */
 .af-foods-table td:nth-child(3) {
     width: 16%;
 }
@@ -2044,16 +2346,19 @@
 .af-foods-table th:nth-child(6),
 .af-foods-table td:nth-child(6),
 .af-foods-table th:nth-child(7),
+/* Table layout styling for .af-foods-table th:nth-child(4), .af-foods-table td:nth-child(4), .af-foods-table th:nth-child(5), .af-foods-table td:nth-child(5), .af-foods-table th:nth-child(6), .af-foods-table td:nth-child(6), .af-foods-table th:nth-child(7), .af-foods-table td:nth-child(7). */
 .af-foods-table td:nth-child(7) {
     width: 12%;
 }
 
+/* Form control styling for .af-foods-table input[type="checkbox"]. */
 .af-foods-table input[type="checkbox"] {
     width: 16px;
     height: 16px;
     accent-color: var(--af-gold);
 }
 
+/* Styling rules for .af-food-cell. */
 .af-food-cell {
     display: grid;
     grid-template-columns: 58px minmax(0, 1fr);
@@ -2061,6 +2366,7 @@
     align-items: center;
 }
 
+/* Styling rules for .af-food-cell img. */
 .af-food-cell img {
     width: 58px;
     height: 58px;
@@ -2071,16 +2377,19 @@
 }
 
 .af-food-cell strong,
+/* Styling rules for .af-food-cell strong, .af-food-cell small. */
 .af-food-cell small {
     display: block;
 }
 
+/* Styling rules for .af-food-cell strong. */
 .af-food-cell strong {
     color: #111827;
     font-size: 14px;
     margin-bottom: 5px;
 }
 
+/* Styling rules for .af-food-cell small. */
 .af-food-cell small {
     color: #4b5563;
     font-size: 12px;
@@ -2091,21 +2400,25 @@
     -webkit-box-orient: vertical;
 }
 
+/* Table layout styling for .af-foods-table .af-row-actions. */
 .af-foods-table .af-row-actions {
     align-items: center;
     flex-wrap: nowrap;
 }
 
+/* Form control styling for .af-foods-table .af-row-actions form. */
 .af-foods-table .af-row-actions form {
     display: inline-flex;
     margin: 0;
 }
 
+/* Styling rules for .af-foods-side. */
 .af-foods-side {
     display: grid;
     gap: 18px;
 }
 
+/* Styling rules for .af-stock-donut. */
 .af-stock-donut {
     width: 132px;
     aspect-ratio: 1;
@@ -2117,6 +2430,7 @@
     position: relative;
 }
 
+/* Styling rules for .af-stock-donut::after. */
 .af-stock-donut::after {
     content: "";
     position: absolute;
@@ -2126,12 +2440,14 @@
 }
 
 .af-stock-donut strong,
+/* Styling rules for .af-stock-donut strong, .af-stock-donut span. */
 .af-stock-donut span {
     position: relative;
     z-index: 1;
     text-align: center;
 }
 
+/* Styling rules for .af-stock-donut strong. */
 .af-stock-donut strong {
     color: #111827;
     font-size: 25px;
@@ -2139,12 +2455,14 @@
     align-self: end;
 }
 
+/* Styling rules for .af-stock-donut span. */
 .af-stock-donut span {
     color: #344054;
     font-size: 12px;
     align-self: start;
 }
 
+/* Styling rules for .af-food-help h2. */
 .af-food-help h2 {
     display: flex;
     align-items: center;
@@ -2152,16 +2470,19 @@
 }
 
 .af-food-help h2 i,
+/* Styling rules for .af-food-help h2 i, .af-food-help a. */
 .af-food-help a {
     color: var(--af-gold);
 }
 
+/* Styling rules for .af-food-help p. */
 .af-food-help p {
     color: #4b5563;
     font-size: 14px;
     line-height: 1.7;
 }
 
+/* Styling rules for .af-food-help a. */
 .af-food-help a {
     display: inline-flex;
     align-items: center;
@@ -2171,22 +2492,26 @@
     text-decoration: none;
 }
 
+/* Form control styling for .af-food-management-form. */
 .af-food-management-form {
     display: grid;
     gap: 12px;
 }
 
+/* Form control styling for .af-food-management-form.compact. */
 .af-food-management-form.compact {
     border-top: 1px solid #edf0f3;
     margin-top: 16px;
     padding-top: 16px;
 }
 
+/* Form control styling for .af-food-management-form label. */
 .af-food-management-form label {
     display: grid;
     gap: 6px;
 }
 
+/* Form control styling for .af-food-management-form span. */
 .af-food-management-form span {
     color: #111827;
     font-size: 12px;
@@ -2195,6 +2520,7 @@
 
 .af-food-management-form input,
 .af-food-management-form select,
+/* Form control styling for .af-food-management-form input, .af-food-management-form select, .af-food-management-form textarea. */
 .af-food-management-form textarea {
     width: 100%;
     min-height: 40px;
@@ -2208,17 +2534,20 @@
     padding: 9px 11px;
 }
 
+/* Form control styling for .af-food-management-form textarea. */
 .af-food-management-form textarea {
     resize: vertical;
 }
 
 .af-food-management-form input:focus,
 .af-food-management-form select:focus,
+/* Form control styling for .af-food-management-form input:focus, .af-food-management-form select:focus, .af-food-management-form textarea:focus. */
 .af-food-management-form textarea:focus {
     border-color: var(--af-gold);
     box-shadow: 0 0 0 3px rgba(190, 124, 15, 0.12);
 }
 
+/* Form control styling for .af-food-management-form button. */
 .af-food-management-form button {
     min-height: 40px;
     border: 0;
@@ -2234,11 +2563,13 @@
     cursor: pointer;
 }
 
+/* Card and panel styling for .af-food-edit-panel. */
 .af-food-edit-panel {
     border-color: #f1d8ad;
     background: #fffaf2;
 }
 
+/* Styling rules for .af-food-edit-preview. */
 .af-food-edit-preview {
     border: 1px solid #f1d8ad;
     border-radius: 8px;
@@ -2251,6 +2582,7 @@
     padding: 10px;
 }
 
+/* Styling rules for .af-food-edit-preview img. */
 .af-food-edit-preview img {
     width: 76px;
     height: 66px;
@@ -2260,22 +2592,26 @@
 }
 
 .af-food-edit-preview strong,
+/* Styling rules for .af-food-edit-preview strong, .af-food-edit-preview small. */
 .af-food-edit-preview small {
     display: block;
 }
 
+/* Styling rules for .af-food-edit-preview strong. */
 .af-food-edit-preview strong {
     color: #111827;
     font-size: 14px;
     line-height: 1.35;
 }
 
+/* Styling rules for .af-food-edit-preview small. */
 .af-food-edit-preview small {
     color: #667085;
     margin-top: 4px;
     font-size: 12px;
 }
 
+/* Styling rules for .af-food-image-upload. */
 .af-food-image-upload {
     border: 1px dashed #d8b16b;
     border-radius: 8px;
@@ -2286,6 +2622,7 @@
     position: relative;
 }
 
+/* Form control styling for .af-food-image-upload input[type="file"]. */
 .af-food-image-upload input[type="file"] {
     position: absolute;
     inset: 0;
@@ -2295,6 +2632,7 @@
     cursor: pointer;
 }
 
+/* Styling rules for .af-food-image-upload strong. */
 .af-food-image-upload strong {
     min-height: 82px;
     border-radius: 7px;
@@ -2307,11 +2645,13 @@
     text-align: center;
 }
 
+/* Styling rules for .af-food-image-upload strong i. */
 .af-food-image-upload strong i {
     color: var(--af-gold);
     font-size: 26px;
 }
 
+/* Styling rules for .af-food-image-upload small. */
 .af-food-image-upload small {
     color: #667085;
     font-size: 12px;
@@ -2319,17 +2659,20 @@
 }
 
 .af-food-image-upload:hover,
+/* Interactive state styling for .af-food-image-upload:hover, .af-food-image-upload:focus-within. */
 .af-food-image-upload:focus-within {
     border-color: var(--af-gold);
     box-shadow: 0 0 0 3px rgba(183, 123, 26, 0.12);
 }
 
+/* Styling rules for .af-food-category-list. */
 .af-food-category-list {
     list-style: none;
     display: grid;
     gap: 12px;
 }
 
+/* Styling rules for .af-food-category-list li. */
 .af-food-category-list li {
     display: grid;
     grid-template-columns: minmax(0, 1fr) auto;
@@ -2337,23 +2680,27 @@
     align-items: center;
 }
 
+/* Styling rules for .af-food-category-list span. */
 .af-food-category-list span {
     min-width: 0;
     display: grid;
     gap: 4px;
 }
 
+/* Styling rules for .af-food-category-list strong. */
 .af-food-category-list strong {
     color: #111827;
     font-size: 13px;
 }
 
+/* Styling rules for .af-food-category-list small. */
 .af-food-category-list small {
     color: #667085;
     font-size: 12px;
     line-height: 1.45;
 }
 
+/* Styling rules for .af-food-category-list em. */
 .af-food-category-list em {
     min-width: 30px;
     min-height: 24px;
@@ -2367,10 +2714,12 @@
     font-weight: 850;
 }
 
+/* Ordering and cart interface styling for .af-order-metrics. */
 .af-order-metrics {
     grid-template-columns: repeat(5, minmax(0, 1fr));
 }
 
+/* Ordering and cart interface styling for .af-orders-workspace. */
 .af-orders-workspace {
     display: grid;
     grid-template-columns: minmax(0, 1fr) 290px;
@@ -2378,27 +2727,32 @@
     align-items: start;
 }
 
+/* Ordering and cart interface styling for .af-orders-filters. */
 .af-orders-filters {
     grid-template-columns: minmax(260px, 1fr) 170px 210px 110px 110px;
     padding: 18px;
     border-bottom: 1px solid #edf0f3;
 }
 
+/* Ordering and cart interface styling for .af-orders-table table. */
 .af-orders-table table {
     min-width: 1180px;
 }
 
 .af-orders-table th:nth-child(1),
+/* Ordering and cart interface styling for .af-orders-table th:nth-child(1), .af-orders-table td:nth-child(1). */
 .af-orders-table td:nth-child(1) {
     width: 9%;
 }
 
 .af-orders-table th:nth-child(2),
+/* Ordering and cart interface styling for .af-orders-table th:nth-child(2), .af-orders-table td:nth-child(2). */
 .af-orders-table td:nth-child(2) {
     width: 15%;
 }
 
 .af-orders-table th:nth-child(3),
+/* Ordering and cart interface styling for .af-orders-table th:nth-child(3), .af-orders-table td:nth-child(3). */
 .af-orders-table td:nth-child(3) {
     width: 18%;
 }
@@ -2406,6 +2760,7 @@
 .af-orders-table th:nth-child(4),
 .af-orders-table td:nth-child(4),
 .af-orders-table th:nth-child(5),
+/* Ordering and cart interface styling for .af-orders-table th:nth-child(4), .af-orders-table td:nth-child(4), .af-orders-table th:nth-child(5), .af-orders-table td:nth-child(5). */
 .af-orders-table td:nth-child(5) {
     width: 14%;
 }
@@ -2417,10 +2772,12 @@
 .af-orders-table th:nth-child(8),
 .af-orders-table td:nth-child(8),
 .af-orders-table th:nth-child(9),
+/* Ordering and cart interface styling for .af-orders-table th:nth-child(6), .af-orders-table td:nth-child(6), .af-orders-table th:nth-child(7), .af-orders-table td:nth-child(7), .af-orders-table th:nth-child(8), .af-orders-table td:nth-child(8), .af-orders-table th:nth-child(9), .af-orders-table td:nth-child(9). */
 .af-orders-table td:nth-child(9) {
     width: 10%;
 }
 
+/* Ordering and cart interface styling for .af-order-email. */
 .af-order-email {
     color: #344054;
     display: inline-block;
@@ -2431,33 +2788,39 @@
 }
 
 .af-order-email:hover,
+/* Ordering and cart interface styling for .af-order-email:hover, .af-order-email:focus-visible. */
 .af-order-email:focus-visible {
     color: var(--af-gold);
 }
 
+/* Ordering and cart interface styling for .af-order-id. */
 .af-order-id {
     color: #0d3b2f;
     font-size: 13px;
 }
 
 .af-order-customer,
+/* Ordering and cart interface styling for .af-order-customer, .af-order-date. */
 .af-order-date {
     display: grid;
     gap: 4px;
 }
 
 .af-order-customer strong,
+/* Ordering and cart interface styling for .af-order-customer strong, .af-order-date strong. */
 .af-order-date strong {
     color: #111827;
     font-size: 13px;
 }
 
 .af-order-customer small,
+/* Ordering and cart interface styling for .af-order-customer small, .af-order-date small. */
 .af-order-date small {
     color: #667085;
     font-size: 12px;
 }
 
+/* Ordering and cart interface styling for .af-order-item-cell. */
 .af-order-item-cell {
     display: grid;
     grid-template-columns: 42px minmax(0, 1fr);
@@ -2465,6 +2828,7 @@
     align-items: center;
 }
 
+/* Ordering and cart interface styling for .af-order-item-cell img. */
 .af-order-item-cell img {
     width: 42px;
     height: 42px;
@@ -2473,10 +2837,12 @@
 }
 
 .af-order-item-cell strong,
+/* Ordering and cart interface styling for .af-order-item-cell strong, .af-order-item-cell small. */
 .af-order-item-cell small {
     display: block;
 }
 
+/* Ordering and cart interface styling for .af-order-item-cell strong. */
 .af-order-item-cell strong {
     color: #111827;
     font-size: 13px;
@@ -2485,12 +2851,14 @@
     white-space: nowrap;
 }
 
+/* Ordering and cart interface styling for .af-order-item-cell small. */
 .af-order-item-cell small {
     color: #667085;
     font-size: 12px;
 }
 
 .af-order-status,
+/* Ordering and cart interface styling for .af-order-status, .af-payment-status. */
 .af-payment-status {
     min-height: 27px;
     border-radius: 6px;
@@ -2502,45 +2870,53 @@
 }
 
 .af-order-status.pending,
+/* Ordering and cart interface styling for .af-order-status.pending, .af-payment-status.pending. */
 .af-payment-status.pending {
     background: #fff1db;
     color: #c06f00;
 }
 
+/* Ordering and cart interface styling for .af-order-status.confirmed. */
 .af-order-status.confirmed {
     background: #f1e4ff;
     color: #7a35c8;
 }
 
 .af-order-status.preparing,
+/* Ordering and cart interface styling for .af-order-status.preparing, .af-order-status.ready. */
 .af-order-status.ready {
     background: #e5f0ff;
     color: #2563eb;
 }
 
 .af-order-status.delivered,
+/* Ordering and cart interface styling for .af-order-status.delivered, .af-payment-status.paid. */
 .af-payment-status.paid {
     background: #e3f6e6;
     color: #159447;
 }
 
 .af-order-status.cancelled,
+/* Ordering and cart interface styling for .af-order-status.cancelled, .af-payment-status.failed. */
 .af-payment-status.failed {
     background: #ffe8ea;
     color: #d92d20;
 }
 
+/* Ordering and cart interface styling for .af-orders-side. */
 .af-orders-side {
     display: grid;
     gap: 18px;
 }
 
+/* Ordering and cart interface styling for .af-order-pipeline. */
 .af-order-pipeline {
     list-style: none;
     display: grid;
     gap: 14px;
 }
 
+/* Ordering and cart interface styling for .af-order-pipeline li. */
 .af-order-pipeline li {
     display: grid;
     grid-template-columns: 10px 1fr auto;
@@ -2550,43 +2926,55 @@
     font-size: 13px;
 }
 
+/* Ordering and cart interface styling for .af-order-pipeline span. */
 .af-order-pipeline span {
     width: 9px;
     height: 9px;
     border-radius: 50%;
 }
 
+/* Ordering and cart interface styling for .af-order-pipeline .pending. */
 .af-order-pipeline .pending { background: #f59e0b; }
+/* Ordering and cart interface styling for .af-order-pipeline .confirmed. */
 .af-order-pipeline .confirmed { background: #9254de; }
+/* Ordering and cart interface styling for .af-order-pipeline .preparing. */
 .af-order-pipeline .preparing { background: #2f78d4; }
+/* Ordering and cart interface styling for .af-order-pipeline .delivered. */
 .af-order-pipeline .delivered { background: #159447; }
+/* Ordering and cart interface styling for .af-order-pipeline .cancelled. */
 .af-order-pipeline .cancelled { background: #ef4444; }
 
+/* Ordering and cart interface styling for .af-order-pipeline strong. */
 .af-order-pipeline strong {
     color: #111827;
 }
 
+/* Ordering and cart interface styling for .af-selected-order-panel. */
 .af-selected-order-panel {
     display: grid;
     gap: 12px;
 }
 
+/* Ordering and cart interface styling for .af-selected-order-panel > strong. */
 .af-selected-order-panel > strong {
     color: #0d3b2f;
     font-size: 18px;
 }
 
+/* Ordering and cart interface styling for .af-selected-order-panel dl. */
 .af-selected-order-panel dl {
     display: grid;
     gap: 10px;
 }
 
+/* Ordering and cart interface styling for .af-selected-order-panel dl div. */
 .af-selected-order-panel dl div {
     display: grid;
     grid-template-columns: 82px minmax(0, 1fr);
     gap: 10px;
 }
 
+/* Ordering and cart interface styling for .af-selected-order-panel dt. */
 .af-selected-order-panel dt {
     color: #667085;
     font-size: 12px;
@@ -2594,12 +2982,14 @@
 }
 
 .af-selected-order-panel dd,
+/* Ordering and cart interface styling for .af-selected-order-panel dd, .af-selected-order-panel p. */
 .af-selected-order-panel p {
     color: #111827;
     font-size: 13px;
     line-height: 1.55;
 }
 
+/* Styling rules for .af-booking-actions. */
 .af-booking-actions {
     display: flex;
     flex-wrap: wrap;
@@ -2608,6 +2998,7 @@
     align-items: center;
 }
 
+/* Button and action control styling for .af-booking-actions > button. */
 .af-booking-actions > button {
     min-height: 42px;
     border: 1px solid #d9dee6;
@@ -2623,15 +3014,18 @@
     cursor: pointer;
 }
 
+/* Button and action control styling for .af-booking-actions .af-add-menu-btn. */
 .af-booking-actions .af-add-menu-btn {
     text-decoration: none;
 }
 
+/* Styling rules for .af-booking-metrics. */
 .af-booking-metrics {
     grid-template-columns: repeat(auto-fit, minmax(155px, 1fr));
     gap: 14px;
 }
 
+/* Styling rules for .af-booking-metrics article. */
 .af-booking-metrics article {
     min-height: 138px;
     grid-template-columns: 1fr;
@@ -2640,12 +3034,14 @@
     padding: 18px;
 }
 
+/* Styling rules for .af-booking-metrics article > span. */
 .af-booking-metrics article > span {
     width: 42px;
     height: 42px;
     font-size: 19px;
 }
 
+/* Styling rules for .af-booking-metrics small. */
 .af-booking-metrics small {
     min-height: 30px;
     color: #344054;
@@ -2654,12 +3050,14 @@
     margin-bottom: 6px;
 }
 
+/* Styling rules for .af-booking-metrics strong. */
 .af-booking-metrics strong {
     font-size: 23px;
     line-height: 1.05;
     white-space: nowrap;
 }
 
+/* Styling rules for .af-booking-metrics p. */
 .af-booking-metrics p {
     color: #667085;
     font-size: 11px;
@@ -2667,6 +3065,7 @@
     margin-top: 7px;
 }
 
+/* Styling rules for .af-bookings-workspace. */
 .af-bookings-workspace {
     display: grid;
     grid-template-columns: minmax(0, 1fr) 300px;
@@ -2674,6 +3073,7 @@
     align-items: start;
 }
 
+/* Styling rules for .af-bookings-filters. */
 .af-bookings-filters {
     display: grid;
     grid-template-columns: minmax(260px, 1fr) 180px 110px 90px;
@@ -2683,6 +3083,7 @@
 }
 
 .af-bookings-filters button,
+/* Button and action control styling for .af-bookings-filters button, .af-bookings-filters a. */
 .af-bookings-filters a {
     min-height: 44px;
     border: 1px solid #d9dee6;
@@ -2700,12 +3101,14 @@
     cursor: pointer;
 }
 
+/* Button and action control styling for .af-bookings-filters button. */
 .af-bookings-filters button {
     border-color: #0d3b2f;
     background: #0d3b2f;
     color: #fff;
 }
 
+/* Styling rules for .af-booking-tabs. */
 .af-booking-tabs {
     display: flex;
     gap: 22px;
@@ -2713,6 +3116,7 @@
     padding: 18px 18px 0;
 }
 
+/* Styling rules for .af-booking-tabs a. */
 .af-booking-tabs a {
     min-height: 42px;
     border-bottom: 2px solid transparent;
@@ -2725,26 +3129,31 @@
     white-space: nowrap;
 }
 
+/* Interactive state styling for .af-booking-tabs a.active. */
 .af-booking-tabs a.active {
     border-color: var(--af-gold);
     color: var(--af-gold);
 }
 
+/* Table layout styling for .af-bookings-table table. */
 .af-bookings-table table {
     min-width: 1240px;
 }
 
 .af-bookings-table th,
+/* Table layout styling for .af-bookings-table th, .af-bookings-table td. */
 .af-bookings-table td {
     padding: 14px 12px;
 }
 
 .af-bookings-table th:nth-child(1),
+/* Table layout styling for .af-bookings-table th:nth-child(1), .af-bookings-table td:nth-child(1). */
 .af-bookings-table td:nth-child(1) {
     width: 4%;
 }
 
 .af-bookings-table th:nth-child(2),
+/* Table layout styling for .af-bookings-table th:nth-child(2), .af-bookings-table td:nth-child(2). */
 .af-bookings-table td:nth-child(2) {
     width: 10%;
 }
@@ -2752,11 +3161,13 @@
 .af-bookings-table th:nth-child(3),
 .af-bookings-table td:nth-child(3),
 .af-bookings-table th:nth-child(4),
+/* Table layout styling for .af-bookings-table th:nth-child(3), .af-bookings-table td:nth-child(3), .af-bookings-table th:nth-child(4), .af-bookings-table td:nth-child(4). */
 .af-bookings-table td:nth-child(4) {
     width: 16%;
 }
 
 .af-bookings-table th:nth-child(5),
+/* Table layout styling for .af-bookings-table th:nth-child(5), .af-bookings-table td:nth-child(5). */
 .af-bookings-table td:nth-child(5) {
     width: 7%;
 }
@@ -2768,59 +3179,71 @@
 .af-bookings-table th:nth-child(8),
 .af-bookings-table td:nth-child(8),
 .af-bookings-table th:nth-child(9),
+/* Table layout styling for .af-bookings-table th:nth-child(6), .af-bookings-table td:nth-child(6), .af-bookings-table th:nth-child(7), .af-bookings-table td:nth-child(7), .af-bookings-table th:nth-child(8), .af-bookings-table td:nth-child(8), .af-bookings-table th:nth-child(9), .af-bookings-table td:nth-child(9). */
 .af-bookings-table td:nth-child(9) {
     width: 8%;
 }
 
 .af-bookings-table th:nth-child(10),
+/* Table layout styling for .af-bookings-table th:nth-child(10), .af-bookings-table td:nth-child(10). */
 .af-bookings-table td:nth-child(10) {
     width: 16%;
 }
 
 .af-bookings-table th:nth-child(11),
+/* Table layout styling for .af-bookings-table th:nth-child(11), .af-bookings-table td:nth-child(11). */
 .af-bookings-table td:nth-child(11) {
     width: 9%;
 }
 
+/* Form control styling for .af-bookings-table input[type="checkbox"]. */
 .af-bookings-table input[type="checkbox"] {
     width: 16px;
     height: 16px;
     accent-color: var(--af-gold);
 }
 
+/* Form control styling for .af-booking-row-actions form. */
 .af-booking-row-actions form {
     margin: 0;
 }
 
+/* Ordering and cart interface styling for .af-order-row-actions. */
 .af-order-row-actions {
     flex-wrap: wrap;
     gap: 7px;
 }
 
+/* Ordering and cart interface styling for .af-order-row-actions form. */
 .af-order-row-actions form {
     margin: 0;
 }
 
+/* Ordering and cart interface styling for .af-orders-table tr.is-selected td. */
 .af-orders-table tr.is-selected td {
     background: #fffaf2;
     box-shadow: inset 0 1px 0 #f1d8ad, inset 0 -1px 0 #f1d8ad;
 }
 
+/* Button and action control styling for .af-row-actions button.success. */
 .af-row-actions button.success {
     border-color: #b7e4c7;
     color: #159447;
 }
 
+/* Button and action control styling for .af-row-actions button.warning. */
 .af-row-actions button.warning {
     border-color: #fed7aa;
     color: #c06f00;
 }
 
+/* Styling rules for .af-bookings-side. */
 .af-bookings-side {
     display: grid;
     gap: 18px;
 }
 
+/* Button and action control styling for .af-notification-read-btn. */
 .af-notification-read-btn {
     min-height: 42px;
     border: 1px solid var(--af-gold);
@@ -2836,6 +3259,7 @@
     cursor: pointer;
 }
 
+/* Styling rules for .af-notifications-workspace. */
 .af-notifications-workspace {
     display: grid;
     grid-template-columns: minmax(0, 1fr) 330px;
@@ -2843,6 +3267,7 @@
     align-items: start;
 }
 
+/* Styling rules for .af-notification-tabs. */
 .af-notification-tabs {
     min-height: 70px;
     border-bottom: 1px solid #edf0f3;
@@ -2853,6 +3278,7 @@
     padding: 0 28px;
 }
 
+/* Styling rules for .af-notification-tabs a. */
 .af-notification-tabs a {
     min-height: 70px;
     border-bottom: 2px solid transparent;
@@ -2866,11 +3292,13 @@
     white-space: nowrap;
 }
 
+/* Interactive state styling for .af-notification-tabs a.active. */
 .af-notification-tabs a.active {
     border-color: var(--af-gold);
     color: #111827;
 }
 
+/* Styling rules for .af-notification-tabs span. */
 .af-notification-tabs span {
     min-width: 24px;
     min-height: 24px;
@@ -2882,10 +3310,12 @@
     font-size: 12px;
 }
 
+/* Styling rules for .af-notification-list. */
 .af-notification-list {
     display: grid;
 }
 
+/* Styling rules for .af-notification-item. */
 .af-notification-item {
     border-bottom: 1px solid #edf0f3;
     display: grid;
@@ -2895,6 +3325,7 @@
     padding: 24px 28px;
 }
 
+/* Styling rules for .af-notification-icon. */
 .af-notification-icon {
     width: 58px;
     height: 58px;
@@ -2905,57 +3336,67 @@
 }
 
 .af-notification-icon.green,
+/* Styling rules for .af-notification-icon.green, .af-notification-type.green. */
 .af-notification-type.green {
     background: #dff7e7;
     color: #159447;
 }
 
 .af-notification-icon.blue,
+/* Styling rules for .af-notification-icon.blue, .af-notification-type.blue. */
 .af-notification-type.blue {
     background: #dcecff;
     color: #2563eb;
 }
 
 .af-notification-icon.gold,
+/* Styling rules for .af-notification-icon.gold, .af-notification-type.gold. */
 .af-notification-type.gold {
     background: #fff1d7;
     color: #c06f00;
 }
 
 .af-notification-icon.purple,
+/* Styling rules for .af-notification-icon.purple, .af-notification-type.purple. */
 .af-notification-type.purple {
     background: #f1e4ff;
     color: #7a35c8;
 }
 
 .af-notification-icon.gray,
+/* Styling rules for .af-notification-icon.gray, .af-notification-type.gray. */
 .af-notification-type.gray {
     background: #f2f4f7;
     color: #475467;
 }
 
+/* Styling rules for .af-unread-dot. */
 .af-unread-dot {
     width: 9px;
     height: 9px;
     border-radius: 50%;
 }
 
+/* Styling rules for .af-notification-item.unread .af-unread-dot. */
 .af-notification-item.unread .af-unread-dot {
     background: #f59e0b;
 }
 
+/* Styling rules for .af-notification-item h2. */
 .af-notification-item h2 {
     color: #111827;
     font-size: 16px;
     margin-bottom: 7px;
 }
 
+/* Styling rules for .af-notification-item p. */
 .af-notification-item p {
     color: #4b5563;
     font-size: 14px;
     line-height: 1.5;
 }
 
+/* Styling rules for .af-notification-type. */
 .af-notification-type {
     min-height: 26px;
     border-radius: 6px;
@@ -2966,12 +3407,14 @@
     font-weight: 850;
 }
 
+/* Styling rules for .af-notification-item time. */
 .af-notification-item time {
     color: #667085;
     font-size: 13px;
     text-align: right;
 }
 
+/* Button and action control styling for .af-notification-item button. */
 .af-notification-item button {
     width: 30px;
     height: 30px;
@@ -2981,17 +3424,20 @@
     cursor: pointer;
 }
 
+/* Styling rules for .af-notifications-side. */
 .af-notifications-side {
     display: grid;
     gap: 18px;
 }
 
+/* Styling rules for .af-notifications-side h2. */
 .af-notifications-side h2 {
     display: flex;
     align-items: center;
     gap: 10px;
 }
 
+/* Styling rules for .af-clear-filters. */
 .af-clear-filters {
     color: var(--af-gold);
     display: inline-flex;
@@ -3000,6 +3446,7 @@
     font-weight: 850;
 }
 
+/* Styling rules for .af-notification-donut. */
 .af-notification-donut {
     width: 132px;
     aspect-ratio: 1;
@@ -3011,6 +3458,7 @@
     position: relative;
 }
 
+/* Styling rules for .af-notification-donut::after. */
 .af-notification-donut::after {
     content: "";
     position: absolute;
@@ -3020,12 +3468,14 @@
 }
 
 .af-notification-donut strong,
+/* Styling rules for .af-notification-donut strong, .af-notification-donut span. */
 .af-notification-donut span {
     position: relative;
     z-index: 1;
     text-align: center;
 }
 
+/* Styling rules for .af-notification-donut strong. */
 .af-notification-donut strong {
     color: #111827;
     font-size: 25px;
@@ -3033,29 +3483,34 @@
     align-self: end;
 }
 
+/* Styling rules for .af-notification-donut span. */
 .af-notification-donut span {
     color: #344054;
     font-size: 12px;
     align-self: start;
 }
 
+/* Styling rules for .af-enquiries-filters. */
 .af-enquiries-filters {
     grid-template-columns: minmax(260px, 1fr) minmax(170px, 0.75fr) minmax(190px, 0.9fr) 170px 110px 90px;
     padding: 22px;
     border-bottom: 1px solid #edf0f3;
 }
 
+/* Form control styling for .af-enquiries-filters > label:not(.af-menu-search):not(.af-menu-select). */
 .af-enquiries-filters > label:not(.af-menu-search):not(.af-menu-select) {
     display: grid;
     gap: 7px;
 }
 
+/* Styling rules for .af-enquiries-filters span. */
 .af-enquiries-filters span {
     color: #111827;
     font-size: 12px;
     font-weight: 850;
 }
 
+/* Form control styling for .af-enquiries-filters input. */
 .af-enquiries-filters input {
     width: 100%;
     min-height: 44px;
@@ -3069,6 +3524,7 @@
 }
 
 .af-enquiries-filters button,
+/* Button and action control styling for .af-enquiries-filters button, .af-enquiries-filters a. */
 .af-enquiries-filters a {
     min-height: 44px;
     border: 1px solid #d9dee6;
@@ -3087,12 +3543,14 @@
     align-self: end;
 }
 
+/* Button and action control styling for .af-enquiries-filters button. */
 .af-enquiries-filters button {
     border-color: #0d3b2f;
     background: #0d3b2f;
     color: #fff;
 }
 
+/* Styling rules for .af-enquiry-tabs. */
 .af-enquiry-tabs {
     border-bottom: 1px solid #edf0f3;
     display: flex;
@@ -3101,6 +3559,7 @@
     padding: 0 2px;
 }
 
+/* Styling rules for .af-enquiry-tabs a. */
 .af-enquiry-tabs a {
     min-height: 46px;
     border-bottom: 2px solid transparent;
@@ -3114,11 +3573,13 @@
     white-space: nowrap;
 }
 
+/* Interactive state styling for .af-enquiry-tabs a.active. */
 .af-enquiry-tabs a.active {
     border-color: var(--af-gold);
     color: var(--af-gold);
 }
 
+/* Styling rules for .af-enquiry-tabs span. */
 .af-enquiry-tabs span {
     border-radius: 999px;
     background: #fff3df;
@@ -3127,6 +3588,7 @@
     font-size: 12px;
 }
 
+/* Styling rules for .af-enquiries-workspace. */
 .af-enquiries-workspace {
     display: grid;
     grid-template-columns: minmax(0, 1fr) 330px;
@@ -3134,11 +3596,13 @@
     align-items: start;
 }
 
+/* Table layout styling for .af-enquiries-table table. */
 .af-enquiries-table table {
     min-width: 1220px;
 }
 
 .af-enquiry-type,
+/* Styling rules for .af-enquiry-type, .af-enquiry-status. */
 .af-enquiry-status {
     min-height: 27px;
     border-radius: 6px;
@@ -3149,71 +3613,85 @@
     font-weight: 850;
 }
 
+/* Styling rules for .af-enquiry-type.general. */
 .af-enquiry-type.general {
     background: #f1e4ff;
     color: #7a35c8;
 }
 
+/* Styling rules for .af-enquiry-type.catering. */
 .af-enquiry-type.catering {
     background: #e3f6e6;
     color: #159447;
 }
 
+/* Ordering and cart interface styling for .af-enquiry-type.orders. */
 .af-enquiry-type.orders {
     background: #fff1db;
     color: #c06f00;
 }
 
+/* Support chat interface styling for .af-enquiry-type.support. */
 .af-enquiry-type.support {
     background: #e5f0ff;
     color: #2563eb;
 }
 
+/* Styling rules for .af-enquiry-status.pending. */
 .af-enquiry-status.pending {
     background: #fff1db;
     color: #c06f00;
 }
 
+/* Styling rules for .af-enquiry-status.read. */
 .af-enquiry-status.read {
     background: #e5f0ff;
     color: #2563eb;
 }
 
+/* Styling rules for .af-enquiry-status.replied. */
 .af-enquiry-status.replied {
     background: #e3f6e6;
     color: #159447;
 }
 
+/* Styling rules for .af-enquiry-status.closed. */
 .af-enquiry-status.closed {
     background: #f2f4f7;
     color: #475467;
 }
 
+/* Styling rules for .af-enquiry-row-actions. */
 .af-enquiry-row-actions {
     flex-wrap: wrap;
     gap: 7px;
 }
 
+/* Form control styling for .af-enquiry-row-actions form. */
 .af-enquiry-row-actions form {
     margin: 0;
 }
 
+/* Form control styling for .af-selected-enquiry-panel. */
 .af-selected-enquiry-panel {
     display: grid;
     gap: 12px;
 }
 
+/* Form control styling for .af-selected-enquiry-panel > strong. */
 .af-selected-enquiry-panel > strong {
     color: #0d3b2f;
     font-size: 18px;
 }
 
+/* Form control styling for .af-selected-enquiry-panel p. */
 .af-selected-enquiry-panel p {
     color: #344054;
     font-size: 13px;
     line-height: 1.6;
 }
 
+/* Responsive styling rules for @media (max-width: 1180px). */
 @media (max-width: 1180px) {
     .af-user-metrics,
     .af-food-metrics,
@@ -3225,6 +3703,7 @@
     .af-orders-workspace,
     .af-bookings-workspace,
     .af-notifications-workspace,
+    /* Ordering and cart interface styling for .af-user-metrics, .af-food-metrics, .af-order-metrics, .af-booking-metrics, .af-settings-grid, .af-roles-workspace, .af-foods-workspace, .af-orders-workspace, .af-bookings-workspace, .af-notifications-workspace, .af-enquiries-workspace. */
     .af-enquiries-workspace {
         grid-template-columns: repeat(2, minmax(0, 1fr));
     }
@@ -3233,15 +3712,18 @@
     .af-foods-filters,
     .af-orders-filters,
     .af-bookings-filters,
+    /* Ordering and cart interface styling for .af-users-filters, .af-foods-filters, .af-orders-filters, .af-bookings-filters, .af-enquiries-filters. */
     .af-enquiries-filters {
         grid-template-columns: repeat(2, minmax(0, 1fr));
     }
 
+    /* Form control styling for .af-user-create-form. */
     .af-user-create-form {
         grid-template-columns: repeat(2, minmax(0, 1fr));
     }
 }
 
+/* Responsive styling rules for @media (max-width: 720px). */
 @media (max-width: 720px) {
     .af-user-metrics,
     .af-food-metrics,
@@ -3258,44 +3740,53 @@
     .af-bookings-workspace,
     .af-notifications-workspace,
     .af-enquiries-workspace,
+    /* Ordering and cart interface styling for .af-user-metrics, .af-food-metrics, .af-order-metrics, .af-booking-metrics, .af-settings-grid, .af-users-filters, .af-foods-filters, .af-orders-filters, .af-bookings-filters, .af-roles-workspace, .af-foods-workspace, .af-orders-workspace, .af-bookings-workspace, .af-notifications-workspace, .af-enquiries-workspace, .af-role-search. */
     .af-role-search {
         grid-template-columns: 1fr;
     }
 
     .af-role-create-form,
+    /* Form control styling for .af-role-create-form, .af-user-create-form. */
     .af-user-create-form {
         grid-template-columns: 1fr;
     }
 
+    /* Styling rules for .af-notification-item. */
     .af-notification-item {
         grid-template-columns: 48px 8px minmax(0, 1fr);
     }
 
     .af-notification-type,
     .af-notification-item time,
+    /* Button and action control styling for .af-notification-type, .af-notification-item time, .af-notification-item button. */
     .af-notification-item button {
         grid-column: 3;
         justify-self: start;
     }
 
+    /* Styling rules for .af-settings-tabs a. */
     .af-settings-tabs a {
         padding: 0 14px;
     }
 
+    /* Table layout styling for .af-table-toolbar. */
     .af-table-toolbar {
         align-items: stretch;
         flex-direction: column;
     }
 }
 
+/* Styling rules for .af-enquiries-management-page. */
 .af-enquiries-management-page {
     gap: 18px;
 }
 
+/* Styling rules for .af-enquiries-heading. */
 .af-enquiries-heading {
     align-items: center;
 }
 
+/* Header layout and controls for .af-enquiries-header-actions. */
 .af-enquiries-header-actions {
     display: flex;
     flex-wrap: wrap;
@@ -3304,6 +3795,7 @@
 }
 
 .af-enquiries-header-actions button,
+/* Header layout and controls for .af-enquiries-header-actions button, .af-enquiries-header-actions a. */
 .af-enquiries-header-actions a {
     min-height: 44px;
     border: 1px solid #d9dee6;
@@ -3321,16 +3813,19 @@
     box-shadow: 0 6px 16px rgba(16, 24, 40, 0.04);
 }
 
+/* Header layout and controls for .af-enquiries-header-actions .af-add-menu-btn. */
 .af-enquiries-header-actions .af-add-menu-btn {
     border-color: var(--af-gold);
     background: linear-gradient(135deg, var(--af-gold), #d98200);
     color: #fff;
 }
 
+/* Card and panel styling for .af-enquiries-filter-card. */
 .af-enquiries-filter-card {
     padding: 0;
 }
 
+/* Styling rules for .af-enquiries-filters. */
 .af-enquiries-filters {
     display: grid;
     grid-template-columns: minmax(240px, 1.2fr) minmax(190px, 0.95fr) minmax(190px, 0.95fr) minmax(200px, 1fr) minmax(170px, 0.8fr);
@@ -3338,11 +3833,13 @@
     padding: 26px;
 }
 
+/* Styling rules for .af-enquiries-filters label. */
 .af-enquiries-filters label {
     display: grid;
     gap: 8px;
 }
 
+/* Styling rules for .af-enquiries-filters label > span. */
 .af-enquiries-filters label > span {
     color: #111827;
     font-size: 12px;
@@ -3352,6 +3849,7 @@
 .af-enquiries-filters input,
 .af-enquiries-filters select,
 .af-bulk-status-select select,
+/* Form control styling for .af-enquiries-filters input, .af-enquiries-filters select, .af-bulk-status-select select, .af-enquiry-sort select. */
 .af-enquiry-sort select {
     width: 100%;
     min-height: 44px;
@@ -3367,15 +3865,18 @@
 .af-enquiries-filters input:focus,
 .af-enquiries-filters select:focus,
 .af-bulk-status-select select:focus,
+/* Form control styling for .af-enquiries-filters input:focus, .af-enquiries-filters select:focus, .af-bulk-status-select select:focus, .af-enquiry-sort select:focus. */
 .af-enquiry-sort select:focus {
     border-color: var(--af-gold);
     box-shadow: 0 0 0 3px rgba(183, 123, 26, 0.13);
 }
 
+/* Form control styling for .af-enquiry-input-icon. */
 .af-enquiry-input-icon {
     position: relative;
 }
 
+/* Form control styling for .af-enquiry-input-icon i. */
 .af-enquiry-input-icon i {
     color: #667085;
     left: 12px;
@@ -3384,10 +3885,12 @@
     transform: translateY(-50%);
 }
 
+/* Form control styling for .af-enquiry-input-icon input. */
 .af-enquiry-input-icon input {
     padding-left: 38px;
 }
 
+/* Styling rules for .af-enquiries-filter-actions. */
 .af-enquiries-filter-actions {
     align-self: end;
     display: grid;
@@ -3396,6 +3899,7 @@
 }
 
 .af-enquiries-filter-actions button,
+/* Button and action control styling for .af-enquiries-filter-actions button, .af-enquiries-filter-actions a. */
 .af-enquiries-filter-actions a {
     min-height: 44px;
     border: 1px solid #d9dee6;
@@ -3411,12 +3915,14 @@
     text-decoration: none;
 }
 
+/* Button and action control styling for .af-enquiries-filter-actions button. */
 .af-enquiries-filter-actions button {
     border-color: #082c22;
     background: linear-gradient(135deg, #06281f, #0d3b2f);
     color: #fff;
 }
 
+/* Styling rules for .af-enquiry-tabs. */
 .af-enquiry-tabs {
     display: flex;
     gap: 18px;
@@ -3424,6 +3930,7 @@
     padding: 0 2px;
 }
 
+/* Styling rules for .af-enquiry-tabs a. */
 .af-enquiry-tabs a {
     min-height: 48px;
     border-bottom: 3px solid transparent;
@@ -3438,11 +3945,13 @@
     white-space: nowrap;
 }
 
+/* Interactive state styling for .af-enquiry-tabs a.active. */
 .af-enquiry-tabs a.active {
     border-color: var(--af-gold);
     color: #c06f00;
 }
 
+/* Styling rules for .af-enquiry-tabs span. */
 .af-enquiry-tabs span {
     border-radius: 999px;
     background: #fff1db;
@@ -3451,15 +3960,18 @@
     font-size: 12px;
 }
 
+/* Card and panel styling for .af-enquiries-table-card. */
 .af-enquiries-table-card {
     overflow: hidden;
     padding: 0;
 }
 
+/* Form control styling for .af-enquiries-table-card > form. */
 .af-enquiries-table-card > form {
     display: none;
 }
 
+/* Styling rules for .af-enquiries-bulkbar. */
 .af-enquiries-bulkbar {
     border-bottom: 1px solid #edf0f3;
     display: flex;
@@ -3468,6 +3980,7 @@
     padding: 18px 24px;
 }
 
+/* Styling rules for .af-enquiries-bulkbar > label:first-child. */
 .af-enquiries-bulkbar > label:first-child {
     display: inline-flex;
     align-items: center;
@@ -3476,6 +3989,7 @@
 }
 
 .af-enquiries-bulkbar input[type="checkbox"],
+/* Form control styling for .af-enquiries-bulkbar input[type="checkbox"], .af-enquiries-table input[type="checkbox"]. */
 .af-enquiries-table input[type="checkbox"] {
     width: 16px;
     height: 16px;
@@ -3484,6 +3998,7 @@
 
 .af-enquiries-bulkbar button,
 .af-enquiry-detail-actions button,
+/* Button and action control styling for .af-enquiries-bulkbar button, .af-enquiry-detail-actions button, .af-enquiry-reply-card button. */
 .af-enquiry-reply-card button {
     min-height: 40px;
     border: 1px solid #d9dee6;
@@ -3500,6 +4015,7 @@
     cursor: pointer;
 }
 
+/* Styling rules for .af-enquiry-sort. */
 .af-enquiry-sort {
     align-items: center;
     display: inline-flex;
@@ -3507,6 +4023,7 @@
     margin-left: auto;
 }
 
+/* Styling rules for .af-enquiry-sort span. */
 .af-enquiry-sort span {
     color: #344054;
     font-size: 13px;
@@ -3514,12 +4031,14 @@
     white-space: nowrap;
 }
 
+/* Table layout styling for .af-enquiries-table. */
 .af-enquiries-table {
     overflow-x: auto;
     max-width: 100%;
     scrollbar-gutter: stable;
 }
 
+/* Table layout styling for .af-enquiries-table table. */
 .af-enquiries-table table {
     min-width: 1720px;
     table-layout: fixed;
@@ -3527,49 +4046,60 @@
 }
 
 .af-enquiries-table th,
+/* Table layout styling for .af-enquiries-table th, .af-enquiries-table td. */
 .af-enquiries-table td {
     box-sizing: border-box;
     padding: 16px 14px;
     vertical-align: middle;
 }
 
+/* Form control styling for .af-enquiries-table .af-enquiry-col-select. */
 .af-enquiries-table .af-enquiry-col-select {
     width: 60px;
 }
 
+/* Table layout styling for .af-enquiries-table .af-enquiry-col-id. */
 .af-enquiries-table .af-enquiry-col-id {
     width: 140px;
 }
 
+/* Table layout styling for .af-enquiries-table .af-enquiry-col-email. */
 .af-enquiries-table .af-enquiry-col-email {
     width: 260px;
 }
 
+/* Table layout styling for .af-enquiries-table .af-enquiry-col-phone. */
 .af-enquiries-table .af-enquiry-col-phone {
     width: 170px;
 }
 
+/* Table layout styling for .af-enquiries-table .af-enquiry-col-subject. */
 .af-enquiries-table .af-enquiry-col-subject {
     width: 260px;
 }
 
+/* Table layout styling for .af-enquiries-table .af-enquiry-col-type. */
 .af-enquiries-table .af-enquiry-col-type {
     width: 180px;
 }
 
+/* Table layout styling for .af-enquiries-table .af-enquiry-col-status. */
 .af-enquiries-table .af-enquiry-col-status {
     width: 140px;
 }
 
+/* Table layout styling for .af-enquiries-table .af-enquiry-col-date. */
 .af-enquiries-table .af-enquiry-col-date {
     width: 170px;
 }
 
+/* Table layout styling for .af-enquiries-table .af-enquiry-col-actions. */
 .af-enquiries-table .af-enquiry-col-actions {
     width: 170px;
 }
 
 .af-enquiries-table th:first-child,
+/* Table layout styling for .af-enquiries-table th:first-child, .af-enquiries-table td:first-child. */
 .af-enquiries-table td:first-child {
     padding-left: 18px;
     padding-right: 10px;
@@ -3581,11 +4111,13 @@
 .af-enquiries-table td:nth-child(4),
 .af-enquiries-table td:nth-child(5),
 .af-enquiries-table td:nth-child(8),
+/* Table layout styling for .af-enquiries-table td:nth-child(2), .af-enquiries-table td:nth-child(3), .af-enquiries-table td:nth-child(4), .af-enquiries-table td:nth-child(5), .af-enquiries-table td:nth-child(8), .af-enquiries-table td:nth-child(9). */
 .af-enquiries-table td:nth-child(9) {
     min-width: 0;
 }
 
 .af-enquiry-contact-text,
+/* Styling rules for .af-enquiry-contact-text, .af-enquiry-subject-text. */
 .af-enquiry-subject-text {
     display: block;
     max-width: 100%;
@@ -3593,10 +4125,12 @@
     text-overflow: ellipsis;
 }
 
+/* Styling rules for .af-enquiry-contact-text. */
 .af-enquiry-contact-text {
     white-space: nowrap;
 }
 
+/* Styling rules for .af-enquiry-subject-text. */
 .af-enquiry-subject-text {
     line-height: 1.45;
     white-space: normal;
@@ -3604,10 +4138,12 @@
     overflow-wrap: anywhere;
 }
 
+/* Form control styling for .af-enquiries-table tr.is-selected td. */
 .af-enquiries-table tr.is-selected td {
     background: #fffaf2;
 }
 
+/* Styling rules for .af-enquiry-id-link. */
 .af-enquiry-id-link {
     color: #111827;
     font-weight: 900;
@@ -3615,11 +4151,13 @@
 }
 
 .af-enquiry-id-link:hover,
+/* Interactive state styling for .af-enquiry-id-link:hover, .af-enquiry-id-link:focus-visible. */
 .af-enquiry-id-link:focus-visible {
     color: var(--af-gold);
 }
 
 .af-enquiry-type,
+/* Styling rules for .af-enquiry-type, .af-enquiry-status. */
 .af-enquiry-status {
     max-width: 100%;
     min-height: 27px;
@@ -3637,46 +4175,55 @@
     white-space: nowrap;
 }
 
+/* Styling rules for .af-enquiry-type.general. */
 .af-enquiry-type.general {
     background: #f1e4ff;
     color: #7a35c8;
 }
 
+/* Styling rules for .af-enquiry-type.catering. */
 .af-enquiry-type.catering {
     background: #e3f6e6;
     color: #087a34;
 }
 
+/* Ordering and cart interface styling for .af-enquiry-type.orders. */
 .af-enquiry-type.orders {
     background: #fff1db;
     color: #c06f00;
 }
 
+/* Support chat interface styling for .af-enquiry-type.support. */
 .af-enquiry-type.support {
     background: #e5f0ff;
     color: #2563eb;
 }
 
+/* Styling rules for .af-enquiry-status.pending. */
 .af-enquiry-status.pending {
     background: #fff1db;
     color: #c06f00;
 }
 
+/* Styling rules for .af-enquiry-status.read. */
 .af-enquiry-status.read {
     background: #e5f0ff;
     color: #2563eb;
 }
 
+/* Styling rules for .af-enquiry-status.replied. */
 .af-enquiry-status.replied {
     background: #e3f6e6;
     color: #087a34;
 }
 
+/* Styling rules for .af-enquiry-status.closed. */
 .af-enquiry-status.closed {
     background: #f2f4f7;
     color: #475467;
 }
 
+/* Styling rules for .af-enquiry-row-actions. */
 .af-enquiry-row-actions {
     align-items: center;
     justify-content: center;
@@ -3685,6 +4232,7 @@
     min-width: 0;
 }
 
+/* Form control styling for .af-enquiry-row-actions form. */
 .af-enquiry-row-actions form {
     display: inline-flex;
     flex: 0 0 auto;
@@ -3692,10 +4240,12 @@
 }
 
 .af-enquiry-row-actions a,
+/* Button and action control styling for .af-enquiry-row-actions a, .af-enquiry-row-actions button. */
 .af-enquiry-row-actions button {
     flex: 0 0 34px;
 }
 
+/* Button and action control styling for .af-enquiry-row-actions button. */
 .af-enquiry-row-actions button {
     min-height: 34px;
     width: 34px;
@@ -3709,11 +4259,13 @@
     cursor: pointer;
 }
 
+/* Styling rules for .af-enquiry-detail-row td. */
 .af-enquiry-detail-row td {
     background: #fffaf2 !important;
     padding: 0 22px 22px !important;
 }
 
+/* Card and panel styling for .af-enquiry-detail-card. */
 .af-enquiry-detail-card {
     border: 1px solid #f1d8ad;
     border-radius: 8px;
@@ -3724,6 +4276,7 @@
     padding: 20px;
 }
 
+/* Header layout and controls for .af-enquiry-detail-card > header. */
 .af-enquiry-detail-card > header {
     border-bottom: 1px solid #edf0f3;
     display: flex;
@@ -3733,6 +4286,7 @@
     padding-bottom: 14px;
 }
 
+/* Card and panel styling for .af-enquiry-detail-card small. */
 .af-enquiry-detail-card small {
     color: #c06f00;
     font-size: 11px;
@@ -3740,6 +4294,7 @@
     text-transform: uppercase;
 }
 
+/* Card and panel styling for .af-enquiry-detail-card h2. */
 .af-enquiry-detail-card h2 {
     color: #0d241e;
     margin: 4px 0 0;
@@ -3747,12 +4302,14 @@
     font-size: 24px;
 }
 
+/* Styling rules for .af-enquiry-detail-grid. */
 .af-enquiry-detail-grid {
     display: grid;
     grid-template-columns: minmax(190px, 0.8fr) minmax(220px, 1fr) minmax(280px, 1.4fr);
     gap: 16px;
 }
 
+/* Styling rules for .af-enquiry-detail-grid article. */
 .af-enquiry-detail-grid article {
     border: 1px solid #edf0f3;
     border-radius: 8px;
@@ -3761,12 +4318,14 @@
 }
 
 .af-enquiry-detail-grid h3,
+/* Card and panel styling for .af-enquiry-detail-grid h3, .af-enquiry-reply-card h3. */
 .af-enquiry-reply-card h3 {
     color: #111827;
     margin: 0 0 10px;
     font-size: 14px;
 }
 
+/* Styling rules for .af-enquiry-detail-grid p. */
 .af-enquiry-detail-grid p {
     color: #344054;
     margin: 4px 0;
@@ -3774,10 +4333,12 @@
     line-height: 1.65;
 }
 
+/* Styling rules for .af-enquiry-message-box. */
 .af-enquiry-message-box {
     grid-row: span 2;
 }
 
+/* Styling rules for .af-enquiry-message-box.is-response. */
 .af-enquiry-message-box.is-response {
     border-color: #ccebd5;
     background: #f3fbf5;
@@ -3785,29 +4346,34 @@
     grid-row: auto;
 }
 
+/* Styling rules for .af-enquiry-detail-actions. */
 .af-enquiry-detail-actions {
     display: flex;
     flex-wrap: wrap;
     gap: 10px;
 }
 
+/* Form control styling for .af-enquiry-detail-actions form. */
 .af-enquiry-detail-actions form {
     margin: 0;
 }
 
 .af-enquiry-detail-actions button,
+/* Button and action control styling for .af-enquiry-detail-actions button, .af-enquiry-reply-card button. */
 .af-enquiry-reply-card button {
     border-color: #082c22;
     background: linear-gradient(135deg, #06281f, #0d3b2f);
     color: #fff;
 }
 
+/* Button and action control styling for .af-enquiry-detail-actions button.secondary. */
 .af-enquiry-detail-actions button.secondary {
     border-color: #f1d8ad;
     background: #fff7ea;
     color: #b45309;
 }
 
+/* Card and panel styling for .af-enquiry-reply-card. */
 .af-enquiry-reply-card {
     border-top: 1px solid #edf0f3;
     display: grid;
@@ -3815,11 +4381,13 @@
     padding-top: 16px;
 }
 
+/* Form control styling for .af-enquiry-reply-card form. */
 .af-enquiry-reply-card form {
     display: grid;
     gap: 12px;
 }
 
+/* Form control styling for .af-enquiry-reply-card textarea. */
 .af-enquiry-reply-card textarea {
     width: 100%;
     min-height: 130px;
@@ -3832,30 +4400,37 @@
     resize: vertical;
 }
 
+/* Form control styling for .af-enquiry-reply-card textarea:focus. */
 .af-enquiry-reply-card textarea:focus {
     border-color: var(--af-gold);
     box-shadow: 0 0 0 3px rgba(183, 123, 26, 0.13);
     outline: 0;
 }
 
+/* Responsive styling rules for @media (max-width: 1180px). */
 @media (max-width: 1180px) {
+    /* Styling rules for .af-enquiries-heading. */
     .af-enquiries-heading {
         align-items: flex-start;
     }
 
     .af-enquiries-filters,
+    /* Styling rules for .af-enquiries-filters, .af-enquiry-detail-grid. */
     .af-enquiry-detail-grid {
         grid-template-columns: repeat(2, minmax(0, 1fr));
     }
 
+    /* Header layout and controls for .af-enquiries-header-actions. */
     .af-enquiries-header-actions {
         justify-content: flex-start;
     }
 }
 
+/* Responsive styling rules for @media (max-width: 720px). */
 @media (max-width: 720px) {
     .af-enquiries-header-actions,
     .af-enquiries-bulkbar,
+    /* Header layout and controls for .af-enquiries-header-actions, .af-enquiries-bulkbar, .af-enquiry-detail-actions. */
     .af-enquiry-detail-actions {
         align-items: stretch;
         flex-direction: column;
@@ -3863,10 +4438,12 @@
 
     .af-enquiries-filters,
     .af-enquiry-detail-grid,
+    /* Styling rules for .af-enquiries-filters, .af-enquiry-detail-grid, .af-enquiries-filter-actions. */
     .af-enquiries-filter-actions {
         grid-template-columns: 1fr;
     }
 
+    /* Styling rules for .af-enquiry-sort. */
     .af-enquiry-sort {
         margin-left: 0;
         width: 100%;
@@ -3875,16 +4452,19 @@
     .af-enquiry-sort select,
     .af-enquiries-bulkbar button,
     .af-enquiries-header-actions button,
+    /* Header layout and controls for .af-enquiry-sort select, .af-enquiries-bulkbar button, .af-enquiries-header-actions button, .af-enquiries-header-actions a. */
     .af-enquiries-header-actions a {
         width: 100%;
     }
 }
 
+/* Styling rules for .af-notification-item. */
 .af-notification-item {
     grid-template-columns: 58px 10px minmax(260px, 1fr) auto 96px minmax(116px, auto);
 }
 
 .af-notification-actions,
+/* Styling rules for .af-notification-actions, .af-customer-notification-actions. */
 .af-customer-notification-actions {
     display: inline-flex;
     align-items: center;
@@ -3893,12 +4473,14 @@
 }
 
 .af-notification-actions form,
+/* Form control styling for .af-notification-actions form, .af-customer-notification-actions form. */
 .af-customer-notification-actions form {
     margin: 0;
 }
 
 .af-notification-actions button,
 .af-customer-notification-actions button,
+/* Button and action control styling for .af-notification-actions button, .af-customer-notification-actions button, .af-customer-notification-actions a. */
 .af-customer-notification-actions a {
     width: 34px;
     height: 34px;
@@ -3918,22 +4500,26 @@
 .af-customer-notification-actions button:hover,
 .af-customer-notification-actions button:focus-visible,
 .af-customer-notification-actions a:hover,
+/* Button and action control styling for .af-notification-actions button:hover, .af-notification-actions button:focus-visible, .af-customer-notification-actions button:hover, .af-customer-notification-actions button:focus-visible, .af-customer-notification-actions a:hover, .af-customer-notification-actions a:focus-visible. */
 .af-customer-notification-actions a:focus-visible {
     border-color: var(--af-gold);
     color: var(--af-gold);
 }
 
 .af-notification-actions button.danger,
+/* Form control styling for .af-notification-actions button.danger, .af-customer-notification-actions form:last-child button. */
 .af-customer-notification-actions form:last-child button {
     color: #dc2626;
 }
 
+/* Button and action control styling for .af-notification-read-btn:disabled. */
 .af-notification-read-btn:disabled {
     border-color: #e5e7eb;
     color: #98a2b3;
     cursor: not-allowed;
 }
 
+/* Styling rules for .af-customer-enquiry-layout. */
 .af-customer-enquiry-layout {
     display: grid;
     grid-template-columns: minmax(0, 1fr) 360px;
@@ -3941,6 +4527,7 @@
     align-items: start;
 }
 
+/* Styling rules for .af-customer-enquiry-filters. */
 .af-customer-enquiry-filters {
     display: grid;
     grid-template-columns: minmax(260px, 1fr) 190px 120px 100px;
@@ -3948,11 +4535,13 @@
     padding: 22px;
 }
 
+/* Form control styling for .af-customer-enquiry-filters .af-enquiry-input-icon. */
 .af-customer-enquiry-filters .af-enquiry-input-icon {
     display: block;
 }
 
 .af-customer-enquiry-filters input,
+/* Form control styling for .af-customer-enquiry-filters input, .af-customer-enquiry-filters select. */
 .af-customer-enquiry-filters select {
     width: 100%;
     min-height: 44px;
@@ -3964,15 +4553,18 @@
     outline: 0;
 }
 
+/* Form control styling for .af-customer-enquiry-filters input. */
 .af-customer-enquiry-filters input {
     padding: 0 12px 0 38px;
 }
 
+/* Form control styling for .af-customer-enquiry-filters select. */
 .af-customer-enquiry-filters select {
     padding: 0 12px;
 }
 
 .af-customer-enquiry-filters button,
+/* Button and action control styling for .af-customer-enquiry-filters button, .af-customer-enquiry-filters a. */
 .af-customer-enquiry-filters a {
     min-height: 44px;
     border: 1px solid #d9dee6;
@@ -3989,17 +4581,20 @@
     text-decoration: none;
 }
 
+/* Button and action control styling for .af-customer-enquiry-filters button. */
 .af-customer-enquiry-filters button {
     border-color: #082c22;
     background: linear-gradient(135deg, #06281f, #0d3b2f);
     color: #fff;
 }
 
+/* Table layout styling for .af-customer-enquiries-page .af-enquiries-table table. */
 .af-customer-enquiries-page .af-enquiries-table table {
     min-width: 900px;
     width: 900px;
 }
 
+/* Table layout styling for .af-customer-enquiries-page .af-enquiries-table td strong. */
 .af-customer-enquiries-page .af-enquiries-table td strong {
     color: #111827;
     display: block;
@@ -4007,6 +4602,7 @@
     line-height: 1.35;
 }
 
+/* Table layout styling for .af-customer-enquiries-page .af-enquiries-table td small. */
 .af-customer-enquiries-page .af-enquiries-table td small {
     color: #667085;
     display: block;
@@ -4015,30 +4611,36 @@
     line-height: 1.45;
 }
 
+/* Styling rules for .af-customer-enquiry-detail-grid. */
 .af-customer-enquiry-detail-grid {
     grid-template-columns: minmax(210px, 0.65fr) minmax(280px, 1fr);
 }
 
+/* Styling rules for .af-customer-enquiry-detail-grid .af-enquiry-message-box.is-response. */
 .af-customer-enquiry-detail-grid .af-enquiry-message-box.is-response {
     grid-column: 1 / -1;
 }
 
+/* Form control styling for .af-customer-enquiry-form. */
 .af-customer-enquiry-form {
     position: sticky;
     top: 92px;
 }
 
+/* Form control styling for .af-customer-enquiry-form h2. */
 .af-customer-enquiry-form h2 {
     display: flex;
     align-items: center;
     gap: 10px;
 }
 
+/* Form control styling for .af-customer-enquiry-form textarea. */
 .af-customer-enquiry-form textarea {
     min-height: 150px;
     line-height: 1.6;
 }
 
+/* Table layout styling for .af-enquiries-table td. */
 .af-enquiries-table td {
     color: #1f2937;
     font-size: 13px;
@@ -4046,51 +4648,61 @@
 
 .af-enquiries-table td:nth-child(4),
 .af-enquiries-table td:nth-child(8),
+/* Table layout styling for .af-enquiries-table td:nth-child(4), .af-enquiries-table td:nth-child(8), .af-enquiries-table td:nth-child(9). */
 .af-enquiries-table td:nth-child(9) {
     white-space: nowrap;
 }
 
+/* Table layout styling for .af-enquiries-table th. */
 .af-enquiries-table th {
     color: #111827;
     font-size: 12px;
 }
 
+/* Card and panel styling for .af-enquiry-detail-card. */
 .af-enquiry-detail-card {
     color: #111827;
 }
 
 .af-enquiries-table th:nth-child(1),
+/* Table layout styling for .af-enquiries-table th:nth-child(1), .af-enquiries-table td:nth-child(1). */
 .af-enquiries-table td:nth-child(1) {
     width: 60px;
 }
 
 .af-enquiries-table th:nth-child(2),
+/* Table layout styling for .af-enquiries-table th:nth-child(2), .af-enquiries-table td:nth-child(2). */
 .af-enquiries-table td:nth-child(2) {
     width: 140px;
 }
 
 .af-enquiries-table th:nth-child(3),
+/* Table layout styling for .af-enquiries-table th:nth-child(3), .af-enquiries-table td:nth-child(3). */
 .af-enquiries-table td:nth-child(3) {
     width: 260px;
 }
 
 .af-enquiries-table th:nth-child(4),
+/* Table layout styling for .af-enquiries-table th:nth-child(4), .af-enquiries-table td:nth-child(4). */
 .af-enquiries-table td:nth-child(4) {
     width: 170px;
 }
 
 .af-enquiries-table th:nth-child(5),
+/* Table layout styling for .af-enquiries-table th:nth-child(5), .af-enquiries-table td:nth-child(5). */
 .af-enquiries-table td:nth-child(5) {
     width: 260px;
     white-space: normal;
 }
 
 .af-enquiries-table th:nth-child(6),
+/* Table layout styling for .af-enquiries-table th:nth-child(6), .af-enquiries-table td:nth-child(6). */
 .af-enquiries-table td:nth-child(6) {
     width: 180px;
 }
 
 .af-enquiries-table th:nth-child(7),
+/* Table layout styling for .af-enquiries-table th:nth-child(7), .af-enquiries-table td:nth-child(7). */
 .af-enquiries-table td:nth-child(7) {
     width: 140px;
 }
@@ -4098,24 +4710,30 @@
 .af-enquiries-table th:nth-child(8),
 .af-enquiries-table td:nth-child(8),
 .af-enquiries-table th:nth-child(9),
+/* Table layout styling for .af-enquiries-table th:nth-child(8), .af-enquiries-table td:nth-child(8), .af-enquiries-table th:nth-child(9), .af-enquiries-table td:nth-child(9). */
 .af-enquiries-table td:nth-child(9) {
     width: 170px;
 }
 
 .af-enquiries-table th:nth-child(10),
+/* Table layout styling for .af-enquiries-table th:nth-child(10), .af-enquiries-table td:nth-child(10). */
 .af-enquiries-table td:nth-child(10) {
     width: 170px;
 }
 
+/* Responsive styling rules for @media (max-width: 1180px). */
 @media (max-width: 1180px) {
+    /* Styling rules for .af-customer-enquiry-layout. */
     .af-customer-enquiry-layout {
         grid-template-columns: 1fr;
     }
 
+    /* Form control styling for .af-customer-enquiry-form. */
     .af-customer-enquiry-form {
         position: static;
     }
 
+    /* Styling rules for .af-notification-item. */
     .af-notification-item {
         grid-template-columns: 58px 10px minmax(0, 1fr);
     }
@@ -4123,19 +4741,24 @@
     .af-notification-type,
     .af-notification-item time,
     .af-notification-actions,
+    /* Styling rules for .af-notification-type, .af-notification-item time, .af-notification-actions, .af-customer-notification-actions. */
     .af-customer-notification-actions {
         grid-column: 3;
         justify-self: start;
     }
 }
 
+/* Responsive styling rules for @media (max-width: 720px). */
 @media (max-width: 720px) {
+    /* Styling rules for .af-customer-enquiry-filters. */
     .af-customer-enquiry-filters {
         grid-template-columns: 1fr;
     }
 }
 
+/* Responsive styling rules for @media (max-width: 1180px). */
 @media (max-width: 1180px) {
+    /* Card and panel styling for .af-settings-card-wide. */
     .af-settings-card-wide {
         grid-column: auto;
     }
@@ -4143,65 +4766,79 @@
     .af-social-accounts-card,
     .af-social-preview-card,
     .af-payment-gateways-card,
+    /* Payment interface styling for .af-social-accounts-card, .af-social-preview-card, .af-payment-gateways-card, .af-payment-config-card. */
     .af-payment-config-card {
         grid-column: 1 / -1;
     }
 
     .af-payment-settings-layout,
     .af-delivery-settings-layout,
+    /* Delivery management interface styling for .af-payment-settings-layout, .af-delivery-settings-layout, .af-seo-settings-layout. */
     .af-seo-settings-layout {
         grid-template-columns: 1fr;
     }
 
+    /* Styling rules for .af-social-account. */
     .af-social-account {
         grid-template-columns: 42px 150px minmax(300px, 1fr) 58px 48px;
         min-width: 680px;
     }
 
+    /* Payment interface styling for .af-payment-gateway-list article. */
     .af-payment-gateway-list article {
         grid-template-columns: 44px minmax(220px, 1fr) auto 52px 44px;
         min-width: 620px;
     }
 
+    /* Payment interface styling for .af-payment-gateway-list. */
     .af-payment-gateway-list {
         overflow-x: auto;
     }
 
+    /* Styling rules for .af-business-hours-editor. */
     .af-business-hours-editor {
         grid-template-columns: 1fr;
     }
 }
 
+/* Responsive styling rules for @media (max-width: 720px). */
 @media (max-width: 720px) {
     .af-settings-two,
+    /* Styling rules for .af-settings-two, .af-settings-color-grid. */
     .af-settings-color-grid {
         grid-template-columns: 1fr;
     }
 
+    /* Styling rules for .af-social-account. */
     .af-social-account {
         grid-template-columns: 34px 1fr 42px;
         min-width: 0;
         gap: 10px;
     }
 
+    /* Styling rules for .af-social-account-list. */
     .af-social-account-list {
         overflow-x: visible;
     }
 
+    /* Form control styling for .af-social-account input[type="url"]. */
     .af-social-account input[type="url"] {
         grid-column: 1 / -1;
     }
 
+    /* Styling rules for .af-social-toggle. */
     .af-social-toggle {
         grid-column: 2;
         justify-self: start;
     }
 
+    /* Styling rules for .af-social-clear. */
     .af-social-clear {
         grid-column: 3;
         grid-row: 1;
     }
 
+    /* Payment interface styling for .af-payment-gateway-list article. */
     .af-payment-gateway-list article {
         min-width: 560px;
     }

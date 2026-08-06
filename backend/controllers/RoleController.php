@@ -41,6 +41,7 @@ class RoleController
     {
         $role = $this->roles->findById($id);
 
+        // Guard this block so it only runs when the required condition is met.
         if ($role === null) {
             return Response::error('Role not found.', 404);
         }
@@ -56,12 +57,14 @@ class RoleController
         $validator = new Validator();
         $nameField = isset($request['rolename']) ? 'rolename' : 'name';
 
+        // Guard this block so it only runs when the required condition is met.
         if (!$validator->validate($request, [$nameField => 'required|minLength:2|maxLength:100'])) {
             return Response::error('Validation failed.', 422, $validator->getErrors());
         }
 
         $id = $this->roles->create($request);
 
+        // Guard this block so it only runs when the required condition is met.
         if ($id === null) {
             return Response::error('Role could not be created.', 500);
         }
@@ -74,6 +77,7 @@ class RoleController
      */
     public function update(int $id, array $request): array
     {
+        // Guard this block so it only runs when the required condition is met.
         if (!$this->roles->update($id, $request)) {
             return Response::error('Role could not be updated.', 400);
         }
@@ -86,6 +90,7 @@ class RoleController
      */
     public function destroy(int $id): array
     {
+        // Guard this block so it only runs when the required condition is met.
         if (!$this->roles->delete($id)) {
             return Response::error('Role could not be deleted.', 400);
         }
@@ -98,6 +103,7 @@ class RoleController
      */
     public function assignPermission(int $roleId, int $permissionId): array
     {
+        // Guard this block so it only runs when the required condition is met.
         if (!$this->roles->assignPermission($roleId, $permissionId)) {
             return Response::error('Permission could not be assigned.', 400);
         }
@@ -110,6 +116,7 @@ class RoleController
      */
     public function removePermission(int $roleId, int $permissionId): array
     {
+        // Guard this block so it only runs when the required condition is met.
         if (!$this->roles->removePermission($roleId, $permissionId)) {
             return Response::error('Permission could not be removed.', 400);
         }

@@ -6,6 +6,7 @@ $authUser = afrisense_require_admin();
 $adminName = (string) ($authUser['fullname'] ?? $authUser['email'] ?? 'Admin User');
 $adminRole = ucwords(afrisense_role_name($authUser) ?: 'Staff');
 
+// Defines the afrisense_dashboard_count helper used by this module.
 function afrisense_dashboard_count(PDO $pdo, string $table): int
 {
     $allowedTables = [
@@ -18,6 +19,7 @@ function afrisense_dashboard_count(PDO $pdo, string $table): int
         'services',
     ];
 
+    // Guard this block so it only runs when the required condition is met.
     if (!in_array($table, $allowedTables, true)) {
         return 0;
     }
@@ -29,6 +31,7 @@ function afrisense_dashboard_count(PDO $pdo, string $table): int
     return (int) ($row['count_value'] ?? 0);
 }
 
+// Defines the afrisense_dashboard_order_status_count helper used by this module.
 function afrisense_dashboard_order_status_count(PDO $pdo, string $status): int
 {
     $statement = $pdo->prepare('SELECT COUNT(*) AS count_value FROM `orders` WHERE `order_status` = :status');
@@ -38,8 +41,10 @@ function afrisense_dashboard_order_status_count(PDO $pdo, string $status): int
     return (int) ($row['count_value'] ?? 0);
 }
 
+// Defines the afrisense_dashboard_percent helper used by this module.
 function afrisense_dashboard_percent(int $value, int $total): string
 {
+    // Guard this block so it only runs when the required condition is met.
     if ($total <= 0) {
         return '0%';
     }
@@ -47,11 +52,13 @@ function afrisense_dashboard_percent(int $value, int $total): string
     return number_format(($value / $total) * 100, 1) . '%';
 }
 
+// Defines the afrisense_dashboard_food_image helper used by this module.
 function afrisense_dashboard_food_image(?string $image): string
 {
     $image = trim((string) $image);
     $filename = basename($image);
 
+    // Guard this block so it only runs when the required condition is met.
     if ($image !== '' && is_file(__DIR__ . '/../assets/images/foods/' . $filename)) {
         return '../assets/images/foods/' . $filename;
     }
@@ -59,6 +66,7 @@ function afrisense_dashboard_food_image(?string $image): string
     return '../assets/images/foods/jollof-rice.png';
 }
 
+// Run database/action work inside a guarded block so the page can fail gracefully.
 try {
     $pdo = afrisense_pdo();
     $dashboardError = '';
@@ -161,6 +169,7 @@ $mainScriptVersion = filemtime(__DIR__ . '/../assets/js/main.js') ?: time();
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
 </head>
 <body>
+    <!-- Side panel with supporting information and actions. -->
     <aside class="sidebar" aria-label="Admin navigation">
         <a class="brand" href="index.php" aria-label="AfriSense home">
             <span class="brand-icon" aria-hidden="true"><i class="bi bi-cup-hot"></i></span>
@@ -170,6 +179,7 @@ $mainScriptVersion = filemtime(__DIR__ . '/../assets/js/main.js') ?: time();
             </span>
         </a>
 
+        <!-- Navigation links for this interface. -->
         <nav class="side-nav">
             <a class="active" href="dashboard.php"><i class="bi bi-house-fill" aria-hidden="true"></i> Dashboard</a>
 
@@ -197,6 +207,7 @@ $mainScriptVersion = filemtime(__DIR__ . '/../assets/js/main.js') ?: time();
     </aside>
 
     <div class="dashboard-shell">
+        <!-- Header block for this interface section. -->
         <header class="topbar">
             <button class="menu-toggle" type="button" aria-label="Open navigation">
                 <i class="bi bi-list" aria-hidden="true"></i>
@@ -213,18 +224,21 @@ $mainScriptVersion = filemtime(__DIR__ . '/../assets/js/main.js') ?: time();
             <div class="top-actions">
                 <a href="notifications.php" aria-label="Notifications">
                     <i class="bi bi-bell" aria-hidden="true"></i>
+                    <?php // Render this conditional/dynamic template block. ?>
                     <?php if ($unreadNotifications > 0): ?>
                         <span><?php echo htmlspecialchars((string) min(99, $unreadNotifications), ENT_QUOTES, 'UTF-8'); ?></span>
                     <?php endif; ?>
                 </a>
                 <a href="enquiries.php?status=Pending" aria-label="Unread enquiries">
                     <i class="bi bi-envelope" aria-hidden="true"></i>
+                    <?php // Render this conditional/dynamic template block. ?>
                     <?php if ($pendingEnquiries > 0): ?>
                         <span class="green"><?php echo htmlspecialchars((string) min(99, $pendingEnquiries), ENT_QUOTES, 'UTF-8'); ?></span>
                     <?php endif; ?>
                 </a>
                 <a href="support.php" aria-label="Support inbox">
                     <i class="bi bi-headset" aria-hidden="true"></i>
+                    <?php // Render this conditional/dynamic template block. ?>
                     <?php if ($pendingSupport > 0): ?>
                         <span class="green"><?php echo htmlspecialchars((string) min(99, $pendingSupport), ENT_QUOTES, 'UTF-8'); ?></span>
                     <?php endif; ?>
@@ -243,7 +257,9 @@ $mainScriptVersion = filemtime(__DIR__ . '/../assets/js/main.js') ?: time();
             </div>
         </header>
 
+        <!-- Main content area for this page. -->
         <main class="content">
+            <!-- Page section for this part of the AfriSense interface. -->
             <section class="page-heading">
                 <div>
                     <h1>Dashboard</h1>
@@ -256,10 +272,12 @@ $mainScriptVersion = filemtime(__DIR__ . '/../assets/js/main.js') ?: time();
                 </button>
             </section>
 
+            <?php // Render this conditional/dynamic template block. ?>
             <?php if ($dashboardError !== ''): ?>
                 <p class="dashboard-alert"><?php echo htmlspecialchars($dashboardError, ENT_QUOTES, 'UTF-8'); ?></p>
             <?php endif; ?>
 
+            <!-- Page section for this part of the AfriSense interface. -->
             <section class="metric-grid" aria-label="Business summary">
                 <article class="metric-card green">
                     <span><i class="bi bi-cart-check" aria-hidden="true"></i></span>
@@ -302,8 +320,10 @@ $mainScriptVersion = filemtime(__DIR__ . '/../assets/js/main.js') ?: time();
                 </article>
             </section>
 
+            <!-- Page section for this part of the AfriSense interface. -->
             <section class="analytics-grid">
                 <article class="panel chart-panel">
+                    <!-- Header block for this interface section. -->
                     <header class="panel-header">
                         <h2>Order Statistics</h2>
                         <button type="button">This Week <i class="bi bi-chevron-down" aria-hidden="true"></i></button>
@@ -347,6 +367,7 @@ $mainScriptVersion = filemtime(__DIR__ . '/../assets/js/main.js') ?: time();
                 </article>
 
                 <article class="panel status-panel">
+                    <!-- Header block for this interface section. -->
                     <header class="panel-header">
                         <h2>Orders by Status</h2>
                     </header>
@@ -356,6 +377,7 @@ $mainScriptVersion = filemtime(__DIR__ . '/../assets/js/main.js') ?: time();
                             <span>Total</span>
                         </div>
                         <ul class="status-list">
+                            <?php // Render this conditional/dynamic template block. ?>
                             <?php foreach ($orderStatusCounts as $status => $count): ?>
                                 <li>
                                     <i class="<?php echo htmlspecialchars(strtolower($status), ENT_QUOTES, 'UTF-8'); ?>"></i>
@@ -369,13 +391,16 @@ $mainScriptVersion = filemtime(__DIR__ . '/../assets/js/main.js') ?: time();
                 </article>
             </section>
 
+            <!-- Page section for this part of the AfriSense interface. -->
             <section class="bottom-grid">
                 <article class="panel table-panel">
+                    <!-- Header block for this interface section. -->
                     <header class="panel-header">
                         <h2>Recent Orders</h2>
                         <a href="orders.php">View All</a>
                     </header>
                     <div class="table-wrap">
+                        <!-- Table block for displaying structured records. -->
                         <table>
                             <thead>
                                 <tr>
@@ -387,11 +412,13 @@ $mainScriptVersion = filemtime(__DIR__ . '/../assets/js/main.js') ?: time();
                                 </tr>
                             </thead>
                             <tbody>
+                                <?php // Render this conditional/dynamic template block. ?>
                                 <?php if ($recentOrders === []): ?>
                                     <tr>
                                         <td colspan="5">No recent orders yet.</td>
                                     </tr>
                                 <?php endif; ?>
+                                <?php // Render this conditional/dynamic template block. ?>
                                 <?php foreach ($recentOrders as $order): ?>
                                     <?php $orderedAt = strtotime((string) ($order['ordered_at'] ?? '')) ?: time(); ?>
                                     <tr>
@@ -408,11 +435,13 @@ $mainScriptVersion = filemtime(__DIR__ . '/../assets/js/main.js') ?: time();
                 </article>
 
                 <article class="panel package-panel">
+                    <!-- Header block for this interface section. -->
                     <header class="panel-header">
                         <h2>Available Services</h2>
                         <a href="bookings.php">View All</a>
                     </header>
                     <div class="table-wrap">
+                        <!-- Table block for displaying structured records. -->
                         <table>
                             <thead>
                                 <tr>
@@ -422,11 +451,13 @@ $mainScriptVersion = filemtime(__DIR__ . '/../assets/js/main.js') ?: time();
                                 </tr>
                             </thead>
                             <tbody>
+                                <?php // Render this conditional/dynamic template block. ?>
                                 <?php if ($topServices === []): ?>
                                     <tr>
                                         <td colspan="3">No services found.</td>
                                     </tr>
                                 <?php endif; ?>
+                                <?php // Render this conditional/dynamic template block. ?>
                                 <?php foreach ($topServices as $service): ?>
                                     <tr>
                                         <td><img src="../assets/images/foods/grilled-chicken.png" alt=""> <?php echo htmlspecialchars((string) ($service['service_name'] ?? 'Service'), ENT_QUOTES, 'UTF-8'); ?></td>
@@ -440,6 +471,7 @@ $mainScriptVersion = filemtime(__DIR__ . '/../assets/js/main.js') ?: time();
                 </article>
 
                 <article class="panel quick-panel">
+                    <!-- Header block for this interface section. -->
                     <header class="panel-header">
                         <h2>Quick Actions</h2>
                     </header>

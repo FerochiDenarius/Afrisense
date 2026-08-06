@@ -12,10 +12,17 @@ require_once __DIR__ . '/../../backend/helpers/Session.php';
 require_once __DIR__ . '/../../backend/models/Auth.php';
 require_once __DIR__ . '/../../backend/models/User.php';
 
+/**
+ * Shared authentication bootstrap for public, customer, and admin pages.
+ *
+ * Pages include this file to reuse one PDO connection, one Auth service, and
+ * the same role checks/redirect rules across the application.
+ */
 function afrisense_pdo(): PDO
 {
     static $pdo = null;
 
+    // Guard this block so it only runs when the required condition is met.
     if ($pdo instanceof PDO) {
         return $pdo;
     }
@@ -25,10 +32,12 @@ function afrisense_pdo(): PDO
     return $pdo;
 }
 
+// Defines the afrisense_auth helper used by this module.
 function afrisense_auth(): Auth
 {
     static $auth = null;
 
+    // Guard this block so it only runs when the required condition is met.
     if ($auth instanceof Auth) {
         return $auth;
     }
@@ -38,43 +47,55 @@ function afrisense_auth(): Auth
     return $auth;
 }
 
+// Defines the afrisense_current_user helper used by this module.
 function afrisense_current_user(): ?array
 {
     return afrisense_auth()->getCurrentUser();
 }
 
+// Defines the afrisense_role_name helper used by this module.
 function afrisense_role_name(?array $user): string
 {
+    // Guard this block so it only runs when the required condition is met.
     if ($user === null || !isset($user['id'])) {
         return '';
     }
 
+    // Role names live in the roles table, so resolve them from the current
+    // user id instead of trusting a stale value stored in the session.
     $role = (new User(afrisense_pdo()))->getRole((int) $user['id']);
 
     return strtolower((string) ($role['rolename'] ?? $role['name'] ?? ''));
 }
 
+// Defines the afrisense_is_customer helper used by this module.
 function afrisense_is_customer(?array $user): bool
 {
     return afrisense_role_name($user) === 'customer';
 }
 
+// Defines the afrisense_is_administrator helper used by this module.
 function afrisense_is_administrator(?array $user): bool
 {
     return in_array(afrisense_role_name($user), ['administrator', 'admin', 'super admin'], true);
 }
 
+// Defines the afrisense_is_support_staff helper used by this module.
 function afrisense_is_support_staff(?array $user): bool
 {
     return in_array(afrisense_role_name($user), ['support agent', 'agent', 'customer support', 'support'], true);
 }
 
+// Defines the afrisense_dashboard_url helper used by this module.
 function afrisense_dashboard_url(?array $user): string
 {
+    // Keep post-login redirects centralized so new roles do not scatter
+    // special cases across login/register pages.
     if (afrisense_is_administrator($user)) {
         return '/Afrisense/frontend/admin/dashboard.php';
     }
 
+    // Guard this block so it only runs when the required condition is met.
     if (afrisense_is_support_staff($user)) {
         return '/Afrisense/frontend/admin/support.php';
     }
@@ -82,11 +103,15 @@ function afrisense_dashboard_url(?array $user): string
     return '/Afrisense/frontend/customer/dashboard.php';
 }
 
+// Defines the afrisense_require_user helper used by this module.
 function afrisense_require_user(): array
 {
     $user = afrisense_current_user();
 
+    // Guard this block so it only runs when the required condition is met.
     if ($user === null) {
+        // Page-level guards redirect instead of returning errors because these
+        // scripts render browser pages, not API responses.
         header('Location: /Afrisense/frontend/auth/login.php');
         exit;
     }
@@ -94,10 +119,12 @@ function afrisense_require_user(): array
     return $user;
 }
 
+// Defines the afrisense_require_customer helper used by this module.
 function afrisense_require_customer(): array
 {
     $user = afrisense_require_user();
 
+    // Guard this block so it only runs when the required condition is met.
     if (!afrisense_is_customer($user)) {
         header('Location: ' . afrisense_dashboard_url($user));
         exit;
@@ -106,10 +133,12 @@ function afrisense_require_customer(): array
     return $user;
 }
 
+// Defines the afrisense_require_admin helper used by this module.
 function afrisense_require_admin(): array
 {
     $user = afrisense_require_user();
 
+    // Guard this block so it only runs when the required condition is met.
     if (!afrisense_is_administrator($user)) {
         header('Location: /Afrisense/frontend/customer/dashboard.php');
         exit;
@@ -118,12 +147,14 @@ function afrisense_require_admin(): array
     return $user;
 }
 
+// Defines the afrisense_ensure_role helper used by this module.
 function afrisense_ensure_role(PDO $pdo, string $roleName, string $description = ''): int
 {
     $statement = $pdo->prepare('SELECT `id` FROM `roles` WHERE LOWER(`rolename`) = LOWER(:role) LIMIT 1');
     $statement->execute(['role' => $roleName]);
     $role = $statement->fetch(PDO::FETCH_ASSOC);
 
+    // Guard this block so it only runs when the required condition is met.
     if ($role !== false) {
         return (int) $role['id'];
     }
@@ -137,18 +168,23 @@ function afrisense_ensure_role(PDO $pdo, string $roleName, string $description =
     return (int) $pdo->lastInsertId();
 }
 
+// Defines the afrisense_customer_role_id helper used by this module.
 function afrisense_customer_role_id(PDO $pdo): int
 {
     return afrisense_ensure_role($pdo, 'Customer', 'Public customer account');
 }
 
+// Defines the afrisense_delivery_rider_role_id helper used by this module.
 function afrisense_delivery_rider_role_id(PDO $pdo): int
 {
     return afrisense_ensure_role($pdo, 'Delivery Rider', 'Handles delivery assignments, pickup and order delivery updates.');
 }
 
+// Defines the afrisense_unique_username helper used by this module.
 function afrisense_unique_username(PDO $pdo, string $email, string $fallbackName): string
 {
+    // Usernames are derived from the email prefix, then made unique with a
+    // numeric suffix. This keeps guest/customer registration friction low.
     $base = preg_replace('/[^a-z0-9_]/', '', strtolower(strtok($email, '@') ?: $fallbackName));
     $base = substr($base !== '' ? $base : 'customer', 0, 40);
     $candidate = $base;
@@ -156,10 +192,12 @@ function afrisense_unique_username(PDO $pdo, string $email, string $fallbackName
 
     $statement = $pdo->prepare('SELECT COUNT(*) AS count_value FROM `users` WHERE `username` = :username');
 
+    // Iterate through the data needed for this block.
     while (true) {
         $statement->execute(['username' => $candidate]);
         $row = $statement->fetch(PDO::FETCH_ASSOC);
 
+        // Guard this block so it only runs when the required condition is met.
         if (((int) ($row['count_value'] ?? 0)) === 0) {
             return $candidate;
         }
@@ -169,36 +207,46 @@ function afrisense_unique_username(PDO $pdo, string $email, string $fallbackName
     }
 }
 
+// Defines the afrisense_register_customer helper used by this module.
 function afrisense_register_customer(array $request): array
 {
     $pdo = afrisense_pdo();
     $required = ['fullname', 'email', 'phone', 'password', 'confirm_password'];
 
+    // Iterate through the data needed for this block.
     foreach ($required as $field) {
+        // Guard this block so it only runs when the required condition is met.
         if (trim((string) ($request[$field] ?? '')) === '') {
             return ['success' => false, 'message' => 'Please complete all required fields.'];
         }
     }
 
+    // Guard this block so it only runs when the required condition is met.
     if (!filter_var((string) $request['email'], FILTER_VALIDATE_EMAIL)) {
         return ['success' => false, 'message' => 'Please enter a valid email address.'];
     }
 
+    // Guard this block so it only runs when the required condition is met.
     if ((string) $request['password'] !== (string) $request['confirm_password']) {
         return ['success' => false, 'message' => 'Passwords do not match.'];
     }
 
+    // Guard this block so it only runs when the required condition is met.
     if (strlen((string) $request['password']) < 8) {
         return ['success' => false, 'message' => 'Password must be at least 8 characters.'];
     }
 
+    // Guard this block so it only runs when the required condition is met.
     if (($request['agree'] ?? '') !== '1') {
         return ['success' => false, 'message' => 'Please accept the terms and privacy policy.'];
     }
 
     $pdo->beginTransaction();
 
+    // Run database/action work inside a guarded block so the page can fail gracefully.
     try {
+        // Registration writes both users and customers so login/auth and order
+        // history can reference the same person from their preferred table.
         $roleId = afrisense_customer_role_id($pdo);
         $email = trim((string) $request['email']);
         $fullname = trim((string) $request['fullname']);
@@ -219,6 +267,7 @@ function afrisense_register_customer(array $request): array
             'verification_token_expires' => $verificationExpires,
         ]);
 
+        // Guard this block so it only runs when the required condition is met.
         if ($userId === null) {
             throw new RuntimeException('Account could not be created.');
         }
@@ -247,6 +296,7 @@ function afrisense_register_customer(array $request): array
         $pdo->commit();
         $mailResult = afrisense_send_verification_email($email, $fullname, $verificationToken);
 
+        // Guard this block so it only runs when the required condition is met.
         if (!$mailResult['success']) {
             return [
                 'success' => true,
@@ -256,10 +306,12 @@ function afrisense_register_customer(array $request): array
 
         return ['success' => true, 'message' => 'Account created. Please check your email to verify your account.'];
     } catch (Throwable $exception) {
+        // Guard this block so it only runs when the required condition is met.
         if ($pdo->inTransaction()) {
             $pdo->rollBack();
         }
 
+        // Guard this block so it only runs when the required condition is met.
         if (str_contains($exception->getMessage(), 'Duplicate entry')) {
             return ['success' => false, 'message' => 'An account with this email or phone already exists.'];
         }
@@ -268,11 +320,13 @@ function afrisense_register_customer(array $request): array
     }
 }
 
+// Defines the afrisense_flash_set helper used by this module.
 function afrisense_flash_set(string $type, string $message): void
 {
     Session::set('flash', ['type' => $type, 'message' => $message]);
 }
 
+// Defines the afrisense_flash_get helper used by this module.
 function afrisense_flash_get(): ?array
 {
     $flash = Session::get('flash');
@@ -281,6 +335,7 @@ function afrisense_flash_get(): ?array
     return is_array($flash) ? $flash : null;
 }
 
+// Defines the afrisense_app_url helper used by this module.
 function afrisense_app_url(): string
 {
     require_once __DIR__ . '/../../backend/config/env.php';
@@ -288,8 +343,10 @@ function afrisense_app_url(): string
     return rtrim((string) ($_ENV['APP_URL'] ?? 'http://localhost/Afrisense'), '/');
 }
 
+// Defines the afrisense_admin_items_per_page helper used by this module.
 function afrisense_admin_items_per_page(int $fallback = 25): int
 {
+    // Run database/action work inside a guarded block so the page can fail gracefully.
     try {
         $statement = afrisense_pdo()->prepare('SELECT `items_per_page` FROM `system_settings` ORDER BY `id` ASC LIMIT 1');
         $statement->execute();
@@ -301,8 +358,10 @@ function afrisense_admin_items_per_page(int $fallback = 25): int
     }
 }
 
+// Defines the afrisense_mail_database_settings helper used by this module.
 function afrisense_mail_database_settings(): array
 {
+    // Run database/action work inside a guarded block so the page can fail gracefully.
     try {
         $pdo = afrisense_pdo();
         $systemStatement = $pdo->prepare('SELECT * FROM `system_settings` ORDER BY `id` ASC LIMIT 1');
@@ -319,13 +378,16 @@ function afrisense_mail_database_settings(): array
     }
 }
 
+// Defines the afrisense_smtp_response helper used by this module.
 function afrisense_smtp_response($socket): string
 {
     $response = '';
 
+    // Iterate through the data needed for this block.
     while (($line = fgets($socket, 515)) !== false) {
         $response .= $line;
 
+        // Guard this block so it only runs when the required condition is met.
         if (strlen($line) >= 4 && $line[3] === ' ') {
             break;
         }
@@ -334,8 +396,10 @@ function afrisense_smtp_response($socket): string
     return $response;
 }
 
+// Defines the afrisense_smtp_command helper used by this module.
 function afrisense_smtp_command($socket, string $command, array $acceptedCodes): string
 {
+    // Guard this block so it only runs when the required condition is met.
     if ($command !== '') {
         fwrite($socket, $command . "\r\n");
     }
@@ -343,6 +407,7 @@ function afrisense_smtp_command($socket, string $command, array $acceptedCodes):
     $response = afrisense_smtp_response($socket);
     $code = substr($response, 0, 3);
 
+    // Guard this block so it only runs when the required condition is met.
     if (!in_array($code, $acceptedCodes, true)) {
         throw new RuntimeException(trim($response) !== '' ? trim($response) : 'SMTP server did not respond as expected.');
     }
@@ -350,6 +415,7 @@ function afrisense_smtp_command($socket, string $command, array $acceptedCodes):
     return $response;
 }
 
+// Defines the afrisense_smtp_message helper used by this module.
 function afrisense_smtp_message(string $from, string $toEmail, string $toName, string $subject, string $html, string $text): string
 {
     $boundary = 'afrisense_' . bin2hex(random_bytes(12));
@@ -372,6 +438,7 @@ function afrisense_smtp_message(string $from, string $toEmail, string $toName, s
     return preg_replace('/^\./m', '..', $body) ?? $body;
 }
 
+// Defines the afrisense_send_smtp_email helper used by this module.
 function afrisense_send_smtp_email(string $toEmail, string $toName, string $subject, string $html, string $text, array $system, array $company): array
 {
     $host = trim((string) ($system['smtp_host'] ?? ''));
@@ -382,6 +449,7 @@ function afrisense_send_smtp_email(string $toEmail, string $toName, string $subj
     $fromEmail = trim((string) ($company['company_email'] ?? $username));
     $fromName = trim((string) ($company['company_name'] ?? 'AfriSense Food Services'));
 
+    // Guard this block so it only runs when the required condition is met.
     if ($host === '' || $fromEmail === '') {
         return ['success' => false, 'message' => 'SMTP host and sender email are required.'];
     }
@@ -389,19 +457,23 @@ function afrisense_send_smtp_email(string $toEmail, string $toName, string $subj
     $remote = ($encryption === 'ssl' ? 'ssl://' : '') . $host . ':' . max(1, $port);
     $socket = @stream_socket_client($remote, $errorCode, $errorMessage, 20, STREAM_CLIENT_CONNECT);
 
+    // Guard this block so it only runs when the required condition is met.
     if (!$socket) {
         return ['success' => false, 'message' => $errorMessage !== '' ? $errorMessage : 'SMTP connection failed.', 'status_code' => $errorCode];
     }
 
     stream_set_timeout($socket, 20);
 
+    // Run database/action work inside a guarded block so the page can fail gracefully.
     try {
         afrisense_smtp_command($socket, '', ['220']);
         afrisense_smtp_command($socket, 'EHLO localhost', ['250']);
 
+        // Guard this block so it only runs when the required condition is met.
         if ($encryption === 'tls') {
             afrisense_smtp_command($socket, 'STARTTLS', ['220']);
 
+            // Guard this block so it only runs when the required condition is met.
             if (!stream_socket_enable_crypto($socket, true, STREAM_CRYPTO_METHOD_TLS_CLIENT)) {
                 throw new RuntimeException('SMTP TLS negotiation failed.');
             }
@@ -409,6 +481,7 @@ function afrisense_send_smtp_email(string $toEmail, string $toName, string $subj
             afrisense_smtp_command($socket, 'EHLO localhost', ['250']);
         }
 
+        // Guard this block so it only runs when the required condition is met.
         if ($username !== '') {
             afrisense_smtp_command($socket, 'AUTH LOGIN', ['334']);
             afrisense_smtp_command($socket, base64_encode($username), ['334']);
@@ -432,11 +505,13 @@ function afrisense_send_smtp_email(string $toEmail, string $toName, string $subj
     }
 }
 
+// Defines the afrisense_send_email helper used by this module.
 function afrisense_send_email(string $toEmail, string $toName, string $subject, string $html, string $text): array
 {
     $databaseMailSettings = afrisense_mail_database_settings();
     $systemMailSettings = $databaseMailSettings['system'];
 
+    // Guard this block so it only runs when the required condition is met.
     if (trim((string) ($systemMailSettings['smtp_host'] ?? '')) !== '') {
         return afrisense_send_smtp_email($toEmail, $toName, $subject, $html, $text, $systemMailSettings, $databaseMailSettings['company']);
     }
@@ -444,10 +519,12 @@ function afrisense_send_email(string $toEmail, string $toName, string $subject, 
     $mail = require __DIR__ . '/../../backend/config/mail.php';
     $apiKey = (string) ($mail['resend']['api_key'] ?? '');
 
+    // Guard this block so it only runs when the required condition is met.
     if ($apiKey === '') {
         return ['success' => false, 'message' => 'Resend API key is missing.'];
     }
 
+    // Guard this block so it only runs when the required condition is met.
     if (!function_exists('curl_init')) {
         return ['success' => false, 'message' => 'PHP cURL extension is not available.'];
     }
@@ -485,11 +562,13 @@ function afrisense_send_email(string $toEmail, string $toName, string $subject, 
 
     $decodedBody = [];
 
+    // Guard this block so it only runs when the required condition is met.
     if (is_string($body) && $body !== '') {
         $decoded = json_decode($body, true);
         $decodedBody = is_array($decoded) ? $decoded : [];
     }
 
+    // Guard this block so it only runs when the required condition is met.
     if ($body === false || $statusCode < 200 || $statusCode >= 300) {
         $providerMessage = (string) (
             $decodedBody['message']
@@ -513,6 +592,7 @@ function afrisense_send_email(string $toEmail, string $toName, string $subject, 
     ];
 }
 
+// Defines the afrisense_send_verification_email helper used by this module.
 function afrisense_send_verification_email(string $email, string $fullname, string $token): array
 {
     $url = afrisense_app_url() . '/frontend/auth/verify-email.php?token=' . urlencode($token);
@@ -531,8 +611,10 @@ function afrisense_send_verification_email(string $email, string $fullname, stri
     return afrisense_send_email($email, $fullname, 'Verify your AfriSense account', $html, $text);
 }
 
+// Defines the afrisense_verify_email_token helper used by this module.
 function afrisense_verify_email_token(string $token): array
 {
+    // Guard this block so it only runs when the required condition is met.
     if ($token === '') {
         return ['success' => false, 'message' => 'Verification token is missing.'];
     }
@@ -548,6 +630,7 @@ function afrisense_verify_email_token(string $token): array
     $statement->execute(['token' => $token]);
     $user = $statement->fetch(PDO::FETCH_ASSOC);
 
+    // Guard this block so it only runs when the required condition is met.
     if ($user === false) {
         return ['success' => false, 'message' => 'This verification link is invalid or expired.'];
     }
@@ -573,10 +656,12 @@ function afrisense_verify_email_token(string $token): array
     return ['success' => true, 'message' => 'Email verified. You can now request password resets.'];
 }
 
+// Defines the afrisense_request_password_reset helper used by this module.
 function afrisense_request_password_reset(string $email): array
 {
     $email = trim($email);
 
+    // Guard this block so it only runs when the required condition is met.
     if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
         return ['success' => false, 'message' => 'Please enter a valid email address.'];
     }
@@ -586,10 +671,12 @@ function afrisense_request_password_reset(string $email): array
     $statement->execute(['email' => $email]);
     $user = $statement->fetch(PDO::FETCH_ASSOC);
 
+    // Guard this block so it only runs when the required condition is met.
     if ($user === false) {
         return ['success' => true, 'message' => 'If the email exists, a reset link will be sent.'];
     }
 
+    // Guard this block so it only runs when the required condition is met.
     if ((int) ($user['email_verified'] ?? 0) !== 1) {
         return ['success' => false, 'message' => 'Please verify your email before requesting a password reset.'];
     }
@@ -615,16 +702,20 @@ function afrisense_request_password_reset(string $email): array
     return afrisense_send_email($email, (string) $user['fullname'], 'Reset your AfriSense password', $html, $text);
 }
 
+// Defines the afrisense_reset_password helper used by this module.
 function afrisense_reset_password(string $token, string $password, string $confirmPassword): array
 {
+    // Guard this block so it only runs when the required condition is met.
     if ($token === '') {
         return ['success' => false, 'message' => 'Reset token is missing.'];
     }
 
+    // Guard this block so it only runs when the required condition is met.
     if ($password !== $confirmPassword) {
         return ['success' => false, 'message' => 'Passwords do not match.'];
     }
 
+    // Guard this block so it only runs when the required condition is met.
     if (strlen($password) < 8) {
         return ['success' => false, 'message' => 'Password must be at least 8 characters.'];
     }
@@ -641,6 +732,7 @@ function afrisense_reset_password(string $token, string $password, string $confi
     $statement->execute(['token' => $token]);
     $user = $statement->fetch(PDO::FETCH_ASSOC);
 
+    // Guard this block so it only runs when the required condition is met.
     if ($user === false) {
         return ['success' => false, 'message' => 'This reset link is invalid, expired, or the email is not verified.'];
     }

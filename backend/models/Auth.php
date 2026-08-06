@@ -37,18 +37,21 @@ class Auth
     {
         $email = trim($email);
 
+        // Guard this block so it only runs when the required condition is met.
         if ($email === '' || $password === '') {
             return Response::error('Email and password are required.', 422);
         }
 
         $user = $this->users->findByEmail($email);
 
+        // Guard this block so it only runs when the required condition is met.
         if (!$user || !isset($user['password']) || !Security::verifyPassword($password, (string) $user['password'])) {
             $this->auditLogs->create(null, 'login_failed', 'Failed login attempt.', ['email' => $email]);
 
             return Response::error('Invalid email or password.', 401);
         }
 
+        // Guard this block so it only runs when the required condition is met.
         if (isset($user['status']) && strtolower((string) $user['status']) !== 'active') {
             $this->auditLogs->create((int) $user['id'], 'login_blocked', 'Inactive user attempted to log in.');
 
@@ -76,6 +79,7 @@ class Auth
     {
         $userId = Session::get('user_id');
 
+        // Guard this block so it only runs when the required condition is met.
         if ($userId !== null) {
             $this->auditLogs->create((int) $userId, 'logout', 'User logged out.');
         }
@@ -98,12 +102,14 @@ class Auth
      */
     public function getCurrentUser(): ?array
     {
+        // Guard this block so it only runs when the required condition is met.
         if (!$this->isLoggedIn()) {
             return null;
         }
 
         $user = $this->users->findById((int) Session::get('user_id'));
 
+        // Guard this block so it only runs when the required condition is met.
         if ($user !== null) {
             unset($user['password']);
         }
@@ -118,10 +124,12 @@ class Auth
     {
         $user = $this->getCurrentUser();
 
+        // Guard this block so it only runs when the required condition is met.
         if ($user !== null) {
             return $user;
         }
 
+        // Guard this block so it only runs when the required condition is met.
         if ($redirectTo !== null) {
             header('Location: ' . $redirectTo);
             exit;

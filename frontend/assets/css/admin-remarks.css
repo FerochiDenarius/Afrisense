@@ -1,32 +1,39 @@
+/* Styling rules for .af-remarks-page. */
 .af-remarks-page {
     gap: 16px;
 }
 
+/* Styling rules for .af-remarks-heading h1. */
 .af-remarks-heading h1 {
     font-family: Georgia, "Times New Roman", serif;
     font-size: 26px;
 }
 
+/* Styling rules for .af-remarks-heading p. */
 .af-remarks-heading p {
     font-size: 13px;
 }
 
+/* Button and action control styling for .af-remark-add-btn. */
 .af-remark-add-btn {
     height: 38px;
     padding-inline: 16px;
     font-size: 12px;
 }
 
+/* Button and action control styling for .af-remark-add-btn i. */
 .af-remark-add-btn i {
     font-size: 13px;
 }
 
+/* Styling rules for .af-remark-metrics. */
 .af-remark-metrics {
     display: grid;
     grid-template-columns: repeat(5, minmax(0, 1fr));
     gap: 10px;
 }
 
+/* Styling rules for .af-remark-metrics article. */
 .af-remark-metrics article {
     min-height: 86px;
     border: 1px solid #e7e9ee;
@@ -40,6 +47,7 @@
     padding: 14px;
 }
 
+/* Styling rules for .af-remark-metrics article > span. */
 .af-remark-metrics article > span {
     width: 42px;
     height: 42px;
@@ -49,11 +57,16 @@
     font-size: 20px;
 }
 
+/* Styling rules for .af-remark-metrics .green > span. */
 .af-remark-metrics .green > span { background: #dff7e7; color: #159447; }
+/* Styling rules for .af-remark-metrics .gold > span. */
 .af-remark-metrics .gold > span { background: #fff1d7; color: #d48600; }
+/* Styling rules for .af-remark-metrics .red > span. */
 .af-remark-metrics .red > span { background: #ffe8ea; color: #e03131; }
+/* Styling rules for .af-remark-metrics .blue > span. */
 .af-remark-metrics .blue > span { background: #e5f0ff; color: #1677ff; }
 
+/* Styling rules for .af-remark-metrics small. */
 .af-remark-metrics small {
     display: block;
     color: #111827;
@@ -62,6 +75,7 @@
     margin-bottom: 5px;
 }
 
+/* Styling rules for .af-remark-metrics strong. */
 .af-remark-metrics strong {
     color: #111827;
     display: block;
@@ -69,6 +83,7 @@
     line-height: 1;
 }
 
+/* Styling rules for .af-remark-metrics p. */
 .af-remark-metrics p {
     color: #07923d;
     font-size: 11px;
@@ -76,14 +91,17 @@
     margin-top: 6px;
 }
 
+/* Styling rules for .af-remark-metrics .red p. */
 .af-remark-metrics .red p {
     color: #e03131;
 }
 
+/* Styling rules for .af-remark-metrics .blue p. */
 .af-remark-metrics .blue p {
     color: #1677ff;
 }
 
+/* Styling rules for .af-remarks-workspace. */
 .af-remarks-workspace {
     display: grid;
     grid-template-columns: minmax(0, 1fr) 270px;
@@ -91,10 +109,12 @@
     align-items: start;
 }
 
+/* Card and panel styling for .af-remarks-table-card. */
 .af-remarks-table-card {
     min-width: 0;
 }
 
+/* Styling rules for .af-remarks-filters. */
 .af-remarks-filters {
     display: grid;
     grid-template-columns: minmax(230px, 1fr) 136px 136px 170px 88px 98px;
@@ -105,6 +125,7 @@
 .af-remarks-filters .af-menu-search,
 .af-remarks-filters .af-menu-select,
 .af-remarks-filters button,
+/* Form control styling for .af-remarks-filters .af-menu-search, .af-remarks-filters .af-menu-select, .af-remarks-filters button, .af-remarks-filters a. */
 .af-remarks-filters a {
     height: 36px;
     border: 1px solid #d9dee6;
@@ -114,15 +135,18 @@
     font-size: 12px;
 }
 
+/* Navigation and menu styling for .af-remarks-filters .af-menu-search. */
 .af-remarks-filters .af-menu-search {
     grid-template-columns: 1fr 34px;
 }
 
+/* Form control styling for .af-remarks-filters .af-menu-search input. */
 .af-remarks-filters .af-menu-search input {
     padding-left: 12px;
 }
 
 .af-remarks-filters button,
+/* Button and action control styling for .af-remarks-filters button, .af-remarks-filters a. */
 .af-remarks-filters a {
     display: inline-flex;
     align-items: center;
@@ -133,49 +157,63 @@
     cursor: pointer;
 }
 
+/* Table layout styling for .af-remarks-table table. */
 .af-remarks-table table {
     min-width: 900px;
     table-layout: fixed;
 }
 
 .af-remarks-table th,
+/* Table layout styling for .af-remarks-table th, .af-remarks-table td. */
 .af-remarks-table td {
     padding: 12px 10px;
     font-size: 11.5px;
 }
 
 .af-remarks-table th:nth-child(1),
+/* Table layout styling for .af-remarks-table th:nth-child(1), .af-remarks-table td:nth-child(1). */
 .af-remarks-table td:nth-child(1) { width: 32px; }
 .af-remarks-table th:nth-child(2),
+/* Table layout styling for .af-remarks-table th:nth-child(2), .af-remarks-table td:nth-child(2). */
 .af-remarks-table td:nth-child(2) { width: 158px; }
 .af-remarks-table th:nth-child(3),
+/* Table layout styling for .af-remarks-table th:nth-child(3), .af-remarks-table td:nth-child(3). */
 .af-remarks-table td:nth-child(3) { width: 142px; }
 .af-remarks-table th:nth-child(4),
+/* Table layout styling for .af-remarks-table th:nth-child(4), .af-remarks-table td:nth-child(4). */
 .af-remarks-table td:nth-child(4) { width: 82px; }
 .af-remarks-table th:nth-child(5),
+/* Table layout styling for .af-remarks-table th:nth-child(5), .af-remarks-table td:nth-child(5). */
 .af-remarks-table td:nth-child(5) { width: 210px; }
 .af-remarks-table th:nth-child(6),
+/* Table layout styling for .af-remarks-table th:nth-child(6), .af-remarks-table td:nth-child(6). */
 .af-remarks-table td:nth-child(6) { width: 78px; }
 .af-remarks-table th:nth-child(7),
+/* Table layout styling for .af-remarks-table th:nth-child(7), .af-remarks-table td:nth-child(7). */
 .af-remarks-table td:nth-child(7) { width: 78px; }
 .af-remarks-table th:nth-child(8),
+/* Table layout styling for .af-remarks-table th:nth-child(8), .af-remarks-table td:nth-child(8). */
 .af-remarks-table td:nth-child(8) { width: 98px; }
 
+/* Form control styling for .af-remarks-table tr.is-selected. */
 .af-remarks-table tr.is-selected {
     background: #fff8ee;
 }
 
 .af-remark-customer,
+/* Styling rules for .af-remark-customer, .af-remark-food. */
 .af-remark-food {
     display: grid;
     align-items: center;
     gap: 9px;
 }
 
+/* Styling rules for .af-remark-customer. */
 .af-remark-customer {
     grid-template-columns: 34px 1fr;
 }
 
+/* Styling rules for .af-remark-customer em. */
 .af-remark-customer em {
     width: 34px;
     height: 34px;
@@ -189,10 +227,12 @@
     font-weight: 900;
 }
 
+/* Styling rules for .af-remark-food. */
 .af-remark-food {
     grid-template-columns: 40px 1fr;
 }
 
+/* Styling rules for .af-remark-food img. */
 .af-remark-food img {
     width: 38px;
     height: 38px;
@@ -205,11 +245,13 @@
 .af-remark-food strong,
 .af-remark-food small,
 .af-remark-date,
+/* Styling rules for .af-remark-customer strong, .af-remark-customer small, .af-remark-food strong, .af-remark-food small, .af-remark-date.... */
 .af-remark-date small {
     display: block;
 }
 
 .af-remark-customer strong,
+/* Styling rules for .af-remark-customer strong, .af-remark-food strong. */
 .af-remark-food strong {
     color: #111827;
     font-size: 11.5px;
@@ -218,12 +260,14 @@
 
 .af-remark-customer small,
 .af-remark-food small,
+/* Styling rules for .af-remark-customer small, .af-remark-food small, .af-remark-date small. */
 .af-remark-date small {
     color: #667085;
     font-size: 10.5px;
     line-height: 1.5;
 }
 
+/* Styling rules for .af-remark-stars. */
 .af-remark-stars {
     color: #f6a700;
     display: inline-flex;
@@ -232,6 +276,7 @@
     white-space: nowrap;
 }
 
+/* Styling rules for .af-remark-text. */
 .af-remark-text {
     color: #111827;
     display: -webkit-box;
@@ -242,12 +287,14 @@
     -webkit-box-orient: vertical;
 }
 
+/* Styling rules for .af-remark-date. */
 .af-remark-date {
     color: #111827;
     font-size: 11.5px;
     line-height: 1.35;
 }
 
+/* Styling rules for .af-remark-status. */
 .af-remark-status {
     min-height: 23px;
     border-radius: 5px;
@@ -258,25 +305,30 @@
     font-weight: 850;
 }
 
+/* Styling rules for .af-remark-status.published. */
 .af-remark-status.published {
     background: #e3f6e6;
     color: #12823b;
 }
 
+/* Styling rules for .af-remark-status.pending. */
 .af-remark-status.pending {
     background: #fff1db;
     color: #c06f00;
 }
 
+/* Styling rules for .af-remark-status.rejected. */
 .af-remark-status.rejected {
     background: #ffe8ea;
     color: #d92d20;
 }
 
+/* Styling rules for .af-remark-actions. */
 .af-remark-actions {
     gap: 6px;
 }
 
+/* Styling rules for .af-remark-actions a. */
 .af-remark-actions a {
     width: 30px;
     height: 30px;
@@ -284,38 +336,45 @@
     font-size: 12px;
 }
 
+/* Styling rules for .af-remarks-pagination. */
 .af-remarks-pagination {
     padding: 12px 14px;
 }
 
 .af-remarks-pagination p,
 .af-remarks-pagination a,
+/* Styling rules for .af-remarks-pagination p, .af-remarks-pagination a, .af-remarks-pagination span. */
 .af-remarks-pagination span {
     font-size: 11.5px;
 }
 
 .af-remarks-pagination a,
+/* Styling rules for .af-remarks-pagination a, .af-remarks-pagination span. */
 .af-remarks-pagination span {
     min-width: 30px;
     height: 30px;
 }
 
+/* Styling rules for .af-remarks-side. */
 .af-remarks-side {
     display: grid;
     gap: 12px;
 }
 
+/* Card and panel styling for .af-remarks-side .af-menu-panel. */
 .af-remarks-side .af-menu-panel {
     border-radius: 8px;
     padding: 14px;
 }
 
+/* Card and panel styling for .af-remarks-side .af-menu-panel h2. */
 .af-remarks-side .af-menu-panel h2 {
     font-family: Georgia, "Times New Roman", serif;
     font-size: 16px;
     margin-bottom: 12px;
 }
 
+/* Styling rules for .af-rating-overview. */
 .af-rating-overview {
     display: grid;
     grid-template-columns: 100px 1fr;
@@ -323,6 +382,7 @@
     align-items: center;
 }
 
+/* Styling rules for .af-rating-donut. */
 .af-rating-donut {
     width: 92px;
     height: 92px;
@@ -333,6 +393,7 @@
     position: relative;
 }
 
+/* Styling rules for .af-rating-donut::before. */
 .af-rating-donut::before {
     content: "";
     position: absolute;
@@ -342,6 +403,7 @@
 }
 
 .af-rating-donut strong,
+/* Styling rules for .af-rating-donut strong, .af-rating-donut small. */
 .af-rating-donut small {
     position: relative;
     z-index: 1;
@@ -349,23 +411,27 @@
     text-align: center;
 }
 
+/* Styling rules for .af-rating-donut strong. */
 .af-rating-donut strong {
     font-size: 22px;
     line-height: 1;
 }
 
+/* Styling rules for .af-rating-donut small. */
 .af-rating-donut small {
     color: #667085;
     font-size: 10px;
 }
 
 .af-rating-overview ul,
+/* Card and panel styling for .af-rating-overview ul, .af-top-foods-card ul. */
 .af-top-foods-card ul {
     list-style: none;
     display: grid;
     gap: 9px;
 }
 
+/* Styling rules for .af-rating-overview li. */
 .af-rating-overview li {
     display: grid;
     grid-template-columns: 9px 48px 1fr;
@@ -375,24 +441,32 @@
     font-size: 10.5px;
 }
 
+/* Styling rules for .af-rating-overview li span. */
 .af-rating-overview li span {
     width: 8px;
     height: 8px;
     border-radius: 50%;
 }
 
+/* Styling rules for .af-rating-overview li strong. */
 .af-rating-overview li strong {
     justify-self: end;
     color: #111827;
     font-size: 10.5px;
 }
 
+/* Styling rules for .tone-5. */
 .tone-5 { background: #39ad4a; }
+/* Styling rules for .tone-4. */
 .tone-4 { background: #ffc107; }
+/* Styling rules for .tone-3. */
 .tone-3 { background: #ff8c1a; }
+/* Styling rules for .tone-2. */
 .tone-2 { background: #ff2d2d; }
+/* Styling rules for .tone-1. */
 .tone-1 { background: #d1d5db; }
 
+/* Card and panel styling for .af-top-foods-card li. */
 .af-top-foods-card li {
     display: grid;
     grid-template-columns: 30px 1fr auto;
@@ -400,6 +474,7 @@
     align-items: center;
 }
 
+/* Card and panel styling for .af-top-foods-card img. */
 .af-top-foods-card img {
     width: 28px;
     height: 28px;
@@ -409,18 +484,22 @@
 
 .af-top-foods-card strong,
 .af-top-foods-card span,
+/* Card and panel styling for .af-top-foods-card strong, .af-top-foods-card span, .af-top-foods-card a. */
 .af-top-foods-card a {
     font-size: 11.5px;
 }
 
+/* Card and panel styling for .af-top-foods-card span. */
 .af-top-foods-card span {
     font-weight: 850;
 }
 
+/* Card and panel styling for .af-top-foods-card span i. */
 .af-top-foods-card span i {
     color: #f6a700;
 }
 
+/* Card and panel styling for .af-top-foods-card a. */
 .af-top-foods-card a {
     color: #3f7f0a;
     display: inline-block;
@@ -429,15 +508,18 @@
     text-decoration: none;
 }
 
+/* Card and panel styling for .af-quick-actions-card. */
 .af-quick-actions-card {
     display: grid;
     gap: 7px;
 }
 
+/* Card and panel styling for .af-quick-actions-card h2. */
 .af-quick-actions-card h2 {
     margin-bottom: 4px !important;
 }
 
+/* Card and panel styling for .af-quick-actions-card a. */
 .af-quick-actions-card a {
     min-height: 30px;
     border-radius: 6px;
@@ -450,6 +532,7 @@
     text-decoration: none;
 }
 
+/* Card and panel styling for .af-quick-actions-card i. */
 .af-quick-actions-card i {
     width: 22px;
     height: 22px;
@@ -461,6 +544,7 @@
     font-size: 11px;
 }
 
+/* Card and panel styling for .af-quick-actions-card span. */
 .af-quick-actions-card span {
     min-width: 21px;
     height: 21px;
@@ -472,32 +556,38 @@
     font-size: 10px;
 }
 
+/* Form control styling for .af-selected-remark. */
 .af-selected-remark {
     display: grid;
     gap: 7px;
 }
 
+/* Form control styling for .af-selected-remark > strong. */
 .af-selected-remark > strong {
     font-size: 12.5px;
 }
 
 .af-selected-remark small,
 .af-selected-remark p,
+/* Form control styling for .af-selected-remark small, .af-selected-remark p, .af-selected-remark a. */
 .af-selected-remark a {
     font-size: 11.5px;
     line-height: 1.55;
 }
 
+/* Form control styling for .af-selected-remark small. */
 .af-selected-remark small {
     color: #667085;
 }
 
+/* Form control styling for .af-selected-remark a. */
 .af-selected-remark a {
     color: #b76b00;
     font-weight: 850;
     text-decoration: none;
 }
 
+/* Form control styling for .af-offline-remark-card form. */
 .af-offline-remark-card form {
     display: grid;
     gap: 8px;
@@ -505,6 +595,7 @@
 
 .af-offline-remark-card input,
 .af-offline-remark-card select,
+/* Form control styling for .af-offline-remark-card input, .af-offline-remark-card select, .af-offline-remark-card textarea. */
 .af-offline-remark-card textarea {
     width: 100%;
     border: 1px solid #d9dee6;
@@ -515,6 +606,7 @@
     padding: 9px;
 }
 
+/* Button and action control styling for .af-offline-remark-card button. */
 .af-offline-remark-card button {
     min-height: 34px;
     border: 0;
@@ -526,32 +618,40 @@
     cursor: pointer;
 }
 
+/* Responsive styling rules for @media (max-width: 1340px). */
 @media (max-width: 1340px) {
+    /* Styling rules for .af-remark-metrics. */
     .af-remark-metrics {
         grid-template-columns: repeat(3, minmax(0, 1fr));
     }
 
+    /* Styling rules for .af-remarks-workspace. */
     .af-remarks-workspace {
         grid-template-columns: 1fr;
     }
 
+    /* Styling rules for .af-remarks-side. */
     .af-remarks-side {
         grid-template-columns: repeat(2, minmax(0, 1fr));
     }
 }
 
+/* Responsive styling rules for @media (max-width: 920px). */
 @media (max-width: 920px) {
     .af-remarks-heading,
+    /* Styling rules for .af-remarks-heading, .af-remarks-pagination. */
     .af-remarks-pagination {
         align-items: stretch;
         flex-direction: column;
     }
 
     .af-remark-metrics,
+    /* Styling rules for .af-remark-metrics, .af-remarks-side. */
     .af-remarks-side {
         grid-template-columns: 1fr;
     }
 
+    /* Styling rules for .af-remarks-filters. */
     .af-remarks-filters {
         grid-template-columns: 1fr;
     }

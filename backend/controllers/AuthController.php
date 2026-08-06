@@ -33,6 +33,7 @@ class AuthController
     {
         $validator = new Validator();
 
+        // Guard this block so it only runs when the required condition is met.
         if (!$validator->validate($request, ['email' => 'required|email', 'password' => 'required'])) {
             return Response::error('Validation failed.', 422, $validator->getErrors());
         }
@@ -55,6 +56,7 @@ class AuthController
     {
         $user = $this->auth->getCurrentUser();
 
+        // Guard this block so it only runs when the required condition is met.
         if ($user === null) {
             return Response::error('Authentication required.', 401);
         }

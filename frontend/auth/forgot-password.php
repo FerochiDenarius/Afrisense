@@ -8,6 +8,7 @@ $extraStyles = [$frontendBase . '/assets/css/auth-recovery.css'];
 $extraScripts = [$frontendBase . '/assets/js/auth-recovery.js'];
 $authMessage = null;
 
+// Handle submitted form actions before rendering the page.
 if (($_SERVER['REQUEST_METHOD'] ?? 'GET') === 'POST') {
     $result = afrisense_request_password_reset((string) ($_POST['email'] ?? ''));
     $authMessage = [
@@ -18,8 +19,10 @@ if (($_SERVER['REQUEST_METHOD'] ?? 'GET') === 'POST') {
 
 ob_start();
 ?>
+<!-- Page section for this part of the AfriSense interface. -->
 <section class="af-auth-recovery-page">
     <div class="af-recovery-card">
+        <!-- Page section for this part of the AfriSense interface. -->
         <section class="af-recovery-form-panel" aria-labelledby="forgot_password_title">
             <div class="af-recovery-icon question">
                 <i class="bi bi-lock" aria-hidden="true"></i>
@@ -30,12 +33,14 @@ ob_start();
             <p class="af-recovery-subtitle">No worries! Enter your email address and we'll send you a link to reset your password.</p>
             <span class="af-gold-divider" aria-hidden="true"></span>
 
+            <?php // Render this conditional/dynamic template block. ?>
             <?php if ($authMessage !== null): ?>
                 <p class="auth-message <?php echo htmlspecialchars($authMessage['type'], ENT_QUOTES, 'UTF-8'); ?>">
                     <?php echo htmlspecialchars($authMessage['message'], ENT_QUOTES, 'UTF-8'); ?>
                 </p>
             <?php endif; ?>
 
+            <!-- Form block that submits this page workflow. -->
             <form class="af-recovery-form" action="forgot-password.php" method="post">
                 <div class="af-form-group">
                     <label for="forgot_email">Email Address</label>
@@ -65,6 +70,7 @@ ob_start();
             </a>
         </section>
 
+        <!-- Side panel with supporting information and actions. -->
         <aside class="af-recovery-info-panel" aria-label="Password reset information">
             <div class="af-recovery-image">
                 <img src="<?php echo htmlspecialchars($frontendBase . '/assets/images/foodimage.jpeg', ENT_QUOTES, 'UTF-8'); ?>" alt="AfriSense meal">

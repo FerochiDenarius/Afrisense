@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 require_once __DIR__ . '/../auth/auth_bootstrap.php';
 
+// Defines the afrisense_public_enquiry_customer_id helper used by this module.
 function afrisense_public_enquiry_customer_id(PDO $pdo, string $fullname, string $email, string $phone): int
 {
     $matchesPhone = $phone !== 'Not provided';
@@ -21,6 +22,7 @@ function afrisense_public_enquiry_customer_id(PDO $pdo, string $fullname, string
     ]);
     $customerId = $statement->fetchColumn();
 
+    // Guard this block so it only runs when the required condition is met.
     if ($customerId !== false) {
         $update = $pdo->prepare(
             'UPDATE `customers`
@@ -53,6 +55,7 @@ function afrisense_public_enquiry_customer_id(PDO $pdo, string $fullname, string
     return (int) $pdo->lastInsertId();
 }
 
+// Defines the afrisense_submit_public_enquiry helper used by this module.
 function afrisense_submit_public_enquiry(array $request, string $defaultType = 'General Enquiry'): array
 {
     $fullname = trim((string) ($request['full_name'] ?? $request['fullname'] ?? ''));
@@ -62,22 +65,27 @@ function afrisense_submit_public_enquiry(array $request, string $defaultType = '
     $message = trim((string) ($request['message'] ?? ''));
     $type = trim((string) ($request['enquiry_type'] ?? $defaultType));
 
+    // Guard this block so it only runs when the required condition is met.
     if ($fullname === '' || strlen($fullname) < 2) {
         return ['success' => false, 'message' => 'Please enter your full name.'];
     }
 
+    // Guard this block so it only runs when the required condition is met.
     if (!filter_var($email, FILTER_VALIDATE_EMAIL)) {
         return ['success' => false, 'message' => 'Please enter a valid email address.'];
     }
 
+    // Guard this block so it only runs when the required condition is met.
     if ($phone === '') {
         $phone = 'Not provided';
     }
 
+    // Guard this block so it only runs when the required condition is met.
     if ($subject === '') {
         return ['success' => false, 'message' => 'Please choose a subject.'];
     }
 
+    // Guard this block so it only runs when the required condition is met.
     if (strlen($message) < 10) {
         return ['success' => false, 'message' => 'Please enter a message with at least 10 characters.'];
     }
@@ -87,6 +95,7 @@ function afrisense_submit_public_enquiry(array $request, string $defaultType = '
         ? $subject
         : $subjectPrefix . ' - ' . $subject;
 
+    // Run database/action work inside a guarded block so the page can fail gracefully.
     try {
         $pdo = afrisense_pdo();
         $pdo->beginTransaction();
@@ -105,6 +114,7 @@ function afrisense_submit_public_enquiry(array $request, string $defaultType = '
 
         return ['success' => true, 'message' => 'Your enquiry has been submitted. Our team will respond shortly.'];
     } catch (Throwable $exception) {
+        // Guard this block so it only runs when the required condition is met.
         if (isset($pdo) && $pdo->inTransaction()) {
             $pdo->rollBack();
         }

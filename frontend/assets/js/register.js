@@ -1,12 +1,15 @@
+// Bind the UI event handler for this interactive control.
 document.addEventListener("DOMContentLoaded", function () {
     var toggles = document.querySelectorAll(".password-toggle");
 
     toggles.forEach(function (toggle) {
+        // Bind the UI event handler for this interactive control.
         toggle.addEventListener("click", function () {
             var inputId = toggle.getAttribute("aria-controls");
             var input = document.getElementById(inputId);
             var icon = toggle.querySelector("i");
 
+            // Run this branch only when the required UI state is present.
             if (!input || !icon) {
                 return;
             }
@@ -22,6 +25,7 @@ document.addEventListener("DOMContentLoaded", function () {
     var cards = document.querySelectorAll(".selection-card");
 
     cards.forEach(function (card) {
+        // Bind the UI event handler for this interactive control.
         card.addEventListener("click", function () {
             cards.forEach(function (item) {
                 item.classList.remove("active");

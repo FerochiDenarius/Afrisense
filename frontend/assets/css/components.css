@@ -1,3 +1,4 @@
+/* Header layout and controls for .af-public-header. */
 .af-public-header {
     position: sticky;
     top: 0;
@@ -7,6 +8,7 @@
     box-shadow: 0 8px 24px rgba(5, 28, 23, 0.18);
 }
 
+/* Navigation and menu styling for .af-navbar. */
 .af-navbar {
     min-height: 76px;
     margin: 0;
@@ -18,6 +20,7 @@
 }
 
 .af-brand,
+/* Header layout and controls for .af-brand, .af-header-brand. */
 .af-header-brand {
     display: inline-flex;
     align-items: center;
@@ -26,6 +29,7 @@
     text-decoration: none;
 }
 
+/* Header layout and controls for .af-header-brand. */
 .af-header-brand {
     align-self: stretch;
     min-width: 200px;
@@ -34,6 +38,7 @@
     padding: 0 18px;
 }
 
+/* Styling rules for .af-brand-icon. */
 .af-brand-icon {
     width: 38px;
     height: 38px;
@@ -45,6 +50,7 @@
     line-height: 1;
 }
 
+/* Styling rules for .af-brand-icon img. */
 .af-brand-icon img {
     max-width: 38px;
     max-height: 38px;
@@ -54,11 +60,13 @@
 .af-brand strong,
 .af-brand small,
 .af-header-brand strong,
+/* Header layout and controls for .af-brand strong, .af-brand small, .af-header-brand strong, .af-header-brand small. */
 .af-header-brand small {
     display: block;
 }
 
 .af-brand strong,
+/* Header layout and controls for .af-brand strong, .af-header-brand strong. */
 .af-header-brand strong {
     font-size: 24px;
     line-height: 1;
@@ -66,11 +74,13 @@
 }
 
 .af-brand strong::first-letter,
+/* Header layout and controls for .af-brand strong::first-letter, .af-header-brand strong::first-letter. */
 .af-header-brand strong::first-letter {
     color: var(--af-gold-2);
 }
 
 .af-brand small,
+/* Header layout and controls for .af-brand small, .af-header-brand small. */
 .af-header-brand small {
     color: rgba(255, 255, 255, 0.82);
     font-size: 8px;
@@ -82,12 +92,14 @@
 
 .af-nav-toggle,
 .af-sidebar-toggle,
+/* Sidebar navigation styling for .af-nav-toggle, .af-sidebar-toggle, .af-header-actions button. */
 .af-header-actions button {
     border: 0;
     background: transparent;
     cursor: pointer;
 }
 
+/* Navigation and menu styling for .af-nav-toggle. */
 .af-nav-toggle {
     display: none;
     width: 54px;
@@ -97,6 +109,7 @@
     font-size: 28px;
 }
 
+/* Styling rules for .af-public-phone-mobile. */
 .af-public-phone-mobile {
     display: none;
     width: 52px;
@@ -112,11 +125,13 @@
 
 .af-nav-menu,
 .af-nav-links,
+/* Navigation and menu styling for .af-nav-menu, .af-nav-links, .af-nav-actions. */
 .af-nav-actions {
     display: flex;
     align-items: center;
 }
 
+/* Navigation and menu styling for .af-nav-menu. */
 .af-nav-menu {
     flex: 1;
     justify-content: space-between;
@@ -124,6 +139,7 @@
     min-width: 0;
 }
 
+/* Navigation and menu styling for .af-nav-links. */
 .af-nav-links {
     list-style: none;
     flex: 1 1 auto;
@@ -132,6 +148,7 @@
     min-width: 0;
 }
 
+/* Navigation and menu styling for .af-nav-links a. */
 .af-nav-links a {
     color: #fff;
     display: inline-flex;
@@ -146,16 +163,19 @@
 }
 
 .af-nav-links a:hover,
+/* Navigation and menu styling for .af-nav-links a:hover, .af-nav-links a.is-active. */
 .af-nav-links a.is-active {
     color: var(--af-gold);
     border-color: var(--af-gold-2);
 }
 
+/* Navigation and menu styling for .af-nav-actions. */
 .af-nav-actions {
     gap: 8px;
     flex-shrink: 0;
 }
 
+/* Styling rules for .af-phone-link. */
 .af-phone-link {
     min-height: 34px;
     border: 1px solid rgba(204, 143, 37, 0.7);
@@ -171,6 +191,7 @@
     white-space: nowrap;
 }
 
+/* Styling rules for .af-phone-link i. */
 .af-phone-link i {
     width: 26px;
     height: 26px;
@@ -184,6 +205,7 @@
 }
 
 .af-order-btn,
+/* Ordering and cart interface styling for .af-order-btn, .af-auth-btn. */
 .af-auth-btn {
     min-height: 34px;
     border-radius: 6px;
@@ -200,23 +222,27 @@
     white-space: nowrap;
 }
 
+/* Button and action control styling for .af-auth-btn. */
 .af-auth-btn {
     border: 1px solid var(--af-gold-2);
     background: transparent;
     color: var(--af-gold-2);
 }
 
+/* Button and action control styling for .af-auth-btn.is-register. */
 .af-auth-btn.is-register {
     background: rgba(204, 143, 37, 0.1);
 }
 
 .af-order-btn:hover,
+/* Ordering and cart interface styling for .af-order-btn:hover, .af-auth-btn:hover. */
 .af-auth-btn:hover {
     background: var(--af-gold);
     color: #fff;
     transform: translateY(-1px);
 }
 
+/* Ordering and cart interface styling for .af-cart-link. */
 .af-cart-link {
     color: #fff;
     display: inline-grid;
@@ -226,6 +252,7 @@
     text-decoration: none;
 }
 
+/* Ordering and cart interface styling for .af-cart-link span. */
 .af-cart-link span {
     position: absolute;
     top: -8px;
@@ -241,6 +268,7 @@
     font-weight: 900;
 }
 
+/* Styling rules for .af-public-profile. */
 .af-public-profile {
     border: 0;
     background: transparent;
@@ -253,6 +281,7 @@
     text-decoration: none;
 }
 
+/* Styling rules for .af-public-profile img. */
 .af-public-profile img {
     width: 34px;
     height: 34px;
@@ -261,51 +290,63 @@
     border: 2px solid rgba(255, 255, 255, 0.35);
 }
 
+/* Responsive styling rules for @media (max-width: 1280px). */
 @media (max-width: 1280px) {
+    /* Navigation and menu styling for .af-navbar. */
     .af-navbar {
         gap: 12px;
         padding-right: 12px;
     }
 
+    /* Header layout and controls for .af-header-brand. */
     .af-header-brand {
         min-width: 190px;
         padding: 0 14px;
     }
 
+    /* Header layout and controls for .af-header-brand strong. */
     .af-header-brand strong {
         font-size: 21px;
     }
 
+    /* Navigation and menu styling for .af-nav-links. */
     .af-nav-links {
         gap: 9px;
     }
 
+    /* Navigation and menu styling for .af-nav-links a. */
     .af-nav-links a {
         font-size: 10px;
     }
 
+    /* Styling rules for .af-phone-link span. */
     .af-phone-link span {
         display: none;
     }
 }
 
+/* Responsive styling rules for @media (max-width: 980px). */
 @media (max-width: 980px) {
+    /* Navigation and menu styling for .af-navbar. */
     .af-navbar {
         min-height: 72px;
         padding: 0 14px 0 0;
     }
 
+    /* Header layout and controls for .af-header-brand. */
     .af-header-brand {
         min-width: 210px;
     }
 
     .af-nav-toggle,
+    /* Navigation and menu styling for .af-nav-toggle, .af-public-phone-mobile. */
     .af-public-phone-mobile {
         display: inline-grid;
         place-items: center;
         flex-shrink: 0;
     }
 
+    /* Navigation and menu styling for .af-nav-menu. */
     .af-nav-menu {
         position: absolute;
         top: 100%;
@@ -319,11 +360,13 @@
     }
 
     .af-nav-menu.is-open,
+    /* Header layout and controls for .af-nav-menu.is-open, .af-public-header.is-open .af-nav-menu. */
     .af-public-header.is-open .af-nav-menu {
         display: grid;
         gap: 12px;
     }
 
+    /* Navigation and menu styling for .af-nav-links. */
     .af-nav-links {
         display: grid;
         grid-template-columns: repeat(2, minmax(0, 1fr));
@@ -331,6 +374,7 @@
         width: 100%;
     }
 
+    /* Navigation and menu styling for .af-nav-links a. */
     .af-nav-links a {
         min-height: 36px;
         border: 1px solid var(--af-line);
@@ -338,6 +382,7 @@
         padding: 0 10px;
     }
 
+    /* Navigation and menu styling for .af-nav-actions. */
     .af-nav-actions {
         display: grid;
         grid-template-columns: repeat(3, minmax(0, 1fr));
@@ -345,21 +390,26 @@
         width: 100%;
     }
 
+    /* Styling rules for .af-phone-link. */
     .af-phone-link {
         display: none;
     }
 }
 
+/* Responsive styling rules for @media (max-width: 560px). */
 @media (max-width: 560px) {
+    /* Navigation and menu styling for .af-navbar. */
     .af-navbar {
         padding: 0 12px 0 0;
     }
 
+    /* Header layout and controls for .af-header-brand. */
     .af-header-brand {
         min-width: 170px;
         padding: 0 12px;
     }
 
+    /* Styling rules for .af-brand-icon. */
     .af-brand-icon {
         width: 34px;
         height: 34px;
@@ -367,22 +417,26 @@
         font-size: 28px;
     }
 
+    /* Header layout and controls for .af-header-brand strong. */
     .af-header-brand strong {
         font-size: 19px;
     }
 
     .af-public-phone-mobile,
+    /* Navigation and menu styling for .af-public-phone-mobile, .af-nav-toggle. */
     .af-nav-toggle {
         width: 42px;
         height: 42px;
         font-size: 20px;
     }
 
+    /* Navigation and menu styling for .af-nav-actions. */
     .af-nav-actions {
         grid-template-columns: 1fr;
     }
 }
 
+/* Footer styling for .af-footer. */
 .af-footer {
     background:
         radial-gradient(circle at 96% 24%, rgba(204, 143, 37, 0.12), transparent 20%),
@@ -396,6 +450,7 @@
     width: min(1200px, calc(100% - 32px));
 }
 
+/* Footer styling for .af-footer-grid. */
 .af-footer-grid {
     margin: 0 auto;
     display: grid;
@@ -403,6 +458,7 @@
     gap: 44px;
 }
 
+/* Button and action control styling for .af-footer-section > button. */
 .af-footer-section > button {
     width: 100%;
     border: 0;
@@ -419,12 +475,14 @@
     cursor: default;
 }
 
+/* Button and action control styling for .af-footer-section > button i. */
 .af-footer-section > button i {
     display: none;
 }
 
 .af-footer p,
 .af-footer li,
+/* Footer styling for .af-footer p, .af-footer li, .af-footer a. */
 .af-footer a {
     color: rgba(255, 255, 255, 0.82);
     font-size: 14px;
@@ -432,31 +490,37 @@
     text-decoration: none;
 }
 
+/* Footer styling for .af-footer ul. */
 .af-footer ul {
     list-style: none;
     display: grid;
     gap: 10px;
 }
 
+/* Footer styling for .af-footer-section li a::before. */
 .af-footer-section li a::before {
     content: "\203A";
     color: var(--af-gold-2);
     margin-right: 10px;
 }
 
+/* Footer styling for .af-footer a:hover. */
 .af-footer a:hover {
     color: var(--af-gold-2);
 }
 
+/* Footer styling for .af-footer-brand p. */
 .af-footer-brand p {
     margin: 18px 0;
 }
 
+/* Styling rules for .af-social-links. */
 .af-social-links {
     display: flex;
     gap: 12px;
 }
 
+/* Styling rules for .af-social-links a. */
 .af-social-links a {
     width: 34px;
     height: 34px;
@@ -467,17 +531,20 @@
     place-items: center;
 }
 
+/* Styling rules for .af-contact-list li. */
 .af-contact-list li {
     display: flex;
     align-items: flex-start;
     gap: 12px;
 }
 
+/* Styling rules for .af-contact-list i. */
 .af-contact-list i {
     color: var(--af-gold-2);
     margin-top: 5px;
 }
 
+/* Styling rules for .af-newsletter. */
 .af-newsletter {
     height: 46px;
     border: 1px solid rgba(255, 255, 255, 0.16);
@@ -488,6 +555,7 @@
     overflow: hidden;
 }
 
+/* Form control styling for .af-newsletter input. */
 .af-newsletter input {
     min-width: 0;
     border: 0;
@@ -497,6 +565,7 @@
     padding: 0 16px;
 }
 
+/* Button and action control styling for .af-newsletter button. */
 .af-newsletter button {
     border: 0;
     background: linear-gradient(135deg, var(--af-gold), var(--af-gold-2));
@@ -504,6 +573,7 @@
     cursor: pointer;
 }
 
+/* Styling rules for .af-privacy-note. */
 .af-privacy-note {
     color: rgba(255, 255, 255, 0.74);
     display: inline-flex;
@@ -512,10 +582,12 @@
     margin-top: 14px;
 }
 
+/* Styling rules for .af-privacy-note i. */
 .af-privacy-note i {
     color: var(--af-gold-2);
 }
 
+/* Footer styling for .af-footer-bottom. */
 .af-footer-bottom {
     border-top: 1px solid rgba(255, 255, 255, 0.12);
     margin: 34px auto 0;
@@ -525,11 +597,13 @@
     gap: 20px;
 }
 
+/* Navigation and menu styling for .af-footer-bottom nav. */
 .af-footer-bottom nav {
     display: flex;
     gap: 26px;
 }
 
+/* Sidebar navigation styling for .af-dashboard-sidebar. */
 .af-dashboard-sidebar {
     position: fixed;
     inset: 0 auto 0 0;
@@ -549,6 +623,7 @@
     transition: width 220ms ease, transform 220ms ease;
 }
 
+/* Sidebar navigation styling for .af-sidebar-close. */
 .af-sidebar-close {
     display: none;
     border: 0;
@@ -561,12 +636,14 @@
     left: 22px;
 }
 
+/* Navigation and menu styling for .af-side-nav. */
 .af-side-nav {
     display: flex;
     flex-direction: column;
     gap: 8px;
 }
 
+/* Navigation and menu styling for .af-side-nav p. */
 .af-side-nav p {
     color: rgba(255, 255, 255, 0.62);
     font-size: 11px;
@@ -577,6 +654,7 @@
     padding-left: 12px;
 }
 
+/* Navigation and menu styling for .af-side-nav p::before. */
 .af-side-nav p::before {
     content: "";
     position: absolute;
@@ -589,6 +667,7 @@
 }
 
 .af-side-nav a,
+/* Sidebar navigation styling for .af-side-nav a, .af-sidebar-logout. */
 .af-sidebar-logout {
     min-height: 48px;
     border-radius: 6px;
@@ -604,29 +683,34 @@
     transition: background var(--af-transition), color var(--af-transition);
 }
 
+/* Sidebar navigation styling for .af-sidebar-logout. */
 .af-sidebar-logout {
     display: flex;
     margin-top: auto;
 }
 
 .af-side-nav a:hover,
+/* Navigation and menu styling for .af-side-nav a:hover, .af-side-nav a.is-active. */
 .af-side-nav a.is-active {
     background: linear-gradient(90deg, rgba(183, 123, 26, 0.92), rgba(183, 123, 26, 0.58));
     color: #fff;
     box-shadow: inset 3px 0 0 var(--af-gold-2), 0 8px 20px rgba(183, 123, 26, 0.12);
 }
 
+/* Navigation and menu styling for .af-nav-chevron. */
 .af-nav-chevron {
     color: rgba(255, 255, 255, 0.7);
     font-size: 13px;
 }
 
+/* Navigation and menu styling for .af-subnav. */
 .af-subnav {
     display: grid;
     gap: 8px;
     margin: -2px 0 8px 40px;
 }
 
+/* Navigation and menu styling for .af-subnav a. */
 .af-subnav a {
     color: rgba(255, 255, 255, 0.82);
     display: flex;
@@ -638,6 +722,7 @@
     text-decoration: none;
 }
 
+/* Navigation and menu styling for .af-subnav a::before. */
 .af-subnav a::before {
     content: "";
     width: 4px;
@@ -646,14 +731,17 @@
     background: rgba(255, 255, 255, 0.55);
 }
 
+/* Navigation and menu styling for .af-subnav a.is-active. */
 .af-subnav a.is-active {
     color: var(--af-gold-2);
 }
 
+/* Navigation and menu styling for .af-subnav a.is-active::before. */
 .af-subnav a.is-active::before {
     background: var(--af-gold-2);
 }
 
+/* Sidebar navigation styling for .af-sidebar-profile. */
 .af-sidebar-profile {
     border: 1px solid rgba(255, 255, 255, 0.16);
     border-radius: 16px;
@@ -666,6 +754,7 @@
     box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.05);
 }
 
+/* Sidebar navigation styling for .af-sidebar-profile img. */
 .af-sidebar-profile img {
     width: 64px;
     height: 64px;
@@ -676,26 +765,31 @@
 
 .af-sidebar-profile strong,
 .af-sidebar-profile small,
+/* Sidebar navigation styling for .af-sidebar-profile strong, .af-sidebar-profile small, .af-sidebar-profile span. */
 .af-sidebar-profile span {
     display: block;
 }
 
+/* Sidebar navigation styling for .af-sidebar-profile strong. */
 .af-sidebar-profile strong {
     font-size: 18px;
     line-height: 1.15;
 }
 
+/* Sidebar navigation styling for .af-sidebar-profile small. */
 .af-sidebar-profile small {
     color: var(--af-gold-2);
     font-size: 14px;
     margin: 5px 0;
 }
 
+/* Sidebar navigation styling for .af-sidebar-profile span. */
 .af-sidebar-profile span {
     color: #fff;
     font-size: 13px;
 }
 
+/* Sidebar navigation styling for .af-sidebar-profile span i. */
 .af-sidebar-profile span i {
     width: 11px;
     height: 11px;
@@ -705,6 +799,7 @@
     margin-right: 7px;
 }
 
+/* Sidebar navigation styling for .af-sidebar-profile button. */
 .af-sidebar-profile button {
     border: 0;
     background: transparent;
@@ -712,6 +807,7 @@
     cursor: pointer;
 }
 
+/* Sidebar navigation styling for .af-sidebar-promo. */
 .af-sidebar-promo {
     border: 1px solid rgba(255, 255, 255, 0.13);
     border-radius: 14px;
@@ -720,6 +816,7 @@
     margin-top: 10px;
 }
 
+/* Sidebar navigation styling for .af-sidebar-promo span. */
 .af-sidebar-promo span {
     width: 44px;
     height: 44px;
@@ -732,6 +829,7 @@
     margin-bottom: 12px;
 }
 
+/* Sidebar navigation styling for .af-sidebar-promo h2. */
 .af-sidebar-promo h2 {
     color: #fff;
     font-size: 18px;
@@ -739,21 +837,25 @@
     margin-bottom: 10px;
 }
 
+/* Sidebar navigation styling for .af-sidebar-promo p. */
 .af-sidebar-promo p {
     color: rgba(255, 255, 255, 0.82);
     font-size: 12px;
     line-height: 1.6;
 }
 
+/* Sidebar navigation styling for body.af-sidebar-collapsed .af-dashboard-sidebar. */
 body.af-sidebar-collapsed .af-dashboard-sidebar {
     width: 88px;
     padding-inline: 18px;
 }
 
+/* Sidebar navigation styling for body.af-sidebar-collapsed .af-dashboard-shell. */
 body.af-sidebar-collapsed .af-dashboard-shell {
     margin-left: 88px;
 }
 
+/* Sidebar navigation styling for body.af-sidebar-collapsed .af-dashboard-sidebar .af-brand. */
 body.af-sidebar-collapsed .af-dashboard-sidebar .af-brand {
     justify-content: center;
 }
@@ -765,17 +867,20 @@ body.af-sidebar-collapsed .af-subnav,
 body.af-sidebar-collapsed .af-side-nav p,
 body.af-sidebar-collapsed .af-side-nav a span,
 body.af-sidebar-collapsed .af-nav-chevron,
+/* Sidebar navigation styling for body.af-sidebar-collapsed .af-dashboard-sidebar .af-brand span:last-child, body.af-sidebar-collapsed .af-sidebar-profile, body.af-sidebar-collapsed .af-sidebar-promo, body.af-sidebar-collapsed .af-subnav, body.af-sidebar-collapsed .af-side-nav p, body.af-sidebar-collapsed .af-side-nav a span, body.af-sidebar-collapsed .af-nav-chevron, body.af-sidebar-collapsed .af-sidebar-logout span. */
 body.af-sidebar-collapsed .af-sidebar-logout span {
     display: none;
 }
 
 body.af-sidebar-collapsed .af-side-nav a,
+/* Sidebar navigation styling for body.af-sidebar-collapsed .af-side-nav a, body.af-sidebar-collapsed .af-sidebar-logout. */
 body.af-sidebar-collapsed .af-sidebar-logout {
     grid-template-columns: 1fr;
     justify-items: center;
     padding: 0;
 }
 
+/* Header layout and controls for .af-dashboard-header. */
 .af-dashboard-header {
     min-height: 94px;
     background: #fff;
@@ -792,15 +897,18 @@ body.af-sidebar-collapsed .af-sidebar-logout {
     z-index: 30;
 }
 
+/* Header layout and controls for .af-dashboard-page .af-dashboard-header. */
 .af-dashboard-page .af-dashboard-header {
     grid-template-columns: 54px minmax(260px, 470px) 1fr;
     padding-left: 24px;
 }
 
+/* Header layout and controls for .af-dashboard-page .af-dashboard-header .af-header-brand. */
 .af-dashboard-page .af-dashboard-header .af-header-brand {
     display: none;
 }
 
+/* Sidebar navigation styling for .af-sidebar-toggle. */
 .af-sidebar-toggle {
     width: 54px;
     height: 54px;
@@ -810,10 +918,12 @@ body.af-sidebar-collapsed .af-sidebar-logout {
     font-size: 24px;
 }
 
+/* Header layout and controls for .af-header-title. */
 .af-header-title {
     display: none;
 }
 
+/* Header layout and controls for .af-header-search. */
 .af-header-search {
     height: 52px;
     border: 1px solid var(--af-line);
@@ -824,6 +934,7 @@ body.af-sidebar-collapsed .af-sidebar-logout {
     padding: 0 12px;
 }
 
+/* Header layout and controls for .af-header-search input. */
 .af-header-search input {
     width: 100%;
     min-width: 0;
@@ -834,10 +945,12 @@ body.af-sidebar-collapsed .af-sidebar-logout {
 }
 
 .af-header-search i,
+/* Header layout and controls for .af-header-search i, .af-header-search kbd. */
 .af-header-search kbd {
     color: var(--af-muted);
 }
 
+/* Header layout and controls for .af-header-search kbd. */
 .af-header-search kbd {
     background: transparent;
     border: 0;
@@ -845,6 +958,7 @@ body.af-sidebar-collapsed .af-sidebar-logout {
     font-size: 12px;
 }
 
+/* Header layout and controls for .af-header-actions. */
 .af-header-actions {
     justify-self: end;
     display: flex;
@@ -852,11 +966,13 @@ body.af-sidebar-collapsed .af-sidebar-logout {
     gap: 22px;
 }
 
+/* Header layout and controls for .af-header-actions button. */
 .af-header-actions button {
     position: relative;
     color: var(--af-text);
 }
 
+/* Header layout and controls for .af-header-action. */
 .af-header-action {
     min-width: 74px;
     display: grid;
@@ -865,11 +981,13 @@ body.af-sidebar-collapsed .af-sidebar-logout {
     font-size: 20px;
 }
 
+/* Header layout and controls for .af-header-action small. */
 .af-header-action small {
     color: var(--af-text);
     font-size: 12px;
 }
 
+/* Styling rules for .af-action-icon. */
 .af-action-icon {
     position: relative;
     display: inline-grid;
@@ -877,6 +995,7 @@ body.af-sidebar-collapsed .af-sidebar-logout {
     font-size: 26px;
 }
 
+/* Styling rules for .af-action-icon em. */
 .af-action-icon em {
     position: absolute;
     top: -10px;
@@ -893,14 +1012,17 @@ body.af-sidebar-collapsed .af-sidebar-logout {
     font-style: normal;
 }
 
+/* Styling rules for .af-action-icon em.is-green. */
 .af-action-icon em.is-green {
     background: #18a058;
 }
 
+/* Styling rules for .af-action-icon em.is-gold. */
 .af-action-icon em.is-gold {
     background: var(--af-gold-2);
 }
 
+/* Navigation and menu styling for .af-profile-menu. */
 .af-profile-menu {
     display: grid;
     grid-template-columns: 38px 1fr 16px;
@@ -910,6 +1032,7 @@ body.af-sidebar-collapsed .af-sidebar-logout {
     padding-left: 22px;
 }
 
+/* Navigation and menu styling for .af-profile-menu img. */
 .af-profile-menu img {
     width: 36px;
     height: 36px;
@@ -918,20 +1041,24 @@ body.af-sidebar-collapsed .af-sidebar-logout {
 }
 
 .af-profile-menu strong,
+/* Navigation and menu styling for .af-profile-menu strong, .af-profile-menu small. */
 .af-profile-menu small {
     display: block;
     text-align: left;
 }
 
+/* Navigation and menu styling for .af-profile-menu strong. */
 .af-profile-menu strong {
     font-size: 13px;
 }
 
+/* Navigation and menu styling for .af-profile-menu small. */
 .af-profile-menu small {
     color: var(--af-muted);
     font-size: 11px;
 }
 
+/* Styling rules for .af-alert-stack. */
 .af-alert-stack {
     position: fixed;
     top: 92px;
@@ -941,6 +1068,7 @@ body.af-sidebar-collapsed .af-sidebar-logout {
     gap: 10px;
 }
 
+/* Styling rules for .af-alert. */
 .af-alert {
     width: min(380px, calc(100vw - 32px));
     border: 1px solid var(--af-line);
@@ -956,12 +1084,14 @@ body.af-sidebar-collapsed .af-sidebar-logout {
     animation: af-slide-in 180ms ease both;
 }
 
+/* Styling rules for .af-alert p. */
 .af-alert p {
     color: var(--af-text);
     font-size: 14px;
     line-height: 1.45;
 }
 
+/* Button and action control styling for .af-alert button. */
 .af-alert button {
     border: 0;
     background: transparent;
@@ -969,42 +1099,52 @@ body.af-sidebar-collapsed .af-sidebar-logout {
     cursor: pointer;
 }
 
+/* Styling rules for .af-alert-success. */
 .af-alert-success {
     border-left-color: var(--af-success);
 }
 
+/* Styling rules for .af-alert-success > i. */
 .af-alert-success > i {
     color: var(--af-success);
 }
 
+/* Styling rules for .af-alert-error. */
 .af-alert-error {
     border-left-color: var(--af-error);
 }
 
+/* Styling rules for .af-alert-error > i. */
 .af-alert-error > i {
     color: var(--af-error);
 }
 
+/* Styling rules for .af-alert-warning. */
 .af-alert-warning {
     border-left-color: var(--af-warning);
 }
 
+/* Styling rules for .af-alert-warning > i. */
 .af-alert-warning > i {
     color: var(--af-warning);
 }
 
+/* Styling rules for .af-alert-info. */
 .af-alert-info {
     border-left-color: var(--af-info);
 }
 
+/* Styling rules for .af-alert-info > i. */
 .af-alert-info > i {
     color: var(--af-info);
 }
 
+/* Styling rules for .af-alert.is-dismissing. */
 .af-alert.is-dismissing {
     animation: af-slide-out 160ms ease both;
 }
 
+/* Modal dialog styling for .af-modal. */
 .af-modal {
     position: fixed;
     inset: 0;
@@ -1014,16 +1154,19 @@ body.af-sidebar-collapsed .af-sidebar-logout {
     padding: 20px;
 }
 
+/* Modal dialog styling for .af-modal.is-open. */
 .af-modal.is-open {
     display: grid;
 }
 
+/* Modal dialog styling for .af-modal-backdrop. */
 .af-modal-backdrop {
     position: absolute;
     inset: 0;
     background: rgba(12, 35, 29, 0.72);
 }
 
+/* Modal dialog styling for .af-modal-dialog. */
 .af-modal-dialog {
     width: min(440px, 100%);
     border-radius: 10px;
@@ -1035,6 +1178,7 @@ body.af-sidebar-collapsed .af-sidebar-logout {
     text-align: center;
 }
 
+/* Modal dialog styling for .af-modal-close. */
 .af-modal-close {
     position: absolute;
     top: 14px;
@@ -1045,6 +1189,7 @@ body.af-sidebar-collapsed .af-sidebar-logout {
     cursor: pointer;
 }
 
+/* Modal dialog styling for .af-modal-icon. */
 .af-modal-icon {
     width: 58px;
     height: 58px;
@@ -1057,16 +1202,19 @@ body.af-sidebar-collapsed .af-sidebar-logout {
     font-size: 26px;
 }
 
+/* Modal dialog styling for .af-modal-dialog h2. */
 .af-modal-dialog h2 {
     font-size: 22px;
     margin-bottom: 8px;
 }
 
+/* Modal dialog styling for .af-modal-dialog p. */
 .af-modal-dialog p {
     color: var(--af-muted);
     line-height: 1.6;
 }
 
+/* Modal dialog styling for .af-modal-actions. */
 .af-modal-actions {
     display: flex;
     justify-content: center;
@@ -1074,6 +1222,7 @@ body.af-sidebar-collapsed .af-sidebar-logout {
     margin-top: 24px;
 }
 
+/* Styling rules for .af-loader. */
 .af-loader {
     position: fixed;
     inset: 0;
@@ -1085,10 +1234,12 @@ body.af-sidebar-collapsed .af-sidebar-logout {
     gap: 16px;
 }
 
+/* Styling rules for .af-loader[hidden]. */
 .af-loader[hidden] {
     display: none;
 }
 
+/* Styling rules for .af-loader-mark. */
 .af-loader-mark {
     width: 78px;
     height: 78px;
@@ -1102,30 +1253,38 @@ body.af-sidebar-collapsed .af-sidebar-logout {
     animation: af-spin 950ms linear infinite;
 }
 
+/* Styling rules for .af-loader p. */
 .af-loader p {
     color: var(--af-green);
     font-weight: 800;
 }
 
+/* Animation frames for @keyframes af-slide-in. */
 @keyframes af-slide-in {
+    /* Styling rules for from. */
     from {
         opacity: 0;
         transform: translateX(16px);
     }
+    /* Styling rules for to. */
     to {
         opacity: 1;
         transform: translateX(0);
     }
 }
 
+/* Animation frames for @keyframes af-slide-out. */
 @keyframes af-slide-out {
+    /* Styling rules for to. */
     to {
         opacity: 0;
         transform: translateX(16px);
     }
 }
 
+/* Animation frames for @keyframes af-spin. */
 @keyframes af-spin {
+    /* Styling rules for to. */
     to {
         transform: rotate(360deg);
     }

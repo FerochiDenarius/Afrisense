@@ -46,6 +46,7 @@ class Dashboard extends BaseModel
      */
     public function countTable(string $table): int
     {
+        // Guard this block so it only runs when the required condition is met.
         if (!$this->tableExists($table)) {
             return 0;
         }

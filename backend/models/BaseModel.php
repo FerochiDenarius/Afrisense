@@ -23,6 +23,7 @@ abstract class BaseModel
 
     protected function tableExists(string $table): bool
     {
+        // Guard this block so it only runs when the required condition is met.
         if (array_key_exists($table, $this->tableCache)) {
             return $this->tableCache[$table];
         }
@@ -47,6 +48,7 @@ abstract class BaseModel
 
     protected function getColumns(string $table): array
     {
+        // Guard this block so it only runs when the required condition is met.
         if (array_key_exists($table, $this->columnCache)) {
             return $this->columnCache[$table];
         }
@@ -79,6 +81,7 @@ abstract class BaseModel
 
     protected function findByIdRow(string $table, int $id): ?array
     {
+        // Guard this block so it only runs when the required condition is met.
         if (!$this->tableExists($table) || !$this->columnExists($table, 'id')) {
             return null;
         }
@@ -95,6 +98,7 @@ abstract class BaseModel
 
     protected function allRows(string $table, string $orderBy = 'id', string $direction = 'ASC'): array
     {
+        // Guard this block so it only runs when the required condition is met.
         if (!$this->tableExists($table)) {
             return [];
         }
@@ -112,12 +116,14 @@ abstract class BaseModel
 
     protected function insertRow(string $table, array $data): ?int
     {
+        // Guard this block so it only runs when the required condition is met.
         if (!$this->tableExists($table)) {
             return null;
         }
 
         $filtered = $this->filterColumns($table, $data);
 
+        // Guard this block so it only runs when the required condition is met.
         if ($filtered === []) {
             return null;
         }
@@ -140,6 +146,7 @@ abstract class BaseModel
 
     protected function updateByIdRow(string $table, int $id, array $data): bool
     {
+        // Guard this block so it only runs when the required condition is met.
         if (!$this->tableExists($table) || !$this->columnExists($table, 'id')) {
             return false;
         }
@@ -147,6 +154,7 @@ abstract class BaseModel
         $filtered = $this->filterColumns($table, $data);
         unset($filtered['id']);
 
+        // Guard this block so it only runs when the required condition is met.
         if ($filtered === []) {
             return false;
         }
@@ -171,6 +179,7 @@ abstract class BaseModel
 
     protected function deleteByIdRow(string $table, int $id): bool
     {
+        // Guard this block so it only runs when the required condition is met.
         if (!$this->tableExists($table) || !$this->columnExists($table, 'id')) {
             return false;
         }
@@ -187,6 +196,7 @@ abstract class BaseModel
     {
         $statement = $this->pdo->prepare($sql);
 
+        // Iterate through the data needed for this block.
         foreach ($params as $key => $value) {
             $parameter = is_int($key) ? $key + 1 : ':' . ltrim((string) $key, ':');
             $statement->bindValue($parameter, $value);

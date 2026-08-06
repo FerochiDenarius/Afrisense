@@ -11,6 +11,7 @@ class Session
      */
     public static function start(): void
     {
+        // Guard this block so it only runs when the required condition is met.
         if (session_status() === PHP_SESSION_NONE) {
             session_start();
         }
@@ -71,6 +72,7 @@ class Session
         self::start();
         $_SESSION = [];
 
+        // Guard this block so it only runs when the required condition is met.
         if (ini_get('session.use_cookies')) {
             $params = session_get_cookie_params();
             setcookie(

@@ -77,6 +77,7 @@ $adminGroups = [
     ],
 ];
 
+// Guard this block so it only runs when the required condition is met.
 if (isset($authUser) && function_exists('afrisense_is_administrator') && !afrisense_is_administrator($authUser)) {
     $adminGroups = [
         [
@@ -88,6 +89,7 @@ if (isset($authUser) && function_exists('afrisense_is_administrator') && !afrise
     ];
 }
 ?>
+<!-- Side panel with supporting information and actions. -->
 <aside class="af-dashboard-sidebar af-admin-sidebar" data-sidebar>
     <button class="af-sidebar-close" type="button" aria-label="Close sidebar" data-sidebar-close>
         <i class="bi bi-x-lg" aria-hidden="true"></i>
@@ -101,6 +103,7 @@ if (isset($authUser) && function_exists('afrisense_is_administrator') && !afrise
         </span>
     </a>
 
+    <!-- Page section for this part of the AfriSense interface. -->
     <section class="af-sidebar-profile" aria-label="Signed in user">
         <img src="<?php echo htmlspecialchars($frontendBase . '/assets/images/foodimage.jpeg', ENT_QUOTES, 'UTF-8'); ?>" alt="">
         <div>
@@ -113,25 +116,33 @@ if (isset($authUser) && function_exists('afrisense_is_administrator') && !afrise
         </button>
     </section>
 
+    <!-- Navigation links for this interface. -->
     <nav class="af-side-nav" aria-label="Admin navigation">
+        <?php // Render this conditional/dynamic template block. ?>
         <?php foreach ($adminGroups as $group): ?>
+            <?php // Render this conditional/dynamic template block. ?>
             <?php if ($group['label'] !== ''): ?>
                 <p><?php echo htmlspecialchars($group['label'], ENT_QUOTES, 'UTF-8'); ?></p>
             <?php endif; ?>
+            <?php // Render this conditional/dynamic template block. ?>
             <?php foreach ($group['items'] as $item): ?>
                 <?php $isActiveParent = $activeAdminPage === $item['key'] || (!empty($item['children']) && in_array($activeAdminPage, array_column($item['children'], 'key'), true)); ?>
                 <a class="<?php echo $isActiveParent ? 'is-active' : ''; ?>" href="<?php echo htmlspecialchars($item['href'], ENT_QUOTES, 'UTF-8'); ?>">
                     <i class="bi <?php echo htmlspecialchars($item['icon'], ENT_QUOTES, 'UTF-8'); ?>" aria-hidden="true"></i>
                     <span><?php echo htmlspecialchars($item['label'], ENT_QUOTES, 'UTF-8'); ?></span>
+                    <?php // Render this conditional/dynamic template block. ?>
                     <?php if (!empty($item['expandable'])): ?>
                         <i class="bi bi-chevron-down af-nav-chevron" aria-hidden="true"></i>
                     <?php endif; ?>
                 </a>
+                <?php // Render this conditional/dynamic template block. ?>
                 <?php if (!empty($item['children']) && $isActiveParent): ?>
                     <div class="af-subnav">
+                        <?php // Render this conditional/dynamic template block. ?>
                         <?php foreach ($item['children'] as $child): ?>
                             <a class="<?php echo $activeAdminPage === $child['key'] ? 'is-active' : ''; ?>" href="<?php echo htmlspecialchars($child['href'], ENT_QUOTES, 'UTF-8'); ?>">
                                 <span><?php echo htmlspecialchars($child['label'], ENT_QUOTES, 'UTF-8'); ?></span>
+                                <?php // Render this conditional/dynamic template block. ?>
                                 <?php if (array_key_exists($child['key'], $adminOrderNavCounts)): ?>
                                     <em class="af-nav-badge <?php echo htmlspecialchars((string) ($child['badge_class'] ?? ''), ENT_QUOTES, 'UTF-8'); ?>"><?php echo htmlspecialchars((string) min(99, (int) $adminOrderNavCounts[$child['key']]), ENT_QUOTES, 'UTF-8'); ?></em>
                                 <?php endif; ?>
@@ -148,6 +159,7 @@ if (isset($authUser) && function_exists('afrisense_is_administrator') && !afrise
         <span>Logout</span>
     </a>
 
+    <!-- Page section for this part of the AfriSense interface. -->
     <section class="af-sidebar-promo">
         <span aria-hidden="true"><i class="bi bi-cup-hot"></i></span>
         <h2>Delicious Meals, Happy Customers</h2>

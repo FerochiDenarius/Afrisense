@@ -10,15 +10,18 @@ $adminName = (string) ($authUser['fullname'] ?? $authUser['email'] ?? 'Admin Use
 $adminRole = ucwords(afrisense_role_name($authUser) ?: 'Staff');
 $reportError = '';
 
+// Defines the afrisense_report_money helper used by this module.
 function afrisense_report_money(float $value): string
 {
     return 'GH₵ ' . number_format($value, 2);
 }
 
+// Defines the afrisense_report_count helper used by this module.
 function afrisense_report_count(PDO $pdo, string $table): int
 {
     $allowed = ['orders', 'bookings', 'customers', 'foods'];
 
+    // Guard this block so it only runs when the required condition is met.
     if (!in_array($table, $allowed, true)) {
         return 0;
     }
@@ -26,8 +29,10 @@ function afrisense_report_count(PDO $pdo, string $table): int
     return (int) $pdo->query(sprintf('SELECT COUNT(*) FROM `%s`', $table))->fetchColumn();
 }
 
+// Defines the afrisense_report_metric_delta helper used by this module.
 function afrisense_report_metric_delta(float $value): string
 {
+    // Guard this block so it only runs when the required condition is met.
     if ($value <= 0) {
         return '0.0%';
     }
@@ -35,14 +40,17 @@ function afrisense_report_metric_delta(float $value): string
     return number_format(min(24.8, max(3.2, $value / 920)), 1) . '%';
 }
 
+// Defines the afrisense_report_food_image helper used by this module.
 function afrisense_report_food_image(?string $image): string
 {
     $filename = basename(trim((string) $image));
 
+    // Guard this block so it only runs when the required condition is met.
     if ($filename !== '' && is_file(__DIR__ . '/../assets/images/foods/' . $filename)) {
         return '../assets/images/foods/' . $filename;
     }
 
+    // Guard this block so it only runs when the required condition is met.
     if ($filename !== '' && is_file(__DIR__ . '/../uploads/' . $filename)) {
         return '../uploads/' . $filename;
     }
@@ -54,6 +62,7 @@ $selectedReport = trim((string) ($_GET['report'] ?? 'All Reports'));
 $selectedOutlet = trim((string) ($_GET['outlet'] ?? 'All Outlets'));
 $selectedPayment = trim((string) ($_GET['payment'] ?? 'All Payment Methods'));
 
+// Run database/action work inside a guarded block so the page can fail gracefully.
 try {
     $pdo = afrisense_pdo();
     afrisense_support_tables($pdo);
@@ -137,6 +146,7 @@ $paymentTotal = max(1.0, array_sum(array_map(static fn (array $row): float => (f
 $paymentColors = ['#38a852', '#f0a000', '#7c4fd6', '#ff7474', '#2f78d4'];
 $paymentGradientParts = [];
 $paymentGradientCursor = 0.0;
+// Iterate through the data needed for this block.
 foreach ($paymentRows as $index => $row) {
     $paymentPercent = (((float) ($row['total_value'] ?? 0)) / $paymentTotal) * 100;
     $paymentGradientNext = min(100.0, $paymentGradientCursor + $paymentPercent);
@@ -160,11 +170,13 @@ $recentReports = [
     ['Delivery Report', $dateLabel, 'bi-truck', 'blue'],
 ];
 
+// Guard this block so it only runs when the required condition is met.
 if (isset($_GET['export']) && (string) $_GET['export'] === 'csv') {
     header('Content-Type: text/csv; charset=UTF-8');
     header('Content-Disposition: attachment; filename="afrisense-report-' . date('Y-m-d') . '.csv"');
 
     $output = fopen('php://output', 'w');
+    // Guard this block so it only runs when the required condition is met.
     if ($output !== false) {
         fputcsv($output, ['AfriSense Reports', $dateLabel]);
         fputcsv($output, []);
@@ -177,6 +189,7 @@ if (isset($_GET['export']) && (string) $_GET['export'] === 'csv') {
         fputcsv($output, []);
         fputcsv($output, ['Top Selling Foods']);
         fputcsv($output, ['Food', 'Category', 'Quantity Sold', 'Revenue']);
+        // Iterate through the data needed for this block.
         foreach ($topFoods as $food) {
             fputcsv($output, [
                 (string) ($food['food_name'] ?? 'Food'),
@@ -188,6 +201,7 @@ if (isset($_GET['export']) && (string) $_GET['export'] === 'csv') {
         fputcsv($output, []);
         fputcsv($output, ['Revenue by Payment Method']);
         fputcsv($output, ['Payment Method', 'Revenue']);
+        // Iterate through the data needed for this block.
         foreach ($paymentRows as $row) {
             fputcsv($output, [
                 trim((string) ($row['payment_method'] ?? '')) !== '' ? (string) $row['payment_method'] : 'Unspecified',
@@ -210,11 +224,13 @@ if (isset($_GET['export']) && (string) $_GET['export'] === 'csv') {
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
 </head>
 <body class="reports-body">
+    <!-- Side panel with supporting information and actions. -->
     <aside class="sidebar" aria-label="Admin navigation">
         <a class="brand" href="dashboard.php" aria-label="AfriSense admin dashboard">
             <span class="brand-icon" aria-hidden="true"><i class="bi bi-cup-hot"></i></span>
             <span><strong>AfriSense</strong><small>Food Services</small></span>
         </a>
+        <!-- Navigation links for this interface. -->
         <nav class="side-nav">
             <p>Main</p>
             <a href="dashboard.php"><i class="bi bi-house-door" aria-hidden="true"></i> Dashboard</a>
@@ -241,6 +257,7 @@ if (isset($_GET['export']) && (string) $_GET['export'] === 'csv') {
     </aside>
 
     <div class="dashboard-shell">
+        <!-- Header block for this interface section. -->
         <header class="topbar reports-topbar">
             <button class="menu-toggle" type="button" aria-label="Open navigation"><i class="bi bi-list" aria-hidden="true"></i></button>
             <label class="top-search" for="reports_search">
@@ -255,7 +272,9 @@ if (isset($_GET['export']) && (string) $_GET['export'] === 'csv') {
             </div>
         </header>
 
+        <!-- Main content area for this page. -->
         <main class="content reports-content">
+            <!-- Page section for this part of the AfriSense interface. -->
             <section class="reports-heading">
                 <div>
                     <h1>Reports</h1>
@@ -263,8 +282,10 @@ if (isset($_GET['export']) && (string) $_GET['export'] === 'csv') {
                 </div>
             </section>
 
+            <?php // Render this conditional/dynamic template block. ?>
             <?php if ($reportError !== ''): ?><p class="dashboard-alert"><?php echo htmlspecialchars($reportError, ENT_QUOTES, 'UTF-8'); ?></p><?php endif; ?>
 
+            <!-- Form block that submits this page workflow. -->
             <form class="reports-filters" action="reports.php" method="get">
                 <label><i class="bi bi-calendar3" aria-hidden="true"></i><input type="text" value="<?php echo htmlspecialchars($dateLabel, ENT_QUOTES, 'UTF-8'); ?>" readonly><i class="bi bi-chevron-down" aria-hidden="true"></i></label>
                 <label><select name="report"><option <?php echo $selectedReport === 'All Reports' ? 'selected' : ''; ?>>All Reports</option><option <?php echo $selectedReport === 'Sales Report' ? 'selected' : ''; ?>>Sales Report</option><option <?php echo $selectedReport === 'Order Report' ? 'selected' : ''; ?>>Order Report</option></select><i class="bi bi-chevron-down" aria-hidden="true"></i></label>
@@ -273,8 +294,10 @@ if (isset($_GET['export']) && (string) $_GET['export'] === 'csv') {
                 <button type="submit" name="export" value="csv"><i class="bi bi-download" aria-hidden="true"></i> Export Report</button>
             </form>
 
+            <!-- Page section for this part of the AfriSense interface. -->
             <section class="reports-layout">
                 <div class="reports-main">
+                    <!-- Page section for this part of the AfriSense interface. -->
                     <section class="reports-metrics" aria-label="Report metrics">
                         <article><span class="green"><i class="bi bi-graph-up-arrow" aria-hidden="true"></i></span><div><small>Total Revenue</small><strong><?php echo htmlspecialchars(afrisense_report_money($totalRevenue), ENT_QUOTES, 'UTF-8'); ?></strong><em>↑ <?php echo htmlspecialchars(afrisense_report_metric_delta($totalRevenue), ENT_QUOTES, 'UTF-8'); ?></em><p>vs previous period</p></div></article>
                         <article><span class="gold"><i class="bi bi-cart-check" aria-hidden="true"></i></span><div><small>Total Orders</small><strong><?php echo htmlspecialchars((string) $totalOrders, ENT_QUOTES, 'UTF-8'); ?></strong><em>↑ <?php echo htmlspecialchars(afrisense_report_metric_delta($totalOrders * 120), ENT_QUOTES, 'UTF-8'); ?></em><p>vs previous period</p></div></article>
@@ -283,8 +306,10 @@ if (isset($_GET['export']) && (string) $_GET['export'] === 'csv') {
                         <article><span class="red"><i class="bi bi-wallet2" aria-hidden="true"></i></span><div><small>Average Order Value</small><strong><?php echo htmlspecialchars(afrisense_report_money($averageOrder), ENT_QUOTES, 'UTF-8'); ?></strong><em>↑ <?php echo htmlspecialchars(afrisense_report_metric_delta($averageOrder * 90), ENT_QUOTES, 'UTF-8'); ?></em><p>vs previous period</p></div></article>
                     </section>
 
+                    <!-- Page section for this part of the AfriSense interface. -->
                     <section class="report-chart-grid" id="sales">
                         <article class="report-panel">
+                            <!-- Header block for this interface section. -->
                             <header><h2>Revenue Overview</h2><button type="button">Daily <i class="bi bi-chevron-down" aria-hidden="true"></i></button></header>
                             <div class="mini-line-chart" aria-label="Revenue overview">
                                 <div class="y-axis"><span>GH₵ 10K</span><span>GH₵ 8K</span><span>GH₵ 6K</span><span>GH₵ 4K</span><span>GH₵ 2K</span><span>GH₵ 0</span></div>
@@ -292,6 +317,7 @@ if (isset($_GET['export']) && (string) $_GET['export'] === 'csv') {
                                     <line x1="36" y1="22" x2="660" y2="22"></line><line x1="36" y1="62" x2="660" y2="62"></line><line x1="36" y1="102" x2="660" y2="102"></line><line x1="36" y1="142" x2="660" y2="142"></line><line x1="36" y1="182" x2="660" y2="182"></line><line x1="36" y1="222" x2="660" y2="222"></line>
                                     <?php
                                     $points = [];
+                                    // Iterate through the data needed for this block.
                                     foreach ($dailyRows as $index => $row) {
                                         $x = 44 + ($index * (600 / max(1, count($dailyRows) - 1)));
                                         $y = 222 - (((float) ($row['revenue'] ?? 0) / $revenueMax) * 180);
@@ -306,8 +332,10 @@ if (isset($_GET['export']) && (string) $_GET['export'] === 'csv') {
                         </article>
 
                         <article class="report-panel">
+                            <!-- Header block for this interface section. -->
                             <header><h2>Orders Overview</h2><button type="button">Daily <i class="bi bi-chevron-down" aria-hidden="true"></i></button></header>
                             <div class="bar-chart" aria-label="Orders overview">
+                                <?php // Render this conditional/dynamic template block. ?>
                                 <?php foreach ($dailyRows ?: range(1, 10) as $index => $row): ?>
                                     <?php $height = is_array($row) ? max(16, ((int) ($row['order_count'] ?? 0) / $orderMax) * 100) : (40 + ($index % 4) * 16); ?>
                                     <span style="--h: <?php echo htmlspecialchars(number_format((float) $height, 2), ENT_QUOTES, 'UTF-8'); ?>%;"></span>
@@ -316,13 +344,17 @@ if (isset($_GET['export']) && (string) $_GET['export'] === 'csv') {
                         </article>
                     </section>
 
+                    <!-- Page section for this part of the AfriSense interface. -->
                     <section class="report-bottom-grid">
                         <article class="report-panel">
+                            <!-- Header block for this interface section. -->
                             <header><h2>Top Selling Foods</h2><a href="foods.php">View All</a></header>
                             <div class="reports-table-wrap"><table><thead><tr><th>#</th><th>Food</th><th>Category</th><th>Quantity Sold</th><th>Revenue (GHC)</th></tr></thead><tbody>
+                                <?php // Render this conditional/dynamic template block. ?>
                                 <?php if ($topFoods === []): ?>
                                     <tr><td colspan="5">No food sales data yet.</td></tr>
                                 <?php endif; ?>
+                                <?php // Render this conditional/dynamic template block. ?>
                                 <?php foreach ($topFoods as $index => $food): ?>
                                     <tr><td><?php echo $index + 1; ?></td><td><img src="<?php echo htmlspecialchars(afrisense_report_food_image((string) ($food['image'] ?? '')), ENT_QUOTES, 'UTF-8'); ?>" alt=""> <?php echo htmlspecialchars((string) ($food['food_name'] ?? 'Food'), ENT_QUOTES, 'UTF-8'); ?></td><td><span><?php echo htmlspecialchars((string) ($food['category_name'] ?? 'Menu'), ENT_QUOTES, 'UTF-8'); ?></span></td><td><?php echo htmlspecialchars((string) (int) ($food['quantity_sold'] ?? 0), ENT_QUOTES, 'UTF-8'); ?></td><td><?php echo htmlspecialchars(number_format((float) ($food['revenue'] ?? 0), 2), ENT_QUOTES, 'UTF-8'); ?></td></tr>
                                 <?php endforeach; ?>
@@ -330,13 +362,16 @@ if (isset($_GET['export']) && (string) $_GET['export'] === 'csv') {
                         </article>
 
                         <article class="report-panel payment-panel">
+                            <!-- Header block for this interface section. -->
                             <header><h2>Revenue by Payment Method</h2><a href="orders.php">View All</a></header>
                             <div class="payment-report">
                                 <div class="payment-donut" style="--payment-gradient: <?php echo htmlspecialchars($paymentGradient, ENT_QUOTES, 'UTF-8'); ?>;"><strong><?php echo htmlspecialchars(afrisense_report_money($totalRevenue), ENT_QUOTES, 'UTF-8'); ?></strong><span>Total Revenue</span></div>
                                 <ul>
+                                    <?php // Render this conditional/dynamic template block. ?>
                                     <?php if ($paymentRows === []): ?>
                                         <li class="empty-payment">No payment data yet.</li>
                                     <?php endif; ?>
+                                    <?php // Render this conditional/dynamic template block. ?>
                                     <?php foreach ($paymentRows as $index => $row): ?>
                                         <?php $percent = ((float) ($row['total_value'] ?? 0) / $paymentTotal) * 100; ?>
                                         <li><i style="background: <?php echo htmlspecialchars($paymentColors[$index % count($paymentColors)], ENT_QUOTES, 'UTF-8'); ?>"></i><span><strong><?php echo htmlspecialchars(trim((string) ($row['payment_method'] ?? '')) !== '' ? (string) $row['payment_method'] : 'Unspecified', ENT_QUOTES, 'UTF-8'); ?></strong><small><?php echo htmlspecialchars(number_format($percent, 1), ENT_QUOTES, 'UTF-8'); ?>%</small></span><b><?php echo htmlspecialchars(afrisense_report_money((float) ($row['total_value'] ?? 0)), ENT_QUOTES, 'UTF-8'); ?></b></li>
@@ -347,12 +382,16 @@ if (isset($_GET['export']) && (string) $_GET['export'] === 'csv') {
                     </section>
                 </div>
 
+                <!-- Side panel with supporting information and actions. -->
                 <aside class="reports-side">
+                    <!-- Page section for this part of the AfriSense interface. -->
                     <section class="report-panel compact-list"><h2>Report Categories</h2><?php foreach ($reportCategories as $category): ?><a href="#"><span class="<?php echo htmlspecialchars($category[3], ENT_QUOTES, 'UTF-8'); ?>"><i class="bi <?php echo htmlspecialchars($category[2], ENT_QUOTES, 'UTF-8'); ?>" aria-hidden="true"></i></span><strong><?php echo htmlspecialchars($category[0], ENT_QUOTES, 'UTF-8'); ?></strong><small><?php echo htmlspecialchars($category[1], ENT_QUOTES, 'UTF-8'); ?></small></a><?php endforeach; ?><a class="view-all" href="reports.php">View All Reports <i class="bi bi-arrow-right" aria-hidden="true"></i></a></section>
+                    <!-- Page section for this part of the AfriSense interface. -->
                     <section class="report-panel recent-list"><header><h2>Recent Reports</h2><a href="#">View All</a></header><?php foreach ($recentReports as $report): ?><article><span class="<?php echo htmlspecialchars($report[3], ENT_QUOTES, 'UTF-8'); ?>"><i class="bi <?php echo htmlspecialchars($report[2], ENT_QUOTES, 'UTF-8'); ?>" aria-hidden="true"></i></span><div><strong><?php echo htmlspecialchars($report[0], ENT_QUOTES, 'UTF-8'); ?></strong><small><?php echo htmlspecialchars($report[1], ENT_QUOTES, 'UTF-8'); ?></small></div><em>PDF</em><button type="button" aria-label="Download <?php echo htmlspecialchars($report[0], ENT_QUOTES, 'UTF-8'); ?>"><i class="bi bi-download" aria-hidden="true"></i></button></article><?php endforeach; ?></section>
                 </aside>
             </section>
 
+            <!-- Footer block for this interface section. -->
             <footer class="reports-footer"><span>© 2025 AfriSense Food Services. All rights reserved.</span><nav><a href="../landing/privacy.php">Privacy Policy</a><i></i><a href="../landing/terms.php">Terms &amp; Conditions</a></nav></footer>
         </main>
     </div>

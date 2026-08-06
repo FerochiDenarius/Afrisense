@@ -1,8 +1,10 @@
+/* Navigation and menu styling for .af-admin-menu-page. */
 .af-admin-menu-page {
     display: grid;
     gap: 22px;
 }
 
+/* Styling rules for .af-admin-page-heading. */
 .af-admin-page-heading {
     display: flex;
     align-items: flex-start;
@@ -10,6 +12,7 @@
     gap: 20px;
 }
 
+/* Styling rules for .af-admin-page-heading h1. */
 .af-admin-page-heading h1 {
     color: #111827;
     font-size: 28px;
@@ -17,11 +20,13 @@
     margin-bottom: 6px;
 }
 
+/* Styling rules for .af-admin-page-heading p. */
 .af-admin-page-heading p {
     color: #667085;
     font-size: 14px;
 }
 
+/* Button and action control styling for .af-add-menu-btn. */
 .af-add-menu-btn {
     height: 42px;
     border: 0;
@@ -38,12 +43,14 @@
     text-decoration: none;
 }
 
+/* Navigation and menu styling for .af-menu-metrics. */
 .af-menu-metrics {
     display: grid;
     grid-template-columns: repeat(4, minmax(0, 1fr));
     gap: 18px;
 }
 
+/* Navigation and menu styling for .af-menu-metrics article. */
 .af-menu-metrics article {
     min-height: 112px;
     border: 1px solid #e5e7eb;
@@ -57,6 +64,7 @@
     padding: 22px;
 }
 
+/* Navigation and menu styling for .af-menu-metrics article > span. */
 .af-menu-metrics article > span {
     width: 56px;
     height: 56px;
@@ -66,26 +74,31 @@
     font-size: 25px;
 }
 
+/* Navigation and menu styling for .af-menu-metrics .green > span. */
 .af-menu-metrics .green > span {
     background: #dff7e7;
     color: #159447;
 }
 
+/* Navigation and menu styling for .af-menu-metrics .gold > span. */
 .af-menu-metrics .gold > span {
     background: #fff1d7;
     color: var(--af-gold);
 }
 
+/* Navigation and menu styling for .af-menu-metrics .blue > span. */
 .af-menu-metrics .blue > span {
     background: #dcecff;
     color: #2f78d4;
 }
 
+/* Navigation and menu styling for .af-menu-metrics .purple > span. */
 .af-menu-metrics .purple > span {
     background: #f0dcff;
     color: #9254de;
 }
 
+/* Navigation and menu styling for .af-menu-metrics small. */
 .af-menu-metrics small {
     color: #667085;
     display: block;
@@ -93,6 +106,7 @@
     margin-bottom: 6px;
 }
 
+/* Navigation and menu styling for .af-menu-metrics strong. */
 .af-menu-metrics strong {
     color: #111827;
     display: block;
@@ -100,12 +114,14 @@
     line-height: 1.05;
 }
 
+/* Navigation and menu styling for .af-menu-metrics p. */
 .af-menu-metrics p {
     color: #159447;
     font-size: 12px;
     margin-top: 5px;
 }
 
+/* Navigation and menu styling for .af-menu-workspace. */
 .af-menu-workspace {
     display: grid;
     grid-template-columns: minmax(0, 1fr) 270px;
@@ -114,12 +130,14 @@
 }
 
 .af-menu-main,
+/* Navigation and menu styling for .af-menu-main, .af-menu-side. */
 .af-menu-side {
     min-width: 0;
     display: grid;
     gap: 20px;
 }
 
+/* Navigation and menu styling for .af-menu-filters. */
 .af-menu-filters {
     display: grid;
     grid-template-columns: minmax(220px, 1fr) 170px 170px 180px;
@@ -128,6 +146,7 @@
 
 .af-menu-search,
 .af-menu-select,
+/* Form control styling for .af-menu-search, .af-menu-select, .af-menu-filters button. */
 .af-menu-filters button {
     height: 44px;
     border: 1px solid #d9dee6;
@@ -137,17 +156,20 @@
     align-items: center;
 }
 
+/* Navigation and menu styling for .af-menu-search. */
 .af-menu-search {
     grid-template-columns: 42px 1fr;
 }
 
 .af-menu-search i,
+/* Form control styling for .af-menu-search i, .af-menu-select i. */
 .af-menu-select i {
     color: #667085;
     justify-self: center;
 }
 
 .af-menu-search input,
+/* Form control styling for .af-menu-search input, .af-menu-select select. */
 .af-menu-select select {
     width: 100%;
     min-width: 0;
@@ -158,15 +180,18 @@
     font-size: 14px;
 }
 
+/* Form control styling for .af-menu-select. */
 .af-menu-select {
     grid-template-columns: 1fr 38px;
 }
 
+/* Form control styling for .af-menu-select select. */
 .af-menu-select select {
     appearance: none;
     padding-left: 14px;
 }
 
+/* Button and action control styling for .af-menu-filters button. */
 .af-menu-filters button {
     grid-template-columns: 24px auto;
     justify-content: center;
@@ -177,6 +202,7 @@
 }
 
 .af-menu-table-card,
+/* Card and panel styling for .af-menu-table-card, .af-menu-panel. */
 .af-menu-panel {
     border: 1px solid #e5e7eb;
     border-radius: 10px;
@@ -185,10 +211,12 @@
     overflow: hidden;
 }
 
+/* Table layout styling for .af-menu-table. */
 .af-menu-table {
     overflow-x: auto;
 }
 
+/* Table layout styling for .af-menu-table table. */
 .af-menu-table table {
     width: 100%;
     min-width: 760px;
@@ -197,11 +225,13 @@
 }
 
 .af-menu-table th:nth-child(1),
+/* Table layout styling for .af-menu-table th:nth-child(1), .af-menu-table td:nth-child(1). */
 .af-menu-table td:nth-child(1) {
     width: 44%;
 }
 
 .af-menu-table th:nth-child(2),
+/* Table layout styling for .af-menu-table th:nth-child(2), .af-menu-table td:nth-child(2). */
 .af-menu-table td:nth-child(2) {
     width: 17%;
 }
@@ -211,11 +241,13 @@
 .af-menu-table th:nth-child(4),
 .af-menu-table td:nth-child(4),
 .af-menu-table th:nth-child(5),
+/* Table layout styling for .af-menu-table th:nth-child(3), .af-menu-table td:nth-child(3), .af-menu-table th:nth-child(4), .af-menu-table td:nth-child(4), .af-menu-table th:nth-child(5), .af-menu-table td:nth-child(5). */
 .af-menu-table td:nth-child(5) {
     width: 13%;
 }
 
 .af-menu-table th,
+/* Table layout styling for .af-menu-table th, .af-menu-table td. */
 .af-menu-table td {
     border-bottom: 1px solid #edf0f3;
     padding: 16px 18px;
@@ -224,11 +256,13 @@
     font-size: 13px;
 }
 
+/* Table layout styling for .af-menu-table th. */
 .af-menu-table th {
     color: #111827;
     font-weight: 850;
 }
 
+/* Navigation and menu styling for .af-menu-item-cell. */
 .af-menu-item-cell {
     display: grid;
     grid-template-columns: 78px minmax(180px, 1fr);
@@ -236,6 +270,7 @@
     align-items: center;
 }
 
+/* Navigation and menu styling for .af-menu-item-cell img. */
 .af-menu-item-cell img {
     width: 78px;
     height: 78px;
@@ -244,16 +279,19 @@
 }
 
 .af-menu-item-cell strong,
+/* Navigation and menu styling for .af-menu-item-cell strong, .af-menu-item-cell small. */
 .af-menu-item-cell small {
     display: block;
 }
 
+/* Navigation and menu styling for .af-menu-item-cell strong. */
 .af-menu-item-cell strong {
     color: #111827;
     font-size: 15px;
     margin-bottom: 8px;
 }
 
+/* Navigation and menu styling for .af-menu-item-cell small. */
 .af-menu-item-cell small {
     color: #4b5563;
     line-height: 1.55;
@@ -264,6 +302,7 @@
 }
 
 .af-menu-tag,
+/* Navigation and menu styling for .af-menu-tag, .af-status. */
 .af-status {
     min-height: 27px;
     border-radius: 5px;
@@ -275,43 +314,51 @@
 }
 
 .af-menu-tag.main,
+/* Navigation and menu styling for .af-menu-tag.main, .af-status.active. */
 .af-status.active {
     background: #e3f6e6;
     color: #159447;
 }
 
+/* Navigation and menu styling for .af-menu-tag.local. */
 .af-menu-tag.local {
     background: #fff1db;
     color: #c06f00;
 }
 
 .af-menu-tag.grills,
+/* Navigation and menu styling for .af-menu-tag.grills, .af-status.out. */
 .af-status.out {
     background: #ffe8ea;
     color: #d92d20;
 }
 
+/* Navigation and menu styling for .af-menu-tag.starters. */
 .af-menu-tag.starters {
     background: #f1e4ff;
     color: #7a35c8;
 }
 
+/* Navigation and menu styling for .af-menu-tag.salads. */
 .af-menu-tag.salads {
     background: #e4f7e8;
     color: #159447;
 }
 
+/* Navigation and menu styling for .af-menu-tag.drinks. */
 .af-menu-tag.drinks {
     background: #e5f0ff;
     color: #2f78d4;
 }
 
+/* Styling rules for .af-row-actions. */
 .af-row-actions {
     display: flex;
     gap: 10px;
 }
 
 .af-row-actions button,
+/* Button and action control styling for .af-row-actions button, .af-row-actions a. */
 .af-row-actions a {
     width: 34px;
     height: 34px;
@@ -325,11 +372,13 @@
     text-decoration: none;
 }
 
+/* Styling rules for .af-row-actions .danger. */
 .af-row-actions .danger {
     border-color: #ffb4b4;
     color: #ef4444;
 }
 
+/* Navigation and menu styling for .af-menu-pagination. */
 .af-menu-pagination {
     display: flex;
     align-items: center;
@@ -338,11 +387,13 @@
     padding: 18px;
 }
 
+/* Navigation and menu styling for .af-menu-pagination p. */
 .af-menu-pagination p {
     color: #344054;
     font-size: 13px;
 }
 
+/* Navigation and menu styling for .af-menu-pagination nav. */
 .af-menu-pagination nav {
     display: flex;
     align-items: center;
@@ -350,6 +401,7 @@
 }
 
 .af-menu-pagination a,
+/* Navigation and menu styling for .af-menu-pagination a, .af-menu-pagination span. */
 .af-menu-pagination span {
     min-width: 34px;
     height: 34px;
@@ -362,21 +414,25 @@
     text-decoration: none;
 }
 
+/* Navigation and menu styling for .af-menu-pagination a.active. */
 .af-menu-pagination a.active {
     background: var(--af-gold);
     color: #fff;
     border-color: var(--af-gold);
 }
 
+/* Navigation and menu styling for .af-menu-pagination a.is-disabled. */
 .af-menu-pagination a.is-disabled {
     opacity: 0.45;
     pointer-events: none;
 }
 
+/* Card and panel styling for .af-menu-panel. */
 .af-menu-panel {
     padding: 20px;
 }
 
+/* Card and panel styling for .af-menu-panel h2. */
 .af-menu-panel h2 {
     color: #111827;
     font-size: 18px;
@@ -384,12 +440,14 @@
 }
 
 .af-category-list,
+/* Styling rules for .af-category-list, .af-overview-list. */
 .af-overview-list {
     list-style: none;
     display: grid;
     gap: 16px;
 }
 
+/* Styling rules for .af-category-list li. */
 .af-category-list li {
     display: grid;
     grid-template-columns: 22px 1fr auto;
@@ -399,13 +457,20 @@
     font-size: 13px;
 }
 
+/* Styling rules for .af-category-list i.green. */
 .af-category-list i.green { color: #159447; }
+/* Styling rules for .af-category-list i.gold. */
 .af-category-list i.gold { color: var(--af-gold); }
+/* Styling rules for .af-category-list i.red. */
 .af-category-list i.red { color: #ef4444; }
+/* Styling rules for .af-category-list i.purple. */
 .af-category-list i.purple { color: #9254de; }
+/* Styling rules for .af-category-list i.blue. */
 .af-category-list i.blue { color: #2f78d4; }
+/* Styling rules for .af-category-list i.orange. */
 .af-category-list i.orange { color: #f59e0b; }
 
+/* Styling rules for .af-category-list strong. */
 .af-category-list strong {
     min-width: 30px;
     min-height: 24px;
@@ -419,6 +484,7 @@
 
 .af-manage-categories,
 .af-menu-actions button,
+/* Button and action control styling for .af-manage-categories, .af-menu-actions button, .af-menu-actions a. */
 .af-menu-actions a {
     width: 100%;
     min-height: 42px;
@@ -436,17 +502,20 @@
     cursor: pointer;
 }
 
+/* Styling rules for .af-manage-categories. */
 .af-manage-categories {
     justify-content: center;
     color: var(--af-gold);
     margin-top: 20px;
 }
 
+/* Navigation and menu styling for .af-menu-actions. */
 .af-menu-actions {
     display: grid;
     gap: 10px;
 }
 
+/* Navigation and menu styling for .af-menu-actions i. */
 .af-menu-actions i {
     width: 25px;
     height: 25px;
@@ -456,10 +525,14 @@
     place-items: center;
 }
 
+/* Navigation and menu styling for .af-menu-actions .green. */
 .af-menu-actions .green { background: #159447; }
+/* Navigation and menu styling for .af-menu-actions .gold. */
 .af-menu-actions .gold { background: var(--af-gold); }
+/* Navigation and menu styling for .af-menu-actions .blue. */
 .af-menu-actions .blue { background: #2f78d4; }
 
+/* Navigation and menu styling for .af-menu-donut. */
 .af-menu-donut {
     width: 150px;
     aspect-ratio: 1;
@@ -471,6 +544,7 @@
     position: relative;
 }
 
+/* Navigation and menu styling for .af-menu-donut::after. */
 .af-menu-donut::after {
     content: "";
     position: absolute;
@@ -480,28 +554,33 @@
 }
 
 .af-menu-donut strong,
+/* Navigation and menu styling for .af-menu-donut strong, .af-menu-donut span. */
 .af-menu-donut span {
     position: relative;
     z-index: 1;
     text-align: center;
 }
 
+/* Navigation and menu styling for .af-menu-donut strong. */
 .af-menu-donut strong {
     font-size: 28px;
     line-height: 1;
     align-self: end;
 }
 
+/* Navigation and menu styling for .af-menu-donut span. */
 .af-menu-donut span {
     color: #667085;
     font-size: 12px;
     align-self: start;
 }
 
+/* Styling rules for .af-overview-list. */
 .af-overview-list {
     gap: 9px;
 }
 
+/* Styling rules for .af-overview-list li. */
 .af-overview-list li {
     display: grid;
     grid-template-columns: 9px 1fr auto;
@@ -511,47 +590,64 @@
     font-size: 11px;
 }
 
+/* Styling rules for .af-overview-list i. */
 .af-overview-list i {
     width: 8px;
     height: 8px;
     border-radius: 50%;
 }
 
+/* Styling rules for .af-overview-list span. */
 .af-overview-list span {
     color: #667085;
 }
 
+/* Styling rules for .af-overview-list .main. */
 .af-overview-list .main { background: #159447; }
+/* Styling rules for .af-overview-list .local. */
 .af-overview-list .local { background: #f59e0b; }
+/* Styling rules for .af-overview-list .grills. */
 .af-overview-list .grills { background: #ef4444; }
+/* Styling rules for .af-overview-list .starters. */
 .af-overview-list .starters { background: #9254de; }
+/* Styling rules for .af-overview-list .salads. */
 .af-overview-list .salads { background: #7dbb4a; }
+/* Styling rules for .af-overview-list .drinks. */
 .af-overview-list .drinks { background: #2f78d4; }
+/* Styling rules for .af-overview-list .soups. */
 .af-overview-list .soups { background: #f97316; }
+/* Styling rules for .af-overview-list .desserts. */
 .af-overview-list .desserts { background: #dc2626; }
 
+/* Responsive styling rules for @media (max-width: 1280px). */
 @media (max-width: 1280px) {
+    /* Navigation and menu styling for .af-menu-metrics. */
     .af-menu-metrics {
         grid-template-columns: repeat(2, minmax(0, 1fr));
     }
 
+    /* Navigation and menu styling for .af-menu-workspace. */
     .af-menu-workspace {
         grid-template-columns: 1fr;
     }
 }
 
+/* Responsive styling rules for @media (max-width: 760px). */
 @media (max-width: 760px) {
     .af-admin-page-heading,
+    /* Navigation and menu styling for .af-admin-page-heading, .af-menu-pagination. */
     .af-menu-pagination {
         flex-direction: column;
         align-items: stretch;
     }
 
+    /* Button and action control styling for .af-add-menu-btn. */
     .af-add-menu-btn {
         justify-content: center;
     }
 
     .af-menu-metrics,
+    /* Navigation and menu styling for .af-menu-metrics, .af-menu-filters. */
     .af-menu-filters {
         grid-template-columns: 1fr;
     }

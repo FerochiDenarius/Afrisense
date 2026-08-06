@@ -1,9 +1,11 @@
+/* Styling rules for *. */
 * {
     margin: 0;
     padding: 0;
     box-sizing: border-box;
 }
 
+/* Global design tokens and CSS custom properties. */
 :root {
     --primary-gold: #b77b1a;
     --secondary-gold: #cc8f25;
@@ -15,6 +17,7 @@
     --surface: #fff;
 }
 
+/* Styling rules for body. */
 body {
     min-height: 100vh;
     background: #fff;
@@ -23,10 +26,12 @@ body {
     overflow-x: hidden;
 }
 
+/* Styling rules for a. */
 a {
     color: inherit;
 }
 
+/* Styling rules for .visually-hidden. */
 .visually-hidden {
     position: absolute;
     width: 1px;
@@ -39,6 +44,7 @@ a {
     border: 0;
 }
 
+/* Header layout and controls for .header. */
 .header {
     min-height: 84px;
     background: var(--primary-green);
@@ -50,6 +56,7 @@ a {
 }
 
 .logo,
+/* Footer styling for .logo, .footer-logo. */
 .footer-logo {
     color: #fff;
     display: inline-flex;
@@ -59,6 +66,7 @@ a {
     flex-shrink: 0;
 }
 
+/* Styling rules for .logo-icon. */
 .logo-icon {
     color: var(--secondary-gold);
     font-size: 42px;
@@ -68,11 +76,13 @@ a {
 .logo strong,
 .logo small,
 .footer-logo strong,
+/* Footer styling for .logo strong, .logo small, .footer-logo strong, .footer-logo small. */
 .footer-logo small {
     display: block;
 }
 
 .logo strong,
+/* Footer styling for .logo strong, .footer-logo strong. */
 .footer-logo strong {
     color: #fff;
     font-size: 31px;
@@ -80,11 +90,13 @@ a {
 }
 
 .logo strong::first-letter,
+/* Footer styling for .logo strong::first-letter, .footer-logo strong::first-letter. */
 .footer-logo strong::first-letter {
     color: var(--secondary-gold);
 }
 
 .logo small,
+/* Footer styling for .logo small, .footer-logo small. */
 .footer-logo small {
     color: rgba(255, 255, 255, 0.86);
     font-size: 10px;
@@ -94,6 +106,7 @@ a {
     text-transform: uppercase;
 }
 
+/* Navigation and menu styling for .main-nav ul. */
 .main-nav ul {
     display: flex;
     align-items: center;
@@ -101,6 +114,7 @@ a {
     gap: 31px;
 }
 
+/* Navigation and menu styling for .main-nav a. */
 .main-nav a {
     color: #fff;
     cursor: pointer;
@@ -111,10 +125,12 @@ a {
 }
 
 .main-nav a:hover,
+/* Navigation and menu styling for .main-nav a:hover, .main-nav a:focus-visible. */
 .main-nav a:focus-visible {
     color: var(--secondary-gold);
 }
 
+/* Header layout and controls for .header-actions. */
 .header-actions {
     display: flex;
     align-items: center;
@@ -123,6 +139,7 @@ a {
     flex-shrink: 0;
 }
 
+/* Styling rules for .phone-link. */
 .phone-link {
     color: #fff;
     display: inline-flex;
@@ -133,6 +150,7 @@ a {
     text-decoration: none;
 }
 
+/* Styling rules for .phone-link span. */
 .phone-link span {
     width: 36px;
     height: 36px;
@@ -145,6 +163,7 @@ a {
 }
 
 .header-actions button,
+/* Header layout and controls for .header-actions button, .order-button-link. */
 .order-button-link {
     min-width: 128px;
     height: 44px;
@@ -165,11 +184,13 @@ a {
 .header-actions button:hover,
 .header-actions button:focus-visible,
 .order-button-link:hover,
+/* Header layout and controls for .header-actions button:hover, .header-actions button:focus-visible, .order-button-link:hover, .order-button-link:focus-visible. */
 .order-button-link:focus-visible {
     background: var(--primary-gold);
     transform: translateY(-1px);
 }
 
+/* Styling rules for .auth-message. */
 .auth-message {
     border-radius: 8px;
     font-size: 14px;
@@ -179,18 +200,21 @@ a {
     padding: 12px 14px;
 }
 
+/* Styling rules for .auth-message.error. */
 .auth-message.error {
     background: #fff1f1;
     border: 1px solid #ffd3d3;
     color: #b42318;
 }
 
+/* Styling rules for .auth-message.success. */
 .auth-message.success {
     background: #edfdf3;
     border: 1px solid #b7efc5;
     color: #087443;
 }
 
+/* Styling rules for .registration-container. */
 .registration-container {
     min-height: 884px;
     display: grid;
@@ -198,6 +222,7 @@ a {
     background: #fff;
 }
 
+/* Styling rules for .left. */
 .left {
     position: relative;
     min-height: 884px;
@@ -206,6 +231,7 @@ a {
     isolation: isolate;
 }
 
+/* Styling rules for .left::before. */
 .left::before {
     content: "";
     position: absolute;
@@ -216,6 +242,7 @@ a {
     z-index: -3;
 }
 
+/* Styling rules for .left::after. */
 .left::after {
     content: "";
     position: absolute;
@@ -229,12 +256,14 @@ a {
     z-index: -1;
 }
 
+/* Hero section styling for .hero-content. */
 .hero-content {
     max-width: 430px;
     position: relative;
     z-index: 2;
 }
 
+/* Styling rules for .welcome-Note. */
 .welcome-Note {
     color: var(--primary-gold);
     display: flex;
@@ -247,6 +276,7 @@ a {
     text-transform: uppercase;
 }
 
+/* Styling rules for .welcome-Note::before. */
 .welcome-Note::before {
     content: "";
     width: 22px;
@@ -255,6 +285,7 @@ a {
     display: inline-block;
 }
 
+/* Styling rules for .Page-Title. */
 .Page-Title {
     color: #0b1220;
     font-family: Georgia, "Times New Roman", serif;
@@ -264,11 +295,13 @@ a {
     text-transform: none;
 }
 
+/* Styling rules for .Page-Title span. */
 .Page-Title span {
     color: var(--secondary-gold);
     display: block;
 }
 
+/* Styling rules for .description. */
 .description {
     color: #4f5561;
     font-size: 16px;
@@ -278,6 +311,7 @@ a {
     max-width: 420px;
 }
 
+/* Styling rules for .features. */
 .features {
     display: flex;
     flex-direction: column;
@@ -288,6 +322,7 @@ a {
     z-index: 2;
 }
 
+/* Styling rules for .feature. */
 .feature {
     display: flex;
     align-items: center;
@@ -295,6 +330,7 @@ a {
     min-width: 0;
 }
 
+/* Styling rules for .feature-icon. */
 .feature-icon {
     width: 58px;
     height: 58px;
@@ -307,17 +343,20 @@ a {
     flex-shrink: 0;
 }
 
+/* Styling rules for .feature-icon i. */
 .feature-icon i {
     color: var(--secondary-gold);
     font-size: 27px;
 }
 
+/* Styling rules for .feature-content. */
 .feature-content {
     display: flex;
     flex-direction: column;
     min-width: 0;
 }
 
+/* Styling rules for .feature-content h3. */
 .feature-content h3 {
     color: var(--text-dark);
     font-size: 16px;
@@ -326,6 +365,7 @@ a {
     margin-bottom: 6px;
 }
 
+/* Styling rules for .feature-content p. */
 .feature-content p {
     color: #4f5561;
     font-size: 13px;
@@ -334,6 +374,7 @@ a {
     max-width: 330px;
 }
 
+/* Hero section styling for .hero-food-plate. */
 .hero-food-plate {
     position: absolute;
     left: -52px;
@@ -345,6 +386,7 @@ a {
     z-index: 1;
 }
 
+/* Hero section styling for .hero-food-plate::after. */
 .hero-food-plate::after {
     content: "";
     position: absolute;
@@ -352,6 +394,7 @@ a {
     background: linear-gradient(0deg, rgba(255, 255, 255, 0), rgba(255, 255, 255, 0.26) 86%, rgba(255, 255, 255, 0.78));
 }
 
+/* Hero section styling for .hero-food-plate img. */
 .hero-food-plate img {
     width: 100%;
     height: 100%;
@@ -360,6 +403,7 @@ a {
     object-position: 40% 74%;
 }
 
+/* Styling rules for .right. */
 .right {
     min-height: 884px;
     display: flex;
@@ -368,6 +412,7 @@ a {
     padding: 46px 70px 46px 42px;
 }
 
+/* Card and panel styling for .register-card. */
 .register-card {
     width: min(640px, 100%);
     min-width: 0;
@@ -377,11 +422,13 @@ a {
     box-shadow: 0 14px 42px rgba(0, 0, 0, 0.11);
 }
 
+/* Header layout and controls for .register-header. */
 .register-header {
     text-align: center;
     margin-bottom: 24px;
 }
 
+/* Styling rules for .register-icon. */
 .register-icon {
     width: 58px;
     height: 58px;
@@ -395,10 +442,12 @@ a {
     margin-bottom: 14px;
 }
 
+/* Styling rules for .register-icon i. */
 .register-icon i {
     font-size: 31px;
 }
 
+/* Header layout and controls for .register-header h2. */
 .register-header h2 {
     color: #111;
     font-family: Georgia, "Times New Roman", serif;
@@ -407,6 +456,7 @@ a {
     text-transform: none;
 }
 
+/* Header layout and controls for .register-header p. */
 .register-header p {
     color: var(--text-muted);
     font-size: 14px;
@@ -415,6 +465,7 @@ a {
     max-width: 380px;
 }
 
+/* Styling rules for .gold-divider. */
 .gold-divider {
     display: block;
     width: 48px;
@@ -424,12 +475,14 @@ a {
     margin: 13px auto 0;
 }
 
+/* Form control styling for .register-form. */
 .register-form {
     display: flex;
     flex-direction: column;
     gap: 17px;
 }
 
+/* Form control styling for .account-selection. */
 .account-selection {
     display: grid;
     grid-template-columns: 1fr 1fr;
@@ -440,6 +493,7 @@ a {
     min-width: 0;
 }
 
+/* Form control styling for .account-selection legend. */
 .account-selection legend {
     position: absolute;
     width: 1px;
@@ -452,6 +506,7 @@ a {
     border: 0;
 }
 
+/* Form control styling for .selection-card. */
 .selection-card {
     min-height: 68px;
     border: 1px solid var(--border);
@@ -467,6 +522,7 @@ a {
     transition: border-color 0.2s ease, box-shadow 0.2s ease, background 0.2s ease;
 }
 
+/* Form control styling for .selection-card input. */
 .selection-card input {
     position: absolute;
     opacity: 0;
@@ -474,12 +530,14 @@ a {
 }
 
 .selection-card.active,
+/* Form control styling for .selection-card.active, .selection-card:has(input:checked). */
 .selection-card:has(input:checked) {
     border-color: var(--primary-gold);
     background: rgba(183, 123, 26, 0.05);
     box-shadow: 0 8px 18px rgba(183, 123, 26, 0.1);
 }
 
+/* Form control styling for .selection-icon. */
 .selection-icon {
     color: var(--primary-green);
     display: inline-flex;
@@ -488,21 +546,25 @@ a {
     flex-shrink: 0;
 }
 
+/* Form control styling for .selection-icon i. */
 .selection-icon i {
     font-size: 18px;
 }
 
 .selection-card strong,
+/* Form control styling for .selection-card strong, .selection-card small. */
 .selection-card small {
     display: block;
 }
 
+/* Form control styling for .selection-card strong. */
 .selection-card strong {
     color: var(--text-dark);
     font-size: 14px;
     line-height: 1.25;
 }
 
+/* Form control styling for .selection-card small. */
 .selection-card small {
     color: var(--text-muted);
     font-size: 12px;
@@ -511,6 +573,7 @@ a {
     margin-top: 4px;
 }
 
+/* Form control styling for .form-row. */
 .form-row {
     display: grid;
     grid-template-columns: 1fr 1fr;
@@ -518,12 +581,14 @@ a {
     min-width: 0;
 }
 
+/* Form control styling for .form-group. */
 .form-group {
     display: flex;
     flex-direction: column;
     min-width: 0;
 }
 
+/* Form control styling for .form-group label. */
 .form-group label {
     color: var(--text-dark);
     font-size: 13px;
@@ -533,6 +598,7 @@ a {
 }
 
 .form-group input,
+/* Form control styling for .form-group input, .form-group select. */
 .form-group select {
     width: 100%;
     height: 43px;
@@ -547,28 +613,34 @@ a {
     transition: border-color 0.2s ease, box-shadow 0.2s ease;
 }
 
+/* Form control styling for .form-group select. */
 .form-group select {
     cursor: pointer;
 }
 
 .form-group input:focus,
+/* Form control styling for .form-group input:focus, .form-group select:focus. */
 .form-group select:focus {
     border-color: var(--primary-gold);
     box-shadow: 0 0 0 3px rgba(183, 123, 26, 0.12);
 }
 
+/* Styling rules for .full-width. */
 .full-width {
     grid-column: 1 / 3;
 }
 
+/* Styling rules for .password-field. */
 .password-field {
     position: relative;
 }
 
+/* Form control styling for .password-field input. */
 .password-field input {
     padding-right: 45px;
 }
 
+/* Styling rules for .password-toggle. */
 .password-toggle {
     position: absolute;
     right: 6px;
@@ -588,11 +660,13 @@ a {
 }
 
 .password-toggle:hover,
+/* Interactive state styling for .password-toggle:hover, .password-toggle:focus-visible. */
 .password-toggle:focus-visible {
     background: rgba(183, 123, 26, 0.12);
     color: var(--primary-gold);
 }
 
+/* Styling rules for .terms. */
 .terms {
     display: flex;
     align-items: center;
@@ -603,6 +677,7 @@ a {
     line-height: 1.5;
 }
 
+/* Form control styling for .terms input. */
 .terms input {
     width: 17px;
     height: 17px;
@@ -611,6 +686,7 @@ a {
 }
 
 .terms a,
+/* Styling rules for .terms a, .login-link a. */
 .login-link a {
     color: var(--primary-gold);
     font-weight: 800;
@@ -620,10 +696,12 @@ a {
 .terms a:hover,
 .terms a:focus-visible,
 .login-link a:hover,
+/* Interactive state styling for .terms a:hover, .terms a:focus-visible, .login-link a:hover, .login-link a:focus-visible. */
 .login-link a:focus-visible {
     text-decoration: underline;
 }
 
+/* Button and action control styling for .submit-section button. */
 .submit-section button {
     width: 100%;
     height: 50px;
@@ -641,22 +719,26 @@ a {
     transition: background 0.2s ease, transform 0.2s ease;
 }
 
+/* Button and action control styling for .submit-section button i. */
 .submit-section button i {
     color: var(--secondary-gold);
     font-size: 20px;
 }
 
 .submit-section button:hover,
+/* Button and action control styling for .submit-section button:hover, .submit-section button:focus-visible. */
 .submit-section button:focus-visible {
     background: var(--primary-gold);
     transform: translateY(-1px);
 }
 
 .submit-section button:hover i,
+/* Button and action control styling for .submit-section button:hover i, .submit-section button:focus-visible i. */
 .submit-section button:focus-visible i {
     color: #fff;
 }
 
+/* Styling rules for .login-link. */
 .login-link {
     color: var(--text-muted);
     font-size: 13px;
@@ -664,12 +746,14 @@ a {
     text-align: center;
 }
 
+/* Footer styling for .site-footer. */
 .site-footer {
     background: var(--primary-green);
     color: #fff;
     padding: 38px 46px 22px;
 }
 
+/* Footer styling for .footer-content. */
 .footer-content {
     max-width: 1220px;
     margin: 0 auto;
@@ -679,6 +763,7 @@ a {
 }
 
 .footer-brand p,
+/* Footer styling for .footer-brand p, .newsletter p. */
 .newsletter p {
     color: rgba(255, 255, 255, 0.82);
     font-size: 14px;
@@ -687,12 +772,14 @@ a {
     margin-top: 18px;
 }
 
+/* Styling rules for .social-links. */
 .social-links {
     display: flex;
     gap: 13px;
     margin-top: 20px;
 }
 
+/* Styling rules for .social-links a. */
 .social-links a {
     width: 32px;
     height: 32px;
@@ -705,6 +792,7 @@ a {
     text-decoration: none;
 }
 
+/* Footer styling for .footer-column h2. */
 .footer-column h2 {
     color: #fff;
     font-family: Georgia, "Times New Roman", serif;
@@ -713,6 +801,7 @@ a {
     margin-bottom: 18px;
 }
 
+/* Footer styling for .footer-column ul. */
 .footer-column ul {
     list-style: none;
     display: flex;
@@ -721,6 +810,7 @@ a {
 }
 
 .footer-column a,
+/* Footer styling for .footer-column a, .footer-column span. */
 .footer-column span {
     color: rgba(255, 255, 255, 0.84);
     font-size: 14px;
@@ -729,10 +819,12 @@ a {
 }
 
 .footer-column a:hover,
+/* Footer styling for .footer-column a:hover, .footer-column a:focus-visible. */
 .footer-column a:focus-visible {
     color: var(--secondary-gold);
 }
 
+/* Footer styling for .footer-contact li. */
 .footer-contact li {
     display: grid;
     grid-template-columns: 20px 1fr;
@@ -740,11 +832,13 @@ a {
     align-items: start;
 }
 
+/* Footer styling for .footer-contact i. */
 .footer-contact i {
     color: var(--secondary-gold);
     font-size: 16px;
 }
 
+/* Form control styling for .newsletter form. */
 .newsletter form {
     display: grid;
     grid-template-columns: 1fr 54px;
@@ -754,6 +848,7 @@ a {
     overflow: hidden;
 }
 
+/* Form control styling for .newsletter input. */
 .newsletter input {
     min-width: 0;
     height: 46px;
@@ -766,10 +861,12 @@ a {
     padding: 0 15px;
 }
 
+/* Form control styling for .newsletter input::placeholder. */
 .newsletter input::placeholder {
     color: rgba(255, 255, 255, 0.68);
 }
 
+/* Button and action control styling for .newsletter button. */
 .newsletter button {
     border: 0;
     background: var(--secondary-gold);
@@ -778,6 +875,7 @@ a {
     font-size: 18px;
 }
 
+/* Footer styling for .footer-bottom. */
 .footer-bottom {
     max-width: 1220px;
     margin: 32px auto 0;
@@ -790,6 +888,7 @@ a {
 }
 
 .footer-bottom p,
+/* Footer styling for .footer-bottom p, .footer-bottom a. */
 .footer-bottom a {
     color: rgba(255, 255, 255, 0.9);
     font-size: 13px;
@@ -797,16 +896,19 @@ a {
     text-decoration: none;
 }
 
+/* Navigation and menu styling for .footer-bottom nav. */
 .footer-bottom nav {
     display: flex;
     align-items: center;
     gap: 22px;
 }
 
+/* Footer styling for .footer-bottom a + a. */
 .footer-bottom a + a {
     position: relative;
 }
 
+/* Footer styling for .footer-bottom a + a::before. */
 .footer-bottom a + a::before {
     content: "";
     position: absolute;
@@ -818,81 +920,101 @@ a {
     transform: translateY(-50%);
 }
 
+/* Responsive styling rules for @media (max-width: 1180px). */
 @media (max-width: 1180px) {
+    /* Header layout and controls for .header. */
     .header {
         padding: 16px 28px;
     }
 
+    /* Navigation and menu styling for .main-nav ul. */
     .main-nav ul {
         gap: 18px;
     }
 
+    /* Styling rules for .registration-container. */
     .registration-container {
         grid-template-columns: 46% 54%;
     }
 
+    /* Styling rules for .right. */
     .right {
         padding: 42px 36px;
     }
 
+    /* Card and panel styling for .register-card. */
     .register-card {
         padding: 30px;
     }
 
+    /* Footer styling for .footer-content. */
     .footer-content {
         grid-template-columns: repeat(3, 1fr);
     }
 }
 
+/* Responsive styling rules for @media (max-width: 980px). */
 @media (max-width: 980px) {
+    /* Header layout and controls for .header. */
     .header {
         flex-wrap: wrap;
     }
 
+    /* Navigation and menu styling for .main-nav. */
     .main-nav {
         order: 3;
         width: 100%;
     }
 
+    /* Navigation and menu styling for .main-nav ul. */
     .main-nav ul {
         justify-content: center;
         flex-wrap: wrap;
     }
 
+    /* Styling rules for .registration-container. */
     .registration-container {
         grid-template-columns: 1fr;
     }
 
+    /* Styling rules for .left. */
     .left {
         min-height: 620px;
         padding: 56px 34px 260px;
     }
 
+    /* Styling rules for .left::after. */
     .left::after {
         display: none;
     }
 
+/* Styling rules for .right. */
 .right {
         min-height: auto;
         padding: 48px 28px 58px;
         overflow: hidden;
     }
 
+    /* Styling rules for .features. */
     .features {
         max-width: 640px;
     }
 
+    /* Hero section styling for .hero-food-plate. */
     .hero-food-plate {
         height: 260px;
         width: 640px;
     }
 
+    /* Footer styling for .footer-content. */
     .footer-content {
         grid-template-columns: repeat(2, 1fr);
     }
 }
 
+/* Responsive styling rules for @media (max-width: 720px). */
 @media (max-width: 720px) {
+    /* Header layout and controls for .header. */
     .header {
         display: grid;
         grid-template-columns: minmax(0, 1fr);
@@ -900,10 +1022,12 @@ a {
         gap: 18px;
     }
 
+    /* Styling rules for .logo strong. */
     .logo strong {
         font-size: 30px;
     }
 
+    /* Header layout and controls for .header-actions. */
     .header-actions {
         width: 100%;
         flex-wrap: wrap;
@@ -912,14 +1036,17 @@ a {
 
     .phone-link,
     .header-actions button,
+    /* Header layout and controls for .phone-link, .header-actions button, .order-button-link. */
     .order-button-link {
         width: 100%;
     }
 
+    /* Navigation and menu styling for .main-nav. */
     .main-nav {
         order: 0;
     }
 
+    /* Navigation and menu styling for .main-nav ul. */
     .main-nav ul {
         display: grid;
         grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
@@ -928,93 +1055,114 @@ a {
     }
 
     .main-nav a,
+    /* Navigation and menu styling for .main-nav a, .phone-link. */
     .phone-link {
         font-size: 14px;
     }
 
+    /* Styling rules for .left. */
     .left {
         padding: 42px 22px 230px;
     }
 
+    /* Styling rules for .Page-Title. */
     .Page-Title {
         font-size: 36px;
     }
 
+    /* Styling rules for .description. */
     .description {
         max-width: 330px;
     }
 
+    /* Styling rules for .feature-content p. */
     .feature-content p {
         max-width: 250px;
     }
 
+    /* Hero section styling for .hero-food-plate. */
     .hero-food-plate {
         left: -70px;
         width: 560px;
         height: 230px;
     }
 
+    /* Styling rules for .right. */
     .right {
         padding: 34px 14px 44px;
     }
 
+    /* Card and panel styling for .register-card. */
     .register-card {
         border-radius: 14px;
         padding: 26px 18px;
         overflow: hidden;
     }
 
+    /* Header layout and controls for .register-header h2. */
     .register-header h2 {
         font-size: 24px;
         overflow-wrap: anywhere;
     }
 
+    /* Header layout and controls for .register-header p. */
     .register-header p {
         max-width: 280px;
     }
 
     .account-selection,
+    /* Form control styling for .account-selection, .form-row. */
     .form-row {
         grid-template-columns: 1fr;
     }
 
+    /* Styling rules for .full-width. */
     .full-width {
         grid-column: auto;
     }
 
+    /* Styling rules for .terms. */
     .terms {
         align-items: flex-start;
     }
 
+    /* Footer styling for .footer-content. */
     .footer-content {
         grid-template-columns: 1fr;
         gap: 28px;
     }
 
+    /* Footer styling for .site-footer. */
     .site-footer {
         padding: 34px 22px 20px;
     }
 
+    /* Footer styling for .footer-bottom. */
     .footer-bottom {
         align-items: flex-start;
         flex-direction: column;
     }
 }
 
+/* Responsive styling rules for @media (max-width: 440px). */
 @media (max-width: 440px) {
+    /* Styling rules for .Page-Title. */
     .Page-Title {
         font-size: 32px;
     }
 
+    /* Styling rules for .feature-icon. */
     .feature-icon {
         width: 54px;
         height: 54px;
     }
 
+    /* Header layout and controls for .register-header h2. */
     .register-header h2 {
         font-size: 22px;
     }
 
+    /* Form control styling for .selection-card. */
     .selection-card {
         justify-content: flex-start;
         text-align: left;

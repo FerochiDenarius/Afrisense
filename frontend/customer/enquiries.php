@@ -15,6 +15,7 @@ require_once __DIR__ . '/../auth/auth_bootstrap.php';
 
 $authUser = afrisense_require_customer();
 
+// Defines the afrisense_customer_enquiry_customer helper used by this module.
 function afrisense_customer_enquiry_customer(PDO $pdo, array $user): ?array
 {
     $email = trim((string) ($user['email'] ?? ''));
@@ -32,10 +33,12 @@ function afrisense_customer_enquiry_customer(PDO $pdo, array $user): ?array
     return $customer ?: null;
 }
 
+// Defines the afrisense_customer_enquiry_customer_id helper used by this module.
 function afrisense_customer_enquiry_customer_id(PDO $pdo, array $user): int
 {
     $customer = afrisense_customer_enquiry_customer($pdo, $user);
 
+    // Guard this block so it only runs when the required condition is met.
     if ($customer !== null) {
         return (int) $customer['id'];
     }
@@ -54,6 +57,7 @@ function afrisense_customer_enquiry_customer_id(PDO $pdo, array $user): int
     return (int) $pdo->lastInsertId();
 }
 
+// Defines the afrisense_customer_enquiry_status_class helper used by this module.
 function afrisense_customer_enquiry_status_class(string $status): string
 {
     return match (strtolower($status)) {
@@ -64,6 +68,7 @@ function afrisense_customer_enquiry_status_class(string $status): string
     };
 }
 
+// Defines the afrisense_customer_enquiry_status_label helper used by this module.
 function afrisense_customer_enquiry_status_label(string $status): string
 {
     return match ($status) {
@@ -73,10 +78,12 @@ function afrisense_customer_enquiry_status_label(string $status): string
     };
 }
 
+// Defines the afrisense_customer_enquiry_excerpt helper used by this module.
 function afrisense_customer_enquiry_excerpt(string $value, int $limit = 86): string
 {
     $value = trim(preg_replace('/\s+/', ' ', $value) ?? '');
 
+    // Guard this block so it only runs when the required condition is met.
     if (strlen($value) <= $limit) {
         return $value;
     }
@@ -108,7 +115,9 @@ function afrisense_customer_enquiry_url(array $filters, array $overrides = [], s
 {
     $params = $filters;
 
+    // Iterate through the data needed for this block.
     foreach ($overrides as $key => $value) {
+        // Guard this block so it only runs when the required condition is met.
         if ($value === null || $value === '') {
             unset($params[$key]);
             continue;
@@ -123,6 +132,7 @@ function afrisense_customer_enquiry_url(array $filters, array $overrides = [], s
     return 'enquiries.php' . ($query !== '' ? '?' . $query : '') . $anchor;
 }
 
+// Defines the afrisense_customer_notify_admins helper used by this module.
 function afrisense_customer_notify_admins(PDO $pdo, int $enquiryId, string $customerName, string $subject): void
 {
     $adminStatement = $pdo->prepare(
@@ -135,6 +145,7 @@ function afrisense_customer_notify_admins(PDO $pdo, int $enquiryId, string $cust
     $adminStatement->execute();
     $adminIds = array_map('intval', $adminStatement->fetchAll(PDO::FETCH_COLUMN));
 
+    // Guard this block so it only runs when the required condition is met.
     if ($adminIds === []) {
         return;
     }
@@ -147,6 +158,7 @@ function afrisense_customer_notify_admins(PDO $pdo, int $enquiryId, string $cust
     );
     $actionUrl = '/Afrisense/frontend/admin/enquiries.php?view=' . $enquiryId . '#enquiry-row-' . $enquiryId;
 
+    // Iterate through the data needed for this block.
     foreach ($adminIds as $adminId) {
         $notification->execute([
             'user_id' => $adminId,
@@ -167,11 +179,13 @@ function afrisense_customer_enquiry_where(array $filters, int $customerId): arra
     $where = ['`customer_id` = :customer_id'];
     $params = ['customer_id' => $customerId];
 
+    // Guard this block so it only runs when the required condition is met.
     if (in_array($filters['status'], ['Pending', 'Read', 'Replied', 'Closed'], true)) {
         $where[] = '`status` = :status';
         $params['status'] = $filters['status'];
     }
 
+    // Guard this block so it only runs when the required condition is met.
     if ($filters['search'] !== '') {
         $where[] = '(`subject` LIKE :search OR `message` LIKE :search OR `admin_response` LIKE :search OR CAST(`id` AS CHAR) LIKE :search)';
         $params['search'] = '%' . $filters['search'] . '%';
@@ -189,14 +203,17 @@ $loadError = '';
 $flashMessage = '';
 $flashType = 'success';
 
+// Run database/action work inside a guarded block so the page can fail gracefully.
 try {
     $pdo = afrisense_pdo();
     $customerId = afrisense_customer_enquiry_customer_id($pdo, $authUser);
 
+    // Handle submitted form actions before rendering the page.
     if (($_SERVER['REQUEST_METHOD'] ?? 'GET') === 'POST') {
         $subject = trim((string) ($_POST['subject'] ?? ''));
         $message = trim((string) ($_POST['message'] ?? ''));
 
+        // Guard this block so it only runs when the required condition is met.
         if ($subject === '' || strlen($message) < 10) {
             afrisense_flash_set('error', 'Choose a subject and enter a message with at least 10 characters.');
             header('Location: enquiries.php#new_enquiry');
@@ -232,6 +249,7 @@ try {
     $flashMessage = (string) ($flash['message'] ?? '');
     $flashType = (string) ($flash['type'] ?? 'success');
 
+    // Iterate through the data needed for this block.
     foreach (['Pending', 'Read', 'Replied', 'Closed'] as $status) {
         $countStatement = $pdo->prepare('SELECT COUNT(*) AS count_value FROM `enquiries` WHERE `customer_id` = :customer_id AND `status` = :status');
         $countStatement->execute(['customer_id' => $customerId, 'status' => $status]);
@@ -250,6 +268,7 @@ try {
     $statement->execute($params);
     $enquiries = $statement->fetchAll(PDO::FETCH_ASSOC);
 
+    // Guard this block so it only runs when the required condition is met.
     if ($viewEnquiryId > 0) {
         $selectedStatement = $pdo->prepare(
             'SELECT `id`, `subject`, `message`, `status`, `admin_response`, `created_at`, `updated_at`
@@ -261,6 +280,7 @@ try {
         $selectedEnquiry = $selectedStatement->fetch(PDO::FETCH_ASSOC) ?: null;
     }
 } catch (Throwable $exception) {
+    // Guard this block so it only runs when the required condition is met.
     if (isset($pdo) && $pdo->inTransaction()) {
         $pdo->rollBack();
     }
@@ -272,7 +292,9 @@ $selectedEnquiryId = (int) ($selectedEnquiry['id'] ?? 0);
 
 ob_start();
 ?>
+<!-- Page section for this part of the AfriSense interface. -->
 <section class="af-admin-menu-page af-enquiries-management-page af-customer-enquiries-page">
+    <!-- Header block for this interface section. -->
     <header class="af-admin-page-heading af-enquiries-heading">
         <div>
             <h1>My Enquiries</h1>
@@ -281,13 +303,16 @@ ob_start();
         <a class="af-add-menu-btn" href="#new_enquiry"><i class="bi bi-send" aria-hidden="true"></i> New Enquiry</a>
     </header>
 
+    <?php // Render this conditional/dynamic template block. ?>
     <?php if ($loadError !== ''): ?>
         <div class="af-admin-alert error"><?php echo htmlspecialchars($loadError, ENT_QUOTES, 'UTF-8'); ?></div>
     <?php endif; ?>
+    <?php // Render this conditional/dynamic template block. ?>
     <?php if ($flashMessage !== ''): ?>
         <div class="af-admin-alert <?php echo htmlspecialchars($flashType, ENT_QUOTES, 'UTF-8'); ?>"><?php echo htmlspecialchars($flashMessage, ENT_QUOTES, 'UTF-8'); ?></div>
     <?php endif; ?>
 
+    <!-- Page section for this part of the AfriSense interface. -->
     <section class="af-menu-metrics" aria-label="Enquiry summary">
         <article class="gold"><span><i class="bi bi-chat-square-text" aria-hidden="true"></i></span><div><small>Total</small><strong><?php echo htmlspecialchars((string) $counts['all'], ENT_QUOTES, 'UTF-8'); ?></strong><p>All enquiries</p></div></article>
         <article class="purple"><span><i class="bi bi-hourglass-split" aria-hidden="true"></i></span><div><small>Unread</small><strong><?php echo htmlspecialchars((string) $counts['Pending'], ENT_QUOTES, 'UTF-8'); ?></strong><p>Awaiting review</p></div></article>
@@ -295,7 +320,9 @@ ob_start();
         <article class="green"><span><i class="bi bi-reply" aria-hidden="true"></i></span><div><small>Replied</small><strong><?php echo htmlspecialchars((string) $counts['Replied'], ENT_QUOTES, 'UTF-8'); ?></strong><p>Answered</p></div></article>
     </section>
 
+    <!-- Page section for this part of the AfriSense interface. -->
     <section class="af-menu-table-card af-enquiries-filter-card">
+        <!-- Form block that submits this page workflow. -->
         <form class="af-customer-enquiry-filters" action="enquiries.php" method="get">
             <label class="af-enquiry-input-icon">
                 <i class="bi bi-search" aria-hidden="true"></i>
@@ -313,9 +340,12 @@ ob_start();
         </form>
     </section>
 
+    <!-- Page section for this part of the AfriSense interface. -->
     <section class="af-customer-enquiry-layout">
+        <!-- Page section for this part of the AfriSense interface. -->
         <section class="af-menu-table-card af-enquiries-table-card">
             <div class="af-menu-table af-enquiries-table">
+                <!-- Table block for displaying structured records. -->
                 <table>
                     <thead>
                         <tr>
@@ -328,10 +358,12 @@ ob_start();
                         </tr>
                     </thead>
                     <tbody>
+                        <?php // Render this conditional/dynamic template block. ?>
                         <?php if ($enquiries === []): ?>
                             <tr><td colspan="6"><div class="af-empty-state">No enquiries found.</div></td></tr>
                         <?php endif; ?>
 
+                        <?php // Render this conditional/dynamic template block. ?>
                         <?php foreach ($enquiries as $enquiry): ?>
                             <?php
                             $enquiryId = (int) ($enquiry['id'] ?? 0);
@@ -362,10 +394,13 @@ ob_start();
                                 </td>
                             </tr>
 
+                            <?php // Render this conditional/dynamic template block. ?>
                             <?php if ($detailEnquiry !== null): ?>
                                 <tr class="af-enquiry-detail-row">
                                     <td colspan="6">
+                                        <!-- Page section for this part of the AfriSense interface. -->
                                         <section class="af-enquiry-detail-card">
+                                            <!-- Header block for this interface section. -->
                                             <header>
                                                 <div>
                                                     <small>Enquiry Details</small>
@@ -400,8 +435,10 @@ ob_start();
             </div>
         </section>
 
+        <!-- Side panel with supporting information and actions. -->
         <aside class="af-menu-panel af-customer-enquiry-form" id="new_enquiry">
             <h2><i class="bi bi-send" aria-hidden="true"></i> New Enquiry</h2>
+            <!-- Form block that submits this page workflow. -->
             <form class="af-food-management-form compact" action="enquiries.php#new_enquiry" method="post">
                 <label>
                     <span>Subject</span>

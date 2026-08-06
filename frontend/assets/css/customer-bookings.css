@@ -1,3 +1,4 @@
+/* Styling rules for .af-customer-bookings-page. */
 .af-customer-bookings-page {
     display: grid;
     gap: 24px;
@@ -6,6 +7,7 @@
 .af-customer-bookings-heading,
 .af-customer-bookings-list,
 .af-customer-booking-help,
+/* Form control styling for .af-customer-bookings-heading, .af-customer-bookings-list, .af-customer-booking-help, .af-customer-booking-form-wrap .af-service-card. */
 .af-customer-booking-form-wrap .af-service-card {
     background: #fff;
     border: 1px solid rgba(12, 35, 29, 0.1);
@@ -13,6 +15,7 @@
     box-shadow: 0 12px 34px rgba(13, 36, 30, 0.08);
 }
 
+/* Styling rules for .af-customer-bookings-heading. */
 .af-customer-bookings-heading {
     display: flex;
     align-items: center;
@@ -22,6 +25,7 @@
 }
 
 .af-customer-bookings-heading h1,
+/* Styling rules for .af-customer-bookings-heading h1, .af-customer-bookings-list h2. */
 .af-customer-bookings-list h2 {
     margin: 0;
     color: #0d241e;
@@ -30,12 +34,14 @@
 
 .af-customer-bookings-heading p,
 .af-customer-bookings-list p,
+/* Styling rules for .af-customer-bookings-heading p, .af-customer-bookings-list p, .af-customer-booking-help p. */
 .af-customer-booking-help p {
     margin: 6px 0 0;
     color: #5f6865;
 }
 
 .af-customer-bookings-heading a,
+/* Styling rules for .af-customer-bookings-heading a, .af-customer-booking-help a. */
 .af-customer-booking-help a {
     display: inline-flex;
     align-items: center;
@@ -50,12 +56,14 @@
     text-decoration: none;
 }
 
+/* Styling rules for .af-customer-booking-metrics. */
 .af-customer-booking-metrics {
     display: grid;
     grid-template-columns: repeat(4, minmax(0, 1fr));
     gap: 16px;
 }
 
+/* Styling rules for .af-customer-booking-metrics article. */
 .af-customer-booking-metrics article {
     display: flex;
     gap: 14px;
@@ -67,6 +75,7 @@
     box-shadow: 0 10px 28px rgba(13, 36, 30, 0.07);
 }
 
+/* Styling rules for .af-customer-booking-metrics span. */
 .af-customer-booking-metrics span {
     display: inline-grid;
     place-items: center;
@@ -78,11 +87,13 @@
     color: #b77b1a;
 }
 
+/* Styling rules for .af-customer-booking-metrics small. */
 .af-customer-booking-metrics small {
     color: #0d241e;
     font-weight: 800;
 }
 
+/* Styling rules for .af-customer-booking-metrics strong. */
 .af-customer-booking-metrics strong {
     display: block;
     margin-top: 8px;
@@ -91,11 +102,13 @@
     line-height: 1;
 }
 
+/* Styling rules for .af-customer-booking-metrics p. */
 .af-customer-booking-metrics p {
     margin: 6px 0 0;
     color: #69736f;
 }
 
+/* Styling rules for .af-customer-bookings-grid. */
 .af-customer-bookings-grid {
     display: grid;
     grid-template-columns: minmax(0, 1fr) 320px;
@@ -103,15 +116,18 @@
     align-items: start;
 }
 
+/* Styling rules for .af-customer-bookings-list. */
 .af-customer-bookings-list {
     overflow: hidden;
 }
 
+/* Header layout and controls for .af-customer-bookings-list > header. */
 .af-customer-bookings-list > header {
     padding: 22px 24px;
     border-bottom: 1px solid rgba(12, 35, 29, 0.08);
 }
 
+/* Styling rules for .af-customer-booking-row. */
 .af-customer-booking-row {
     display: grid;
     grid-template-columns: 48px minmax(0, 1fr) 140px;
@@ -121,10 +137,12 @@
     border-bottom: 1px solid rgba(12, 35, 29, 0.08);
 }
 
+/* Styling rules for .af-customer-booking-row:last-child. */
 .af-customer-booking-row:last-child {
     border-bottom: 0;
 }
 
+/* Styling rules for .af-customer-booking-row > span. */
 .af-customer-booking-row > span {
     display: inline-grid;
     place-items: center;
@@ -135,6 +153,7 @@
     color: #b77b1a;
 }
 
+/* Styling rules for .af-customer-booking-row h3. */
 .af-customer-booking-row h3 {
     display: flex;
     flex-wrap: wrap;
@@ -145,17 +164,20 @@
     font-size: 15px;
 }
 
+/* Styling rules for .af-customer-booking-row p. */
 .af-customer-booking-row p {
     margin: 4px 0 0;
     color: #53605c;
 }
 
+/* Styling rules for .af-customer-booking-row time. */
 .af-customer-booking-row time {
     color: #0d241e;
     font-weight: 800;
     text-align: right;
 }
 
+/* Styling rules for .af-customer-booking-row time small. */
 .af-customer-booking-row time small {
     display: block;
     margin-top: 4px;
@@ -166,6 +188,7 @@
 .af-customer-booking-row small.pending,
 .af-customer-booking-row small.confirmed,
 .af-customer-booking-row small.completed,
+/* Styling rules for .af-customer-booking-row small.pending, .af-customer-booking-row small.confirmed, .af-customer-booking-row small.comp.... */
 .af-customer-booking-row small.cancelled {
     padding: 5px 9px;
     border-radius: 6px;
@@ -174,22 +197,26 @@
     font-weight: 800;
 }
 
+/* Styling rules for .af-customer-booking-row small.pending. */
 .af-customer-booking-row small.pending {
     background: #fff2dc;
     color: #b66b00;
 }
 
 .af-customer-booking-row small.confirmed,
+/* Styling rules for .af-customer-booking-row small.confirmed, .af-customer-booking-row small.completed. */
 .af-customer-booking-row small.completed {
     background: #e7f6e9;
     color: #0a7a22;
 }
 
+/* Styling rules for .af-customer-booking-row small.cancelled. */
 .af-customer-booking-row small.cancelled {
     background: #ffe7e7;
     color: #c72222;
 }
 
+/* Styling rules for .af-customer-empty-bookings. */
 .af-customer-empty-bookings {
     display: grid;
     place-items: center;
@@ -198,6 +225,7 @@
     color: #69736f;
 }
 
+/* Styling rules for .af-customer-empty-bookings i. */
 .af-customer-empty-bookings i {
     margin-bottom: 12px;
     color: #b77b1a;
@@ -205,64 +233,79 @@
 }
 
 .af-customer-empty-bookings h3,
+/* Styling rules for .af-customer-empty-bookings h3, .af-customer-booking-help h2. */
 .af-customer-booking-help h2 {
     margin: 0;
     color: #0d241e;
 }
 
+/* Styling rules for .af-customer-booking-help. */
 .af-customer-booking-help {
     padding: 24px;
 }
 
+/* Styling rules for .af-customer-booking-help a. */
 .af-customer-booking-help a {
     width: 100%;
     margin-top: 18px;
     background: #0d241e;
 }
 
+/* Form control styling for .af-customer-booking-form-wrap. */
 .af-customer-booking-form-wrap {
     padding: 0;
 }
 
+/* Form control styling for .af-customer-booking-form-wrap .af-booking-grid. */
 .af-customer-booking-form-wrap .af-booking-grid {
     grid-template-columns: minmax(0, 1fr) 320px;
 }
 
+/* Form control styling for .af-customer-booking-form-wrap .af-service-form. */
 .af-customer-booking-form-wrap .af-service-form {
     margin-top: 0;
 }
 
 .af-customer-booking-form-wrap .af-event-card,
+/* Form control styling for .af-customer-booking-form-wrap .af-event-card, .af-customer-booking-form-wrap .af-feature-strip. */
 .af-customer-booking-form-wrap .af-feature-strip {
     display: none;
 }
 
+/* Responsive styling rules for @media (max-width: 1180px). */
 @media (max-width: 1180px) {
+    /* Styling rules for .af-customer-booking-metrics. */
     .af-customer-booking-metrics {
         grid-template-columns: repeat(2, minmax(0, 1fr));
     }
 
     .af-customer-bookings-grid,
+    /* Form control styling for .af-customer-bookings-grid, .af-customer-booking-form-wrap .af-booking-grid. */
     .af-customer-booking-form-wrap .af-booking-grid {
         grid-template-columns: 1fr;
     }
 }
 
+/* Responsive styling rules for @media (max-width: 760px). */
 @media (max-width: 760px) {
     .af-customer-bookings-heading,
+    /* Styling rules for .af-customer-bookings-heading, .af-customer-booking-row. */
     .af-customer-booking-row {
         grid-template-columns: 1fr;
     }
 
+    /* Styling rules for .af-customer-bookings-heading. */
     .af-customer-bookings-heading {
         align-items: stretch;
         flex-direction: column;
     }
 
+    /* Styling rules for .af-customer-booking-metrics. */
     .af-customer-booking-metrics {
         grid-template-columns: 1fr;
     }
 
+    /* Styling rules for .af-customer-booking-row time. */
     .af-customer-booking-row time {
         text-align: left;
     }

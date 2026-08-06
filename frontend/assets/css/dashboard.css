@@ -1,9 +1,11 @@
+/* Styling rules for *. */
 * {
     margin: 0;
     padding: 0;
     box-sizing: border-box;
 }
 
+/* Global design tokens and CSS custom properties. */
 :root {
     --green: #0d241e;
     --green-2: #0c231d;
@@ -20,6 +22,7 @@
     --red: #ef4444;
 }
 
+/* Styling rules for body. */
 body {
     min-height: 100vh;
     background: var(--bg);
@@ -28,15 +31,18 @@ body {
     overflow-x: hidden;
 }
 
+/* Styling rules for a. */
 a {
     color: inherit;
 }
 
 button,
+/* Form control styling for button, input. */
 input {
     font: inherit;
 }
 
+/* Sidebar navigation styling for .sidebar. */
 .sidebar {
     position: fixed;
     inset: 0 auto 0 0;
@@ -51,6 +57,7 @@ input {
     z-index: 20;
 }
 
+/* Styling rules for .brand. */
 .brand {
     display: inline-flex;
     align-items: center;
@@ -60,25 +67,30 @@ input {
     margin-bottom: 16px;
 }
 
+/* Styling rules for .brand-icon. */
 .brand-icon {
     color: var(--gold-2);
     font-size: 42px;
 }
 
 .brand strong,
+/* Styling rules for .brand strong, .brand small. */
 .brand small {
     display: block;
 }
 
+/* Styling rules for .brand strong. */
 .brand strong {
     font-size: 30px;
     line-height: 1;
 }
 
+/* Styling rules for .brand strong::first-letter. */
 .brand strong::first-letter {
     color: var(--gold-2);
 }
 
+/* Styling rules for .brand small. */
 .brand small {
     color: rgba(255, 255, 255, 0.82);
     font-size: 10px;
@@ -88,12 +100,14 @@ input {
     text-transform: uppercase;
 }
 
+/* Navigation and menu styling for .side-nav. */
 .side-nav {
     display: flex;
     flex-direction: column;
     gap: 7px;
 }
 
+/* Navigation and menu styling for .side-nav p. */
 .side-nav p {
     color: rgba(255, 255, 255, 0.62);
     font-size: 11px;
@@ -103,6 +117,7 @@ input {
 }
 
 .side-nav a,
+/* Navigation and menu styling for .side-nav a, .logout-link. */
 .logout-link {
     min-height: 40px;
     border-radius: 6px;
@@ -117,36 +132,43 @@ input {
     text-decoration: none;
 }
 
+/* Styling rules for .logout-link. */
 .logout-link {
     display: flex;
     margin-top: auto;
 }
 
 .side-nav a i:first-child,
+/* Navigation and menu styling for .side-nav a i:first-child, .logout-link i. */
 .logout-link i {
     font-size: 17px;
 }
 
+/* Navigation and menu styling for .nav-chevron. */
 .nav-chevron {
     color: rgba(255, 255, 255, 0.72);
     font-size: 13px;
 }
 
 .side-nav a.active,
+/* Navigation and menu styling for .side-nav a.active, .side-nav a:hover. */
 .side-nav a:hover {
     background: rgba(183, 123, 26, 0.32);
     color: #fff;
 }
 
+/* Navigation and menu styling for .side-nav a.active i. */
 .side-nav a.active i {
     color: #fff;
 }
 
+/* Styling rules for .dashboard-shell. */
 .dashboard-shell {
     margin-left: 258px;
     min-height: 100vh;
 }
 
+/* Styling rules for .topbar. */
 .topbar {
     height: 70px;
     background: #fff;
@@ -162,20 +184,24 @@ input {
 }
 
 .menu-toggle,
+/* Button and action control styling for .menu-toggle, .top-actions button. */
 .top-actions button {
     border: 0;
     background: transparent;
     cursor: pointer;
 }
 
+/* Navigation and menu styling for .menu-toggle i. */
 .menu-toggle i {
     font-size: 24px;
 }
 
+/* Styling rules for .top-title. */
 .top-title {
     font-size: 17px;
 }
 
+/* Styling rules for .top-search. */
 .top-search {
     height: 38px;
     border: 1px solid var(--line);
@@ -186,6 +212,7 @@ input {
     gap: 10px;
 }
 
+/* Form control styling for .top-search input. */
 .top-search input {
     width: 100%;
     border: 0;
@@ -195,10 +222,12 @@ input {
 }
 
 .top-search i,
+/* Styling rules for .top-search i, .top-search kbd. */
 .top-search kbd {
     color: var(--muted);
 }
 
+/* Styling rules for .top-search kbd. */
 .top-search kbd {
     background: transparent;
     border: 0;
@@ -206,6 +235,7 @@ input {
     font-size: 12px;
 }
 
+/* Styling rules for .top-actions. */
 .top-actions {
     justify-self: end;
     display: flex;
@@ -214,6 +244,7 @@ input {
 }
 
 .top-actions button,
+/* Button and action control styling for .top-actions button, .top-actions a. */
 .top-actions a {
     position: relative;
     color: var(--text);
@@ -224,6 +255,7 @@ input {
 }
 
 .top-actions button span,
+/* Button and action control styling for .top-actions button span, .top-actions a span. */
 .top-actions a span {
     position: absolute;
     top: -8px;
@@ -240,10 +272,12 @@ input {
 }
 
 .top-actions button span.green,
+/* Button and action control styling for .top-actions button span.green, .top-actions a span.green. */
 .top-actions a span.green {
     background: #18a058;
 }
 
+/* Styling rules for .admin-profile. */
 .admin-profile {
     display: grid;
     grid-template-columns: 38px 1fr 16px;
@@ -252,6 +286,7 @@ input {
 }
 
 .admin-profile img,
+/* Styling rules for .admin-profile img, td img. */
 td img {
     width: 36px;
     height: 36px;
@@ -260,24 +295,29 @@ td img {
 }
 
 .admin-profile strong,
+/* Styling rules for .admin-profile strong, .admin-profile small. */
 .admin-profile small {
     display: block;
 }
 
+/* Styling rules for .admin-profile strong. */
 .admin-profile strong {
     font-size: 13px;
 }
 
+/* Styling rules for .admin-profile small. */
 .admin-profile small {
     color: var(--muted);
     font-size: 11px;
 }
 
+/* Styling rules for .content. */
 .content {
     padding: 26px 28px 36px;
     max-width: 100%;
 }
 
+/* Styling rules for .page-heading. */
 .page-heading {
     display: flex;
     justify-content: space-between;
@@ -286,17 +326,20 @@ td img {
     margin-bottom: 22px;
 }
 
+/* Styling rules for .page-heading h1. */
 .page-heading h1 {
     font-size: 30px;
     line-height: 1.1;
     margin-bottom: 6px;
 }
 
+/* Styling rules for .page-heading p. */
 .page-heading p {
     color: var(--muted);
     font-size: 14px;
 }
 
+/* Styling rules for .date-filter. */
 .date-filter {
     height: 40px;
     border: 1px solid var(--line);
@@ -312,6 +355,7 @@ td img {
     cursor: pointer;
 }
 
+/* Styling rules for .metric-grid. */
 .metric-grid {
     display: grid;
     grid-template-columns: repeat(4, minmax(0, 1fr));
@@ -319,6 +363,7 @@ td img {
     margin-bottom: 16px;
 }
 
+/* Card and panel styling for .metric-card. */
 .metric-card {
     min-height: 100px;
     background: var(--card);
@@ -333,10 +378,12 @@ td img {
     min-width: 0;
 }
 
+/* Card and panel styling for .metric-card div. */
 .metric-card div {
     min-width: 0;
 }
 
+/* Card and panel styling for .metric-card > span. */
 .metric-card > span {
     width: 52px;
     height: 52px;
@@ -346,26 +393,31 @@ td img {
     font-size: 24px;
 }
 
+/* Card and panel styling for .metric-card.green > span. */
 .metric-card.green > span {
     background: #d7f8e3;
     color: var(--success);
 }
 
+/* Card and panel styling for .metric-card.gold > span. */
 .metric-card.gold > span {
     background: #fff0bc;
     color: var(--gold);
 }
 
+/* Card and panel styling for .metric-card.blue > span. */
 .metric-card.blue > span {
     background: #dcecff;
     color: var(--blue);
 }
 
+/* Card and panel styling for .metric-card.purple > span. */
 .metric-card.purple > span {
     background: #f0dcff;
     color: var(--purple);
 }
 
+/* Card and panel styling for .metric-card small. */
 .metric-card small {
     color: var(--muted);
     display: block;
@@ -373,6 +425,7 @@ td img {
     margin-bottom: 4px;
 }
 
+/* Card and panel styling for .metric-card strong. */
 .metric-card strong {
     display: inline-block;
     font-size: 26px;
@@ -380,6 +433,7 @@ td img {
     margin-right: 8px;
 }
 
+/* Card and panel styling for .metric-card p. */
 .metric-card p {
     color: var(--success);
     display: inline-flex;
@@ -389,6 +443,7 @@ td img {
     font-weight: 800;
 }
 
+/* Card and panel styling for .metric-card em. */
 .metric-card em {
     color: var(--muted);
     display: block;
@@ -397,6 +452,7 @@ td img {
     margin-top: 2px;
 }
 
+/* Styling rules for .analytics-grid. */
 .analytics-grid {
     display: grid;
     grid-template-columns: minmax(0, 1.52fr) minmax(330px, 1fr);
@@ -404,12 +460,14 @@ td img {
     margin-bottom: 16px;
 }
 
+/* Styling rules for .bottom-grid. */
 .bottom-grid {
     display: grid;
     grid-template-columns: minmax(0, 1.25fr) minmax(0, 1.08fr) 240px;
     gap: 16px;
 }
 
+/* Card and panel styling for .panel. */
 .panel {
     background: #fff;
     border: 1px solid var(--line);
@@ -418,6 +476,7 @@ td img {
     min-width: 0;
 }
 
+/* Header layout and controls for .panel-header. */
 .panel-header {
     min-height: 54px;
     border-bottom: 1px solid #eef0f3;
@@ -428,10 +487,12 @@ td img {
     padding: 0 18px;
 }
 
+/* Header layout and controls for .panel-header h2. */
 .panel-header h2 {
     font-size: 16px;
 }
 
+/* Header layout and controls for .panel-header a. */
 .panel-header a {
     color: var(--green);
     font-size: 12px;
@@ -439,6 +500,7 @@ td img {
     text-decoration: none;
 }
 
+/* Header layout and controls for .panel-header button. */
 .panel-header button {
     height: 34px;
     border: 1px solid var(--line);
@@ -453,6 +515,7 @@ td img {
     font-weight: 700;
 }
 
+/* Styling rules for .chart-legend. */
 .chart-legend {
     display: flex;
     justify-content: center;
@@ -462,49 +525,59 @@ td img {
     font-size: 12px;
 }
 
+/* Styling rules for .chart-legend span. */
 .chart-legend span {
     display: inline-flex;
     align-items: center;
     gap: 8px;
 }
 
+/* Styling rules for .chart-legend i. */
 .chart-legend i {
     width: 22px;
     height: 2px;
     display: inline-block;
 }
 
+/* Styling rules for .chart-legend .this-week. */
 .chart-legend .this-week {
     background: var(--green);
 }
 
+/* Styling rules for .chart-legend .last-week. */
 .chart-legend .last-week {
     border-top: 2px dashed #aab1ba;
 }
 
+/* Styling rules for .line-chart. */
 .line-chart {
     padding: 4px 18px 14px;
 }
 
+/* Styling rules for .line-chart svg. */
 .line-chart svg {
     width: 100%;
     height: 235px;
     display: block;
 }
 
+/* Styling rules for .line-chart line. */
 .line-chart line {
     stroke: #d7dce2;
     stroke-width: 1;
 }
 
+/* Styling rules for .line-chart .grid-line. */
 .line-chart .grid-line {
     stroke: #edf0f3;
 }
 
+/* Styling rules for .line-chart .area. */
 .line-chart .area {
     fill: rgba(13, 36, 30, 0.08);
 }
 
+/* Styling rules for .line-chart .current-path. */
 .line-chart .current-path {
     fill: none;
     stroke: var(--green);
@@ -513,6 +586,7 @@ td img {
     stroke-linejoin: round;
 }
 
+/* Styling rules for .line-chart .last-path. */
 .line-chart .last-path {
     fill: none;
     stroke: #aab1ba;
@@ -520,12 +594,14 @@ td img {
     stroke-dasharray: 6 7;
 }
 
+/* Styling rules for .line-chart .points circle. */
 .line-chart .points circle {
     fill: var(--green);
     stroke: #fff;
     stroke-width: 2;
 }
 
+/* Styling rules for .chart-days. */
 .chart-days {
     display: grid;
     grid-template-columns: repeat(7, 1fr);
@@ -535,11 +611,13 @@ td img {
     text-align: center;
 }
 
+/* Card and panel styling for .status-panel. */
 .status-panel {
     display: flex;
     flex-direction: column;
 }
 
+/* Styling rules for .status-content. */
 .status-content {
     display: grid;
     grid-template-columns: 180px 1fr;
@@ -548,6 +626,7 @@ td img {
     padding: 26px 24px 18px;
 }
 
+/* Styling rules for .donut-chart. */
 .donut-chart {
     width: 172px;
     aspect-ratio: 1;
@@ -558,6 +637,7 @@ td img {
     position: relative;
 }
 
+/* Styling rules for .donut-chart::after. */
 .donut-chart::after {
     content: "";
     position: absolute;
@@ -567,6 +647,7 @@ td img {
 }
 
 .donut-chart strong,
+/* Styling rules for .donut-chart strong, .donut-chart span. */
 .donut-chart span {
     grid-area: 1 / 1;
     position: relative;
@@ -575,6 +656,7 @@ td img {
     text-align: center;
 }
 
+/* Styling rules for .donut-chart strong. */
 .donut-chart strong {
     font-size: 28px;
     line-height: 1;
@@ -582,6 +664,7 @@ td img {
     margin-top: -12px;
 }
 
+/* Styling rules for .donut-chart span. */
 .donut-chart span {
     align-self: center;
     color: var(--muted);
@@ -589,12 +672,14 @@ td img {
     margin-top: 34px;
 }
 
+/* Styling rules for .status-list. */
 .status-list {
     list-style: none;
     display: grid;
     gap: 13px;
 }
 
+/* Styling rules for .status-list li. */
 .status-list li {
     display: grid;
     grid-template-columns: 12px 1fr auto;
@@ -604,37 +689,45 @@ td img {
     font-size: 13px;
 }
 
+/* Styling rules for .status-list li i. */
 .status-list li i {
     width: 10px;
     height: 10px;
     border-radius: 50%;
 }
 
+/* Styling rules for .status-list strong. */
 .status-list strong {
     color: var(--text);
     font-size: 12px;
 }
 
+/* Styling rules for .pending. */
 .pending {
     background: #e4a914;
 }
 
+/* Styling rules for .confirmed. */
 .confirmed {
     background: var(--green);
 }
 
+/* Styling rules for .preparing. */
 .preparing {
     background: var(--blue);
 }
 
+/* Styling rules for .delivered. */
 .delivered {
     background: #38a852;
 }
 
+/* Styling rules for .cancelled. */
 .cancelled {
     background: #ef2b2d;
 }
 
+/* Card and panel styling for .panel-link. */
 .panel-link {
     align-self: flex-end;
     color: var(--text);
@@ -647,16 +740,19 @@ td img {
     text-decoration: none;
 }
 
+/* Table layout styling for .table-wrap. */
 .table-wrap {
     overflow-x: auto;
 }
 
+/* Table layout styling for table. */
 table {
     width: 100%;
     border-collapse: collapse;
 }
 
 th,
+/* Styling rules for th, td. */
 td {
     height: 48px;
     border-bottom: 1px solid #eef0f3;
@@ -666,16 +762,19 @@ td {
     font-size: 12px;
 }
 
+/* Styling rules for th. */
 th {
     color: var(--muted);
     font-weight: 800;
 }
 
+/* Styling rules for td. */
 td {
     color: var(--text);
     font-weight: 650;
 }
 
+/* Styling rules for td img. */
 td img {
     width: 30px;
     height: 30px;
@@ -683,12 +782,14 @@ td img {
     margin-right: 9px;
 }
 
+/* Card and panel styling for .package-panel td img. */
 .package-panel td img {
     width: 46px;
     height: 32px;
     border-radius: 5px;
 }
 
+/* Styling rules for .badge. */
 .badge {
     border-radius: 5px;
     display: inline-flex;
@@ -699,31 +800,37 @@ td img {
     font-weight: 800;
 }
 
+/* Styling rules for .badge.delivered. */
 .badge.delivered {
     background: #e4f8e9;
     color: #159447;
 }
 
+/* Styling rules for .badge.preparing. */
 .badge.preparing {
     background: #e5f0ff;
     color: #2f78d4;
 }
 
+/* Styling rules for .badge.pending. */
 .badge.pending {
     background: #fff3cb;
     color: #b77b1a;
 }
 
+/* Card and panel styling for .quick-panel. */
 .quick-panel {
     padding-bottom: 12px;
 }
 
+/* Styling rules for .quick-actions. */
 .quick-actions {
     display: grid;
     gap: 8px;
     padding: 14px;
 }
 
+/* Styling rules for .quick-actions a. */
 .quick-actions a {
     min-height: 38px;
     border: 1px solid #edf0f3;
@@ -739,6 +846,7 @@ td img {
     box-shadow: 0 4px 12px rgba(15, 23, 42, 0.03);
 }
 
+/* Styling rules for .quick-actions i. */
 .quick-actions i {
     width: 24px;
     height: 24px;
@@ -749,46 +857,58 @@ td img {
     font-size: 13px;
 }
 
+/* Styling rules for .green-action. */
 .green-action {
     background: var(--green);
 }
 
+/* Styling rules for .gold-action. */
 .gold-action {
     background: var(--gold-2);
 }
 
+/* Styling rules for .green-light-action. */
 .green-light-action {
     background: #38a852;
 }
 
+/* Styling rules for .blue-action. */
 .blue-action {
     background: var(--blue);
 }
 
+/* Styling rules for .purple-action. */
 .purple-action {
     background: var(--purple);
 }
 
+/* Styling rules for .orange-action. */
 .orange-action {
     background: #d99a1f;
 }
 
+/* Responsive styling rules for @media (max-width: 1240px). */
 @media (max-width: 1240px) {
+    /* Styling rules for .metric-grid. */
     .metric-grid {
         grid-template-columns: repeat(2, minmax(0, 1fr));
     }
 
     .analytics-grid,
+    /* Styling rules for .analytics-grid, .bottom-grid. */
     .bottom-grid {
         grid-template-columns: 1fr;
     }
 
+    /* Styling rules for .quick-actions. */
     .quick-actions {
         grid-template-columns: repeat(2, minmax(0, 1fr));
     }
 }
 
+/* Responsive styling rules for @media (max-width: 920px). */
 @media (max-width: 920px) {
+    /* Sidebar navigation styling for .sidebar. */
     .sidebar {
         position: static;
         width: 100%;
@@ -796,54 +916,65 @@ td img {
         padding: 18px;
     }
 
+    /* Styling rules for .brand. */
     .brand {
         margin-bottom: 0;
     }
 
     .side-nav,
+    /* Navigation and menu styling for .side-nav, .logout-link. */
     .logout-link {
         display: none;
     }
 
+    /* Styling rules for .dashboard-shell. */
     .dashboard-shell {
         margin-left: 0;
     }
 
+    /* Styling rules for .topbar. */
     .topbar {
         height: auto;
         grid-template-columns: 40px 1fr;
         padding: 16px;
     }
 
+    /* Styling rules for .top-title. */
     .top-title {
         align-self: center;
     }
 
     .top-search,
+    /* Styling rules for .top-search, .top-actions. */
     .top-actions {
         grid-column: 1 / -1;
     }
 
+    /* Styling rules for .top-actions. */
     .top-actions {
         justify-self: stretch;
         justify-content: space-between;
     }
 
     .admin-profile span,
+    /* Styling rules for .admin-profile span, .admin-profile i. */
     .admin-profile i {
         display: none;
     }
 
+    /* Styling rules for .admin-profile. */
     .admin-profile {
         grid-template-columns: 38px;
     }
 
+    /* Styling rules for .content. */
     .content {
         padding: 22px 16px;
         max-width: 100vw;
         overflow: hidden;
     }
 
+    /* Styling rules for .page-heading. */
     .page-heading {
         flex-direction: column;
     }
@@ -851,49 +982,60 @@ td img {
     .page-heading > div,
     .metric-grid,
     .analytics-grid,
+    /* Styling rules for .page-heading > div, .metric-grid, .analytics-grid, .bottom-grid. */
     .bottom-grid {
         min-width: 0;
         width: 100%;
     }
 
+    /* Styling rules for .date-filter. */
     .date-filter {
         width: 100%;
         justify-content: center;
     }
 
+    /* Styling rules for .status-content. */
     .status-content {
         grid-template-columns: 1fr;
         justify-items: center;
     }
 
+    /* Styling rules for .status-list. */
     .status-list {
         width: 100%;
     }
 }
 
+/* Responsive styling rules for @media (max-width: 620px). */
 @media (max-width: 620px) {
     .metric-grid,
+    /* Styling rules for .metric-grid, .quick-actions. */
     .quick-actions {
         grid-template-columns: 1fr;
     }
 
+    /* Card and panel styling for .metric-card. */
     .metric-card {
         grid-template-columns: 58px 1fr;
     }
 
+    /* Styling rules for .page-heading h1. */
     .page-heading h1 {
         font-size: 26px;
     }
 
+    /* Styling rules for .page-heading p. */
     .page-heading p {
         max-width: 100%;
         overflow-wrap: anywhere;
     }
 
+    /* Styling rules for .top-search kbd. */
     .top-search kbd {
         display: none;
     }
 
+    /* Header layout and controls for .panel-header. */
     .panel-header {
         align-items: flex-start;
         flex-direction: column;
@@ -901,11 +1043,13 @@ td img {
         padding: 14px 18px;
     }
 
+    /* Header layout and controls for .panel-header button. */
     .panel-header button {
         width: 100%;
         justify-content: center;
     }
 
+    /* Styling rules for .chart-days. */
     .chart-days {
         display: flex;
         justify-content: space-between;
@@ -914,18 +1058,22 @@ td img {
         font-size: 9px;
     }
 
+    /* Styling rules for .line-chart svg. */
     .line-chart svg {
         height: 190px;
     }
 
+    /* Styling rules for .line-chart. */
     .line-chart {
         padding-inline: 10px;
     }
 
+    /* Styling rules for .donut-chart. */
     .donut-chart {
         width: 150px;
     }
 
+    /* Styling rules for .donut-chart::after. */
     .donut-chart::after {
         inset: 37px;
     }

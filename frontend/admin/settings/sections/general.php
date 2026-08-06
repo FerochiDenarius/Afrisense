@@ -1,3 +1,4 @@
+        <!-- Page section for this part of the AfriSense interface. -->
         <section class="af-settings-card" id="general-settings">
             <h2>General Settings</h2>
             <p>Manage your website general preferences and configurations.</p>
@@ -35,6 +36,7 @@
         </section>
 
 
+        <!-- Page section for this part of the AfriSense interface. -->
         <section class="af-settings-card">
             <h2>Footer Text</h2>
             <p>This text will be displayed in the website footer.</p>

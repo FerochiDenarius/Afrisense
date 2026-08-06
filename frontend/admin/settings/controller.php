@@ -4,6 +4,7 @@ require_once __DIR__ . '/../../includes/public_settings.php';
 
 afrisense_require_admin();
 
+// Defines the afrisense_fetch_first_row helper used by this module.
 function afrisense_fetch_first_row(PDO $pdo, string $table): array
 {
     $statement = $pdo->prepare(sprintf('SELECT * FROM `%s` ORDER BY `id` ASC LIMIT 1', $table));
@@ -13,6 +14,7 @@ function afrisense_fetch_first_row(PDO $pdo, string $table): array
     return $row ?: [];
 }
 
+// Defines the afrisense_column_exists helper used by this module.
 function afrisense_column_exists(PDO $pdo, string $table, string $column): bool
 {
     $statement = $pdo->prepare(
@@ -31,8 +33,10 @@ function afrisense_column_exists(PDO $pdo, string $table, string $column): bool
     return ((int) ($row['count_value'] ?? 0)) > 0;
 }
 
+// Defines the afrisense_ensure_column helper used by this module.
 function afrisense_ensure_column(PDO $pdo, string $table, string $column, string $definition): void
 {
+    // Guard this block so it only runs when the required condition is met.
     if (afrisense_column_exists($pdo, $table, $column)) {
         return;
     }
@@ -41,6 +45,7 @@ function afrisense_ensure_column(PDO $pdo, string $table, string $column, string
     $statement->execute();
 }
 
+// Defines the afrisense_ensure_settings_rows helper used by this module.
 function afrisense_ensure_settings_rows(PDO $pdo): void
 {
     $websiteColumns = [
@@ -49,6 +54,7 @@ function afrisense_ensure_settings_rows(PDO $pdo): void
         'hero_image' => 'VARCHAR(255) NULL AFTER `hero_subtitle`',
     ];
 
+    // Iterate through the data needed for this block.
     foreach ($websiteColumns as $column => $definition) {
         afrisense_ensure_column($pdo, 'website_settings', $column, $definition);
     }
@@ -63,6 +69,7 @@ function afrisense_ensure_settings_rows(PDO $pdo): void
         'tiktok_url' => 'VARCHAR(255) NULL AFTER `youtube_url`',
     ];
 
+    // Iterate through the data needed for this block.
     foreach ($companyColumns as $column => $definition) {
         afrisense_ensure_column($pdo, 'company_information', $column, $definition);
     }
@@ -115,10 +122,12 @@ function afrisense_ensure_settings_rows(PDO $pdo): void
         'delivery_instructions' => 'TEXT NULL',
     ];
 
+    // Iterate through the data needed for this block.
     foreach ($systemColumns as $column => $definition) {
         afrisense_ensure_column($pdo, 'system_settings', $column, $definition);
     }
 
+    // Guard this block so it only runs when the required condition is met.
     if (afrisense_fetch_first_row($pdo, 'website_settings') === []) {
         $statement = $pdo->prepare(
             'INSERT INTO `website_settings`
@@ -137,6 +146,7 @@ function afrisense_ensure_settings_rows(PDO $pdo): void
         ]);
     }
 
+    // Guard this block so it only runs when the required condition is met.
     if (afrisense_fetch_first_row($pdo, 'company_information') === []) {
         $statement = $pdo->prepare(
             'INSERT INTO `company_information`
@@ -161,6 +171,7 @@ function afrisense_ensure_settings_rows(PDO $pdo): void
         ]);
     }
 
+    // Guard this block so it only runs when the required condition is met.
     if (afrisense_fetch_first_row($pdo, 'system_settings') === []) {
         $statement = $pdo->prepare(
             'INSERT INTO `system_settings`
@@ -179,25 +190,30 @@ function afrisense_ensure_settings_rows(PDO $pdo): void
     }
 }
 
+// Defines the afrisense_post_value helper used by this module.
 function afrisense_post_value(array $source, string $key, string $fallback = ''): string
 {
     return trim((string) ($source[$key] ?? $fallback));
 }
 
+// Defines the afrisense_social_post_value helper used by this module.
 function afrisense_social_post_value(array $company, string $key, string $activeSection): string
 {
+    // Guard this block so it only runs when the required condition is met.
     if ($activeSection !== 'social') {
         return (string) ($company[$key] ?? '');
     }
 
     $enabled = isset($_POST['social_enabled']) && is_array($_POST['social_enabled']) && isset($_POST['social_enabled'][$key]);
 
+    // Guard this block so it only runs when the required condition is met.
     if (!$enabled) {
         return '';
     }
 
     $url = afrisense_post_value($_POST, $key);
 
+    // Guard this block so it only runs when the required condition is met.
     if ($url !== '' && filter_var($url, FILTER_VALIDATE_URL) === false) {
         throw new RuntimeException('Please enter a valid URL for ' . str_replace('_url', '', $key) . '.');
     }
@@ -205,8 +221,10 @@ function afrisense_social_post_value(array $company, string $key, string $active
     return $url;
 }
 
+// Defines the afrisense_post_bool_setting helper used by this module.
 function afrisense_post_bool_setting(string $key, array $system, string $activeSection, string $section): int
 {
+    // Guard this block so it only runs when the required condition is met.
     if ($activeSection !== $section) {
         return (int) ($system[$key] ?? 0);
     }
@@ -214,8 +232,10 @@ function afrisense_post_bool_setting(string $key, array $system, string $activeS
     return isset($_POST[$key]) ? 1 : 0;
 }
 
+// Defines the afrisense_post_text_setting helper used by this module.
 function afrisense_post_text_setting(string $key, array $system, string $activeSection, string $section, string $fallback = ''): string
 {
+    // Guard this block so it only runs when the required condition is met.
     if ($activeSection !== $section) {
         return (string) ($system[$key] ?? $fallback);
     }
@@ -223,8 +243,10 @@ function afrisense_post_text_setting(string $key, array $system, string $activeS
     return afrisense_post_value($_POST, $key, $fallback);
 }
 
+// Defines the afrisense_post_decimal_setting helper used by this module.
 function afrisense_post_decimal_setting(string $key, array $system, string $activeSection, string $section, float $fallback): float
 {
+    // Guard this block so it only runs when the required condition is met.
     if ($activeSection !== $section) {
         return (float) ($system[$key] ?? $fallback);
     }
@@ -232,6 +254,7 @@ function afrisense_post_decimal_setting(string $key, array $system, string $acti
     return max(0.00, (float) afrisense_post_value($_POST, $key, (string) $fallback));
 }
 
+// Defines the afrisense_default_delivery_zones helper used by this module.
 function afrisense_default_delivery_zones(float $baseDeliveryFee = 10.00): array
 {
     return [
@@ -259,17 +282,21 @@ function afrisense_default_delivery_zones(float $baseDeliveryFee = 10.00): array
     ];
 }
 
+// Defines the afrisense_delivery_zones helper used by this module.
 function afrisense_delivery_zones(array $system): array
 {
     $baseDeliveryFee = (float) ($system['delivery_fee'] ?? 10.00);
     $decoded = json_decode((string) ($system['delivery_zones'] ?? ''), true);
 
+    // Guard this block so it only runs when the required condition is met.
     if (!is_array($decoded)) {
         return afrisense_default_delivery_zones($baseDeliveryFee);
     }
 
     $zones = [];
+    // Iterate through the data needed for this block.
     foreach ($decoded as $zone) {
+        // Guard this block so it only runs when the required condition is met.
         if (!is_array($zone)) {
             continue;
         }
@@ -277,6 +304,7 @@ function afrisense_delivery_zones(array $system): array
         $name = trim((string) ($zone['name'] ?? ''));
         $areas = trim((string) ($zone['areas'] ?? ''));
 
+        // Guard this block so it only runs when the required condition is met.
         if ($name === '' && $areas === '') {
             continue;
         }
@@ -293,14 +321,17 @@ function afrisense_delivery_zones(array $system): array
     return $zones !== [] ? $zones : afrisense_default_delivery_zones($baseDeliveryFee);
 }
 
+// Defines the afrisense_post_delivery_zones helper used by this module.
 function afrisense_post_delivery_zones(array $system, string $activeSection): string
 {
+    // Guard this block so it only runs when the required condition is met.
     if ($activeSection !== 'delivery') {
         return (string) ($system['delivery_zones'] ?? '');
     }
 
     $postedZones = $_POST['delivery_zones'] ?? [];
 
+    // Guard this block so it only runs when the required condition is met.
     if (!is_array($postedZones)) {
         return json_encode(afrisense_default_delivery_zones(), JSON_THROW_ON_ERROR);
     }
@@ -312,10 +343,12 @@ function afrisense_post_delivery_zones(array $system, string $activeSection): st
     $statuses = is_array($postedZones['status'] ?? null) ? $postedZones['status'] : [];
     $zones = [];
 
+    // Iterate through the data needed for this block.
     foreach ($names as $index => $name) {
         $zoneName = trim((string) $name);
         $zoneAreas = trim((string) ($areasList[$index] ?? ''));
 
+        // Guard this block so it only runs when the required condition is met.
         if ($zoneName === '' && $zoneAreas === '') {
             continue;
         }
@@ -332,18 +365,22 @@ function afrisense_post_delivery_zones(array $system, string $activeSection): st
     return json_encode($zones !== [] ? $zones : afrisense_default_delivery_zones(), JSON_THROW_ON_ERROR);
 }
 
+// Defines the afrisense_upload_settings_asset helper used by this module.
 function afrisense_upload_settings_asset(string $field, string $prefix): ?string
 {
     $file = $_FILES[$field] ?? null;
 
+    // Guard this block so it only runs when the required condition is met.
     if (!is_array($file) || (int) ($file['error'] ?? UPLOAD_ERR_NO_FILE) === UPLOAD_ERR_NO_FILE) {
         return null;
     }
 
+    // Guard this block so it only runs when the required condition is met.
     if ((int) ($file['error'] ?? UPLOAD_ERR_OK) !== UPLOAD_ERR_OK) {
         throw new RuntimeException('The selected image could not be uploaded.');
     }
 
+    // Guard this block so it only runs when the required condition is met.
     if ((int) ($file['size'] ?? 0) > 3 * 1024 * 1024) {
         throw new RuntimeException('Settings images must be 3MB or smaller.');
     }
@@ -352,6 +389,7 @@ function afrisense_upload_settings_asset(string $field, string $prefix): ?string
     $finfo = finfo_open(FILEINFO_MIME_TYPE);
     $mimeType = $finfo !== false ? (string) finfo_file($finfo, $temporaryName) : '';
 
+    // Guard this block so it only runs when the required condition is met.
     if ($finfo !== false) {
         finfo_close($finfo);
     }
@@ -365,6 +403,7 @@ function afrisense_upload_settings_asset(string $field, string $prefix): ?string
         'image/vnd.microsoft.icon' => 'ico',
     ];
 
+    // Guard this block so it only runs when the required condition is met.
     if (!isset($allowedMimeTypes[$mimeType])) {
         throw new RuntimeException('Settings images must be JPG, PNG, WebP, GIF or ICO.');
     }
@@ -372,11 +411,14 @@ function afrisense_upload_settings_asset(string $field, string $prefix): ?string
     $uploadRoot = __DIR__ . '/../../uploads';
     $uploadDirectory = $uploadRoot . '/settings';
 
+    // Iterate through the data needed for this block.
     foreach ([$uploadRoot, $uploadDirectory] as $directory) {
+        // Guard this block so it only runs when the required condition is met.
         if (!is_dir($directory) && !mkdir($directory, 0775, true)) {
             throw new RuntimeException('Settings upload folder could not be created.');
         }
 
+        // Guard this block so it only runs when the required condition is met.
         if (!is_writable($directory)) {
             throw new RuntimeException('Settings upload folder is not writable by XAMPP.');
         }
@@ -385,6 +427,7 @@ function afrisense_upload_settings_asset(string $field, string $prefix): ?string
     $filename = $prefix . '-' . bin2hex(random_bytes(12)) . '.' . $allowedMimeTypes[$mimeType];
     $destination = $uploadDirectory . DIRECTORY_SEPARATOR . $filename;
 
+    // Guard this block so it only runs when the required condition is met.
     if (!move_uploaded_file($temporaryName, $destination)) {
         throw new RuntimeException('Settings image could not be saved.');
     }
@@ -392,16 +435,19 @@ function afrisense_upload_settings_asset(string $field, string $prefix): ?string
     return 'settings/' . $filename;
 }
 
+// Defines the afrisense_settings_asset_url helper used by this module.
 function afrisense_settings_asset_url(string $frontendBase, ?string $image): string
 {
     $image = trim((string) $image);
 
+    // Guard this block so it only runs when the required condition is met.
     if ($image === '') {
         return '';
     }
 
     $relativeImage = ltrim(str_replace('\\', '/', $image), '/');
 
+    // Guard this block so it only runs when the required condition is met.
     if (is_file(__DIR__ . '/../uploads/' . $relativeImage)) {
         return $frontendBase . '/uploads/' . $relativeImage;
     }
@@ -420,6 +466,7 @@ $settingTabs = [
     'maintenance' => ['label' => 'Maintenance Mode', 'icon' => 'bi-tools'],
 ];
 $activeSettingSection = (string) ($_POST['settings_section'] ?? $_GET['section'] ?? 'general');
+// Guard this block so it only runs when the required condition is met.
 if (!array_key_exists($activeSettingSection, $settingTabs)) {
     $activeSettingSection = 'general';
 }
@@ -427,6 +474,7 @@ if (!array_key_exists($activeSettingSection, $settingTabs)) {
 $flashMessage = '';
 $flashType = 'success';
 
+// Run database/action work inside a guarded block so the page can fail gracefully.
 try {
     $pdo = afrisense_pdo();
     afrisense_ensure_settings_rows($pdo);
@@ -434,25 +482,31 @@ try {
     $company = afrisense_fetch_first_row($pdo, 'company_information');
     $system = afrisense_fetch_first_row($pdo, 'system_settings');
 
+    // Handle submitted form actions before rendering the page.
     if (($_SERVER['REQUEST_METHOD'] ?? 'GET') === 'POST') {
         $logoValue = (string) ($website['logo'] ?? '');
         $faviconValue = (string) ($website['favicon'] ?? '');
 
+        // Guard this block so it only runs when the required condition is met.
         if ($activeSettingSection === 'company') {
+            // Guard this block so it only runs when the required condition is met.
             if (isset($_POST['remove_logo'])) {
                 $logoValue = '';
             }
 
+            // Guard this block so it only runs when the required condition is met.
             if (isset($_POST['remove_favicon'])) {
                 $faviconValue = '';
             }
 
             $uploadedLogo = afrisense_upload_settings_asset('logo_file', 'logo');
+            // Guard this block so it only runs when the required condition is met.
             if ($uploadedLogo !== null) {
                 $logoValue = $uploadedLogo;
             }
 
             $uploadedFavicon = afrisense_upload_settings_asset('favicon_file', 'favicon');
+            // Guard this block so it only runs when the required condition is met.
             if ($uploadedFavicon !== null) {
                 $faviconValue = $uploadedFavicon;
             }
@@ -471,6 +525,7 @@ try {
             ? (($_POST['order_notifications'] ?? '') === '1' ? 1 : 0)
             : (int) ($system['order_notifications'] ?? 1);
         $smtpPassword = afrisense_post_value($_POST, 'smtp_password');
+        // Guard this block so it only runs when the required condition is met.
         if ($smtpPassword === '') {
             $smtpPassword = (string) ($system['smtp_password'] ?? '');
         }
@@ -654,6 +709,7 @@ try {
     $company = afrisense_fetch_first_row($pdo, 'company_information');
     $system = afrisense_fetch_first_row($pdo, 'system_settings');
 } catch (Throwable $exception) {
+    // Guard this block so it only runs when the required condition is met.
     if (isset($pdo) && $pdo->inTransaction()) {
         $pdo->rollBack();
     }

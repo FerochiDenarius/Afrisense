@@ -24,18 +24,22 @@ require_once __DIR__ . '/../controllers/UserController.php';
 require_once __DIR__ . '/../middleware/AdminMiddleware.php';
 require_once __DIR__ . '/../middleware/AuthMiddleware.php';
 
+// Guard this block so it only runs when the required condition is met.
 if (!function_exists('afrisenseRequestPayload')) {
+    // Defines the afrisenseRequestPayload helper used by this module.
     function afrisenseRequestPayload(): array
     {
         $contentType = (string) ($_SERVER['CONTENT_TYPE'] ?? '');
         $rawBody = file_get_contents('php://input') ?: '';
 
+        // Guard this block so it only runs when the required condition is met.
         if (str_contains($contentType, 'application/json') && $rawBody !== '') {
             $decoded = json_decode($rawBody, true);
 
             return is_array($decoded) ? $decoded : [];
         }
 
+        // Guard this block so it only runs when the required condition is met.
         if ($_POST !== []) {
             return $_POST;
         }
@@ -63,25 +67,30 @@ return static function (PDO $pdo): void {
     $authMiddleware = new AuthMiddleware($pdo);
     $adminMiddleware = new AdminMiddleware($pdo);
 
+    // Guard this block so it only runs when the required condition is met.
     if ($method === 'POST' && $path === '/api/login') {
         Response::json($auth->login($payload));
     }
 
+    // Guard this block so it only runs when the required condition is met.
     if ($method === 'POST' && $path === '/api/logout') {
         $authMiddleware->handle();
         Response::json($auth->logout());
     }
 
+    // Guard this block so it only runs when the required condition is met.
     if ($method === 'GET' && $path === '/api/me') {
         $authMiddleware->handle();
         Response::json($auth->currentUser());
     }
 
+    // Guard this block so it only runs when the required condition is met.
     if ($method === 'GET' && $path === '/api/dashboard') {
         $user = $authMiddleware->handle();
         Response::json($dashboard->index((int) $user['id']));
     }
 
+    // Guard this block so it only runs when the required condition is met.
     if (preg_match('#^/api/users/?(\d+)?$#', $path, $matches)) {
         $adminMiddleware->handle();
         $id = isset($matches[1]) ? (int) $matches[1] : null;
@@ -95,6 +104,7 @@ return static function (PDO $pdo): void {
         });
     }
 
+    // Guard this block so it only runs when the required condition is met.
     if (preg_match('#^/api/roles/?(\d+)?(?:/permissions/(\d+))?$#', $path, $matches)) {
         $adminMiddleware->handle();
         $roleId = isset($matches[1]) && $matches[1] !== '' ? (int) $matches[1] : null;
@@ -113,6 +123,7 @@ return static function (PDO $pdo): void {
         });
     }
 
+    // Guard this block so it only runs when the required condition is met.
     if (preg_match('#^/api/permissions/?(\d+)?$#', $path, $matches)) {
         $adminMiddleware->handle();
         $id = isset($matches[1]) ? (int) $matches[1] : null;
@@ -126,6 +137,7 @@ return static function (PDO $pdo): void {
         });
     }
 
+    // Guard this block so it only runs when the required condition is met.
     if (preg_match('#^/api/notifications/?(\d+)?(?:/(read))?$#', $path, $matches)) {
         $user = $authMiddleware->handle();
         $id = isset($matches[1]) && $matches[1] !== '' ? (int) $matches[1] : null;
@@ -142,6 +154,7 @@ return static function (PDO $pdo): void {
         });
     }
 
+    // Guard this block so it only runs when the required condition is met.
     if (preg_match('#^/api/settings/?([^/]+)?$#', $path, $matches)) {
         $adminMiddleware->handle();
         $key = isset($matches[1]) && $matches[1] !== '' ? urldecode($matches[1]) : null;

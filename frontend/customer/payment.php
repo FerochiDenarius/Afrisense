@@ -15,10 +15,12 @@ require_once __DIR__ . '/../includes/public_settings.php';
 $authUser = afrisense_require_customer();
 afrisense_enforce_public_delivery_available();
 
+// Defines the afrisense_customer_payment_image helper used by this module.
 function afrisense_customer_payment_image(string $frontendBase, ?string $image): string
 {
     $filename = basename(trim((string) $image));
 
+    // Guard this block so it only runs when the required condition is met.
     if ($filename !== '' && is_file(__DIR__ . '/../assets/images/foods/' . $filename)) {
         return $frontendBase . '/assets/images/foods/' . $filename;
     }
@@ -26,6 +28,7 @@ function afrisense_customer_payment_image(string $frontendBase, ?string $image):
     return $frontendBase . '/assets/images/foods/jollof-rice.png';
 }
 
+// Defines the afrisense_customer_payment_customer_id helper used by this module.
 function afrisense_customer_payment_customer_id(PDO $pdo, array $user, string $address): int
 {
     $email = trim((string) ($user['email'] ?? ''));
@@ -35,6 +38,7 @@ function afrisense_customer_payment_customer_id(PDO $pdo, array $user, string $a
     $statement->execute(['email' => $email, 'phone' => $phone]);
     $customerId = $statement->fetchColumn();
 
+    // Guard this block so it only runs when the required condition is met.
     if ($customerId !== false) {
         $update = $pdo->prepare('UPDATE `customers` SET `fullname` = :fullname, `email` = :email, `phone_number` = :phone, `address` = :address, `updated_at` = NOW() WHERE `id` = :id');
         $update->execute(['fullname' => $fullname, 'email' => $email, 'phone' => $phone, 'address' => $address, 'id' => (int) $customerId]);
@@ -46,8 +50,10 @@ function afrisense_customer_payment_customer_id(PDO $pdo, array $user, string $a
     return (int) $pdo->lastInsertId();
 }
 
+// Defines the afrisense_customer_payment_notify_admins helper used by this module.
 function afrisense_customer_payment_notify_admins(PDO $pdo, array $orderIds, string $customerName, int $createdBy): void
 {
+    // Guard this block so it only runs when the required condition is met.
     if ($orderIds === [] || !afrisense_public_setting_bool('order_notifications', true)) {
         return;
     }
@@ -56,6 +62,7 @@ function afrisense_customer_payment_notify_admins(PDO $pdo, array $orderIds, str
     $admins->execute();
     $notification = $pdo->prepare('INSERT INTO `notifications` (`user_id`, `title`, `message`, `notification_type`, `action_url`, `created_by`) VALUES (:user_id, :title, :message, :notification_type, :action_url, :created_by)');
 
+    // Iterate through the data needed for this block.
     foreach ($admins->fetchAll(PDO::FETCH_COLUMN) as $adminId) {
         $notification->execute([
             'user_id' => (int) $adminId,
@@ -76,14 +83,17 @@ $message = null;
 $availablePaymentMethods = afrisense_public_payment_methods();
 $availableMobileMoneyNetworks = afrisense_public_mobile_money_networks();
 
+// Run database/action work inside a guarded block so the page can fail gracefully.
 try {
     $pdo = afrisense_pdo();
 
+    // Handle submitted form actions before rendering the page.
     if (($_SERVER['REQUEST_METHOD'] ?? 'GET') === 'POST' && ($_POST['action'] ?? '') === 'pay_now') {
         $paymentMethod = (string) ($_POST['payment_method'] ?? ($availablePaymentMethods[0] ?? 'Cash'));
         $deliveryAddress = trim((string) ($checkout['delivery_address'] ?? ''));
         $cartNote = trim((string) ($checkout['cart_note'] ?? $_SESSION['afrisense_customer_cart_note'] ?? ''));
 
+        // Guard this block so it only runs when the required condition is met.
         if ($cart === [] || $deliveryAddress === '' || !afrisense_public_payment_method_allowed($paymentMethod)) {
             $message = ['type' => 'error', 'text' => 'Cart, delivery address, and payment method are required.'];
         } else {
@@ -92,12 +102,15 @@ try {
             $foodLookup = $pdo->prepare('SELECT `id`, `price` FROM `foods` WHERE `availability` = "Available" AND `id` IN (' . $placeholders . ')');
             $foodLookup->execute(array_map('intval', $ids));
             $prices = [];
+            // Iterate through the data needed for this block.
             foreach ($foodLookup->fetchAll(PDO::FETCH_ASSOC) as $food) {
                 $prices[(int) $food['id']] = (float) $food['price'];
             }
 
             $orderSubtotal = 0.00;
+            // Iterate through the data needed for this block.
             foreach ($cart as $foodId => $quantity) {
+                // Guard this block so it only runs when the required condition is met.
                 if (isset($prices[(int) $foodId])) {
                     $orderSubtotal += $prices[(int) $foodId] * max(1, min(20, (int) $quantity));
                 }
@@ -110,13 +123,16 @@ try {
             $orderIds = [];
             $deliveryFeeApplied = false;
 
+            // Iterate through the data needed for this block.
             foreach ($cart as $foodId => $quantity) {
+                // Guard this block so it only runs when the required condition is met.
                 if (!isset($prices[(int) $foodId])) {
                     continue;
                 }
 
                 $quantity = max(1, min(20, (int) $quantity));
                 $lineTotal = $prices[(int) $foodId] * $quantity;
+                // Guard this block so it only runs when the required condition is met.
                 if (!$deliveryFeeApplied) {
                     $lineTotal += $orderDeliveryFee;
                     $deliveryFeeApplied = true;
@@ -137,6 +153,7 @@ try {
 
             afrisense_customer_payment_notify_admins($pdo, $orderIds, (string) ($authUser['fullname'] ?? 'Customer'), (int) ($authUser['id'] ?? 0));
             $pdo->commit();
+            // Guard this block so it only runs when the required condition is met.
             if ($orderIds !== []) {
                 afrisense_public_send_order_customer_email_for_order(
                     $pdo,
@@ -154,11 +171,13 @@ try {
     }
 
     $cartFoods = [];
+    // Guard this block so it only runs when the required condition is met.
     if ($cart !== []) {
         $ids = array_keys($cart);
         $placeholders = implode(',', array_fill(0, count($ids), '?'));
         $statement = $pdo->prepare('SELECT `id`, `food_name`, `price`, `image` FROM `foods` WHERE `id` IN (' . $placeholders . ')');
         $statement->execute(array_map('intval', $ids));
+        // Iterate through the data needed for this block.
         foreach ($statement->fetchAll(PDO::FETCH_ASSOC) as $food) {
             $food['quantity'] = max(1, (int) ($cart[(int) $food['id']] ?? 1));
             $cartFoods[] = $food;
@@ -166,6 +185,7 @@ try {
     }
     $loadError = '';
 } catch (Throwable $exception) {
+    // Guard this block so it only runs when the required condition is met.
     if (isset($pdo) && $pdo->inTransaction()) {
         $pdo->rollBack();
     }
@@ -182,6 +202,7 @@ $supportEmail = (string) ($publicSettings['company']['support_email'] ?? 'suppor
 
 ob_start();
 ?>
+<!-- Page section for this part of the AfriSense interface. -->
 <section class="af-payment-page af-customer-payment-page">
     <ol class="af-checkout-steps">
         <li class="done"><span><i class="bi bi-cart3"></i></span>1. Cart <i class="bi bi-check-circle-fill"></i></li>
@@ -189,16 +210,23 @@ ob_start();
         <li class="active"><span><i class="bi bi-credit-card"></i></span>3. Payment</li>
         <li><span><i class="bi bi-check-lg"></i></span>4. Confirmation</li>
     </ol>
+    <?php // Render this conditional/dynamic template block. ?>
     <?php if ($loadError !== ''): ?><div class="af-admin-alert error"><?php echo htmlspecialchars($loadError, ENT_QUOTES, 'UTF-8'); ?></div><?php endif; ?>
+    <?php // Render this conditional/dynamic template block. ?>
     <?php if ($message !== null): ?><div class="af-admin-alert <?php echo htmlspecialchars($message['type'], ENT_QUOTES, 'UTF-8'); ?>"><?php echo htmlspecialchars($message['text'], ENT_QUOTES, 'UTF-8'); ?></div><?php endif; ?>
     <div class="af-payment-grid">
+        <!-- Main content area for this page. -->
         <main class="af-payment-card">
+            <!-- Header block for this interface section. -->
             <header class="af-payment-heading"><i class="bi bi-lock"></i><div><h1>Secure Payment</h1><p>Complete your payment to confirm your order.</p></div></header>
             <p class="af-payment-alert"><i class="bi bi-shield-check"></i> Your payment is 100% secure and encrypted.</p>
+            <!-- Form block that submits this page workflow. -->
             <form action="payment.php" method="post">
                 <input type="hidden" name="action" value="pay_now">
+                <!-- Page section for this part of the AfriSense interface. -->
                 <section class="af-payment-section">
                     <h2>Choose Payment Method</h2>
+                    <?php // Render this conditional/dynamic template block. ?>
                     <?php foreach ($availablePaymentMethods as $index => $method): ?>
                         <label class="af-payment-method <?php echo $index === 0 ? 'is-active' : ''; ?>">
                             <input type="radio" name="payment_method" value="<?php echo htmlspecialchars($method, ENT_QUOTES, 'UTF-8'); ?>" <?php echo $index === 0 ? 'checked' : ''; ?>>
@@ -210,7 +238,9 @@ ob_start();
                         </label>
                     <?php endforeach; ?>
                 </section>
+                <?php // Render this conditional/dynamic template block. ?>
                 <?php if (in_array('Mobile Money', $availablePaymentMethods, true)): ?>
+                <!-- Page section for this part of the AfriSense interface. -->
                 <section class="af-payment-section">
                     <h2>Pay with Mobile Money</h2>
                     <div class="af-billing-grid single"><label>Select Network<select name="network"><?php foreach ($availableMobileMoneyNetworks as $network): ?><option><?php echo htmlspecialchars($network, ENT_QUOTES, 'UTF-8'); ?></option><?php endforeach; ?></select></label></div>
@@ -218,6 +248,7 @@ ob_start();
                     <p class="af-payment-warning"><i class="bi bi-info-circle"></i> <?php echo htmlspecialchars(afrisense_public_payment_instruction(), ENT_QUOTES, 'UTF-8'); ?></p>
                 </section>
                 <?php endif; ?>
+                <!-- Page section for this part of the AfriSense interface. -->
                 <section class="af-payment-section">
                     <h2>Billing Information</h2>
                     <div class="af-billing-grid">
@@ -231,13 +262,18 @@ ob_start();
                 </section>
             </form>
         </main>
+        <!-- Side panel with supporting information and actions. -->
         <aside class="af-payment-side">
+            <!-- Page section for this part of the AfriSense interface. -->
             <section class="af-summary-card">
                 <h2>Order Summary</h2>
+                <?php // Render this conditional/dynamic template block. ?>
                 <?php foreach ($cartFoods as $item): ?><article><img src="<?php echo htmlspecialchars(afrisense_customer_payment_image($frontendBase, (string) ($item['image'] ?? '')), ENT_QUOTES, 'UTF-8'); ?>" alt=""><span><strong><?php echo htmlspecialchars((string) $item['food_name'], ENT_QUOTES, 'UTF-8'); ?></strong><small>Qty: <?php echo (int) $item['quantity']; ?></small></span><b><?php echo htmlspecialchars(afrisense_public_money((float) $item['price'] * (int) $item['quantity']), ENT_QUOTES, 'UTF-8'); ?></b></article><?php endforeach; ?>
                 <dl><div><dt>Subtotal</dt><dd><?php echo htmlspecialchars(afrisense_public_money($subtotal), ENT_QUOTES, 'UTF-8'); ?></dd></div><div><dt>Delivery Fee</dt><dd><?php echo htmlspecialchars(afrisense_public_money($deliveryFee), ENT_QUOTES, 'UTF-8'); ?></dd></div><div class="total"><dt>Total Amount</dt><dd><?php echo htmlspecialchars(afrisense_public_money($total), ENT_QUOTES, 'UTF-8'); ?></dd></div></dl>
             </section>
+            <!-- Page section for this part of the AfriSense interface. -->
             <section class="af-summary-card"><h2>Why Pay with AfriSense?</h2><ul class="af-pay-reasons"><li><i class="bi bi-shield-check"></i><span><strong>100% Secure Payments</strong>Your payment details are safe with us.</span></li><li><i class="bi bi-hand-thumbs-up"></i><span><strong>Fast &amp; Reliable</strong>Quick payment confirmation and order processing.</span></li><li><i class="bi bi-credit-card"></i><span><strong>Multiple Payment Options</strong>Choose the payment method that works for you.</span></li></ul></section>
+            <!-- Page section for this part of the AfriSense interface. -->
             <section class="af-summary-card af-payment-help"><i class="bi bi-headset"></i><div><h2>Need Help?</h2><p>Our support team is here to assist you.</p><strong><a href="support.php">Chat with Support</a></strong><strong>Email: <?php echo htmlspecialchars($supportEmail, ENT_QUOTES, 'UTF-8'); ?></strong></div></section>
         </aside>
     </div>

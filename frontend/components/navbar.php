@@ -9,7 +9,9 @@ $publicSettings = afrisense_public_settings();
 $siteName = (string) ($publicSettings['website']['site_name'] ?? 'AfriSense Food Services');
 $primaryPhone = (string) ($publicSettings['company']['phone_number_1'] ?? '+233 24 123 4567');
 $publicUser = null;
+// Guard this block so it only runs when the required condition is met.
 if (function_exists('afrisense_current_user')) {
+    // Run database/action work inside a guarded block so the page can fail gracefully.
     try {
         $publicUser = afrisense_current_user();
     } catch (Throwable) {
@@ -40,7 +42,9 @@ $navItems = [
     'contact' => ['label' => 'Contact Us', 'href' => $frontendBase . '/landing/contact.php'],
 ];
 ?>
+<!-- Header block for this interface section. -->
 <header class="af-public-header" data-navbar>
+    <!-- Navigation links for this interface. -->
     <nav class="af-navbar" aria-label="Primary navigation">
         <a class="af-header-brand" href="<?php echo htmlspecialchars($frontendBase . '/landing/index.php', ENT_QUOTES, 'UTF-8'); ?>" aria-label="AfriSense home">
             <span class="af-brand-icon" aria-hidden="true"><?php echo afrisense_public_brand_icon_html($frontendBase); ?></span>
@@ -60,6 +64,7 @@ $navItems = [
 
         <div class="af-nav-menu" data-navbar-menu>
             <ul class="af-nav-links">
+                <?php // Render this conditional/dynamic template block. ?>
                 <?php foreach ($navItems as $key => $item): ?>
                     <li>
                         <a class="<?php echo $activePage === $key ? 'is-active' : ''; ?>" href="<?php echo htmlspecialchars($item['href'], ENT_QUOTES, 'UTF-8'); ?>">
@@ -74,6 +79,7 @@ $navItems = [
                     <i class="bi bi-telephone" aria-hidden="true"></i>
                     <span><?php echo htmlspecialchars($primaryPhone, ENT_QUOTES, 'UTF-8'); ?></span>
                 </a>
+                <?php // Render this conditional/dynamic template block. ?>
                 <?php if ($publicHeaderMode === 'shop'): ?>
                     <a class="af-cart-link" href="<?php echo htmlspecialchars($publicCartHref, ENT_QUOTES, 'UTF-8'); ?>" aria-label="View cart">
                         <i class="bi bi-cart3" aria-hidden="true"></i>
@@ -86,6 +92,7 @@ $navItems = [
                     </a>
                 <?php else: ?>
                     <a class="af-order-btn" href="<?php echo htmlspecialchars($publicOrderHref, ENT_QUOTES, 'UTF-8'); ?>">Order Now</a>
+                    <?php // Render this conditional/dynamic template block. ?>
                     <?php if ($publicUser === null): ?>
                         <a class="af-auth-btn" href="<?php echo htmlspecialchars($frontendBase . '/auth/login.php', ENT_QUOTES, 'UTF-8'); ?>">Login</a>
                         <a class="af-auth-btn is-register" href="<?php echo htmlspecialchars($frontendBase . '/auth/register.php', ENT_QUOTES, 'UTF-8'); ?>">Register</a>

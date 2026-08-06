@@ -12,6 +12,7 @@ require_once __DIR__ . '/../auth/auth_bootstrap.php';
 
 afrisense_require_admin();
 
+// Defines the afrisense_role_icon helper used by this module.
 function afrisense_role_icon(string $roleName): string
 {
     $roleName = strtolower($roleName);
@@ -27,6 +28,7 @@ function afrisense_role_icon(string $roleName): string
     };
 }
 
+// Defines the afrisense_role_tone helper used by this module.
 function afrisense_role_tone(string $roleName): string
 {
     $roleName = strtolower($roleName);
@@ -42,6 +44,7 @@ function afrisense_role_tone(string $roleName): string
     };
 }
 
+// Defines the afrisense_role_permission_count helper used by this module.
 function afrisense_role_permission_count(string $roleName): int
 {
     $roleName = strtolower($roleName);
@@ -57,6 +60,7 @@ function afrisense_role_permission_count(string $roleName): int
     };
 }
 
+// Defines the afrisense_role_permission_level helper used by this module.
 function afrisense_role_permission_level(int $count): string
 {
     return match (true) {
@@ -67,8 +71,10 @@ function afrisense_role_permission_level(int $count): string
     };
 }
 
+// Defines the afrisense_role_description helper used by this module.
 function afrisense_role_description(string $roleName, string $description): string
 {
+    // Guard this block so it only runs when the required condition is met.
     if ($description !== '') {
         return $description;
     }
@@ -86,6 +92,7 @@ function afrisense_role_description(string $roleName, string $description): stri
     };
 }
 
+// Run database/action work inside a guarded block so the page can fail gracefully.
 try {
     $pdo = afrisense_pdo();
     afrisense_delivery_rider_role_id($pdo);
@@ -94,10 +101,12 @@ try {
     $flashMessage = '';
     $flashType = 'success';
 
+    // Handle submitted form actions before rendering the page.
     if (($_SERVER['REQUEST_METHOD'] ?? 'GET') === 'POST' && ($_POST['action'] ?? '') === 'create_role') {
         $roleName = trim((string) ($_POST['rolename'] ?? ''));
         $roleDescription = trim((string) ($_POST['description'] ?? ''));
 
+        // Guard this block so it only runs when the required condition is met.
         if ($roleName === '' || strlen($roleName) < 2 || strlen($roleName) > 50) {
             $flashType = 'error';
             $flashMessage = 'Role name must be between 2 and 50 characters.';
@@ -109,6 +118,7 @@ try {
             $duplicate->execute(['rolename' => $roleName]);
             $duplicateRow = $duplicate->fetch(PDO::FETCH_ASSOC);
 
+            // Guard this block so it only runs when the required condition is met.
             if (((int) ($duplicateRow['count_value'] ?? 0)) > 0) {
                 $flashType = 'error';
                 $flashMessage = 'A role with that name already exists.';
@@ -130,6 +140,7 @@ try {
     $roleWhere = '';
     $roleParams = [];
 
+    // Guard this block so it only runs when the required condition is met.
     if ($roleSearch !== '') {
         $roleWhere = 'WHERE r.`rolename` LIKE :search OR r.`description` LIKE :search';
         $roleParams['search'] = '%' . $roleSearch . '%';
@@ -194,7 +205,9 @@ $selectedRolePermissionCount = $hasPermissionTables ? (int) ($selectedRole['assi
 
 ob_start();
 ?>
+<!-- Page section for this part of the AfriSense interface. -->
 <section class="af-admin-menu-page af-roles-page">
+    <!-- Header block for this interface section. -->
     <header class="af-admin-page-heading">
         <div>
             <h1>Roles &amp; Permissions</h1>
@@ -206,13 +219,16 @@ ob_start();
         </a>
     </header>
 
+    <?php // Render this conditional/dynamic template block. ?>
     <?php if ($loadError !== ''): ?>
         <div class="af-admin-alert error"><?php echo htmlspecialchars($loadError, ENT_QUOTES, 'UTF-8'); ?></div>
     <?php endif; ?>
+    <?php // Render this conditional/dynamic template block. ?>
     <?php if ($flashMessage !== ''): ?>
         <div class="af-admin-alert <?php echo htmlspecialchars($flashType, ENT_QUOTES, 'UTF-8'); ?>"><?php echo htmlspecialchars($flashMessage, ENT_QUOTES, 'UTF-8'); ?></div>
     <?php endif; ?>
 
+    <!-- Page section for this part of the AfriSense interface. -->
     <section class="af-menu-metrics" aria-label="Role summary">
         <article class="green">
             <span><i class="bi bi-shield-check" aria-hidden="true"></i></span>
@@ -232,11 +248,14 @@ ob_start();
         </article>
     </section>
 
+    <!-- Page section for this part of the AfriSense interface. -->
     <section class="af-menu-table-card af-role-create-card">
+        <!-- Header block for this interface section. -->
         <header class="af-table-toolbar">
             <h2>Create Role</h2>
             <p>Add a role that can be assigned to users from the Users page.</p>
         </header>
+        <!-- Form block that submits this page workflow. -->
         <form id="add_role_form" class="af-food-management-form af-role-create-form" action="roles.php#add_role_form" method="post">
             <input type="hidden" name="action" value="create_role">
             <label>
@@ -251,10 +270,14 @@ ob_start();
         </form>
     </section>
 
+    <!-- Page section for this part of the AfriSense interface. -->
     <section class="af-roles-workspace">
+        <!-- Page section for this part of the AfriSense interface. -->
         <section class="af-menu-table-card">
+            <!-- Header block for this interface section. -->
             <header class="af-table-toolbar">
                 <h2>All Roles</h2>
+                <!-- Form block that submits this page workflow. -->
                 <form class="af-role-search" action="roles.php" method="get">
                     <label class="af-menu-search" for="role_search">
                         <i class="bi bi-search" aria-hidden="true"></i>
@@ -265,6 +288,7 @@ ob_start();
             </header>
 
             <div class="af-menu-table af-roles-table">
+                <!-- Table block for displaying structured records. -->
                 <table>
                     <thead>
                         <tr>
@@ -278,11 +302,13 @@ ob_start();
                         </tr>
                     </thead>
                     <tbody>
+                        <?php // Render this conditional/dynamic template block. ?>
                         <?php if ($roles === []): ?>
                             <tr>
                                 <td colspan="7"><div class="af-empty-state">No roles found yet.</div></td>
                             </tr>
                         <?php endif; ?>
+                        <?php // Render this conditional/dynamic template block. ?>
                         <?php foreach ($roles as $index => $role): ?>
                             <?php
                             $roleId = (int) ($role['id'] ?? 0);
@@ -298,6 +324,7 @@ ob_start();
                                             <i class="bi <?php echo htmlspecialchars(afrisense_role_icon($roleName), ENT_QUOTES, 'UTF-8'); ?>" aria-hidden="true"></i>
                                         </span>
                                         <strong><?php echo htmlspecialchars($roleName, ENT_QUOTES, 'UTF-8'); ?></strong>
+                                        <?php // Render this conditional/dynamic template block. ?>
                                         <?php if ($index === 0): ?><small>System</small><?php endif; ?>
                                     </div>
                                 </td>
@@ -320,8 +347,10 @@ ob_start();
                 </table>
             </div>
 
+            <!-- Footer block for this interface section. -->
             <footer class="af-menu-pagination">
                 <p>Showing 1 to <?php echo htmlspecialchars((string) $totalRoles, ENT_QUOTES, 'UTF-8'); ?> of <?php echo htmlspecialchars((string) $totalRoles, ENT_QUOTES, 'UTF-8'); ?> roles</p>
+                <!-- Navigation links for this interface. -->
                 <nav aria-label="Roles pagination">
                     <a class="is-disabled" href="#" aria-label="Previous page"><i class="bi bi-chevron-left" aria-hidden="true"></i></a>
                     <a class="active" href="#">1</a>
@@ -330,7 +359,9 @@ ob_start();
             </footer>
         </section>
 
+        <!-- Side panel with supporting information and actions. -->
         <aside class="af-roles-side">
+            <!-- Page section for this part of the AfriSense interface. -->
             <section class="af-role-details-card">
                 <h2>Role Details</h2>
                 <div class="af-role-detail-head">
@@ -353,6 +384,7 @@ ob_start();
                 <a class="af-role-permission-link" href="permissions.php?role=<?php echo htmlspecialchars((string) ($selectedRole['id'] ?? 0), ENT_QUOTES, 'UTF-8'); ?>#permission-editor">View Full Permissions</a>
             </section>
 
+            <!-- Page section for this part of the AfriSense interface. -->
             <section class="af-role-help-card">
                 <h2><i class="bi bi-question-circle" aria-hidden="true"></i> Quick Help</h2>
                 <p>Roles help you control what each user can see and do in the system.</p>

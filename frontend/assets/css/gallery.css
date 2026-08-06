@@ -1,9 +1,11 @@
+/* Styling rules for *. */
 * {
     margin: 0;
     padding: 0;
     box-sizing: border-box;
 }
 
+/* Global design tokens and CSS custom properties. */
 :root {
     --green: #0d241e;
     --green-2: #0c231d;
@@ -16,6 +18,7 @@
     --card: #fff;
 }
 
+/* Styling rules for body. */
 body {
     min-height: 100vh;
     background: var(--bg);
@@ -23,10 +26,12 @@ body {
     font-family: "Poppins", Arial, sans-serif;
 }
 
+/* Styling rules for a. */
 a {
     color: inherit;
 }
 
+/* Sidebar navigation styling for .sidebar. */
 .sidebar {
     position: fixed;
     inset: 0 auto 0 0;
@@ -41,6 +46,7 @@ a {
     z-index: 20;
 }
 
+/* Styling rules for .brand. */
 .brand {
     display: inline-flex;
     align-items: center;
@@ -50,25 +56,30 @@ a {
     margin-bottom: 22px;
 }
 
+/* Styling rules for .brand-icon. */
 .brand-icon {
     color: var(--gold-2);
     font-size: 42px;
 }
 
 .brand strong,
+/* Styling rules for .brand strong, .brand small. */
 .brand small {
     display: block;
 }
 
+/* Styling rules for .brand strong. */
 .brand strong {
     font-size: 30px;
     line-height: 1;
 }
 
+/* Styling rules for .brand strong::first-letter. */
 .brand strong::first-letter {
     color: var(--gold-2);
 }
 
+/* Styling rules for .brand small. */
 .brand small {
     color: rgba(255, 255, 255, 0.82);
     font-size: 10px;
@@ -78,12 +89,14 @@ a {
     text-transform: uppercase;
 }
 
+/* Navigation and menu styling for .side-nav. */
 .side-nav {
     display: flex;
     flex-direction: column;
     gap: 7px;
 }
 
+/* Navigation and menu styling for .side-nav p. */
 .side-nav p {
     color: rgba(255, 255, 255, 0.62);
     font-size: 11px;
@@ -93,6 +106,7 @@ a {
 }
 
 .side-nav a,
+/* Navigation and menu styling for .side-nav a, .logout-link. */
 .logout-link {
     height: 40px;
     border-radius: 6px;
@@ -107,21 +121,25 @@ a {
 }
 
 .side-nav a i,
+/* Navigation and menu styling for .side-nav a i, .logout-link i. */
 .logout-link i {
     font-size: 17px;
     width: 19px;
 }
 
 .side-nav a.active,
+/* Navigation and menu styling for .side-nav a.active, .side-nav a:hover. */
 .side-nav a:hover {
     background: rgba(183, 123, 26, 0.22);
     color: #fff;
 }
 
+/* Navigation and menu styling for .side-nav a.active i. */
 .side-nav a.active i {
     color: var(--gold-2);
 }
 
+/* Sidebar navigation styling for .sidebar-user. */
 .sidebar-user {
     margin-top: auto;
     border: 1px solid rgba(255, 255, 255, 0.12);
@@ -134,6 +152,7 @@ a {
 }
 
 .sidebar-user img,
+/* Sidebar navigation styling for .sidebar-user img, .admin-profile img. */
 .admin-profile img {
     width: 36px;
     height: 36px;
@@ -144,28 +163,34 @@ a {
 .sidebar-user strong,
 .sidebar-user small,
 .admin-profile strong,
+/* Sidebar navigation styling for .sidebar-user strong, .sidebar-user small, .admin-profile strong, .admin-profile small. */
 .admin-profile small {
     display: block;
 }
 
+/* Sidebar navigation styling for .sidebar-user strong. */
 .sidebar-user strong {
     font-size: 13px;
 }
 
+/* Sidebar navigation styling for .sidebar-user small. */
 .sidebar-user small {
     color: rgba(255, 255, 255, 0.72);
     font-size: 11px;
 }
 
+/* Styling rules for .logout-link. */
 .logout-link {
     margin-top: 8px;
 }
 
+/* Styling rules for .dashboard-shell. */
 .dashboard-shell {
     margin-left: 256px;
     min-height: 100vh;
 }
 
+/* Styling rules for .topbar. */
 .topbar {
     height: 78px;
     background: #fff;
@@ -181,16 +206,19 @@ a {
 }
 
 .menu-toggle,
+/* Button and action control styling for .menu-toggle, .top-actions button. */
 .top-actions button {
     border: 0;
     background: transparent;
     cursor: pointer;
 }
 
+/* Navigation and menu styling for .menu-toggle i. */
 .menu-toggle i {
     font-size: 24px;
 }
 
+/* Styling rules for .top-search. */
 .top-search {
     height: 42px;
     border: 1px solid var(--line);
@@ -201,6 +229,7 @@ a {
     gap: 10px;
 }
 
+/* Form control styling for .top-search input. */
 .top-search input {
     width: 100%;
     border: 0;
@@ -209,10 +238,12 @@ a {
     font-size: 14px;
 }
 
+/* Styling rules for .top-search i. */
 .top-search i {
     color: var(--muted);
 }
 
+/* Styling rules for .top-actions. */
 .top-actions {
     justify-self: end;
     display: flex;
@@ -220,11 +251,13 @@ a {
     gap: 20px;
 }
 
+/* Button and action control styling for .top-actions button. */
 .top-actions button {
     position: relative;
     font-size: 20px;
 }
 
+/* Button and action control styling for .top-actions button span. */
 .top-actions button span {
     position: absolute;
     top: -8px;
@@ -241,10 +274,12 @@ a {
     font-weight: 800;
 }
 
+/* Button and action control styling for .top-actions button span.green. */
 .top-actions button span.green {
     background: #16a34a;
 }
 
+/* Styling rules for .admin-profile. */
 .admin-profile {
     display: grid;
     grid-template-columns: 38px 1fr 16px;
@@ -252,19 +287,23 @@ a {
     gap: 10px;
 }
 
+/* Styling rules for .admin-profile strong. */
 .admin-profile strong {
     font-size: 13px;
 }
 
+/* Styling rules for .admin-profile small. */
 .admin-profile small {
     color: var(--muted);
     font-size: 11px;
 }
 
+/* Styling rules for .content. */
 .content {
     padding: 26px 28px 18px;
 }
 
+/* Styling rules for .page-heading. */
 .page-heading {
     display: flex;
     align-items: center;
@@ -272,11 +311,13 @@ a {
     gap: 24px;
 }
 
+/* Styling rules for .page-heading h1. */
 .page-heading h1 {
     font-size: 28px;
     line-height: 1.2;
 }
 
+/* Styling rules for .page-heading p. */
 .page-heading p {
     color: var(--muted);
     display: flex;
@@ -288,12 +329,14 @@ a {
 }
 
 .heading-actions,
+/* Styling rules for .heading-actions, .filter-actions. */
 .filter-actions {
     display: flex;
     gap: 12px;
 }
 
 .heading-actions button,
+/* Button and action control styling for .heading-actions button, .filter-actions button. */
 .filter-actions button {
     height: 38px;
     border-radius: 5px;
@@ -309,18 +352,21 @@ a {
 }
 
 .outline-btn,
+/* Button and action control styling for .outline-btn, .filter-actions button. */
 .filter-actions button {
     background: #fff;
     border: 1px solid var(--line);
     color: var(--text);
 }
 
+/* Button and action control styling for .solid-btn. */
 .solid-btn {
     background: var(--green);
     border: 1px solid var(--green);
     color: #fff;
 }
 
+/* Styling rules for .metric-grid. */
 .metric-grid {
     display: grid;
     grid-template-columns: repeat(4, 1fr);
@@ -328,6 +374,7 @@ a {
     margin-top: 26px;
 }
 
+/* Card and panel styling for .metric-card. */
 .metric-card {
     min-height: 118px;
     background: #fff;
@@ -340,6 +387,7 @@ a {
     padding: 22px 28px;
 }
 
+/* Card and panel styling for .metric-card > span:first-child. */
 .metric-card > span:first-child {
     width: 58px;
     height: 58px;
@@ -349,22 +397,29 @@ a {
     justify-content: center;
 }
 
+/* Card and panel styling for .metric-card.green > span:first-child. */
 .metric-card.green > span:first-child { background: #dcfce7; color: #16a34a; }
+/* Card and panel styling for .metric-card.gold > span:first-child. */
 .metric-card.gold > span:first-child { background: #fef3c7; color: var(--gold); }
+/* Card and panel styling for .metric-card.blue > span:first-child. */
 .metric-card.blue > span:first-child { background: #dbeafe; color: #2563eb; }
+/* Card and panel styling for .metric-card.purple > span:first-child. */
 .metric-card.purple > span:first-child { background: #f3e8ff; color: #9333ea; }
 
+/* Card and panel styling for .metric-card i. */
 .metric-card i {
     font-size: 27px;
 }
 
 .metric-card small,
+/* Card and panel styling for .metric-card small, .metric-card p. */
 .metric-card p {
     color: var(--muted);
     font-size: 13px;
     font-weight: 600;
 }
 
+/* Card and panel styling for .metric-card strong. */
 .metric-card strong {
     display: block;
     font-size: 26px;
@@ -372,6 +427,7 @@ a {
     margin: 8px 0 5px;
 }
 
+/* Styling rules for .progress. */
 .progress {
     height: 6px;
     border-radius: 999px;
@@ -381,6 +437,7 @@ a {
     overflow: hidden;
 }
 
+/* Styling rules for .progress span. */
 .progress span {
     width: 25%;
     height: 100%;
@@ -388,6 +445,7 @@ a {
     display: block;
 }
 
+/* Card and panel styling for .filter-panel. */
 .filter-panel {
     background: #fff;
     border-radius: 8px;
@@ -401,6 +459,7 @@ a {
 }
 
 .gallery-search,
+/* Form control styling for .gallery-search, .filter-panel label:not(.gallery-search) select. */
 .filter-panel label:not(.gallery-search) select {
     height: 40px;
     border: 1px solid var(--line);
@@ -408,6 +467,7 @@ a {
     background: #fff;
 }
 
+/* Styling rules for .gallery-search. */
 .gallery-search {
     display: flex;
     align-items: center;
@@ -415,10 +475,12 @@ a {
     padding: 0 12px;
 }
 
+/* Styling rules for .gallery-search i. */
 .gallery-search i {
     color: var(--muted);
 }
 
+/* Form control styling for .gallery-search input. */
 .gallery-search input {
     width: 100%;
     border: 0;
@@ -427,6 +489,7 @@ a {
     font-size: 13px;
 }
 
+/* Card and panel styling for .filter-panel label:not(.gallery-search) span. */
 .filter-panel label:not(.gallery-search) span {
     color: var(--text);
     display: block;
@@ -435,6 +498,7 @@ a {
     margin-bottom: 8px;
 }
 
+/* Form control styling for .filter-panel select. */
 .filter-panel select {
     width: 100%;
     padding: 0 12px;
@@ -443,10 +507,12 @@ a {
     outline: 0;
 }
 
+/* Styling rules for .filter-actions. */
 .filter-actions {
     justify-self: end;
 }
 
+/* Styling rules for .gallery-grid. */
 .gallery-grid {
     display: grid;
     grid-template-columns: repeat(6, 1fr);
@@ -454,6 +520,7 @@ a {
     margin-top: 22px;
 }
 
+/* Card and panel styling for .gallery-card. */
 .gallery-card {
     background: #fff;
     border: 1px solid #edf0f2;
@@ -462,11 +529,13 @@ a {
     box-shadow: 0 6px 16px rgba(15, 23, 42, 0.04);
 }
 
+/* Styling rules for .image-frame. */
 .image-frame {
     height: 142px;
     position: relative;
 }
 
+/* Styling rules for .image-frame img. */
 .image-frame img {
     width: 100%;
     height: 100%;
@@ -474,6 +543,7 @@ a {
     object-fit: cover;
 }
 
+/* Form control styling for .image-frame input. */
 .image-frame input {
     position: absolute;
     top: 10px;
@@ -483,6 +553,7 @@ a {
     accent-color: var(--gold);
 }
 
+/* Button and action control styling for .image-frame button. */
 .image-frame button {
     position: absolute;
     top: 8px;
@@ -496,15 +567,18 @@ a {
     cursor: pointer;
 }
 
+/* Card and panel styling for .card-body. */
 .card-body {
     padding: 12px;
 }
 
+/* Card and panel styling for .card-body h2. */
 .card-body h2 {
     font-size: 13px;
     line-height: 1.25;
 }
 
+/* Card and panel styling for .card-body p. */
 .card-body p {
     color: var(--muted);
     font-size: 11px;
@@ -512,6 +586,7 @@ a {
     margin-top: 7px;
 }
 
+/* Styling rules for .tag. */
 .tag {
     border-radius: 4px;
     display: inline-flex;
@@ -521,14 +596,22 @@ a {
     padding: 4px 7px;
 }
 
+/* Styling rules for .tag.meals. */
 .tag.meals { background: #dcfce7; color: #15803d; }
+/* Styling rules for .tag.salads. */
 .tag.salads { background: #f3e8ff; color: #7e22ce; }
+/* Styling rules for .tag.soups. */
 .tag.soups { background: #fef3c7; color: #a16207; }
+/* Styling rules for .tag.drinks. */
 .tag.drinks { background: #fce7f3; color: #be185d; }
+/* Styling rules for .tag.catering. */
 .tag.catering { background: #dbeafe; color: #1d4ed8; }
+/* Styling rules for .tag.events. */
 .tag.events { background: #f3f4f6; color: #4b5563; }
+/* Styling rules for .tag.packages. */
 .tag.packages { background: #ffedd5; color: #c2410c; }
 
+/* Footer styling for .gallery-footer. */
 .gallery-footer {
     background: #fff;
     border: 1px solid #edf0f2;
@@ -542,12 +625,14 @@ a {
 }
 
 .bulk-actions,
+/* Styling rules for .bulk-actions, .pagination. */
 .pagination {
     display: flex;
     align-items: center;
     gap: 10px;
 }
 
+/* Styling rules for .bulk-actions label. */
 .bulk-actions label {
     color: var(--text);
     display: inline-flex;
@@ -560,6 +645,7 @@ a {
 .bulk-actions select,
 .bulk-actions button,
 .pagination a,
+/* Form control styling for .bulk-actions select, .bulk-actions button, .pagination a, .pagination select. */
 .pagination select {
     height: 34px;
     border: 1px solid var(--line);
@@ -576,42 +662,52 @@ a {
     text-decoration: none;
 }
 
+/* Button and action control styling for .bulk-actions button. */
 .bulk-actions button {
     color: #dc2626;
     border-color: #fecaca;
 }
 
+/* Footer styling for .gallery-footer p. */
 .gallery-footer p {
     color: var(--muted);
     font-size: 13px;
     font-weight: 600;
 }
 
+/* Interactive state styling for .pagination a.active. */
 .pagination a.active {
     background: var(--green);
     color: #fff;
     border-color: var(--green);
 }
 
+/* Responsive styling rules for @media (max-width: 1220px). */
 @media (max-width: 1220px) {
+    /* Styling rules for .metric-grid. */
     .metric-grid {
         grid-template-columns: repeat(2, 1fr);
     }
 
+    /* Card and panel styling for .filter-panel. */
     .filter-panel {
         grid-template-columns: repeat(2, 1fr);
     }
 
+    /* Styling rules for .gallery-grid. */
     .gallery-grid {
         grid-template-columns: repeat(3, 1fr);
     }
 
+    /* Styling rules for .filter-actions. */
     .filter-actions {
         justify-self: start;
     }
 }
 
+/* Responsive styling rules for @media (max-width: 860px). */
 @media (max-width: 860px) {
+    /* Sidebar navigation styling for .sidebar. */
     .sidebar {
         position: static;
         width: 100%;
@@ -620,39 +716,46 @@ a {
         padding: 18px;
     }
 
+    /* Styling rules for .brand. */
     .brand {
         margin-bottom: 0;
     }
 
     .side-nav,
     .sidebar-user,
+    /* Sidebar navigation styling for .side-nav, .sidebar-user, .logout-link. */
     .logout-link {
         display: none;
     }
 
+    /* Styling rules for .dashboard-shell. */
     .dashboard-shell {
         margin-left: 0;
     }
 
     .topbar,
     .page-heading,
+    /* Footer styling for .topbar, .page-heading, .gallery-footer. */
     .gallery-footer {
         align-items: stretch;
         display: flex;
         flex-direction: column;
     }
 
+    /* Styling rules for .topbar. */
     .topbar {
         height: auto;
         padding: 18px;
     }
 
+    /* Styling rules for .top-actions. */
     .top-actions {
         justify-self: stretch;
         justify-content: space-between;
     }
 
     .admin-profile span,
+    /* Styling rules for .admin-profile span, .admin-profile i. */
     .admin-profile i {
         display: none;
     }
@@ -660,16 +763,19 @@ a {
     .heading-actions,
     .filter-actions,
     .bulk-actions,
+    /* Styling rules for .heading-actions, .filter-actions, .bulk-actions, .pagination. */
     .pagination {
         flex-wrap: wrap;
     }
 
     .metric-grid,
     .filter-panel,
+    /* Card and panel styling for .metric-grid, .filter-panel, .gallery-grid. */
     .gallery-grid {
         grid-template-columns: 1fr;
     }
 
+    /* Styling rules for .content. */
     .content {
         padding: 20px 16px;
     }

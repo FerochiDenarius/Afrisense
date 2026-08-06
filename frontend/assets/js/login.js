@@ -1,14 +1,18 @@
+// Bind the UI event handler for this interactive control.
 document.addEventListener("DOMContentLoaded", function () {
     var toggle = document.querySelector(".password-toggle");
 
+    // Run this branch only when the required UI state is present.
     if (!toggle) {
         return;
     }
 
+    // Bind the UI event handler for this interactive control.
     toggle.addEventListener("click", function () {
         var input = document.getElementById(toggle.getAttribute("aria-controls"));
         var icon = toggle.querySelector("i");
 
+        // Run this branch only when the required UI state is present.
         if (!input || !icon) {
             return;
         }

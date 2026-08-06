@@ -31,10 +31,12 @@ class AuthMiddleware
     {
         $user = $this->auth->getCurrentUser();
 
+        // Guard this block so it only runs when the required condition is met.
         if ($user !== null) {
             return $user;
         }
 
+        // Guard this block so it only runs when the required condition is met.
         if ($redirectTo !== null) {
             header('Location: ' . $redirectTo);
             exit;

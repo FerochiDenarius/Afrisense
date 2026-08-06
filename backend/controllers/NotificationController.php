@@ -44,6 +44,7 @@ class NotificationController
         $validator = new Validator();
         $typeField = isset($request['notification_type']) ? 'notification_type' : 'type';
 
+        // Guard this block so it only runs when the required condition is met.
         if (!$validator->validate($request, [
             'user_id' => 'required',
             'title' => 'required|minLength:2|maxLength:150',
@@ -55,6 +56,7 @@ class NotificationController
 
         $id = $this->notifications->create($request);
 
+        // Guard this block so it only runs when the required condition is met.
         if ($id === null) {
             return Response::error('Notification could not be created.', 500);
         }
@@ -67,6 +69,7 @@ class NotificationController
      */
     public function markAsRead(int $id, int $userId): array
     {
+        // Guard this block so it only runs when the required condition is met.
         if (!$this->notifications->markAsRead($id, $userId)) {
             return Response::error('Notification could not be updated.', 400);
         }
@@ -89,6 +92,7 @@ class NotificationController
      */
     public function destroy(int $id, int $userId): array
     {
+        // Guard this block so it only runs when the required condition is met.
         if (!$this->notifications->delete($id, $userId)) {
             return Response::error('Notification could not be deleted.', 400);
         }

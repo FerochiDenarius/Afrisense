@@ -50,6 +50,7 @@ class UserController
     {
         $user = $this->users->findById($id);
 
+        // Guard this block so it only runs when the required condition is met.
         if ($user === null) {
             return Response::error('User not found.', 404);
         }
@@ -67,6 +68,7 @@ class UserController
         $validator = new Validator();
         $phoneField = isset($request['phonenumber']) ? 'phonenumber' : 'phone';
 
+        // Guard this block so it only runs when the required condition is met.
         if (!$validator->validate($request, [
             'fullname' => 'required|minLength:2|maxLength:150',
             'username' => 'required|minLength:2|maxLength:100',
@@ -80,6 +82,7 @@ class UserController
 
         $id = $this->users->create($request);
 
+        // Guard this block so it only runs when the required condition is met.
         if ($id === null) {
             return Response::error('User could not be created.', 500);
         }
@@ -94,10 +97,12 @@ class UserController
     {
         $validator = new Validator();
 
+        // Guard this block so it only runs when the required condition is met.
         if (isset($request['email']) && !$validator->validate($request, ['email' => 'email'])) {
             return Response::error('Validation failed.', 422, $validator->getErrors());
         }
 
+        // Guard this block so it only runs when the required condition is met.
         if (!$this->users->update($id, $request)) {
             return Response::error('User could not be updated.', 400);
         }
@@ -110,6 +115,7 @@ class UserController
      */
     public function destroy(int $id): array
     {
+        // Guard this block so it only runs when the required condition is met.
         if (!$this->users->delete($id)) {
             return Response::error('User could not be deleted.', 400);
         }

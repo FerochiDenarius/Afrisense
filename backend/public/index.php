@@ -6,6 +6,7 @@ require_once __DIR__ . '/../config/database.php';
 
 use AfriSense\Backend\Config\Database;
 
+// Backend front controller: choose API or web routes from the current request path.
 $pdo = (new Database())->getConnection();
 $path = parse_url((string) ($_SERVER['REQUEST_URI'] ?? '/'), PHP_URL_PATH) ?: '/';
 $dispatcher = str_contains($path, '/api')

@@ -1,5 +1,8 @@
+// Wrap this script in an isolated scope to avoid leaking globals.
 (function () {
+    // Defines the dismiss helper for this browser module.
     function dismiss(alert) {
+        // Run this branch only when the required UI state is present.
         if (!alert) {
             return;
         }
@@ -10,8 +13,10 @@
         }, 170);
     }
 
+    // Defines the show helper for this browser module.
     function show(type, message) {
         var stack = document.querySelector("[data-alert-stack]");
+        // Run this branch only when the required UI state is present.
         if (!stack) {
             return;
         }
@@ -25,8 +30,10 @@
         stack.appendChild(alert);
     }
 
+    // Bind the UI event handler for this interactive control.
     document.addEventListener("click", function (event) {
         var button = event.target.closest("[data-alert-dismiss]");
+        // Run this branch only when the required UI state is present.
         if (button) {
             dismiss(button.closest("[data-alert]"));
         }

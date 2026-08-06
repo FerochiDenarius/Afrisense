@@ -1,35 +1,43 @@
+/* Styling rules for .reports-body. */
 .reports-body {
     background: #fafbfc;
 }
 
+/* Sidebar navigation styling for .reports-body .sidebar. */
 .reports-body .sidebar {
     width: 244px;
     padding: 20px 14px;
 }
 
+/* Styling rules for .reports-body .brand. */
 .reports-body .brand {
     gap: 9px;
     margin-bottom: 12px;
 }
 
+/* Styling rules for .reports-body .brand-icon. */
 .reports-body .brand-icon {
     font-size: 38px;
 }
 
+/* Styling rules for .reports-body .brand strong. */
 .reports-body .brand strong {
     font-size: 28px;
 }
 
+/* Navigation and menu styling for .reports-body .side-nav. */
 .reports-body .side-nav {
     gap: 4px;
 }
 
+/* Navigation and menu styling for .reports-body .side-nav p. */
 .reports-body .side-nav p {
     font-size: 10px;
     margin: 14px 6px 5px;
 }
 
 .reports-body .side-nav a,
+/* Navigation and menu styling for .reports-body .side-nav a, .reports-body .logout-link. */
 .reports-body .logout-link {
     min-height: 34px;
     border-radius: 5px;
@@ -40,14 +48,17 @@
 }
 
 .reports-body .side-nav a i:first-child,
+/* Navigation and menu styling for .reports-body .side-nav a i:first-child, .reports-body .logout-link i. */
 .reports-body .logout-link i {
     font-size: 14px;
 }
 
+/* Styling rules for .reports-body .dashboard-shell. */
 .reports-body .dashboard-shell {
     margin-left: 244px;
 }
 
+/* Styling rules for .reports-topbar. */
 .reports-topbar {
     height: 62px;
     grid-template-columns: 34px minmax(260px, 430px) 1fr;
@@ -55,33 +66,40 @@
     padding: 0 28px;
 }
 
+/* Styling rules for .reports-topbar .top-search. */
 .reports-topbar .top-search {
     height: 36px;
     border-radius: 7px;
 }
 
+/* Styling rules for .reports-topbar .top-actions. */
 .reports-topbar .top-actions {
     gap: 18px;
 }
 
 .reports-topbar .top-actions button,
+/* Button and action control styling for .reports-topbar .top-actions button, .reports-topbar .top-actions a. */
 .reports-topbar .top-actions a {
     font-size: 18px;
 }
 
+/* Styling rules for .reports-topbar .admin-profile. */
 .reports-topbar .admin-profile {
     grid-template-columns: 34px 1fr 14px;
 }
 
+/* Styling rules for .reports-topbar .admin-profile img. */
 .reports-topbar .admin-profile img {
     width: 34px;
     height: 34px;
 }
 
+/* Styling rules for .reports-content. */
 .reports-content {
     padding: 18px 26px 24px;
 }
 
+/* Styling rules for .reports-heading. */
 .reports-heading {
     display: flex;
     align-items: flex-start;
@@ -90,6 +108,7 @@
     margin-bottom: 14px;
 }
 
+/* Styling rules for .reports-heading h1. */
 .reports-heading h1 {
     font-family: Georgia, "Times New Roman", serif;
     font-size: 29px;
@@ -97,11 +116,13 @@
     margin-bottom: 6px;
 }
 
+/* Styling rules for .reports-heading p. */
 .reports-heading p {
     color: var(--muted);
     font-size: 12px;
 }
 
+/* Styling rules for .reports-filters. */
 .reports-filters {
     display: grid;
     grid-template-columns: minmax(210px, 260px) minmax(155px, 210px) minmax(155px, 210px) minmax(185px, 230px) 140px;
@@ -110,6 +131,7 @@
     margin-bottom: 18px;
 }
 
+/* Styling rules for .reports-filters label. */
 .reports-filters label {
     min-width: 0;
     height: 35px;
@@ -124,6 +146,7 @@
 }
 
 .reports-filters input,
+/* Form control styling for .reports-filters input, .reports-filters select. */
 .reports-filters select {
     min-width: 0;
     width: 100%;
@@ -136,11 +159,13 @@
     appearance: none;
 }
 
+/* Styling rules for .reports-filters i. */
 .reports-filters i {
     color: #111827;
     font-size: 14px;
 }
 
+/* Button and action control styling for .reports-filters button. */
 .reports-filters button {
     height: 35px;
     border: 0;
@@ -160,11 +185,13 @@
 
 .reports-filters button:hover,
 .report-panel header button:hover,
+/* Header layout and controls for .reports-filters button:hover, .report-panel header button:hover, .recent-list button:hover. */
 .recent-list button:hover {
     transform: translateY(-1px);
     box-shadow: 0 8px 16px rgba(15, 23, 42, 0.12);
 }
 
+/* Styling rules for .reports-layout. */
 .reports-layout {
     display: grid;
     grid-template-columns: minmax(0, 1fr) 282px;
@@ -173,20 +200,24 @@
 }
 
 .reports-main,
+/* Styling rules for .reports-main, .reports-side. */
 .reports-side {
     min-width: 0;
 }
 
+/* Styling rules for .reports-main. */
 .reports-main {
     display: grid;
     gap: 16px;
 }
 
+/* Styling rules for .reports-side. */
 .reports-side {
     display: grid;
     gap: 16px;
 }
 
+/* Styling rules for .reports-metrics. */
 .reports-metrics {
     display: grid;
     grid-template-columns: repeat(5, minmax(0, 1fr));
@@ -194,6 +225,7 @@
 }
 
 .reports-metrics article,
+/* Card and panel styling for .reports-metrics article, .report-panel. */
 .report-panel {
     background: #fff;
     border: 1px solid var(--line);
@@ -201,6 +233,7 @@
     box-shadow: 0 8px 22px rgba(15, 23, 42, 0.045);
 }
 
+/* Styling rules for .reports-metrics article. */
 .reports-metrics article {
     min-height: 92px;
     display: grid;
@@ -210,6 +243,7 @@
     padding: 14px;
 }
 
+/* Styling rules for .reports-metrics article > span. */
 .reports-metrics article > span {
     width: 42px;
     height: 42px;
@@ -221,6 +255,7 @@
 
 .reports-metrics article > span.green,
 .compact-list span.green,
+/* Styling rules for .reports-metrics article > span.green, .compact-list span.green, .recent-list span.green. */
 .recent-list span.green {
     background: #e0f6e5;
     color: #24963d;
@@ -228,6 +263,7 @@
 
 .reports-metrics article > span.gold,
 .compact-list span.gold,
+/* Styling rules for .reports-metrics article > span.gold, .compact-list span.gold, .recent-list span.gold. */
 .recent-list span.gold {
     background: #fff0d9;
     color: #d78308;
@@ -235,6 +271,7 @@
 
 .reports-metrics article > span.purple,
 .compact-list span.purple,
+/* Styling rules for .reports-metrics article > span.purple, .compact-list span.purple, .recent-list span.purple. */
 .recent-list span.purple {
     background: #efe8ff;
     color: #7046d4;
@@ -242,6 +279,7 @@
 
 .reports-metrics article > span.blue,
 .compact-list span.blue,
+/* Styling rules for .reports-metrics article > span.blue, .compact-list span.blue, .recent-list span.blue. */
 .recent-list span.blue {
     background: #e2f0ff;
     color: #2384d7;
@@ -249,16 +287,19 @@
 
 .reports-metrics article > span.red,
 .compact-list span.red,
+/* Styling rules for .reports-metrics article > span.red, .compact-list span.red, .recent-list span.red. */
 .recent-list span.red {
     background: #ffe5e7;
     color: #f2383e;
 }
 
+/* Styling rules for .compact-list span.orange. */
 .compact-list span.orange {
     background: #fff0dd;
     color: #e27609;
 }
 
+/* Styling rules for .reports-metrics small. */
 .reports-metrics small {
     display: block;
     color: var(--text);
@@ -267,6 +308,7 @@
     margin-bottom: 4px;
 }
 
+/* Styling rules for .reports-metrics strong. */
 .reports-metrics strong {
     display: block;
     font-size: 17px;
@@ -274,6 +316,7 @@
     white-space: nowrap;
 }
 
+/* Styling rules for .reports-metrics em. */
 .reports-metrics em {
     color: #148c37;
     display: block;
@@ -283,6 +326,7 @@
     margin-top: 8px;
 }
 
+/* Styling rules for .reports-metrics p. */
 .reports-metrics p {
     color: var(--muted);
     font-size: 10px;
@@ -290,17 +334,20 @@
 }
 
 .report-chart-grid,
+/* Styling rules for .report-chart-grid, .report-bottom-grid. */
 .report-bottom-grid {
     display: grid;
     grid-template-columns: repeat(2, minmax(0, 1fr));
     gap: 16px;
 }
 
+/* Card and panel styling for .report-panel. */
 .report-panel {
     min-width: 0;
     overflow: hidden;
 }
 
+/* Header layout and controls for .report-panel header. */
 .report-panel header {
     min-height: 48px;
     display: flex;
@@ -310,6 +357,7 @@
     padding: 0 15px;
 }
 
+/* Card and panel styling for .report-panel h2. */
 .report-panel h2 {
     font-family: Georgia, "Times New Roman", serif;
     font-size: 15px;
@@ -318,6 +366,7 @@
 
 .report-panel header a,
 .compact-list .view-all,
+/* Header layout and controls for .report-panel header a, .compact-list .view-all, .recent-list header a. */
 .recent-list header a {
     color: #c66e00;
     font-size: 11px;
@@ -325,6 +374,7 @@
     text-decoration: none;
 }
 
+/* Header layout and controls for .report-panel header button. */
 .report-panel header button {
     height: 31px;
     border: 1px solid var(--line);
@@ -341,6 +391,7 @@
     transition: transform 160ms ease, box-shadow 160ms ease;
 }
 
+/* Styling rules for .mini-line-chart. */
 .mini-line-chart {
     display: grid;
     grid-template-columns: 50px 1fr;
@@ -349,6 +400,7 @@
     padding: 0 16px 12px;
 }
 
+/* Styling rules for .mini-line-chart .y-axis. */
 .mini-line-chart .y-axis {
     display: flex;
     flex-direction: column;
@@ -358,17 +410,20 @@
     font-size: 10px;
 }
 
+/* Styling rules for .mini-line-chart svg. */
 .mini-line-chart svg {
     width: 100%;
     height: 220px;
     display: block;
 }
 
+/* Styling rules for .mini-line-chart line. */
 .mini-line-chart line {
     stroke: #e9edf1;
     stroke-width: 1;
 }
 
+/* Styling rules for .mini-line-chart polyline. */
 .mini-line-chart polyline {
     fill: none;
     stroke: #ee9208;
@@ -377,6 +432,7 @@
     stroke-width: 3;
 }
 
+/* Styling rules for .mini-line-chart .x-axis. */
 .mini-line-chart .x-axis {
     grid-column: 2;
     display: flex;
@@ -386,6 +442,7 @@
     font-size: 9px;
 }
 
+/* Styling rules for .bar-chart. */
 .bar-chart {
     height: 256px;
     display: flex;
@@ -397,6 +454,7 @@
     background-size: 100% 42px;
 }
 
+/* Styling rules for .bar-chart span. */
 .bar-chart span {
     width: 16px;
     height: var(--h);
@@ -405,21 +463,25 @@
     box-shadow: inset 0 -5px 0 rgba(0, 0, 0, 0.08);
 }
 
+/* Table layout styling for .reports-table-wrap. */
 .reports-table-wrap {
     overflow-x: auto;
 }
 
+/* Table layout styling for .reports-table-wrap table. */
 .reports-table-wrap table {
     min-width: 520px;
 }
 
 .reports-table-wrap th,
+/* Table layout styling for .reports-table-wrap th, .reports-table-wrap td. */
 .reports-table-wrap td {
     height: 38px;
     padding: 0 12px;
     font-size: 10px;
 }
 
+/* Table layout styling for .reports-table-wrap td img. */
 .reports-table-wrap td img {
     width: 24px;
     height: 24px;
@@ -427,6 +489,7 @@
     margin-right: 8px;
 }
 
+/* Table layout styling for .reports-table-wrap td span. */
 .reports-table-wrap td span {
     border-radius: 4px;
     background: #fff2d9;
@@ -439,6 +502,7 @@
     font-weight: 800;
 }
 
+/* Payment interface styling for .payment-report. */
 .payment-report {
     display: grid;
     grid-template-columns: minmax(132px, 170px) 1fr;
@@ -447,6 +511,7 @@
     padding: 18px 20px 22px;
 }
 
+/* Payment interface styling for .payment-donut. */
 .payment-donut {
     width: 148px;
     aspect-ratio: 1;
@@ -457,6 +522,7 @@
     position: relative;
 }
 
+/* Payment interface styling for .payment-donut::after. */
 .payment-donut::after {
     content: "";
     position: absolute;
@@ -466,29 +532,34 @@
 }
 
 .payment-donut strong,
+/* Payment interface styling for .payment-donut strong, .payment-donut span. */
 .payment-donut span {
     position: relative;
     z-index: 1;
     text-align: center;
 }
 
+/* Payment interface styling for .payment-donut strong. */
 .payment-donut strong {
     align-self: end;
     font-size: 15px;
 }
 
+/* Payment interface styling for .payment-donut span. */
 .payment-donut span {
     align-self: start;
     color: var(--muted);
     font-size: 10px;
 }
 
+/* Payment interface styling for .payment-report ul. */
 .payment-report ul {
     list-style: none;
     display: grid;
     gap: 12px;
 }
 
+/* Payment interface styling for .payment-report li. */
 .payment-report li {
     display: grid;
     grid-template-columns: 10px minmax(0, 1fr) auto;
@@ -497,6 +568,7 @@
     font-size: 10px;
 }
 
+/* Payment interface styling for .payment-report li i. */
 .payment-report li i {
     width: 9px;
     height: 9px;
@@ -504,34 +576,41 @@
 }
 
 .payment-report li strong,
+/* Payment interface styling for .payment-report li strong, .payment-report li small. */
 .payment-report li small {
     display: block;
 }
 
+/* Payment interface styling for .payment-report li small. */
 .payment-report li small {
     color: var(--muted);
     margin-top: 2px;
 }
 
+/* Payment interface styling for .payment-report li b. */
 .payment-report li b {
     font-size: 10px;
     white-space: nowrap;
 }
 
+/* Payment interface styling for .payment-report li.empty-payment. */
 .payment-report li.empty-payment {
     display: block;
     color: var(--muted);
     font-size: 11px;
 }
 
+/* Styling rules for .compact-list. */
 .compact-list {
     padding: 14px 14px 16px;
 }
 
+/* Styling rules for .compact-list h2. */
 .compact-list h2 {
     margin-bottom: 12px;
 }
 
+/* Styling rules for .compact-list a. */
 .compact-list a {
     min-height: 46px;
     display: grid;
@@ -544,6 +623,7 @@
 }
 
 .compact-list span,
+/* Styling rules for .compact-list span, .recent-list article > span. */
 .recent-list article > span {
     width: 27px;
     height: 27px;
@@ -555,16 +635,19 @@
 }
 
 .compact-list strong,
+/* Styling rules for .compact-list strong, .recent-list strong. */
 .recent-list strong {
     font-size: 10px;
 }
 
 .compact-list small,
+/* Styling rules for .compact-list small, .recent-list small. */
 .recent-list small {
     color: var(--muted);
     font-size: 9px;
 }
 
+/* Styling rules for .compact-list .view-all. */
 .compact-list .view-all {
     min-height: 30px;
     display: inline-flex;
@@ -573,14 +656,17 @@
     margin-top: 6px;
 }
 
+/* Styling rules for .recent-list. */
 .recent-list {
     padding: 0 14px 13px;
 }
 
+/* Header layout and controls for .recent-list header. */
 .recent-list header {
     padding-inline: 0;
 }
 
+/* Styling rules for .recent-list article. */
 .recent-list article {
     min-height: 40px;
     display: grid;
@@ -589,12 +675,14 @@
     gap: 8px;
 }
 
+/* Styling rules for .recent-list em. */
 .recent-list em {
     color: var(--muted);
     font-size: 9px;
     font-style: normal;
 }
 
+/* Button and action control styling for .recent-list button. */
 .recent-list button {
     width: 22px;
     height: 22px;
@@ -606,6 +694,7 @@
     transition: transform 160ms ease, box-shadow 160ms ease;
 }
 
+/* Footer styling for .reports-footer. */
 .reports-footer {
     color: var(--muted);
     display: flex;
@@ -616,119 +705,146 @@
     font-size: 12px;
 }
 
+/* Navigation and menu styling for .reports-footer nav. */
 .reports-footer nav {
     display: inline-flex;
     align-items: center;
     gap: 22px;
 }
 
+/* Footer styling for .reports-footer a. */
 .reports-footer a {
     color: var(--muted);
     text-decoration: none;
 }
 
+/* Footer styling for .reports-footer i. */
 .reports-footer i {
     width: 1px;
     height: 14px;
     background: #9ca3af;
 }
 
+/* Responsive styling rules for @media (max-width: 1360px). */
 @media (max-width: 1360px) {
+    /* Styling rules for .reports-layout. */
     .reports-layout {
         grid-template-columns: minmax(0, 1fr) 250px;
         gap: 14px;
     }
 
+    /* Styling rules for .reports-metrics. */
     .reports-metrics {
         gap: 10px;
     }
 
+    /* Styling rules for .reports-metrics article. */
     .reports-metrics article {
         grid-template-columns: 42px 1fr;
         padding: 12px;
     }
 
+    /* Styling rules for .reports-metrics article > span. */
     .reports-metrics article > span {
         width: 38px;
         height: 38px;
     }
 }
 
+/* Responsive styling rules for @media (max-width: 1240px). */
 @media (max-width: 1240px) {
+    /* Styling rules for .reports-filters. */
     .reports-filters {
         grid-template-columns: repeat(2, minmax(0, 1fr)) 140px;
     }
 
     .reports-layout,
     .report-chart-grid,
+    /* Styling rules for .reports-layout, .report-chart-grid, .report-bottom-grid. */
     .report-bottom-grid {
         grid-template-columns: 1fr;
     }
 
+    /* Styling rules for .reports-side. */
     .reports-side {
         grid-template-columns: repeat(2, minmax(0, 1fr));
     }
 }
 
+/* Responsive styling rules for @media (max-width: 920px). */
 @media (max-width: 920px) {
+    /* Sidebar navigation styling for .reports-body .sidebar. */
     .reports-body .sidebar {
         position: static;
         width: 100%;
     }
 
+    /* Styling rules for .reports-body .dashboard-shell. */
     .reports-body .dashboard-shell {
         margin-left: 0;
     }
 
+    /* Styling rules for .reports-topbar. */
     .reports-topbar {
         grid-template-columns: 34px 1fr;
         padding: 14px 16px;
     }
 
     .reports-topbar .top-search,
+    /* Styling rules for .reports-topbar .top-search, .reports-topbar .top-actions. */
     .reports-topbar .top-actions {
         grid-column: 1 / -1;
     }
 
+    /* Styling rules for .reports-content. */
     .reports-content {
         padding: 18px 16px 24px;
     }
 
+    /* Styling rules for .reports-metrics. */
     .reports-metrics {
         grid-template-columns: repeat(2, minmax(0, 1fr));
     }
 }
 
+/* Responsive styling rules for @media (max-width: 700px). */
 @media (max-width: 700px) {
     .reports-filters,
     .reports-side,
+    /* Payment interface styling for .reports-filters, .reports-side, .payment-report. */
     .payment-report {
         grid-template-columns: 1fr;
     }
 
+    /* Button and action control styling for .reports-filters button. */
     .reports-filters button {
         width: 100%;
     }
 
+    /* Styling rules for .reports-metrics. */
     .reports-metrics {
         grid-template-columns: 1fr;
     }
 
+    /* Footer styling for .reports-footer. */
     .reports-footer {
         align-items: flex-start;
         flex-direction: column;
     }
 
+    /* Styling rules for .mini-line-chart. */
     .mini-line-chart {
         grid-template-columns: 44px 1fr;
         grid-template-rows: 185px 24px;
         padding-inline: 10px;
     }
 
+    /* Styling rules for .mini-line-chart svg. */
     .mini-line-chart svg {
         height: 185px;
     }
 
+    /* Styling rules for .bar-chart. */
     .bar-chart {
         height: 210px;
         padding-inline: 16px;

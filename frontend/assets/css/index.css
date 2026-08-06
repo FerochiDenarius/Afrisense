@@ -1,9 +1,11 @@
+/* Styling rules for *. */
 * {
     margin: 0;
     padding: 0;
     box-sizing: border-box;
 }
 
+/* Global design tokens and CSS custom properties. */
 :root {
     --primary-green: #0d241e;
     --secondary-green: #0c231d;
@@ -15,10 +17,12 @@
     --surface: #fff;
 }
 
+/* Styling rules for html. */
 html {
     scroll-behavior: smooth;
 }
 
+/* Styling rules for body. */
 body {
     min-height: 100vh;
     background: #fff;
@@ -27,10 +31,12 @@ body {
     overflow-x: hidden;
 }
 
+/* Styling rules for a. */
 a {
     color: inherit;
 }
 
+/* Header layout and controls for .site-header. */
 .site-header {
     min-height: 66px;
     background: var(--primary-green);
@@ -44,6 +50,7 @@ a {
     z-index: 20;
 }
 
+/* Styling rules for .brand. */
 .brand {
     color: #fff;
     display: inline-flex;
@@ -53,6 +60,7 @@ a {
     flex-shrink: 0;
 }
 
+/* Styling rules for .brand-icon. */
 .brand-icon {
     width: 38px;
     height: 38px;
@@ -64,6 +72,7 @@ a {
     line-height: 1;
 }
 
+/* Styling rules for .brand-icon img. */
 .brand-icon img {
     max-width: 38px;
     max-height: 38px;
@@ -71,20 +80,24 @@ a {
 }
 
 .brand strong,
+/* Styling rules for .brand strong, .brand small. */
 .brand small {
     display: block;
 }
 
+/* Styling rules for .brand strong. */
 .brand strong {
     color: #fff;
     font-size: 23px;
     line-height: 1;
 }
 
+/* Styling rules for .brand strong::first-letter. */
 .brand strong::first-letter {
     color: var(--secondary-gold);
 }
 
+/* Styling rules for .brand small. */
 .brand small {
     color: rgba(255, 255, 255, 0.85);
     font-size: 8px;
@@ -94,11 +107,13 @@ a {
     text-transform: uppercase;
 }
 
+/* Navigation and menu styling for .site-nav. */
 .site-nav {
     flex: 1 1 auto;
     min-width: 0;
 }
 
+/* Navigation and menu styling for .site-nav ul. */
 .site-nav ul {
     display: flex;
     align-items: center;
@@ -107,6 +122,7 @@ a {
     list-style: none;
 }
 
+/* Navigation and menu styling for .site-nav a. */
 .site-nav a {
     color: #fff;
     font-size: 11px;
@@ -117,6 +133,7 @@ a {
     white-space: nowrap;
 }
 
+/* Navigation and menu styling for .site-nav a::after. */
 .site-nav a::after {
     content: "";
     position: absolute;
@@ -130,16 +147,19 @@ a {
 
 .site-nav a.active,
 .site-nav a:hover,
+/* Navigation and menu styling for .site-nav a.active, .site-nav a:hover, .site-nav a:focus-visible. */
 .site-nav a:focus-visible {
     color: var(--secondary-gold);
 }
 
 .site-nav a.active::after,
 .site-nav a:hover::after,
+/* Navigation and menu styling for .site-nav a.active::after, .site-nav a:hover::after, .site-nav a:focus-visible::after. */
 .site-nav a:focus-visible::after {
     width: 100%;
 }
 
+/* Header layout and controls for .header-actions. */
 .header-actions {
     display: flex;
     align-items: center;
@@ -147,6 +167,7 @@ a {
     flex-shrink: 0;
 }
 
+/* Styling rules for .phone-link. */
 .phone-link {
     color: #fff;
     display: inline-flex;
@@ -157,6 +178,7 @@ a {
     text-decoration: none;
 }
 
+/* Styling rules for .phone-link span. */
 .phone-link span {
     width: 30px;
     height: 30px;
@@ -169,12 +191,14 @@ a {
     flex: 0 0 30px;
 }
 
+/* Styling rules for .phone-link b. */
 .phone-link b {
     font: inherit;
     white-space: nowrap;
 }
 
 .order-link,
+/* Ordering and cart interface styling for .order-link, .auth-link. */
 .auth-link {
     min-width: 76px;
     height: 34px;
@@ -192,10 +216,12 @@ a {
     white-space: nowrap;
 }
 
+/* Styling rules for .auth-link. */
 .auth-link {
     min-width: 58px;
 }
 
+/* Styling rules for .auth-link.register. */
 .auth-link.register {
     background: rgba(204, 143, 37, 0.12);
 }
@@ -203,11 +229,13 @@ a {
 .order-link:hover,
 .order-link:focus-visible,
 .auth-link:hover,
+/* Ordering and cart interface styling for .order-link:hover, .order-link:focus-visible, .auth-link:hover, .auth-link:focus-visible. */
 .auth-link:focus-visible {
     background: var(--secondary-gold);
     color: #fff;
 }
 
+/* Hero section styling for .hero-section. */
 .hero-section {
     min-height: 410px;
     padding: 42px 95px 28px;
@@ -220,6 +248,7 @@ a {
     overflow: hidden;
 }
 
+/* Hero section styling for .hero-section::before. */
 .hero-section::before {
     content: "";
     position: absolute;
@@ -230,6 +259,7 @@ a {
     z-index: -2;
 }
 
+/* Hero section styling for .hero-section::after. */
 .hero-section::after {
     content: "";
     position: absolute;
@@ -240,10 +270,12 @@ a {
     z-index: -1;
 }
 
+/* Hero section styling for .hero-copy. */
 .hero-copy {
     max-width: 560px;
 }
 
+/* Styling rules for .eyebrow. */
 .eyebrow {
     color: var(--primary-gold);
     font-size: 13px;
@@ -253,6 +285,7 @@ a {
     text-transform: uppercase;
 }
 
+/* Hero section styling for .hero-copy h1. */
 .hero-copy h1 {
     color: #0b1220;
     font-family: Georgia, "Times New Roman", serif;
@@ -261,11 +294,13 @@ a {
     line-height: 1.08;
 }
 
+/* Hero section styling for .hero-copy h1 span. */
 .hero-copy h1 span {
     color: var(--secondary-gold);
     display: block;
 }
 
+/* Hero section styling for .hero-description. */
 .hero-description {
     color: #4c5360;
     font-size: 15px;
@@ -275,6 +310,7 @@ a {
     max-width: 430px;
 }
 
+/* Hero section styling for .hero-actions. */
 .hero-actions {
     display: flex;
     align-items: center;
@@ -283,6 +319,7 @@ a {
 }
 
 .primary-action,
+/* Styling rules for .primary-action, .secondary-action. */
 .secondary-action {
     min-width: 150px;
     height: 44px;
@@ -296,17 +333,20 @@ a {
     text-decoration: none;
 }
 
+/* Styling rules for .primary-action. */
 .primary-action {
     background: var(--primary-green);
     color: #fff;
 }
 
+/* Styling rules for .secondary-action. */
 .secondary-action {
     background: #fff;
     border: 1px solid #d7c7a7;
     color: var(--text-dark);
 }
 
+/* Styling rules for .trust-strip. */
 .trust-strip {
     display: grid;
     grid-template-columns: repeat(4, 1fr);
@@ -315,6 +355,7 @@ a {
     max-width: 650px;
 }
 
+/* Styling rules for .trust-item. */
 .trust-item {
     display: flex;
     align-items: center;
@@ -326,10 +367,12 @@ a {
     text-decoration: none;
 }
 
+/* Styling rules for .trust-item:last-child. */
 .trust-item:last-child {
     border-right: 0;
 }
 
+/* Support chat interface styling for .trust-support-link. */
 .trust-support-link {
     cursor: pointer;
     text-decoration: none;
@@ -337,6 +380,7 @@ a {
 }
 
 .trust-support-link:hover,
+/* Support chat interface styling for .trust-support-link:hover, .trust-support-link:focus-visible. */
 .trust-support-link:focus-visible {
     color: var(--primary-gold);
     text-decoration: none;
@@ -344,10 +388,12 @@ a {
 }
 
 .trust-support-link strong,
+/* Support chat interface styling for .trust-support-link strong, .trust-support-link small. */
 .trust-support-link small {
     text-decoration: none;
 }
 
+/* Styling rules for .trust-item > i. */
 .trust-item > i {
     color: var(--primary-gold);
     font-size: 28px;
@@ -355,16 +401,19 @@ a {
 }
 
 .trust-item strong,
+/* Styling rules for .trust-item strong, .trust-item small. */
 .trust-item small {
     display: block;
 }
 
+/* Styling rules for .trust-item strong. */
 .trust-item strong {
     font-size: 11px;
     font-weight: 900;
     line-height: 1.2;
 }
 
+/* Styling rules for .trust-item small. */
 .trust-item small {
     color: var(--text-muted);
     font-size: 10px;
@@ -373,6 +422,7 @@ a {
     margin-top: 4px;
 }
 
+/* Card and panel styling for .booking-card. */
 .booking-card {
     justify-self: end;
     width: min(330px, 100%);
@@ -383,6 +433,7 @@ a {
     box-shadow: 0 18px 38px rgba(0, 0, 0, 0.24);
 }
 
+/* Card and panel styling for .booking-card h2. */
 .booking-card h2 {
     font-family: Georgia, "Times New Roman", serif;
     font-size: 21px;
@@ -390,6 +441,7 @@ a {
     text-align: center;
 }
 
+/* Styling rules for .gold-line. */
 .gold-line {
     width: 58px;
     height: 2px;
@@ -401,10 +453,12 @@ a {
 
 .booking-card,
 .field-shell,
+/* Card and panel styling for .booking-card, .field-shell, .booking-row. */
 .booking-row {
     min-width: 0;
 }
 
+/* Styling rules for .field-shell. */
 .field-shell {
     height: 43px;
     border: 1px solid rgba(255, 255, 255, 0.16);
@@ -417,12 +471,14 @@ a {
     margin-bottom: 12px;
 }
 
+/* Styling rules for .field-shell i. */
 .field-shell i {
     color: var(--secondary-gold);
     font-size: 15px;
 }
 
 .field-shell input,
+/* Form control styling for .field-shell input, .field-shell select. */
 .field-shell select {
     width: 100%;
     height: 100%;
@@ -435,21 +491,25 @@ a {
     font-weight: 700;
 }
 
+/* Form control styling for .field-shell input::-webkit-calendar-picker-indicator. */
 .field-shell input::-webkit-calendar-picker-indicator {
     filter: invert(1);
     opacity: 0.75;
 }
 
+/* Form control styling for .field-shell select option. */
 .field-shell select option {
     color: var(--text-dark);
 }
 
+/* Styling rules for .booking-row. */
 .booking-row {
     display: grid;
     grid-template-columns: 1fr 1fr;
     gap: 10px;
 }
 
+/* Button and action control styling for .booking-card button. */
 .booking-card button {
     width: 100%;
     height: 43px;
@@ -469,11 +529,13 @@ a {
 }
 
 .booking-card button:hover,
+/* Button and action control styling for .booking-card button:hover, .booking-card button:focus-visible. */
 .booking-card button:focus-visible {
     background: var(--primary-gold);
     transform: translateY(-1px);
 }
 
+/* Card and panel styling for .stats-panel. */
 .stats-panel {
     max-width: 1180px;
     margin: 25px auto 0;
@@ -484,6 +546,7 @@ a {
     box-shadow: 0 12px 32px rgba(0, 0, 0, 0.06);
 }
 
+/* Card and panel styling for .stats-panel article. */
 .stats-panel article {
     min-height: 78px;
     display: grid;
@@ -494,10 +557,12 @@ a {
     border-right: 1px solid #ededed;
 }
 
+/* Card and panel styling for .stats-panel article:last-child. */
 .stats-panel article:last-child {
     border-right: 0;
 }
 
+/* Card and panel styling for .stats-panel i. */
 .stats-panel i {
     grid-row: span 2;
     color: var(--primary-gold);
@@ -505,11 +570,13 @@ a {
     align-self: center;
 }
 
+/* Card and panel styling for .stats-panel strong. */
 .stats-panel strong {
     font-size: 24px;
     line-height: 1;
 }
 
+/* Card and panel styling for .stats-panel span. */
 .stats-panel span {
     color: var(--text-muted);
     font-size: 12px;
@@ -518,16 +585,19 @@ a {
 }
 
 .services-section,
+/* Styling rules for .services-section, .popular-section. */
 .popular-section {
     max-width: 1180px;
     margin: 0 auto;
     padding: 34px 0 24px;
 }
 
+/* Styling rules for .section-heading. */
 .section-heading {
     text-align: center;
 }
 
+/* Styling rules for .section-heading p. */
 .section-heading p {
     color: var(--primary-gold);
     font-size: 12px;
@@ -536,6 +606,7 @@ a {
 }
 
 .section-heading h2,
+/* Styling rules for .section-heading h2, .popular-heading h2. */
 .popular-heading h2 {
     color: #111;
     font-family: Georgia, "Times New Roman", serif;
@@ -543,6 +614,7 @@ a {
     line-height: 1.2;
 }
 
+/* Styling rules for .section-heading span. */
 .section-heading span {
     width: 48px;
     height: 3px;
@@ -552,6 +624,7 @@ a {
     margin: 10px auto 0;
 }
 
+/* Styling rules for .section-heading small. */
 .section-heading small {
     color: var(--text-muted);
     display: block;
@@ -560,6 +633,7 @@ a {
     margin-top: 10px;
 }
 
+/* Styling rules for .service-grid. */
 .service-grid {
     display: grid;
     grid-template-columns: repeat(6, 1fr);
@@ -567,6 +641,7 @@ a {
     margin-top: 28px;
 }
 
+/* Card and panel styling for .service-card. */
 .service-card {
     min-height: 118px;
     border: 1px solid var(--border);
@@ -579,12 +654,14 @@ a {
     transition: border-color 0.2s ease, box-shadow 0.2s ease, transform 0.2s ease;
 }
 
+/* Card and panel styling for .service-card:hover. */
 .service-card:hover {
     border-color: rgba(183, 123, 26, 0.55);
     box-shadow: 0 12px 24px rgba(0, 0, 0, 0.08);
     transform: translateY(-2px);
 }
 
+/* Card and panel styling for .service-card > span. */
 .service-card > span {
     width: 58px;
     height: 58px;
@@ -597,16 +674,19 @@ a {
     margin-bottom: 13px;
 }
 
+/* Card and panel styling for .service-card > span i. */
 .service-card > span i {
     font-size: 28px;
 }
 
+/* Card and panel styling for .service-card h3. */
 .service-card h3 {
     font-size: 13px;
     line-height: 1.25;
     margin-bottom: 8px;
 }
 
+/* Card and panel styling for .service-card p. */
 .service-card p {
     color: var(--text-muted);
     font-size: 11px;
@@ -614,6 +694,7 @@ a {
     line-height: 1.45;
 }
 
+/* Card and panel styling for .service-card .service-card-arrow. */
 .service-card .service-card-arrow {
     color: var(--primary-gold);
     position: absolute;
@@ -621,6 +702,7 @@ a {
     bottom: 14px;
 }
 
+/* Card and panel styling for .service-card-link. */
 .service-card-link {
     display: block;
     cursor: pointer;
@@ -629,25 +711,30 @@ a {
 
 .service-card-link:hover,
 .service-card-link:focus-visible,
+/* Card and panel styling for .service-card-link:hover, .service-card-link:focus-visible, .service-card-link:active. */
 .service-card-link:active {
     text-decoration: none;
 }
 
 .service-card-link h3,
 .service-card-link p,
+/* Card and panel styling for .service-card-link h3, .service-card-link p, .service-card-link span. */
 .service-card-link span {
     text-decoration: none;
 }
 
+/* Card and panel styling for .service-card-link .service-card-arrow. */
 .service-card-link .service-card-arrow {
     color: var(--primary-gold);
 }
 
 .service-card-link:hover .service-card-arrow,
+/* Card and panel styling for .service-card-link:hover .service-card-arrow, .service-card-link:focus-visible .service-card-arrow. */
 .service-card-link:focus-visible .service-card-arrow {
     color: var(--secondary-gold);
 }
 
+/* Styling rules for .steps-section. */
 .steps-section {
     margin-top: 12px;
     padding: 28px 95px 34px;
@@ -658,10 +745,12 @@ a {
     overflow: hidden;
 }
 
+/* Styling rules for .section-heading.dark h2. */
 .section-heading.dark h2 {
     color: #fff;
 }
 
+/* Styling rules for .steps-line. */
 .steps-line {
     max-width: 920px;
     margin: 24px auto 0;
@@ -671,6 +760,7 @@ a {
     position: relative;
 }
 
+/* Styling rules for .steps-line::before. */
 .steps-line::before {
     content: "";
     position: absolute;
@@ -681,11 +771,13 @@ a {
     background: rgba(204, 143, 37, 0.42);
 }
 
+/* Styling rules for .steps-line article. */
 .steps-line article {
     text-align: center;
     position: relative;
 }
 
+/* Styling rules for .steps-line span. */
 .steps-line span {
     width: 38px;
     height: 38px;
@@ -701,12 +793,14 @@ a {
     z-index: 1;
 }
 
+/* Styling rules for .steps-line h3. */
 .steps-line h3 {
     color: #fff;
     font-size: 12px;
     margin-top: 14px;
 }
 
+/* Styling rules for .steps-line p. */
 .steps-line p {
     color: rgba(255, 255, 255, 0.74);
     font-size: 10px;
@@ -715,6 +809,7 @@ a {
     margin-top: 7px;
 }
 
+/* Styling rules for .popular-heading. */
 .popular-heading {
     display: flex;
     justify-content: space-between;
@@ -722,6 +817,7 @@ a {
     gap: 24px;
 }
 
+/* Styling rules for .popular-heading p. */
 .popular-heading p {
     color: var(--text-muted);
     font-size: 13px;
@@ -729,6 +825,7 @@ a {
     margin-top: 6px;
 }
 
+/* Styling rules for .popular-heading a. */
 .popular-heading a {
     height: 38px;
     border-radius: 5px;
@@ -743,6 +840,7 @@ a {
     text-decoration: none;
 }
 
+/* Styling rules for .meal-grid. */
 .meal-grid {
     display: grid;
     grid-template-columns: repeat(3, 1fr);
@@ -750,6 +848,7 @@ a {
     margin-top: 22px;
 }
 
+/* Card and panel styling for .meal-card. */
 .meal-card {
     border: 1px solid var(--border);
     border-radius: 8px;
@@ -757,6 +856,7 @@ a {
     background: #fff;
 }
 
+/* Card and panel styling for .meal-card img. */
 .meal-card img {
     width: 100%;
     height: 180px;
@@ -764,15 +864,18 @@ a {
     object-fit: cover;
 }
 
+/* Card and panel styling for .meal-card div. */
 .meal-card div {
     padding: 16px;
 }
 
+/* Card and panel styling for .meal-card h3. */
 .meal-card h3 {
     font-size: 15px;
     line-height: 1.3;
 }
 
+/* Card and panel styling for .meal-card p. */
 .meal-card p {
     color: var(--text-muted);
     font-size: 12px;
@@ -781,6 +884,7 @@ a {
     margin-top: 6px;
 }
 
+/* Styling rules for .reviews-section. */
 .reviews-section {
     margin: 0 95px 34px;
     border: 1px solid #e4e7ec;
@@ -792,6 +896,7 @@ a {
     padding: 22px 24px;
 }
 
+/* Styling rules for .reviews-section-heading. */
 .reviews-section-heading {
     display: flex;
     align-items: center;
@@ -799,6 +904,7 @@ a {
     gap: 18px;
 }
 
+/* Styling rules for .reviews-section-heading p. */
 .reviews-section-heading p {
     color: var(--primary-gold);
     font-size: 12px;
@@ -807,6 +913,7 @@ a {
     text-transform: uppercase;
 }
 
+/* Styling rules for .reviews-section-heading h2. */
 .reviews-section-heading h2 {
     color: var(--text-dark);
     font-family: Georgia, "Times New Roman", serif;
@@ -814,6 +921,7 @@ a {
     line-height: 1.1;
 }
 
+/* Styling rules for .reviews-section-heading small. */
 .reviews-section-heading small {
     color: var(--text-muted);
     display: block;
@@ -822,6 +930,7 @@ a {
     margin-top: 6px;
 }
 
+/* Styling rules for .reviews-section-heading a. */
 .reviews-section-heading a {
     min-height: 38px;
     border-radius: 6px;
@@ -838,6 +947,7 @@ a {
     white-space: nowrap;
 }
 
+/* Styling rules for .home-review-grid. */
 .home-review-grid {
     display: grid;
     grid-template-columns: repeat(3, minmax(0, 1fr));
@@ -845,6 +955,7 @@ a {
 }
 
 .home-review-card,
+/* Card and panel styling for .home-review-card, .home-review-empty. */
 .home-review-empty {
     min-height: 104px;
     border: 1px solid #edf0f3;
@@ -855,10 +966,12 @@ a {
     padding: 12px;
 }
 
+/* Card and panel styling for .home-review-card. */
 .home-review-card {
     grid-template-columns: 46px 1fr;
 }
 
+/* Card and panel styling for .home-review-card img. */
 .home-review-card img {
     width: 44px;
     height: 44px;
@@ -866,6 +979,7 @@ a {
     object-fit: cover;
 }
 
+/* Header layout and controls for .home-review-card header. */
 .home-review-card header {
     display: flex;
     align-items: flex-start;
@@ -874,12 +988,14 @@ a {
 }
 
 .home-review-card strong,
+/* Card and panel styling for .home-review-card strong, .home-review-empty strong. */
 .home-review-empty strong {
     color: var(--text-dark);
     font-size: 12px;
     line-height: 1.25;
 }
 
+/* Card and panel styling for .home-review-card p. */
 .home-review-card p {
     color: var(--text-muted);
     font-size: 11.5px;
@@ -888,12 +1004,14 @@ a {
 }
 
 .home-review-card small,
+/* Card and panel styling for .home-review-card small, .home-review-empty span. */
 .home-review-empty span {
     color: #667085;
     font-size: 11px;
     font-weight: 700;
 }
 
+/* Card and panel styling for .home-review-card .af-remark-stars. */
 .home-review-card .af-remark-stars {
     color: #f6a700;
     display: inline-flex;
@@ -902,10 +1020,12 @@ a {
     white-space: nowrap;
 }
 
+/* Styling rules for .home-review-empty. */
 .home-review-empty {
     grid-column: 1 / -1;
 }
 
+/* Form control styling for .home-remark-form. */
 .home-remark-form {
     border: 1px solid #edf0f3;
     border-radius: 8px;
@@ -915,6 +1035,7 @@ a {
     padding: 14px;
 }
 
+/* Header layout and controls for .home-remark-form > header. */
 .home-remark-form > header {
     display: flex;
     align-items: center;
@@ -922,16 +1043,19 @@ a {
     gap: 12px;
 }
 
+/* Header layout and controls for .home-remark-form > header strong. */
 .home-remark-form > header strong {
     color: var(--text-dark);
     font-size: 13px;
 }
 
+/* Header layout and controls for .home-remark-form > header span. */
 .home-remark-form > header span {
     color: var(--text-muted);
     font-size: 11.5px;
 }
 
+/* Styling rules for .home-remark-alert. */
 .home-remark-alert {
     border-radius: 6px;
     font-size: 12px;
@@ -940,16 +1064,19 @@ a {
     padding: 9px 10px;
 }
 
+/* Styling rules for .home-remark-alert.success. */
 .home-remark-alert.success {
     background: #e3f6e6;
     color: #137333;
 }
 
+/* Styling rules for .home-remark-alert.error. */
 .home-remark-alert.error {
     background: #ffe8ea;
     color: #b42318;
 }
 
+/* Form control styling for .home-remark-form > div. */
 .home-remark-form > div {
     display: grid;
     grid-template-columns: repeat(4, minmax(0, 1fr)) 120px;
@@ -957,11 +1084,13 @@ a {
     align-items: end;
 }
 
+/* Form control styling for .home-remark-form label. */
 .home-remark-form label {
     display: grid;
     gap: 5px;
 }
 
+/* Form control styling for .home-remark-form label span. */
 .home-remark-form label span {
     color: #111827;
     font-size: 11px;
@@ -970,6 +1099,7 @@ a {
 
 .home-remark-form input,
 .home-remark-form select,
+/* Form control styling for .home-remark-form input, .home-remark-form select, .home-remark-form textarea. */
 .home-remark-form textarea {
     width: 100%;
     min-width: 0;
@@ -982,14 +1112,17 @@ a {
     padding: 8px 9px;
 }
 
+/* Form control styling for .home-remark-textarea. */
 .home-remark-textarea {
     grid-column: span 4;
 }
 
+/* Form control styling for .home-remark-form textarea. */
 .home-remark-form textarea {
     resize: vertical;
 }
 
+/* Form control styling for .home-remark-form button. */
 .home-remark-form button {
     min-height: 36px;
     border: 0;
@@ -1006,6 +1139,7 @@ a {
     cursor: pointer;
 }
 
+/* Footer styling for .site-footer. */
 .site-footer {
     background: var(--primary-green);
     color: #fff;
@@ -1017,6 +1151,7 @@ a {
 }
 
 .site-footer p,
+/* Footer styling for .site-footer p, .site-footer a. */
 .site-footer a {
     color: rgba(255, 255, 255, 0.86);
     font-size: 13px;
@@ -1024,17 +1159,20 @@ a {
     text-decoration: none;
 }
 
+/* Navigation and menu styling for .site-footer nav. */
 .site-footer nav {
     display: flex;
     gap: 22px;
 }
 
+/* Footer styling for .site-footer-social. */
 .site-footer-social {
     display: flex;
     align-items: center;
     gap: 10px;
 }
 
+/* Footer styling for .site-footer-social a. */
 .site-footer-social a {
     width: 34px;
     height: 34px;
@@ -1048,11 +1186,13 @@ a {
 }
 
 .site-footer-social a:hover,
+/* Footer styling for .site-footer-social a:hover, .site-footer-social a:focus-visible. */
 .site-footer-social a:focus-visible {
     background: var(--secondary-gold);
     color: #fff;
 }
 
+/* Support chat interface styling for .guest-support-float. */
 .guest-support-float {
     position: fixed;
     right: 22px;
@@ -1074,6 +1214,7 @@ a {
     transition: transform 0.2s ease, box-shadow 0.2s ease, background 0.2s ease;
 }
 
+/* Support chat interface styling for .guest-support-float i. */
 .guest-support-float i {
     width: 28px;
     height: 28px;
@@ -1087,48 +1228,59 @@ a {
 }
 
 .guest-support-float:hover,
+/* Support chat interface styling for .guest-support-float:hover, .guest-support-float:focus-visible. */
 .guest-support-float:focus-visible {
     background: linear-gradient(135deg, #064632, var(--primary-gold));
     box-shadow: 0 18px 36px rgba(5, 18, 15, 0.3);
     transform: translateY(-2px);
 }
 
+/* Responsive styling rules for @media (max-width: 1280px). */
 @media (max-width: 1280px) {
+    /* Header layout and controls for .site-header. */
     .site-header {
         padding-left: 24px;
         padding-right: 24px;
     }
 
+    /* Styling rules for .brand strong. */
     .brand strong {
         font-size: 21px;
     }
 
+    /* Navigation and menu styling for .site-nav ul. */
     .site-nav ul {
         gap: 10px;
     }
 
+    /* Navigation and menu styling for .site-nav a. */
     .site-nav a {
         font-size: 10px;
     }
 
+    /* Styling rules for .phone-link b. */
     .phone-link b {
         display: none;
     }
 }
 
+/* Responsive styling rules for @media (max-width: 1180px). */
 @media (max-width: 1180px) {
     .site-header,
     .hero-section,
     .steps-section,
+    /* Header layout and controls for .site-header, .hero-section, .steps-section, .site-footer. */
     .site-footer {
         padding-left: 36px;
         padding-right: 36px;
     }
 
+    /* Navigation and menu styling for .site-nav ul. */
     .site-nav ul {
         gap: 12px;
     }
 
+    /* Hero section styling for .hero-section. */
     .hero-section {
         grid-template-columns: 1fr 360px;
     }
@@ -1137,92 +1289,113 @@ a {
     .stats-panel,
     .services-section,
     .popular-section,
+    /* Card and panel styling for .trust-strip, .stats-panel, .services-section, .popular-section, .reviews-section. */
     .reviews-section {
         margin-left: 36px;
         margin-right: 36px;
     }
 
+    /* Styling rules for .service-grid. */
     .service-grid {
         grid-template-columns: repeat(3, 1fr);
     }
 }
 
+/* Responsive styling rules for @media (max-width: 920px). */
 @media (max-width: 920px) {
+    /* Header layout and controls for .site-header. */
     .site-header {
         flex-wrap: wrap;
     }
 
+    /* Navigation and menu styling for .site-nav. */
     .site-nav {
         order: 3;
         width: 100%;
     }
 
+    /* Navigation and menu styling for .site-nav ul. */
     .site-nav ul {
         justify-content: center;
         flex-wrap: wrap;
     }
 
+    /* Hero section styling for .hero-section. */
     .hero-section {
         grid-template-columns: 1fr;
         padding-top: 54px;
     }
 
+    /* Card and panel styling for .booking-card. */
     .booking-card {
         justify-self: start;
     }
 
     .trust-strip,
+    /* Card and panel styling for .trust-strip, .stats-panel. */
     .stats-panel {
         grid-template-columns: repeat(2, 1fr);
     }
 
+    /* Card and panel styling for .stats-panel article:nth-child(2). */
     .stats-panel article:nth-child(2) {
         border-right: 0;
     }
 
+    /* Styling rules for .steps-line. */
     .steps-line {
         grid-template-columns: 1fr;
     }
 
+    /* Styling rules for .steps-line::before. */
     .steps-line::before {
         display: none;
     }
 
+    /* Styling rules for .meal-grid. */
     .meal-grid {
         grid-template-columns: 1fr;
     }
 
+    /* Styling rules for .reviews-section-heading. */
     .reviews-section-heading {
         align-items: flex-start;
         flex-direction: column;
     }
 
+    /* Styling rules for .home-review-grid. */
     .home-review-grid {
         grid-template-columns: 1fr;
     }
 
+    /* Header layout and controls for .home-remark-form > header. */
     .home-remark-form > header {
         align-items: flex-start;
         flex-direction: column;
     }
 
+    /* Form control styling for .home-remark-form > div. */
     .home-remark-form > div {
         grid-template-columns: repeat(2, minmax(0, 1fr));
     }
 
     .home-remark-textarea,
+    /* Form control styling for .home-remark-textarea, .home-remark-form button. */
     .home-remark-form button {
         grid-column: 1 / -1;
     }
 }
 
+/* Responsive styling rules for @media (max-width: 680px). */
 @media (max-width: 680px) {
+    /* Header layout and controls for .site-header. */
     .site-header {
         display: grid;
         grid-template-columns: minmax(0, 1fr);
         padding: 18px 22px;
     }
 
+    /* Navigation and menu styling for .site-nav ul. */
     .site-nav ul {
         display: grid;
         grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
@@ -1230,35 +1403,42 @@ a {
         gap: 14px 22px;
     }
 
+    /* Header layout and controls for .header-actions. */
     .header-actions {
         flex-wrap: wrap;
     }
 
     .phone-link,
     .order-link,
+    /* Ordering and cart interface styling for .phone-link, .order-link, .auth-link. */
     .auth-link {
         width: 100%;
     }
 
+    /* Hero section styling for .hero-section. */
     .hero-section {
         padding: 42px 22px 30px;
     }
 
+    /* Hero section styling for .hero-copy. */
     .hero-copy {
         max-width: 340px;
     }
 
+    /* Hero section styling for .hero-copy h1. */
     .hero-copy h1 {
         font-size: 34px;
         overflow-wrap: anywhere;
     }
 
+    /* Hero section styling for .hero-description. */
     .hero-description {
         max-width: 330px;
     }
 
     .hero-actions,
     .popular-heading,
+    /* Hero section styling for .hero-actions, .popular-heading, .site-footer. */
     .site-footer {
         align-items: stretch;
         flex-direction: column;
@@ -1266,12 +1446,14 @@ a {
 
     .primary-action,
     .secondary-action,
+    /* Styling rules for .primary-action, .secondary-action, .popular-heading a. */
     .popular-heading a {
         width: 100%;
     }
 
     .trust-strip,
     .stats-panel,
+    /* Card and panel styling for .trust-strip, .stats-panel, .service-grid. */
     .service-grid {
         grid-template-columns: 1fr;
     }
@@ -1280,30 +1462,36 @@ a {
     .stats-panel,
     .services-section,
     .popular-section,
+    /* Card and panel styling for .trust-strip, .stats-panel, .services-section, .popular-section, .reviews-section. */
     .reviews-section {
         margin-left: 22px;
         margin-right: 22px;
     }
 
     .trust-item,
+    /* Card and panel styling for .trust-item, .stats-panel article. */
     .stats-panel article {
         border-right: 0;
     }
 
+    /* Form control styling for .home-remark-form > div. */
     .home-remark-form > div {
         grid-template-columns: 1fr;
     }
 
+    /* Styling rules for .booking-row. */
     .booking-row {
         grid-template-columns: 1fr;
     }
 
     .steps-section,
+    /* Footer styling for .steps-section, .site-footer. */
     .site-footer {
         padding-left: 22px;
         padding-right: 22px;
     }
 
+    /* Support chat interface styling for .guest-support-float. */
     .guest-support-float {
         right: 14px;
         bottom: 14px;
@@ -1311,6 +1499,7 @@ a {
         padding: 0 12px;
     }
 
+    /* Support chat interface styling for .guest-support-float span. */
     .guest-support-float span {
         display: none;
     }

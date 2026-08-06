@@ -30,6 +30,7 @@ function afrisense_enquiry_statuses(): array
     ];
 }
 
+// Defines the afrisense_enquiry_status_class helper used by this module.
 function afrisense_enquiry_status_class(string $status): string
 {
     return match (strtolower($status)) {
@@ -40,6 +41,7 @@ function afrisense_enquiry_status_class(string $status): string
     };
 }
 
+// Defines the afrisense_enquiry_status_label helper used by this module.
 function afrisense_enquiry_status_label(string $status): string
 {
     $statuses = afrisense_enquiry_statuses();
@@ -47,6 +49,7 @@ function afrisense_enquiry_status_label(string $status): string
     return $statuses[$status] ?? $status;
 }
 
+// Defines the afrisense_enquiry_type helper used by this module.
 function afrisense_enquiry_type(string $subject): string
 {
     $subject = strtolower($subject);
@@ -60,6 +63,7 @@ function afrisense_enquiry_type(string $subject): string
     };
 }
 
+// Defines the afrisense_enquiry_type_class helper used by this module.
 function afrisense_enquiry_type_class(string $type): string
 {
     return match ($type) {
@@ -102,7 +106,9 @@ function afrisense_enquiry_url(array $filters, array $overrides = [], string $an
 {
     $params = $filters;
 
+    // Iterate through the data needed for this block.
     foreach ($overrides as $key => $value) {
+        // Guard this block so it only runs when the required condition is met.
         if ($value === null || $value === '') {
             unset($params[$key]);
             continue;
@@ -129,11 +135,13 @@ function afrisense_enquiry_where_sql(array $filters): array
     $params = [];
     $validStatuses = array_keys(afrisense_enquiry_statuses());
 
+    // Guard this block so it only runs when the required condition is met.
     if (in_array($filters['status'], $validStatuses, true)) {
         $where[] = 'e.`status` = :status';
         $params['status'] = $filters['status'];
     }
 
+    // Guard this block so it only runs when the required condition is met.
     if ($filters['search'] !== '') {
         $where[] = '(
             CAST(e.`id` AS CHAR) LIKE :search
@@ -146,26 +154,31 @@ function afrisense_enquiry_where_sql(array $filters): array
         $params['search'] = '%' . $filters['search'] . '%';
     }
 
+    // Guard this block so it only runs when the required condition is met.
     if ($filters['email'] !== '') {
         $where[] = 'COALESCE(c.`email`, "") LIKE :email';
         $params['email'] = '%' . $filters['email'] . '%';
     }
 
+    // Guard this block so it only runs when the required condition is met.
     if ($filters['phone'] !== '') {
         $where[] = 'COALESCE(c.`phone_number`, "") LIKE :phone';
         $params['phone'] = '%' . preg_replace('/\s+/', '', $filters['phone']) . '%';
     }
 
+    // Guard this block so it only runs when the required condition is met.
     if ($filters['subject'] !== '') {
         $where[] = 'e.`subject` LIKE :subject';
         $params['subject'] = '%' . $filters['subject'] . '%';
     }
 
+    // Guard this block so it only runs when the required condition is met.
     if ($filters['date_from'] !== '') {
         $where[] = 'DATE(e.`created_at`) = :date_from';
         $params['date_from'] = $filters['date_from'];
     }
 
+    // Guard this block so it only runs when the required condition is met.
     if ($filters['type'] !== '') {
         $type = strtolower($filters['type']);
         $typePatterns = match ($type) {
@@ -176,8 +189,10 @@ function afrisense_enquiry_where_sql(array $filters): array
             default => [],
         };
 
+        // Guard this block so it only runs when the required condition is met.
         if ($typePatterns !== []) {
             $typeParts = [];
+            // Iterate through the data needed for this block.
             foreach ($typePatterns as $index => $pattern) {
                 $key = 'type_' . $index;
                 $typeParts[] = 'LOWER(e.`subject`) LIKE :' . $key;
@@ -191,8 +206,10 @@ function afrisense_enquiry_where_sql(array $filters): array
     return [$where !== [] ? 'WHERE ' . implode(' AND ', $where) : '', $params];
 }
 
+// Defines the afrisense_count_enquiries helper used by this module.
 function afrisense_count_enquiries(PDO $pdo, ?string $status = null): int
 {
+    // Guard this block so it only runs when the required condition is met.
     if ($status === null) {
         $statement = $pdo->prepare('SELECT COUNT(*) AS count_value FROM `enquiries`');
         $statement->execute();
@@ -235,6 +252,7 @@ function afrisense_find_enquiry(PDO $pdo, int $id): ?array
     return is_array($row) ? $row : null;
 }
 
+// Defines the afrisense_redirect_enquiries helper used by this module.
 function afrisense_redirect_enquiries(array $filters, int $viewId = 0): never
 {
     $overrides = $viewId > 0 ? ['view' => (string) $viewId] : ['view' => null];
@@ -252,16 +270,20 @@ $offset = ($page - 1) * $itemsPerPage;
 $loadError = '';
 $flash = afrisense_flash_get();
 
+// Run database/action work inside a guarded block so the page can fail gracefully.
 try {
     $pdo = afrisense_pdo();
 
+    // Handle submitted form actions before rendering the page.
     if (($_SERVER['REQUEST_METHOD'] ?? 'GET') === 'POST') {
         $action = (string) ($_POST['action'] ?? '');
         $enquiryId = (int) ($_POST['enquiry_id'] ?? 0);
 
+        // Guard this block so it only runs when the required condition is met.
         if ($action === 'update_status') {
             $nextStatus = (string) ($_POST['status'] ?? '');
 
+            // Guard this block so it only runs when the required condition is met.
             if ($enquiryId <= 0 || !in_array($nextStatus, $validStatuses, true)) {
                 afrisense_flash_set('error', 'Enquiry status could not be updated.');
                 afrisense_redirect_enquiries($filters, $enquiryId);
@@ -285,9 +307,11 @@ try {
             afrisense_redirect_enquiries($filters, $enquiryId);
         }
 
+        // Guard this block so it only runs when the required condition is met.
         if ($action === 'save_response') {
             $response = trim((string) ($_POST['admin_response'] ?? ''));
 
+            // Guard this block so it only runs when the required condition is met.
             if ($enquiryId <= 0 || $response === '') {
                 afrisense_flash_set('error', 'Enter a response before saving.');
                 afrisense_redirect_enquiries($filters, $enquiryId);
@@ -310,10 +334,12 @@ try {
             afrisense_redirect_enquiries($filters, $enquiryId);
         }
 
+        // Guard this block so it only runs when the required condition is met.
         if ($action === 'bulk_update_status') {
             $nextStatus = (string) ($_POST['bulk_status'] ?? '');
             $ids = array_values(array_filter(array_map('intval', (array) ($_POST['selected_enquiries'] ?? []))));
 
+            // Guard this block so it only runs when the required condition is met.
             if ($ids === [] || !in_array($nextStatus, $validStatuses, true)) {
                 afrisense_flash_set('error', 'Select at least one enquiry and a valid status.');
                 afrisense_redirect_enquiries($filters);
@@ -327,7 +353,9 @@ try {
             afrisense_redirect_enquiries($filters, $ids[0] ?? 0);
         }
 
+        // Guard this block so it only runs when the required condition is met.
         if ($action === 'delete_enquiry') {
+            // Guard this block so it only runs when the required condition is met.
             if ($enquiryId <= 0) {
                 afrisense_flash_set('error', 'Enquiry could not be deleted.');
                 afrisense_redirect_enquiries($filters);
@@ -412,7 +440,9 @@ $statusCounts = [
 
 ob_start();
 ?>
+<!-- Page section for this part of the AfriSense interface. -->
 <section class="af-admin-menu-page af-enquiries-management-page">
+    <!-- Header block for this interface section. -->
     <header class="af-admin-page-heading af-enquiries-heading">
         <div>
             <h1>Enquiries Management</h1>
@@ -429,16 +459,20 @@ ob_start();
         </div>
     </header>
 
+    <?php // Render this conditional/dynamic template block. ?>
     <?php if ($loadError !== ''): ?>
         <div class="af-admin-alert error"><?php echo htmlspecialchars($loadError, ENT_QUOTES, 'UTF-8'); ?></div>
     <?php endif; ?>
+    <?php // Render this conditional/dynamic template block. ?>
     <?php if ($flash !== null): ?>
         <div class="af-admin-alert <?php echo htmlspecialchars((string) ($flash['type'] ?? 'success'), ENT_QUOTES, 'UTF-8'); ?>">
             <?php echo htmlspecialchars((string) ($flash['message'] ?? ''), ENT_QUOTES, 'UTF-8'); ?>
         </div>
     <?php endif; ?>
 
+    <!-- Page section for this part of the AfriSense interface. -->
     <section class="af-menu-table-card af-enquiries-filter-card">
+        <!-- Form block that submits this page workflow. -->
         <form class="af-enquiries-filters" action="enquiries.php" method="get">
             <label>
                 <span>Search Enquiry</span>
@@ -473,6 +507,7 @@ ob_start();
                 <span>Status</span>
                 <select name="status">
                     <option value="">All Status</option>
+                    <?php // Render this conditional/dynamic template block. ?>
                     <?php foreach (afrisense_enquiry_statuses() as $statusValue => $statusLabel): ?>
                         <option value="<?php echo htmlspecialchars($statusValue, ENT_QUOTES, 'UTF-8'); ?>" <?php echo $filters['status'] === $statusValue ? 'selected' : ''; ?>>
                             <?php echo htmlspecialchars($statusLabel, ENT_QUOTES, 'UTF-8'); ?>
@@ -491,7 +526,9 @@ ob_start();
         </form>
     </section>
 
+    <!-- Navigation links for this interface. -->
     <nav class="af-enquiry-tabs" aria-label="Enquiry status filters">
+        <?php // Render this conditional/dynamic template block. ?>
         <?php foreach (['' => 'All Enquiries', 'Pending' => 'Unread', 'Read' => 'Reading', 'Replied' => 'Replied', 'Closed' => 'Closed'] as $tabStatus => $tabLabel): ?>
             <a class="<?php echo $filters['status'] === $tabStatus ? 'active' : ''; ?>" href="<?php echo htmlspecialchars(afrisense_enquiry_url($filters, ['status' => $tabStatus, 'view' => null]), ENT_QUOTES, 'UTF-8'); ?>">
                 <?php echo htmlspecialchars($tabLabel, ENT_QUOTES, 'UTF-8'); ?>
@@ -500,15 +537,21 @@ ob_start();
         <?php endforeach; ?>
     </nav>
 
+    <!-- Page section for this part of the AfriSense interface. -->
     <section class="af-menu-table-card af-enquiries-table-card" id="enquiries-table">
+        <!-- Form block that submits this page workflow. -->
         <form id="af-enquiries-bulk-form" action="<?php echo htmlspecialchars(afrisense_enquiry_url($filters, ['view' => $selectedEnquiryId > 0 ? (string) $selectedEnquiryId : null], '#enquiries-table'), ENT_QUOTES, 'UTF-8'); ?>" method="post"></form>
+        <!-- Form block that submits this page workflow. -->
         <form id="af-enquiries-sort-form" action="enquiries.php" method="get">
+            <?php // Render this conditional/dynamic template block. ?>
             <?php foreach ($filters as $filterKey => $filterValue): ?>
+                <?php // Render this conditional/dynamic template block. ?>
                 <?php if ($filterKey !== 'sort' && $filterValue !== ''): ?>
                     <input type="hidden" name="<?php echo htmlspecialchars($filterKey, ENT_QUOTES, 'UTF-8'); ?>" value="<?php echo htmlspecialchars($filterValue, ENT_QUOTES, 'UTF-8'); ?>">
                 <?php endif; ?>
             <?php endforeach; ?>
         </form>
+        <!-- Header block for this interface section. -->
         <header class="af-enquiries-bulkbar">
             <label>
                 <input type="checkbox" data-select-all-enquiries>
@@ -519,6 +562,7 @@ ob_start();
                 <span class="sr-only">Change Status</span>
                 <select name="bulk_status" form="af-enquiries-bulk-form">
                     <option value="">Change Status</option>
+                    <?php // Render this conditional/dynamic template block. ?>
                     <?php foreach (afrisense_enquiry_statuses() as $statusValue => $statusLabel): ?>
                         <option value="<?php echo htmlspecialchars($statusValue, ENT_QUOTES, 'UTF-8'); ?>"><?php echo htmlspecialchars($statusLabel, ENT_QUOTES, 'UTF-8'); ?></option>
                     <?php endforeach; ?>
@@ -536,6 +580,7 @@ ob_start();
         </header>
 
         <div class="af-menu-table af-enquiries-table table-responsive">
+            <!-- Table block for displaying structured records. -->
             <table>
                 <colgroup>
                     <col class="af-enquiry-col-select">
@@ -564,12 +609,14 @@ ob_start();
                     </tr>
                 </thead>
                 <tbody>
+                    <?php // Render this conditional/dynamic template block. ?>
                     <?php if ($enquiries === []): ?>
                         <tr>
                             <td colspan="10"><div class="af-empty-state">No enquiries found.</div></td>
                         </tr>
                     <?php endif; ?>
 
+                    <?php // Render this conditional/dynamic template block. ?>
                     <?php foreach ($enquiries as $enquiry): ?>
                         <?php
                         $enquiryId = (int) ($enquiry['id'] ?? 0);
@@ -610,10 +657,13 @@ ob_start();
                                 <div class="af-row-actions af-enquiry-row-actions">
                                     <a href="<?php echo htmlspecialchars(afrisense_enquiry_url($filters, ['view' => (string) $enquiryId], '#enquiry-row-' . $enquiryId), ENT_QUOTES, 'UTF-8'); ?>" title="View enquiry" aria-label="View enquiry"><i class="bi bi-eye" aria-hidden="true"></i></a>
                                     <a href="<?php echo htmlspecialchars(afrisense_enquiry_url($filters, ['view' => (string) $enquiryId], '#enquiry-reply-' . $enquiryId), ENT_QUOTES, 'UTF-8'); ?>" title="Reply" aria-label="Reply"><i class="bi bi-reply" aria-hidden="true"></i></a>
+                                    <?php // Render this conditional/dynamic template block. ?>
                                     <?php if (($enquiry['email'] ?? '') !== ''): ?>
                                         <a href="mailto:<?php echo htmlspecialchars((string) $enquiry['email'], ENT_QUOTES, 'UTF-8'); ?>" title="Email customer" aria-label="Email customer"><i class="bi bi-envelope" aria-hidden="true"></i></a>
                                     <?php endif; ?>
+                                    <?php // Render this conditional/dynamic template block. ?>
                                     <?php if ($status !== 'Closed'): ?>
+                                        <!-- Form block that submits this page workflow. -->
                                         <form action="<?php echo htmlspecialchars(afrisense_enquiry_url($filters, ['view' => (string) $enquiryId], '#enquiry-row-' . $enquiryId), ENT_QUOTES, 'UTF-8'); ?>" method="post">
                                             <input type="hidden" name="action" value="update_status">
                                             <input type="hidden" name="enquiry_id" value="<?php echo htmlspecialchars((string) $enquiryId, ENT_QUOTES, 'UTF-8'); ?>">
@@ -625,10 +675,13 @@ ob_start();
                             </td>
                         </tr>
 
+                        <?php // Render this conditional/dynamic template block. ?>
                         <?php if ($detailEnquiry !== null): ?>
                             <tr class="af-enquiry-detail-row">
                                 <td colspan="10">
+                                    <!-- Page section for this part of the AfriSense interface. -->
                                     <section class="af-enquiry-detail-card">
+                                        <!-- Header block for this interface section. -->
                                         <header>
                                             <div>
                                                 <small>Selected Enquiry</small>
@@ -654,6 +707,7 @@ ob_start();
                                                 <h3>Message</h3>
                                                 <p><?php echo nl2br(htmlspecialchars((string) ($detailEnquiry['message'] ?? ''), ENT_QUOTES, 'UTF-8')); ?></p>
                                             </article>
+                                            <?php // Render this conditional/dynamic template block. ?>
                                             <?php if (trim((string) ($detailEnquiry['admin_response'] ?? '')) !== ''): ?>
                                                 <article class="af-enquiry-message-box is-response">
                                                     <h3>Latest Admin Response</h3>
@@ -662,7 +716,9 @@ ob_start();
                                             <?php endif; ?>
                                         </div>
                                         <div class="af-enquiry-detail-actions">
+                                            <?php // Render this conditional/dynamic template block. ?>
                                             <?php if ((string) $detailEnquiry['status'] === 'Pending'): ?>
+                                                <!-- Form block that submits this page workflow. -->
                                                 <form action="<?php echo htmlspecialchars(afrisense_enquiry_url($filters, ['view' => (string) $enquiryId], '#enquiry-row-' . $enquiryId), ENT_QUOTES, 'UTF-8'); ?>" method="post">
                                                     <input type="hidden" name="action" value="update_status">
                                                     <input type="hidden" name="enquiry_id" value="<?php echo htmlspecialchars((string) $enquiryId, ENT_QUOTES, 'UTF-8'); ?>">
@@ -670,7 +726,9 @@ ob_start();
                                                     <button type="submit"><i class="bi bi-check2" aria-hidden="true"></i> Mark as Read</button>
                                                 </form>
                                             <?php endif; ?>
+                                            <?php // Render this conditional/dynamic template block. ?>
                                             <?php if ((string) $detailEnquiry['status'] !== 'Closed'): ?>
+                                                <!-- Form block that submits this page workflow. -->
                                                 <form action="<?php echo htmlspecialchars(afrisense_enquiry_url($filters, ['view' => (string) $enquiryId], '#enquiry-row-' . $enquiryId), ENT_QUOTES, 'UTF-8'); ?>" method="post">
                                                     <input type="hidden" name="action" value="update_status">
                                                     <input type="hidden" name="enquiry_id" value="<?php echo htmlspecialchars((string) $enquiryId, ENT_QUOTES, 'UTF-8'); ?>">
@@ -679,8 +737,10 @@ ob_start();
                                                 </form>
                                             <?php endif; ?>
                                         </div>
+                                        <!-- Page section for this part of the AfriSense interface. -->
                                         <section class="af-enquiry-reply-card" id="enquiry-reply-<?php echo htmlspecialchars((string) $enquiryId, ENT_QUOTES, 'UTF-8'); ?>">
                                             <h3>Compose Reply</h3>
+                                            <!-- Form block that submits this page workflow. -->
                                             <form action="<?php echo htmlspecialchars(afrisense_enquiry_url($filters, ['view' => (string) $enquiryId], '#enquiry-row-' . $enquiryId), ENT_QUOTES, 'UTF-8'); ?>" method="post">
                                                 <input type="hidden" name="action" value="save_response">
                                                 <input type="hidden" name="enquiry_id" value="<?php echo htmlspecialchars((string) $enquiryId, ENT_QUOTES, 'UTF-8'); ?>">
@@ -697,13 +757,17 @@ ob_start();
             </table>
         </div>
 
+        <!-- Footer block for this interface section. -->
         <footer class="af-menu-pagination">
             <p>Showing <?php echo htmlspecialchars((string) ($filteredEnquiryCount > 0 ? $offset + 1 : 0), ENT_QUOTES, 'UTF-8'); ?> to <?php echo htmlspecialchars((string) min($offset + count($enquiries), $filteredEnquiryCount), ENT_QUOTES, 'UTF-8'); ?> of <?php echo htmlspecialchars((string) $filteredEnquiryCount, ENT_QUOTES, 'UTF-8'); ?> enquiries</p>
+            <!-- Navigation links for this interface. -->
             <nav aria-label="Enquiries pagination">
                 <a class="<?php echo $page <= 1 ? 'is-disabled' : ''; ?>" href="<?php echo htmlspecialchars($page <= 1 ? '#' : afrisense_enquiry_url($filters, ['page' => (string) ($page - 1), 'view' => null], '#enquiries-table'), ENT_QUOTES, 'UTF-8'); ?>" aria-label="Previous page" title="Previous page"><i class="bi bi-chevron-left" aria-hidden="true"></i></a>
+                <?php // Render this conditional/dynamic template block. ?>
                 <?php for ($number = max(1, $page - 1); $number <= min($totalPages, $page + 1); $number++): ?>
                     <a class="<?php echo $number === $page ? 'active' : ''; ?>" href="<?php echo htmlspecialchars(afrisense_enquiry_url($filters, ['page' => (string) $number, 'view' => null], '#enquiries-table'), ENT_QUOTES, 'UTF-8'); ?>"><?php echo htmlspecialchars((string) $number, ENT_QUOTES, 'UTF-8'); ?></a>
                 <?php endfor; ?>
+                <?php // Render this conditional/dynamic template block. ?>
                 <?php if ($totalPages > $page + 1): ?>
                     <span>...</span>
                     <a href="<?php echo htmlspecialchars(afrisense_enquiry_url($filters, ['page' => (string) $totalPages, 'view' => null], '#enquiries-table'), ENT_QUOTES, 'UTF-8'); ?>"><?php echo htmlspecialchars((string) $totalPages, ENT_QUOTES, 'UTF-8'); ?></a>

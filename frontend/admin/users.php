@@ -13,6 +13,7 @@ require_once __DIR__ . '/../auth/auth_bootstrap.php';
 afrisense_require_admin();
 $itemsPerPage = afrisense_admin_items_per_page();
 
+// Defines the afrisense_count_users helper used by this module.
 function afrisense_count_users(PDO $pdo, string $condition = '1 = 1', array $params = []): int
 {
     $statement = $pdo->prepare(
@@ -27,6 +28,7 @@ function afrisense_count_users(PDO $pdo, string $condition = '1 = 1', array $par
     return (int) ($row['count_value'] ?? 0);
 }
 
+// Defines the afrisense_user_role_class helper used by this module.
 function afrisense_user_role_class(string $role): string
 {
     $role = strtolower($role);
@@ -39,16 +41,20 @@ function afrisense_user_role_class(string $role): string
     };
 }
 
+// Defines the afrisense_admin_user_form_value helper used by this module.
 function afrisense_admin_user_form_value(string $key): string
 {
     return trim((string) ($_POST[$key] ?? ''));
 }
 
+// Defines the afrisense_admin_user_url helper used by this module.
 function afrisense_admin_user_url(array $overrides = [], string $anchor = ''): string
 {
     $params = $_GET;
 
+    // Iterate through the data needed for this block.
     foreach ($overrides as $key => $value) {
+        // Guard this block so it only runs when the required condition is met.
         if ($value === null || $value === '') {
             unset($params[$key]);
         } else {
@@ -61,6 +67,7 @@ function afrisense_admin_user_url(array $overrides = [], string $anchor = ''): s
     return 'users.php' . ($query !== '' ? '?' . $query : '') . $anchor;
 }
 
+// Run database/action work inside a guarded block so the page can fail gracefully.
 try {
     $pdo = afrisense_pdo();
     afrisense_delivery_rider_role_id($pdo);
@@ -77,6 +84,7 @@ try {
     $rolesStatement->execute();
     $roles = $rolesStatement->fetchAll(PDO::FETCH_ASSOC);
 
+    // Handle submitted form actions before rendering the page.
     if (($_SERVER['REQUEST_METHOD'] ?? 'GET') === 'POST' && ($_POST['action'] ?? '') === 'create_user') {
         $fullname = afrisense_admin_user_form_value('fullname');
         $username = afrisense_admin_user_form_value('username');
@@ -86,6 +94,7 @@ try {
         $roleId = (int) ($_POST['role_id'] ?? 0);
         $emailVerified = isset($_POST['email_verified']) ? 1 : 0;
 
+        // Guard this block so it only runs when the required condition is met.
         if ($fullname === '' || $email === '' || $phone === '' || $password === '' || $roleId <= 0) {
             $flashType = 'error';
             $flashMessage = 'Full name, email, phone, password and role are required.';
@@ -115,6 +124,7 @@ try {
                 'phone' => $phone,
             ]);
 
+            // Guard this block so it only runs when the required condition is met.
             if (!$roleExists) {
                 $flashType = 'error';
                 $flashMessage = 'Selected role does not exist.';
@@ -152,20 +162,24 @@ try {
     $where = [];
     $params = [];
 
+    // Guard this block so it only runs when the required condition is met.
     if ($search !== '') {
         $where[] = '(u.`fullname` LIKE :search OR u.`username` LIKE :search OR u.`email` LIKE :search OR u.`phonenumber` LIKE :search)';
         $params['search'] = '%' . $search . '%';
     }
 
+    // Guard this block so it only runs when the required condition is met.
     if ($roleFilter > 0) {
         $where[] = 'u.`role_id` = :role_id';
         $params['role_id'] = $roleFilter;
     }
 
+    // Guard this block so it only runs when the required condition is met.
     if ($verifiedFilter === 'verified') {
         $where[] = 'u.`email_verified` = 1';
     }
 
+    // Guard this block so it only runs when the required condition is met.
     if ($verifiedFilter === 'pending') {
         $where[] = 'COALESCE(u.`email_verified`, 0) = 0';
     }
@@ -217,7 +231,9 @@ try {
 
 ob_start();
 ?>
+<!-- Page section for this part of the AfriSense interface. -->
 <section class="af-admin-menu-page af-admin-users-page">
+    <!-- Header block for this interface section. -->
     <header class="af-admin-page-heading">
         <div>
             <h1>Users</h1>
@@ -229,13 +245,16 @@ ob_start();
         </a>
     </header>
 
+    <?php // Render this conditional/dynamic template block. ?>
     <?php if ($loadError !== ''): ?>
         <div class="af-admin-alert error"><?php echo htmlspecialchars($loadError, ENT_QUOTES, 'UTF-8'); ?></div>
     <?php endif; ?>
+    <?php // Render this conditional/dynamic template block. ?>
     <?php if ($flashMessage !== ''): ?>
         <div class="af-admin-alert <?php echo htmlspecialchars($flashType, ENT_QUOTES, 'UTF-8'); ?>"><?php echo htmlspecialchars($flashMessage, ENT_QUOTES, 'UTF-8'); ?></div>
     <?php endif; ?>
 
+    <!-- Page section for this part of the AfriSense interface. -->
     <section class="af-menu-metrics af-user-metrics" aria-label="User summary">
         <article class="green">
             <span><i class="bi bi-people" aria-hidden="true"></i></span>
@@ -259,11 +278,14 @@ ob_start();
         </article>
     </section>
 
+    <!-- Page section for this part of the AfriSense interface. -->
     <section class="af-menu-table-card af-user-create-card">
+        <!-- Header block for this interface section. -->
         <header class="af-table-toolbar">
             <h2>Add User / Staff</h2>
             <p>Create a staff, rider, customer or admin account using the roles already in the system.</p>
         </header>
+        <!-- Form block that submits this page workflow. -->
         <form id="add_user_form" class="af-food-management-form af-user-create-form" action="users.php#add_user_form" method="post">
             <input type="hidden" name="action" value="create_user">
             <label>
@@ -286,6 +308,7 @@ ob_start();
                 <span>Role</span>
                 <select name="role_id" required>
                     <option value="">Select role</option>
+                    <?php // Render this conditional/dynamic template block. ?>
                     <?php foreach ($roles as $role): ?>
                         <option value="<?php echo htmlspecialchars((string) ($role['id'] ?? 0), ENT_QUOTES, 'UTF-8'); ?>" <?php echo (int) ($_POST['role_id'] ?? 0) === (int) ($role['id'] ?? 0) ? 'selected' : ''; ?>>
                             <?php echo htmlspecialchars((string) ($role['rolename'] ?? 'Role'), ENT_QUOTES, 'UTF-8'); ?>
@@ -305,7 +328,9 @@ ob_start();
         </form>
     </section>
 
+    <!-- Page section for this part of the AfriSense interface. -->
     <section class="af-menu-table-card" id="users-table">
+        <!-- Form block that submits this page workflow. -->
         <form class="af-menu-filters af-users-filters" action="users.php" method="get">
             <label class="af-menu-search" for="user_search">
                 <i class="bi bi-search" aria-hidden="true"></i>
@@ -314,6 +339,7 @@ ob_start();
             <label class="af-menu-select" for="role_filter">
                 <select id="role_filter" name="role">
                     <option value="">All Roles</option>
+                    <?php // Render this conditional/dynamic template block. ?>
                     <?php foreach ($roles as $role): ?>
                         <option value="<?php echo htmlspecialchars((string) ($role['id'] ?? 0), ENT_QUOTES, 'UTF-8'); ?>" <?php echo $roleFilter === (int) ($role['id'] ?? 0) ? 'selected' : ''; ?>>
                             <?php echo htmlspecialchars((string) ($role['rolename'] ?? 'Role'), ENT_QUOTES, 'UTF-8'); ?>
@@ -343,6 +369,7 @@ ob_start();
         </form>
 
         <div class="af-menu-table af-users-table">
+            <!-- Table block for displaying structured records. -->
             <table>
                 <thead>
                     <tr>
@@ -357,6 +384,7 @@ ob_start();
                     </tr>
                 </thead>
                 <tbody>
+                    <?php // Render this conditional/dynamic template block. ?>
                     <?php if ($users === []): ?>
                         <tr>
                             <td colspan="8">
@@ -364,6 +392,7 @@ ob_start();
                             </td>
                         </tr>
                     <?php endif; ?>
+                    <?php // Render this conditional/dynamic template block. ?>
                     <?php foreach ($users as $index => $user): ?>
                         <?php
                         $roleName = (string) ($user['role_name'] ?? 'Unassigned');
@@ -414,13 +443,17 @@ ob_start();
             </table>
         </div>
 
+        <!-- Footer block for this interface section. -->
         <footer class="af-menu-pagination">
             <p>Showing <?php echo htmlspecialchars((string) ($filteredUserCount > 0 ? $offset + 1 : 0), ENT_QUOTES, 'UTF-8'); ?> to <?php echo htmlspecialchars((string) min($offset + count($users), $filteredUserCount), ENT_QUOTES, 'UTF-8'); ?> of <?php echo htmlspecialchars((string) $filteredUserCount, ENT_QUOTES, 'UTF-8'); ?> users</p>
+            <!-- Navigation links for this interface. -->
             <nav aria-label="Users pagination">
                 <a class="<?php echo $page <= 1 ? 'is-disabled' : ''; ?>" href="<?php echo htmlspecialchars($page <= 1 ? '#' : afrisense_admin_user_url(['page' => (string) ($page - 1)], '#users-table'), ENT_QUOTES, 'UTF-8'); ?>" aria-label="Previous page" title="Previous page"><i class="bi bi-chevron-left" aria-hidden="true"></i></a>
+                <?php // Render this conditional/dynamic template block. ?>
                 <?php for ($number = max(1, $page - 1); $number <= min($totalPages, $page + 1); $number++): ?>
                     <a class="<?php echo $number === $page ? 'active' : ''; ?>" href="<?php echo htmlspecialchars(afrisense_admin_user_url(['page' => (string) $number], '#users-table'), ENT_QUOTES, 'UTF-8'); ?>"><?php echo htmlspecialchars((string) $number, ENT_QUOTES, 'UTF-8'); ?></a>
                 <?php endfor; ?>
+                <?php // Render this conditional/dynamic template block. ?>
                 <?php if ($totalPages > $page + 1): ?>
                     <span>...</span>
                     <a href="<?php echo htmlspecialchars(afrisense_admin_user_url(['page' => (string) $totalPages], '#users-table'), ENT_QUOTES, 'UTF-8'); ?>"><?php echo htmlspecialchars((string) $totalPages, ENT_QUOTES, 'UTF-8'); ?></a>

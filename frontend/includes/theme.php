@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 require_once __DIR__ . '/public_settings.php';
 
+// Defines the afrisense_theme_color helper used by this module.
 function afrisense_theme_color(string $value, string $fallback): string
 {
     $value = trim($value);
@@ -11,6 +12,7 @@ function afrisense_theme_color(string $value, string $fallback): string
     return preg_match('/^#[0-9a-fA-F]{6}$/', $value) === 1 ? strtolower($value) : $fallback;
 }
 
+// Defines the afrisense_theme_style_block helper used by this module.
 function afrisense_theme_style_block(): string
 {
     $settings = afrisense_public_settings();
@@ -36,6 +38,7 @@ function afrisense_theme_style_block(): string
     );
 }
 
+// Defines the afrisense_print_theme_style helper used by this module.
 function afrisense_print_theme_style(): void
 {
     echo afrisense_theme_style_block();

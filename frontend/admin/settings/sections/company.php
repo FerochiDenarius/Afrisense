@@ -1,3 +1,4 @@
+        <!-- Page section for this part of the AfriSense interface. -->
         <section class="af-settings-card af-settings-card-wide" id="company-information">
             <h2>Company Information</h2>
             <p>Update your company details and contact information shown across the website.</p>
@@ -68,6 +69,7 @@
             </label>
         </section>
 
+        <!-- Page section for this part of the AfriSense interface. -->
         <section class="af-settings-card af-company-assets-card">
             <?php
             $logoUrl = afrisense_settings_asset_url($frontendBase, (string) ($website['logo'] ?? ''));
@@ -76,6 +78,7 @@
             <h2>Company Logo</h2>
             <p>Upload your company logo. Recommended size: 300 x 100px.</p>
             <div class="af-logo-preview">
+                <?php // Render this conditional/dynamic template block. ?>
                 <?php if ($logoUrl !== ''): ?>
                     <img src="<?php echo htmlspecialchars($logoUrl, ENT_QUOTES, 'UTF-8'); ?>" alt="Company logo">
                 <?php else: ?>
@@ -99,6 +102,7 @@
             <h2>Favicon</h2>
             <p>Upload favicon for your website. Recommended size: 32 x 32px.</p>
             <div class="af-favicon-preview">
+                <?php // Render this conditional/dynamic template block. ?>
                 <?php if ($faviconUrl !== ''): ?>
                     <img src="<?php echo htmlspecialchars($faviconUrl, ENT_QUOTES, 'UTF-8'); ?>" alt="Website favicon">
                 <?php else: ?>
@@ -118,6 +122,7 @@
             </div>
         </section>
 
+        <!-- Page section for this part of the AfriSense interface. -->
         <section class="af-settings-card af-settings-card-wide">
             <h2>Business Hours</h2>
             <p>Set your business operating hours as they appear on the website.</p>
@@ -134,6 +139,7 @@
             </div>
         </section>
 
+        <!-- Page section for this part of the AfriSense interface. -->
         <section class="af-settings-card">
             <h2>Other Information</h2>
             <p>Additional company information available in the current database.</p>

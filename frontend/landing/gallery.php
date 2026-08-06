@@ -9,20 +9,24 @@ $extraStyles = [$frontendBase . '/assets/css/public-gallery.css'];
 
 require_once __DIR__ . '/../auth/auth_bootstrap.php';
 
+// Defines the afrisense_public_gallery_image helper used by this module.
 function afrisense_public_gallery_image(string $frontendBase, ?string $image): string
 {
     $image = trim((string) $image);
     $relativeImage = ltrim(str_replace('\\', '/', $image), '/');
     $filename = basename($relativeImage);
 
+    // Guard this block so it only runs when the required condition is met.
     if ($filename !== '' && is_file(__DIR__ . '/../assets/images/foods/' . $filename)) {
         return $frontendBase . '/assets/images/foods/' . $filename;
     }
 
+    // Guard this block so it only runs when the required condition is met.
     if ($relativeImage !== '' && is_file(__DIR__ . '/../uploads/' . $relativeImage)) {
         return $frontendBase . '/uploads/' . $relativeImage;
     }
 
+    // Guard this block so it only runs when the required condition is met.
     if ($filename !== '' && is_file(__DIR__ . '/../uploads/' . $filename)) {
         return $frontendBase . '/uploads/' . $filename;
     }
@@ -30,6 +34,7 @@ function afrisense_public_gallery_image(string $frontendBase, ?string $image): s
     return $frontendBase . '/assets/images/foods/jollof-rice.png';
 }
 
+// Defines the afrisense_public_gallery_tag_class helper used by this module.
 function afrisense_public_gallery_tag_class(string $category): string
 {
     $category = strtolower($category);
@@ -49,6 +54,7 @@ $galleryItems = [];
 $categories = [];
 $galleryMessage = '';
 
+// Run database/action work inside a guarded block so the page can fail gracefully.
 try {
     $pdo = afrisense_pdo();
 
@@ -74,11 +80,13 @@ try {
     $foodWhere = ['f.`availability` = :availability'];
     $foodParams = ['availability' => 'Available'];
 
+    // Guard this block so it only runs when the required condition is met.
     if ($search !== '') {
         $foodWhere[] = '(f.`food_name` LIKE :food_search OR f.`description` LIKE :food_search OR COALESCE(c.`category_name`, "") LIKE :food_search)';
         $foodParams['food_search'] = '%' . $search . '%';
     }
 
+    // Guard this block so it only runs when the required condition is met.
     if ($categoryFilter !== '') {
         $foodWhere[] = 'COALESCE(c.`category_name`, "") = :food_category';
         $foodParams['food_category'] = $categoryFilter;
@@ -101,15 +109,18 @@ try {
     $foodStatement->execute($foodParams);
     $galleryItems = $foodStatement->fetchAll(PDO::FETCH_ASSOC);
 
+    // Guard this block so it only runs when the required condition is met.
     if ($categoryFilter === '' || in_array($categoryFilter, ['Food', 'Events', 'Services', 'Team'], true)) {
         $galleryWhere = [];
         $galleryParams = [];
 
+        // Guard this block so it only runs when the required condition is met.
         if ($search !== '') {
             $galleryWhere[] = '(g.`title` LIKE :gallery_search OR g.`description` LIKE :gallery_search OR g.`category` LIKE :gallery_search)';
             $galleryParams['gallery_search'] = '%' . $search . '%';
         }
 
+        // Guard this block so it only runs when the required condition is met.
         if ($categoryFilter !== '') {
             $galleryWhere[] = 'g.`category` = :gallery_category';
             $galleryParams['gallery_category'] = $categoryFilter;
@@ -140,8 +151,10 @@ try {
 
 ob_start();
 ?>
+<!-- Page section for this part of the AfriSense interface. -->
 <section class="af-public-gallery-hero">
     <div>
+        <!-- Navigation links for this interface. -->
         <nav aria-label="Breadcrumb">
             <a href="index.php">Home</a>
             <i class="bi bi-chevron-right" aria-hidden="true"></i>
@@ -153,13 +166,16 @@ ob_start();
     </div>
 </section>
 
+<!-- Page section for this part of the AfriSense interface. -->
 <section class="af-public-gallery-page">
+    <!-- Header block for this interface section. -->
     <header class="af-public-gallery-heading">
         <p>Browse Gallery</p>
         <h2>Freshly Prepared, Beautifully Served</h2>
         <small>Food Sold items and admin gallery uploads are shown from the same database-backed image source.</small>
     </header>
 
+    <!-- Form block that submits this page workflow. -->
     <form class="af-public-gallery-toolbar" action="gallery.php" method="get">
         <label>
             <i class="bi bi-search" aria-hidden="true"></i>
@@ -167,6 +183,7 @@ ob_start();
         </label>
         <select name="category">
             <option value="">All Categories</option>
+            <?php // Render this conditional/dynamic template block. ?>
             <?php foreach ($categories as $category): ?>
                 <?php $categoryName = (string) ($category['category_name'] ?? 'Food'); ?>
                 <option value="<?php echo htmlspecialchars($categoryName, ENT_QUOTES, 'UTF-8'); ?>" <?php echo $categoryFilter === $categoryName ? 'selected' : ''; ?>>
@@ -178,15 +195,18 @@ ob_start();
         <a href="gallery.php">Reset</a>
     </form>
 
+    <?php // Render this conditional/dynamic template block. ?>
     <?php if ($galleryMessage !== ''): ?>
         <div class="af-public-gallery-empty"><?php echo htmlspecialchars($galleryMessage, ENT_QUOTES, 'UTF-8'); ?></div>
     <?php endif; ?>
 
     <div class="af-public-gallery-grid">
+        <?php // Render this conditional/dynamic template block. ?>
         <?php if ($galleryItems === [] && $galleryMessage === ''): ?>
             <div class="af-public-gallery-empty">No gallery items match your filters.</div>
         <?php endif; ?>
 
+        <?php // Render this conditional/dynamic template block. ?>
         <?php foreach ($galleryItems as $item): ?>
             <?php
             $category = (string) ($item['category'] ?? 'Food');

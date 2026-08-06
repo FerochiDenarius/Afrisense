@@ -41,12 +41,14 @@ class Permission extends BaseModel
      */
     public function findByName(string $name): ?array
     {
+        // Guard this block so it only runs when the required condition is met.
         if (!$this->tableExists($this->table)) {
             return null;
         }
 
         $column = $this->columnExists($this->table, 'slug') ? 'slug' : 'name';
 
+        // Guard this block so it only runs when the required condition is met.
         if (!$this->columnExists($this->table, $column)) {
             return null;
         }
@@ -66,6 +68,7 @@ class Permission extends BaseModel
      */
     public function create(array $data): ?int
     {
+        // Guard this block so it only runs when the required condition is met.
         if ($this->columnExists($this->table, 'created_at') && !isset($data['created_at'])) {
             $data['created_at'] = date('Y-m-d H:i:s');
         }
@@ -78,6 +81,7 @@ class Permission extends BaseModel
      */
     public function update(int $id, array $data): bool
     {
+        // Guard this block so it only runs when the required condition is met.
         if ($this->columnExists($this->table, 'updated_at')) {
             $data['updated_at'] = date('Y-m-d H:i:s');
         }

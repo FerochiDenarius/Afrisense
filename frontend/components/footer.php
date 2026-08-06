@@ -17,8 +17,10 @@ $footerOrderHref = afrisense_public_order_url($frontendBase);
 $footerBookingHref = afrisense_public_booking_url($frontendBase);
 $footerSupportHref = afrisense_public_support_url($frontendBase);
 ?>
+<!-- Footer block for this interface section. -->
 <footer class="af-footer">
     <div class="af-footer-grid">
+        <!-- Page section for this part of the AfriSense interface. -->
         <section class="af-footer-brand">
             <a class="af-brand" href="<?php echo htmlspecialchars($frontendBase . '/landing/index.php', ENT_QUOTES, 'UTF-8'); ?>" aria-label="AfriSense home">
                 <span class="af-brand-icon" aria-hidden="true"><?php echo afrisense_public_brand_icon_html($frontendBase); ?></span>
@@ -29,6 +31,7 @@ $footerSupportHref = afrisense_public_support_url($frontendBase);
             </a>
             <p><?php echo htmlspecialchars($siteTagline, ENT_QUOTES, 'UTF-8'); ?></p>
             <div class="af-social-links" aria-label="Social links">
+                <?php // Render this conditional/dynamic template block. ?>
                 <?php foreach (afrisense_public_social_links() as $social): ?>
                     <a href="<?php echo htmlspecialchars($social['url'], ENT_QUOTES, 'UTF-8'); ?>" aria-label="<?php echo htmlspecialchars($social['label'], ENT_QUOTES, 'UTF-8'); ?>"><i class="bi <?php echo htmlspecialchars($social['icon'], ENT_QUOTES, 'UTF-8'); ?>" aria-hidden="true"></i></a>
                 <?php endforeach; ?>
@@ -36,6 +39,7 @@ $footerSupportHref = afrisense_public_support_url($frontendBase);
             </div>
         </section>
 
+        <!-- Page section for this part of the AfriSense interface. -->
         <section class="af-footer-section" data-footer-section>
             <button type="button" data-footer-toggle>
                 <span>Quick Links</span>
@@ -54,6 +58,7 @@ $footerSupportHref = afrisense_public_support_url($frontendBase);
             </ul>
         </section>
 
+        <!-- Page section for this part of the AfriSense interface. -->
         <section class="af-footer-section" data-footer-section>
             <button type="button" data-footer-toggle>
                 <span>Our Services</span>
@@ -69,6 +74,7 @@ $footerSupportHref = afrisense_public_support_url($frontendBase);
             </ul>
         </section>
 
+        <!-- Page section for this part of the AfriSense interface. -->
         <section class="af-footer-section" data-footer-section>
             <button type="button" data-footer-toggle>
                 <span>Contact Us</span>
@@ -82,12 +88,14 @@ $footerSupportHref = afrisense_public_support_url($frontendBase);
             </ul>
         </section>
 
+        <!-- Page section for this part of the AfriSense interface. -->
         <section class="af-footer-section af-footer-newsletter is-open" data-footer-section>
             <button type="button" data-footer-toggle>
                 <span>Newsletter</span>
                 <i class="bi bi-chevron-down" aria-hidden="true"></i>
             </button>
             <p>Subscribe to get the latest updates, offers and news.</p>
+            <!-- Form block that submits this page workflow. -->
             <form class="af-newsletter" action="<?php echo htmlspecialchars($frontendBase . '/landing/contact.php', ENT_QUOTES, 'UTF-8'); ?>" method="post">
                 <label class="sr-only" for="footer_newsletter_email">Email address</label>
                 <input type="email" id="footer_newsletter_email" name="email" placeholder="Enter your email">
@@ -99,6 +107,7 @@ $footerSupportHref = afrisense_public_support_url($frontendBase);
 
     <div class="af-footer-bottom">
         <p><?php echo htmlspecialchars($footerText, ENT_QUOTES, 'UTF-8'); ?></p>
+        <!-- Navigation links for this interface. -->
         <nav aria-label="Footer links">
             <a href="<?php echo htmlspecialchars($frontendBase . '/landing/privacy.php', ENT_QUOTES, 'UTF-8'); ?>">Privacy Policy</a>
             <a href="<?php echo htmlspecialchars($frontendBase . '/landing/terms.php', ENT_QUOTES, 'UTF-8'); ?>">Terms &amp; Conditions</a>

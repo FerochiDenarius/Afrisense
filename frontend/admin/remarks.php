@@ -18,10 +18,12 @@ require_once __DIR__ . '/../includes/remarks_helpers.php';
 
 afrisense_require_admin();
 
+// Defines the afrisense_remark_image helper used by this module.
 function afrisense_remark_image(string $frontendBase, string $image): string
 {
     $filename = basename(str_replace('\\', '/', $image));
 
+    // Guard this block so it only runs when the required condition is met.
     if ($filename !== '' && is_file(__DIR__ . '/../assets/images/foods/' . $filename)) {
         return $frontendBase . '/assets/images/foods/' . $filename;
     }
@@ -29,6 +31,7 @@ function afrisense_remark_image(string $frontendBase, string $image): string
     return $frontendBase . '/assets/images/foodimage.jpeg';
 }
 
+// Defines the afrisense_remark_status_class helper used by this module.
 function afrisense_remark_status_class(string $status): string
 {
     return match (strtolower($status)) {
@@ -38,6 +41,7 @@ function afrisense_remark_status_class(string $status): string
     };
 }
 
+// Defines the afrisense_remark_url helper used by this module.
 function afrisense_remark_url(array $params = [], string $anchor = ''): string
 {
     $query = http_build_query(array_filter($params, static fn (string $value): bool => $value !== ''));
@@ -45,10 +49,12 @@ function afrisense_remark_url(array $params = [], string $anchor = ''): string
     return 'remarks.php' . ($query !== '' ? '?' . $query : '') . $anchor;
 }
 
+// Defines the afrisense_remark_stars helper used by this module.
 function afrisense_remark_stars(float $rating): string
 {
     $html = '<span class="af-remark-stars" aria-label="' . htmlspecialchars(number_format($rating, 1), ENT_QUOTES, 'UTF-8') . ' out of 5">';
 
+    // Iterate through the data needed for this block.
     for ($i = 1; $i <= 5; $i++) {
         $html .= '<i class="bi ' . ($i <= round($rating) ? 'bi-star-fill' : 'bi-star') . '" aria-hidden="true"></i>';
     }
@@ -66,6 +72,7 @@ $remarks = [
     ['id' => 7, 'customer' => 'Isaac Asare', 'email' => 'isaac.asare@gmail.com', 'food' => 'Catering Service', 'category' => 'Catering Packages', 'image' => 'foodimage.jpeg', 'rating' => 5.0, 'remark' => 'Excellent service for our event. Everything was perfect!', 'date' => '2025-05-11 09:30:00', 'status' => 'Published'],
 ];
 
+// Run database/action work inside a guarded block so the page can fail gracefully.
 try {
     $pdo = afrisense_pdo();
     afrisense_remarks_seed_samples($pdo);
@@ -97,18 +104,22 @@ $page = max(1, (int) ($_GET['page'] ?? 1));
 $validStatuses = ['Published', 'Pending', 'Rejected'];
 $foodOptions = array_values(array_unique(array_map(static fn (array $remark): string => (string) $remark['food'], $remarks)));
 $filteredRemarks = array_values(array_filter($remarks, static function (array $remark) use ($filters, $validStatuses): bool {
+    // Guard this block so it only runs when the required condition is met.
     if ($filters['status'] !== '' && in_array($filters['status'], $validStatuses, true) && $remark['status'] !== $filters['status']) {
         return false;
     }
 
+    // Guard this block so it only runs when the required condition is met.
     if ($filters['rating'] !== '' && (int) $filters['rating'] > 0 && (int) round((float) $remark['rating']) !== (int) $filters['rating']) {
         return false;
     }
 
+    // Guard this block so it only runs when the required condition is met.
     if ($filters['food'] !== '' && $remark['food'] !== $filters['food']) {
         return false;
     }
 
+    // Guard this block so it only runs when the required condition is met.
     if ($filters['search'] !== '') {
         $haystack = strtolower(implode(' ', [$remark['customer'], $remark['email'], $remark['food'], $remark['category'], $remark['remark']]));
 
@@ -126,19 +137,23 @@ $paginatedRemarks = array_slice($filteredRemarks, $offset, $itemsPerPage);
 
 $selectedRemark = null;
 $selectedRemarkId = (int) ($_GET['view'] ?? 0);
+// Iterate through the data needed for this block.
 foreach ($remarks as $remark) {
+    // Guard this block so it only runs when the required condition is met.
     if ((int) $remark['id'] === $selectedRemarkId) {
         $selectedRemark = $remark;
         break;
     }
 }
 
+// Guard this block so it only runs when the required condition is met.
 if (($_GET['export'] ?? '') === 'csv') {
     header('Content-Type: text/csv; charset=utf-8');
     header('Content-Disposition: attachment; filename="afrisense-remarks.csv"');
     $output = fopen('php://output', 'w');
     fputcsv($output, ['#', 'Customer', 'Email', 'Food / Service', 'Category', 'Rating', 'Remark', 'Date', 'Status']);
 
+    // Iterate through the data needed for this block.
     foreach ($filteredRemarks as $remark) {
         fputcsv($output, [
             $remark['id'],
@@ -184,7 +199,9 @@ $topFoods = [
 
 ob_start();
 ?>
+<!-- Page section for this part of the AfriSense interface. -->
 <section class="af-admin-menu-page af-remarks-page">
+    <!-- Header block for this interface section. -->
     <header class="af-admin-page-heading af-remarks-heading">
         <div>
             <h1>Reviews &amp; Remarks</h1>
@@ -196,6 +213,7 @@ ob_start();
         </a>
     </header>
 
+    <!-- Page section for this part of the AfriSense interface. -->
     <section class="af-remark-metrics" aria-label="Review summary">
         <article class="green"><span><i class="bi bi-chat-square-text" aria-hidden="true"></i></span><div><small>Total Remarks</small><strong><?php echo htmlspecialchars((string) $metricTotals['total'], ENT_QUOTES, 'UTF-8'); ?></strong><p>All time reviews</p></div></article>
         <article class="gold"><span><i class="bi bi-star" aria-hidden="true"></i></span><div><small>Average Rating</small><strong><?php echo htmlspecialchars(number_format((float) $metricTotals['average'], 1), ENT_QUOTES, 'UTF-8'); ?></strong><?php echo afrisense_remark_stars((float) $metricTotals['average']); ?></div></article>
@@ -204,8 +222,11 @@ ob_start();
         <article class="blue"><span><i class="bi bi-chat-square" aria-hidden="true"></i></span><div><small>Pending</small><strong><?php echo htmlspecialchars((string) $metricTotals['pending'], ENT_QUOTES, 'UTF-8'); ?></strong><p><?php echo htmlspecialchars($metricTotals['pending_rate'], ENT_QUOTES, 'UTF-8'); ?></p></div></article>
     </section>
 
+    <!-- Page section for this part of the AfriSense interface. -->
     <section class="af-remarks-workspace">
+        <!-- Page section for this part of the AfriSense interface. -->
         <section class="af-menu-table-card af-remarks-table-card" id="remarks-table">
+            <!-- Form block that submits this page workflow. -->
             <form class="af-remarks-filters" action="remarks.php" method="get">
                 <label class="af-menu-search" for="remark_search">
                     <input type="search" id="remark_search" name="search" value="<?php echo htmlspecialchars($filters['search'], ENT_QUOTES, 'UTF-8'); ?>" placeholder="Search reviews, customers, foods...">
@@ -214,6 +235,7 @@ ob_start();
                 <label class="af-menu-select" for="remark_status">
                     <select id="remark_status" name="status">
                         <option value="">All Status</option>
+                        <?php // Render this conditional/dynamic template block. ?>
                         <?php foreach ($validStatuses as $status): ?>
                             <option value="<?php echo htmlspecialchars($status, ENT_QUOTES, 'UTF-8'); ?>" <?php echo $filters['status'] === $status ? 'selected' : ''; ?>><?php echo htmlspecialchars($status, ENT_QUOTES, 'UTF-8'); ?></option>
                         <?php endforeach; ?>
@@ -223,6 +245,7 @@ ob_start();
                 <label class="af-menu-select" for="remark_rating">
                     <select id="remark_rating" name="rating">
                         <option value="">All Ratings</option>
+                        <?php // Render this conditional/dynamic template block. ?>
                         <?php for ($rating = 5; $rating >= 1; $rating--): ?>
                             <option value="<?php echo $rating; ?>" <?php echo $filters['rating'] === (string) $rating ? 'selected' : ''; ?>><?php echo $rating; ?> Stars</option>
                         <?php endfor; ?>
@@ -232,6 +255,7 @@ ob_start();
                 <label class="af-menu-select" for="remark_food">
                     <select id="remark_food" name="food">
                         <option value="">All Foods/Services</option>
+                        <?php // Render this conditional/dynamic template block. ?>
                         <?php foreach ($foodOptions as $foodOption): ?>
                             <option value="<?php echo htmlspecialchars($foodOption, ENT_QUOTES, 'UTF-8'); ?>" <?php echo $filters['food'] === $foodOption ? 'selected' : ''; ?>><?php echo htmlspecialchars($foodOption, ENT_QUOTES, 'UTF-8'); ?></option>
                         <?php endforeach; ?>
@@ -243,6 +267,7 @@ ob_start();
             </form>
 
             <div class="af-menu-table af-remarks-table">
+                <!-- Table block for displaying structured records. -->
                 <table>
                     <thead>
                         <tr>
@@ -257,9 +282,11 @@ ob_start();
                         </tr>
                     </thead>
                     <tbody>
+                        <?php // Render this conditional/dynamic template block. ?>
                         <?php if ($paginatedRemarks === []): ?>
                             <tr><td colspan="8"><div class="af-empty-state">No remarks found.</div></td></tr>
                         <?php endif; ?>
+                        <?php // Render this conditional/dynamic template block. ?>
                         <?php foreach ($paginatedRemarks as $index => $remark): ?>
                             <?php $date = strtotime((string) $remark['date']) ?: time(); ?>
                             <tr id="remark-row-<?php echo htmlspecialchars((string) $remark['id'], ENT_QUOTES, 'UTF-8'); ?>" class="<?php echo (int) $remark['id'] === $selectedRemarkId ? 'is-selected' : ''; ?>">
@@ -293,13 +320,17 @@ ob_start();
                 </table>
             </div>
 
+            <!-- Footer block for this interface section. -->
             <footer class="af-menu-pagination af-remarks-pagination">
                 <p>Showing <?php echo htmlspecialchars((string) ($totalFilteredRemarks > 0 ? $offset + 1 : 0), ENT_QUOTES, 'UTF-8'); ?> to <?php echo htmlspecialchars((string) min($offset + count($paginatedRemarks), $totalFilteredRemarks), ENT_QUOTES, 'UTF-8'); ?> of <?php echo htmlspecialchars((string) $totalFilteredRemarks, ENT_QUOTES, 'UTF-8'); ?> remarks</p>
+                <!-- Navigation links for this interface. -->
                 <nav aria-label="Remarks pagination">
                     <a class="<?php echo $page <= 1 ? 'is-disabled' : ''; ?>" href="<?php echo htmlspecialchars($page <= 1 ? '#' : afrisense_remark_url(array_merge($filters, ['page' => (string) ($page - 1)]), '#remarks-table'), ENT_QUOTES, 'UTF-8'); ?>" aria-label="Previous page" title="Previous page"><i class="bi bi-chevron-left" aria-hidden="true"></i></a>
+                    <?php // Render this conditional/dynamic template block. ?>
                     <?php for ($number = max(1, $page - 1); $number <= min($totalPages, $page + 1); $number++): ?>
                         <a class="<?php echo $number === $page ? 'active' : ''; ?>" href="<?php echo htmlspecialchars(afrisense_remark_url(array_merge($filters, ['page' => (string) $number]), '#remarks-table'), ENT_QUOTES, 'UTF-8'); ?>"><?php echo htmlspecialchars((string) $number, ENT_QUOTES, 'UTF-8'); ?></a>
                     <?php endfor; ?>
+                    <?php // Render this conditional/dynamic template block. ?>
                     <?php if ($totalPages > $page + 1): ?>
                         <span>...</span>
                         <a href="<?php echo htmlspecialchars(afrisense_remark_url(array_merge($filters, ['page' => (string) $totalPages]), '#remarks-table'), ENT_QUOTES, 'UTF-8'); ?>"><?php echo htmlspecialchars((string) $totalPages, ENT_QUOTES, 'UTF-8'); ?></a>
@@ -309,12 +340,15 @@ ob_start();
             </footer>
         </section>
 
+        <!-- Side panel with supporting information and actions. -->
         <aside class="af-remarks-side">
+            <!-- Page section for this part of the AfriSense interface. -->
             <section class="af-menu-panel af-rating-card">
                 <h2>Rating Overview</h2>
                 <div class="af-rating-overview">
                     <div class="af-rating-donut"><strong>4.6</strong><small>Average</small></div>
                     <ul>
+                        <?php // Render this conditional/dynamic template block. ?>
                         <?php foreach ($ratingOverview as $stars => $data): ?>
                             <li><span class="tone-<?php echo htmlspecialchars((string) $stars, ENT_QUOTES, 'UTF-8'); ?>"></span><?php echo htmlspecialchars((string) $stars, ENT_QUOTES, 'UTF-8'); ?> Stars <strong><?php echo htmlspecialchars((string) $data['count'] . ' (' . $data['rate'] . ')', ENT_QUOTES, 'UTF-8'); ?></strong></li>
                         <?php endforeach; ?>
@@ -322,9 +356,11 @@ ob_start();
                 </div>
             </section>
 
+            <!-- Page section for this part of the AfriSense interface. -->
             <section class="af-menu-panel af-top-foods-card">
                 <h2>Top Rated Foods</h2>
                 <ul>
+                    <?php // Render this conditional/dynamic template block. ?>
                     <?php foreach ($topFoods as $food): ?>
                         <li>
                             <img src="<?php echo htmlspecialchars(afrisense_remark_image($frontendBase, (string) $food['image']), ENT_QUOTES, 'UTF-8'); ?>" alt="">
@@ -336,6 +372,7 @@ ob_start();
                 <a href="<?php echo htmlspecialchars(afrisense_remark_url([], '#remarks-table'), ENT_QUOTES, 'UTF-8'); ?>">View All</a>
             </section>
 
+            <!-- Page section for this part of the AfriSense interface. -->
             <section class="af-menu-panel af-quick-actions-card">
                 <h2>Quick Actions</h2>
                 <a href="<?php echo htmlspecialchars(afrisense_remark_url(['status' => 'Published'], '#remarks-table'), ENT_QUOTES, 'UTF-8'); ?>"><i class="bi bi-chat-square-text" aria-hidden="true"></i> All Published Reviews</a>
@@ -344,7 +381,9 @@ ob_start();
                 <a href="<?php echo htmlspecialchars($frontendBase . '/landing/remarks.php#give-remark', ENT_QUOTES, 'UTF-8'); ?>"><i class="bi bi-box-arrow-up-right" aria-hidden="true"></i> Open Public Remark Form</a>
             </section>
 
+            <?php // Render this conditional/dynamic template block. ?>
             <?php if ($selectedRemark !== null): ?>
+                <!-- Page section for this part of the AfriSense interface. -->
                 <section class="af-menu-panel af-selected-remark">
                     <h2>Selected Remark</h2>
                     <strong><?php echo htmlspecialchars((string) $selectedRemark['customer'], ENT_QUOTES, 'UTF-8'); ?></strong>

@@ -16,6 +16,7 @@ class Auth
 
 public function login($email, $password)
 {
+    // Guard this block so it only runs when the required condition is met.
     if (empty($email) || empty($password)) {
 
         return [
@@ -26,6 +27,7 @@ public function login($email, $password)
 
     $user = $this->userModel->getUserByEmail($email);
 
+    // Guard this block so it only runs when the required condition is met.
     if (!$user) {
 
         return [
@@ -34,6 +36,7 @@ public function login($email, $password)
         ];
     }
 
+    // Guard this block so it only runs when the required condition is met.
     if (!password_verify($password, $user['password'])) {
 
         return [
@@ -42,6 +45,7 @@ public function login($email, $password)
         ];
     }
 
+    // Guard this block so it only runs when the required condition is met.
     if (session_status() === PHP_SESSION_NONE) {
         session_start();
     }

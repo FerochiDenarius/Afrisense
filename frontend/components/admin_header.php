@@ -13,7 +13,9 @@ $adminSiteTagline = (string) ($publicSettings['website']['site_tagline'] ?? 'Foo
 $adminUnreadNotifications = 0;
 $adminUnreadEnquiries = 0;
 
+// Run database/action work inside a guarded block so the page can fail gracefully.
 try {
+    // Guard this block so it only runs when the required condition is met.
     if (isset($authUser['id'])) {
         $notificationStatement = afrisense_pdo()->prepare(
             'SELECT COUNT(*) AS count_value
@@ -36,6 +38,7 @@ try {
     $adminUnreadEnquiries = 0;
 }
 ?>
+<!-- Header block for this interface section. -->
 <header class="af-dashboard-header af-admin-header">
     <a class="af-header-brand" href="<?php echo htmlspecialchars($frontendBase . '/admin/dashboard.php', ENT_QUOTES, 'UTF-8'); ?>" aria-label="AfriSense admin dashboard">
         <span class="af-brand-icon" aria-hidden="true"><?php echo afrisense_public_brand_icon_html($frontendBase); ?></span>
@@ -61,6 +64,7 @@ try {
         <a class="af-header-action" href="<?php echo htmlspecialchars($frontendBase . '/admin/notifications.php', ENT_QUOTES, 'UTF-8'); ?>" aria-label="Notifications">
             <span class="af-action-icon">
                 <i class="bi bi-bell" aria-hidden="true"></i>
+                <?php // Render this conditional/dynamic template block. ?>
                 <?php if ($adminUnreadNotifications > 0): ?><em><?php echo htmlspecialchars((string) min(99, $adminUnreadNotifications), ENT_QUOTES, 'UTF-8'); ?></em><?php endif; ?>
             </span>
             <small>Notifications</small>
@@ -68,6 +72,7 @@ try {
         <a class="af-header-action" href="<?php echo htmlspecialchars($frontendBase . '/admin/enquiries.php?status=Pending', ENT_QUOTES, 'UTF-8'); ?>" aria-label="Unread enquiries">
             <span class="af-action-icon">
                 <i class="bi bi-envelope" aria-hidden="true"></i>
+                <?php // Render this conditional/dynamic template block. ?>
                 <?php if ($adminUnreadEnquiries > 0): ?><em class="is-green"><?php echo htmlspecialchars((string) min(99, $adminUnreadEnquiries), ENT_QUOTES, 'UTF-8'); ?></em><?php endif; ?>
             </span>
             <small>Enquiries</small>

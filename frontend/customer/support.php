@@ -29,20 +29,24 @@ $supportPrefill = [
     'phone' => (string) ($authUser['phonenumber'] ?? $authUser['phone'] ?? ''),
 ];
 
+// Run database/action work inside a guarded block so the page can fail gracefully.
 try {
     $pdo = afrisense_pdo();
     afrisense_support_tables($pdo);
     $supportAgent = afrisense_support_default_agent($pdo);
     $supportConversation = afrisense_support_find_conversation($pdo, $authUser, $supportToken) ?? [];
 
+    // Handle submitted form actions before rendering the page.
     if (($_SERVER['REQUEST_METHOD'] ?? 'GET') === 'POST') {
         $message = trim((string) ($_POST['message'] ?? ''));
         $attachment = $_FILES['attachment'] ?? null;
         $hasAttachment = is_array($attachment) && (int) ($attachment['error'] ?? UPLOAD_ERR_NO_FILE) !== UPLOAD_ERR_NO_FILE;
 
+        // Guard this block so it only runs when the required condition is met.
         if ($message === '' && !$hasAttachment) {
             $supportFlash = ['success' => false, 'message' => 'Please type a message or choose an attachment before sending.'];
         } else {
+            // Guard this block so it only runs when the required condition is met.
             if ($supportConversation === []) {
                 $supportConversation = afrisense_support_create_conversation($pdo, $authUser, $supportToken, $_POST);
             }
@@ -60,6 +64,7 @@ try {
         }
     }
 
+    // Guard this block so it only runs when the required condition is met.
     if ($supportConversation !== []) {
         $supportMessages = afrisense_support_messages($pdo, (int) $supportConversation['id']);
     }
@@ -67,6 +72,7 @@ try {
     $supportFlash = ['success' => false, 'message' => 'Support chat could not be loaded. Check that MySQL is running.'];
 }
 
+// Guard this block so it only runs when the required condition is met.
 if ($supportMessages === []) {
     $supportMessages = [[
         'sender_type' => 'agent',

@@ -6,13 +6,16 @@ $activeCustomerPage = 'profile';
 
 ob_start();
 ?>
+<!-- Page section for this part of the AfriSense interface. -->
 <section class="af-admin-menu-page">
+    <!-- Header block for this interface section. -->
     <header class="af-admin-page-heading">
         <div>
             <h1>Profile</h1>
             <p>Your account profile is ready for backend-backed editing.</p>
         </div>
     </header>
+    <!-- Page section for this part of the AfriSense interface. -->
     <section class="af-menu-panel">
         <h2>Profile details</h2>
         <p>Profile editing, address management, and preferences are the next pieces to connect.</p>

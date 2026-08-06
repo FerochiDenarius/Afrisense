@@ -36,6 +36,7 @@ class SystemSettings extends BaseModel
         $keyColumn = $this->keyColumn();
         $valueColumn = $this->valueColumn();
 
+        // Guard this block so it only runs when the required condition is met.
         if ($this->columnExists($this->table, $key)) {
             $statement = $this->query(sprintf('SELECT `%s` FROM `system_settings` ORDER BY `id` ASC LIMIT 1', $key));
             $row = $statement->fetch();
@@ -43,6 +44,7 @@ class SystemSettings extends BaseModel
             return $row[$key] ?? $default;
         }
 
+        // Guard this block so it only runs when the required condition is met.
         if ($keyColumn === null || $valueColumn === null) {
             return $default;
         }
@@ -70,19 +72,23 @@ class SystemSettings extends BaseModel
         $valueColumn = $this->valueColumn();
         $storedValue = is_scalar($value) ? (string) $value : json_encode($value, JSON_THROW_ON_ERROR);
 
+        // Guard this block so it only runs when the required condition is met.
         if ($this->columnExists($this->table, $key)) {
             $statement = $this->query('SELECT `id` FROM `system_settings` ORDER BY `id` ASC LIMIT 1');
             $existing = $statement->fetch();
             $data = [$key => $storedValue];
 
+            // Guard this block so it only runs when the required condition is met.
             if ($this->columnExists($this->table, 'updated_at')) {
                 $data['updated_at'] = date('Y-m-d H:i:s');
             }
 
+            // Guard this block so it only runs when the required condition is met.
             if ($existing) {
                 return $this->updateByIdRow($this->table, (int) $existing['id'], $data);
             }
 
+            // Guard this block so it only runs when the required condition is met.
             if ($this->columnExists($this->table, 'created_at')) {
                 $data['created_at'] = date('Y-m-d H:i:s');
             }
@@ -90,6 +96,7 @@ class SystemSettings extends BaseModel
             return $this->insertRow($this->table, $data) !== null;
         }
 
+        // Guard this block so it only runs when the required condition is met.
         if ($keyColumn === null || $valueColumn === null) {
             return false;
         }
@@ -105,14 +112,17 @@ class SystemSettings extends BaseModel
             $valueColumn => $storedValue,
         ];
 
+        // Guard this block so it only runs when the required condition is met.
         if ($this->columnExists($this->table, 'updated_at')) {
             $data['updated_at'] = date('Y-m-d H:i:s');
         }
 
+        // Guard this block so it only runs when the required condition is met.
         if ($existing) {
             return $this->updateByIdRow($this->table, (int) $existing['id'], $data);
         }
 
+        // Guard this block so it only runs when the required condition is met.
         if ($this->columnExists($this->table, 'created_at')) {
             $data['created_at'] = date('Y-m-d H:i:s');
         }
@@ -127,10 +137,12 @@ class SystemSettings extends BaseModel
     {
         $keyColumn = $this->keyColumn();
 
+        // Guard this block so it only runs when the required condition is met.
         if ($this->columnExists($this->table, $key)) {
             $statement = $this->query('SELECT `id` FROM `system_settings` ORDER BY `id` ASC LIMIT 1');
             $existing = $statement->fetch();
 
+            // Guard this block so it only runs when the required condition is met.
             if (!$existing) {
                 return false;
             }
@@ -138,6 +150,7 @@ class SystemSettings extends BaseModel
             return $this->updateByIdRow($this->table, (int) $existing['id'], [$key => null]);
         }
 
+        // Guard this block so it only runs when the required condition is met.
         if ($keyColumn === null) {
             return false;
         }
@@ -152,7 +165,9 @@ class SystemSettings extends BaseModel
 
     private function keyColumn(): ?string
     {
+        // Iterate through the data needed for this block.
         foreach (['setting_key', 'key', 'name'] as $column) {
+            // Guard this block so it only runs when the required condition is met.
             if ($this->columnExists($this->table, $column)) {
                 return $column;
             }
@@ -163,7 +178,9 @@ class SystemSettings extends BaseModel
 
     private function valueColumn(): ?string
     {
+        // Iterate through the data needed for this block.
         foreach (['setting_value', 'value'] as $column) {
+            // Guard this block so it only runs when the required condition is met.
             if ($this->columnExists($this->table, $column)) {
                 return $column;
             }

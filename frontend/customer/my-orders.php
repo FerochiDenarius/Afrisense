@@ -14,6 +14,7 @@ require_once __DIR__ . '/../includes/public_settings.php';
 \AfriSense\Backend\Helpers\Session::start();
 $authUser = afrisense_require_customer();
 
+// Defines the afrisense_my_orders_customer helper used by this module.
 function afrisense_my_orders_customer(PDO $pdo, array $user): ?array
 {
     $email = trim((string) ($user['email'] ?? ''));
@@ -35,6 +36,7 @@ function afrisense_my_orders_customer(PDO $pdo, array $user): ?array
     return $customer ?: null;
 }
 
+// Defines the afrisense_my_orders_status_class helper used by this module.
 function afrisense_my_orders_status_class(string $status): string
 {
     return match (strtolower($status)) {
@@ -47,15 +49,18 @@ function afrisense_my_orders_status_class(string $status): string
     };
 }
 
+// Defines the afrisense_my_orders_payment_class helper used by this module.
 function afrisense_my_orders_payment_class(string $status): string
 {
     return strtolower($status) === 'paid' ? 'paid' : 'pending';
 }
 
+// Defines the afrisense_my_orders_image helper used by this module.
 function afrisense_my_orders_image(string $frontendBase, ?string $image): string
 {
     $filename = basename(trim((string) $image));
 
+    // Guard this block so it only runs when the required condition is met.
     if ($filename !== '' && is_file(__DIR__ . '/../assets/images/foods/' . $filename)) {
         return $frontendBase . '/assets/images/foods/' . $filename;
     }
@@ -63,8 +68,10 @@ function afrisense_my_orders_image(string $frontendBase, ?string $image): string
     return $frontendBase . '/assets/images/foods/jollof-rice.png';
 }
 
+// Defines the afrisense_my_orders_fetch_items helper used by this module.
 function afrisense_my_orders_fetch_items(PDO $pdo, int $customerId, int $groupId): array
 {
+    // Guard this block so it only runs when the required condition is met.
     if ($customerId <= 0 || $groupId <= 0) {
         return [];
     }
@@ -81,6 +88,7 @@ function afrisense_my_orders_fetch_items(PDO $pdo, int $customerId, int $groupId
     ]);
     $baseOrder = $base->fetch(PDO::FETCH_ASSOC);
 
+    // Guard this block so it only runs when the required condition is met.
     if ($baseOrder === false) {
         return [];
     }
@@ -124,15 +132,18 @@ $validPaymentStatuses = ['Pending', 'Paid', 'Failed', 'Refunded'];
 $flashMessage = '';
 $flashType = 'success';
 
+// Run database/action work inside a guarded block so the page can fail gracefully.
 try {
     $pdo = afrisense_pdo();
     $customer = afrisense_my_orders_customer($pdo, $authUser);
     $customerId = (int) ($customer['id'] ?? 0);
 
+    // Handle submitted form actions before rendering the page.
     if (($_SERVER['REQUEST_METHOD'] ?? 'GET') === 'POST' && ($_POST['action'] ?? '') === 'reorder') {
         $reorderGroupId = (int) ($_POST['group_id'] ?? 0);
         $items = afrisense_my_orders_fetch_items($pdo, $customerId, $reorderGroupId);
 
+        // Guard this block so it only runs when the required condition is met.
         if ($items === []) {
             $flashType = 'error';
             $flashMessage = 'That order could not be added to your cart.';
@@ -140,6 +151,7 @@ try {
             $cart = $_SESSION['afrisense_customer_cart'] ?? [];
             $cart = is_array($cart) ? $cart : [];
 
+            // Iterate through the data needed for this block.
             foreach ($items as $item) {
                 $foodIdStatement = $pdo->prepare(
                     'SELECT `id`
@@ -150,6 +162,7 @@ try {
                 $foodIdStatement->execute(['food_name' => (string) $item['food_name']]);
                 $foodId = (int) $foodIdStatement->fetchColumn();
 
+                // Guard this block so it only runs when the required condition is met.
                 if ($foodId > 0) {
                     $cart[$foodId] = min(20, (int) ($cart[$foodId] ?? 0) + (int) ($item['quantity'] ?? 1));
                 }
@@ -164,16 +177,19 @@ try {
     $where = ['o.`customer_id` = :customer_id'];
     $params = ['customer_id' => $customerId];
 
+    // Guard this block so it only runs when the required condition is met.
     if (in_array($statusFilter, $validStatuses, true)) {
         $where[] = 'o.`order_status` = :status';
         $params['status'] = $statusFilter;
     }
 
+    // Guard this block so it only runs when the required condition is met.
     if (in_array($paymentFilter, $validPaymentStatuses, true)) {
         $where[] = 'o.`payment_status` = :payment_status';
         $params['payment_status'] = $paymentFilter;
     }
 
+    // Guard this block so it only runs when the required condition is met.
     if ($search !== '') {
         $where[] = '(CAST(o.`id` AS CHAR) LIKE :search OR f.`food_name` LIKE :search OR o.`delivery_address` LIKE :search)';
         $params['search'] = '%' . $search . '%';
@@ -182,6 +198,7 @@ try {
     $orders = [];
     $selectedItems = [];
 
+    // Guard this block so it only runs when the required condition is met.
     if ($customerId > 0) {
         $sql = 'SELECT
                     MIN(o.`id`) AS group_id,
@@ -205,10 +222,12 @@ try {
         $orders = $statement->fetchAll(PDO::FETCH_ASSOC);
     }
 
+    // Guard this block so it only runs when the required condition is met.
     if ($viewGroupId <= 0 && $orders !== []) {
         $viewGroupId = (int) $orders[0]['group_id'];
     }
 
+    // Guard this block so it only runs when the required condition is met.
     if ($viewGroupId > 0 && $customerId > 0) {
         $selectedItems = afrisense_my_orders_fetch_items($pdo, $customerId, $viewGroupId);
     }
@@ -222,6 +241,7 @@ try {
         'Cancelled' => 0,
     ];
 
+    // Guard this block so it only runs when the required condition is met.
     if ($customerId > 0) {
         $countStatement = $pdo->prepare(
             'SELECT `order_status`, COUNT(*) AS count_value
@@ -235,6 +255,7 @@ try {
         );
         $countStatement->execute(['customer_id' => $customerId]);
 
+        // Iterate through the data needed for this block.
         foreach ($countStatement->fetchAll(PDO::FETCH_ASSOC) as $row) {
             $counts[(string) $row['order_status']] = (int) $row['count_value'];
             $counts['all'] += (int) $row['count_value'];
@@ -262,7 +283,9 @@ $selectedGroupId = (int) ($selectedFirst['id'] ?? $viewGroupId);
 
 ob_start();
 ?>
+<!-- Page section for this part of the AfriSense interface. -->
 <section class="af-my-orders-page">
+    <!-- Header block for this interface section. -->
     <header class="af-my-orders-heading">
         <div>
             <h1>My Orders</h1>
@@ -271,13 +294,16 @@ ob_start();
         <a href="orders.php"><i class="bi bi-bag-plus" aria-hidden="true"></i> Place Order</a>
     </header>
 
+    <?php // Render this conditional/dynamic template block. ?>
     <?php if ($loadError !== ''): ?>
         <div class="af-admin-alert error"><?php echo htmlspecialchars($loadError, ENT_QUOTES, 'UTF-8'); ?></div>
     <?php endif; ?>
+    <?php // Render this conditional/dynamic template block. ?>
     <?php if ($flashMessage !== ''): ?>
         <div class="af-admin-alert <?php echo htmlspecialchars($flashType, ENT_QUOTES, 'UTF-8'); ?>"><?php echo htmlspecialchars($flashMessage, ENT_QUOTES, 'UTF-8'); ?></div>
     <?php endif; ?>
 
+    <!-- Page section for this part of the AfriSense interface. -->
     <section class="af-my-order-metrics">
         <article><span><i class="bi bi-receipt" aria-hidden="true"></i></span><div><small>All Orders</small><strong><?php echo htmlspecialchars((string) $counts['all'], ENT_QUOTES, 'UTF-8'); ?></strong><p>View all orders</p></div></article>
         <article><span><i class="bi bi-clock" aria-hidden="true"></i></span><div><small>Pending</small><strong><?php echo htmlspecialchars((string) $counts['Pending'], ENT_QUOTES, 'UTF-8'); ?></strong><p>Awaiting confirmation</p></div></article>
@@ -287,8 +313,11 @@ ob_start();
         <article><span><i class="bi bi-x-circle" aria-hidden="true"></i></span><div><small>Cancelled</small><strong><?php echo htmlspecialchars((string) $counts['Cancelled'], ENT_QUOTES, 'UTF-8'); ?></strong><p>Cancelled orders</p></div></article>
     </section>
 
+    <!-- Page section for this part of the AfriSense interface. -->
     <section class="af-my-orders-layout">
+        <!-- Main content area for this page. -->
         <main class="af-my-orders-main">
+            <!-- Form block that submits this page workflow. -->
             <form class="af-my-orders-filters" action="my-orders.php" method="get">
                 <label><i class="bi bi-search" aria-hidden="true"></i><input type="search" name="search" value="<?php echo htmlspecialchars($search, ENT_QUOTES, 'UTF-8'); ?>" placeholder="Search orders by ID, items, or address..."></label>
                 <label><select name="status"><option value="">All Status</option><?php foreach ($validStatuses as $status): ?><option value="<?php echo htmlspecialchars($status, ENT_QUOTES, 'UTF-8'); ?>" <?php echo $statusFilter === $status ? 'selected' : ''; ?>><?php echo htmlspecialchars($status, ENT_QUOTES, 'UTF-8'); ?></option><?php endforeach; ?></select><i class="bi bi-chevron-down" aria-hidden="true"></i></label>
@@ -296,10 +325,13 @@ ob_start();
                 <button type="submit"><i class="bi bi-filter" aria-hidden="true"></i> Filter</button>
             </form>
 
+            <!-- Page section for this part of the AfriSense interface. -->
             <section class="af-my-orders-list">
+                <?php // Render this conditional/dynamic template block. ?>
                 <?php if ($orders === []): ?>
                     <article class="af-my-order-empty"><i class="bi bi-bag" aria-hidden="true"></i><h2>No orders yet</h2><p>Place your first order and it will appear here.</p><a href="orders.php">Place Order</a></article>
                 <?php endif; ?>
+                <?php // Render this conditional/dynamic template block. ?>
                 <?php foreach ($orders as $order): ?>
                     <?php
                     $orderedAt = strtotime((string) ($order['ordered_at'] ?? '')) ?: time();
@@ -327,26 +359,34 @@ ob_start();
             </section>
         </main>
 
+        <!-- Side panel with supporting information and actions. -->
         <aside class="af-my-order-details" id="order-details">
+            <!-- Header block for this interface section. -->
             <header>
                 <h2>Order Details</h2>
+                <?php // Render this conditional/dynamic template block. ?>
                 <?php if ($selectedFirst !== null): ?><span class="<?php echo htmlspecialchars(afrisense_my_orders_status_class((string) ($selectedFirst['order_status'] ?? 'Pending')), ENT_QUOTES, 'UTF-8'); ?>"><?php echo htmlspecialchars((string) ($selectedFirst['order_status'] ?? 'Pending'), ENT_QUOTES, 'UTF-8'); ?></span><?php endif; ?>
             </header>
+            <?php // Render this conditional/dynamic template block. ?>
             <?php if ($selectedFirst === null): ?>
                 <p class="af-my-order-empty-side">Select an order to view details.</p>
             <?php else: ?>
                 <?php $selectedDate = strtotime((string) ($selectedFirst['ordered_at'] ?? '')) ?: time(); ?>
+                <!-- Page section for this part of the AfriSense interface. -->
                 <section class="af-detail-highlight">
                     <i class="bi bi-receipt" aria-hidden="true"></i>
                     <div><strong>ORD-<?php echo htmlspecialchars(str_pad((string) ($selectedFirst['id'] ?? 0), 6, '0', STR_PAD_LEFT), ENT_QUOTES, 'UTF-8'); ?></strong><p>Placed on <?php echo htmlspecialchars(date('j M Y', $selectedDate), ENT_QUOTES, 'UTF-8'); ?> at <?php echo htmlspecialchars(date('h:i A', $selectedDate), ENT_QUOTES, 'UTF-8'); ?></p></div>
                 </section>
+                <!-- Page section for this part of the AfriSense interface. -->
                 <section class="af-detail-section">
                     <h3>Delivery Information</h3>
                     <p><i class="bi bi-geo-alt" aria-hidden="true"></i> <?php echo htmlspecialchars((string) ($selectedFirst['delivery_address'] ?? ''), ENT_QUOTES, 'UTF-8'); ?></p>
                     <p><i class="bi bi-telephone" aria-hidden="true"></i> <?php echo htmlspecialchars((string) ($customer['phone_number'] ?? ''), ENT_QUOTES, 'UTF-8'); ?></p>
                 </section>
+                <!-- Page section for this part of the AfriSense interface. -->
                 <section class="af-detail-items">
                     <h3>Order Items</h3>
+                    <?php // Render this conditional/dynamic template block. ?>
                     <?php foreach ($selectedItems as $item): ?>
                         <article>
                             <img src="<?php echo htmlspecialchars(afrisense_my_orders_image($frontendBase, (string) ($item['image'] ?? '')), ENT_QUOTES, 'UTF-8'); ?>" alt="">
@@ -360,10 +400,12 @@ ob_start();
                     <div><dt>Delivery Fee</dt><dd><?php echo htmlspecialchars(afrisense_public_money($selectedDeliveryFee), ENT_QUOTES, 'UTF-8'); ?></dd></div>
                     <div><dt>Total</dt><dd><?php echo htmlspecialchars(afrisense_public_money($selectedSubtotal), ENT_QUOTES, 'UTF-8'); ?></dd></div>
                 </dl>
+                <!-- Page section for this part of the AfriSense interface. -->
                 <section class="af-detail-payment">
                     <h3>Payment Method</h3>
                     <p><i class="bi bi-credit-card" aria-hidden="true"></i> <?php echo htmlspecialchars((string) ($selectedFirst['payment_method'] ?? 'Cash'), ENT_QUOTES, 'UTF-8'); ?> <span class="<?php echo htmlspecialchars(afrisense_my_orders_payment_class((string) ($selectedFirst['payment_status'] ?? 'Pending')), ENT_QUOTES, 'UTF-8'); ?>"><?php echo htmlspecialchars((string) ($selectedFirst['payment_status'] ?? 'Pending'), ENT_QUOTES, 'UTF-8'); ?></span></p>
                 </section>
+                <!-- Form block that submits this page workflow. -->
                 <form action="my-orders.php" method="post">
                     <input type="hidden" name="action" value="reorder">
                     <input type="hidden" name="group_id" value="<?php echo htmlspecialchars((string) $viewGroupId, ENT_QUOTES, 'UTF-8'); ?>">

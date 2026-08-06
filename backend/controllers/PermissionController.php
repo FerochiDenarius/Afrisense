@@ -41,6 +41,7 @@ class PermissionController
     {
         $permission = $this->permissions->findById($id);
 
+        // Guard this block so it only runs when the required condition is met.
         if ($permission === null) {
             return Response::error('Permission not found.', 404);
         }
@@ -55,12 +56,14 @@ class PermissionController
     {
         $validator = new Validator();
 
+        // Guard this block so it only runs when the required condition is met.
         if (!$validator->validate($request, ['name' => 'required|minLength:2|maxLength:100'])) {
             return Response::error('Validation failed.', 422, $validator->getErrors());
         }
 
         $id = $this->permissions->create($request);
 
+        // Guard this block so it only runs when the required condition is met.
         if ($id === null) {
             return Response::error('Permission could not be created.', 500);
         }
@@ -73,6 +76,7 @@ class PermissionController
      */
     public function update(int $id, array $request): array
     {
+        // Guard this block so it only runs when the required condition is met.
         if (!$this->permissions->update($id, $request)) {
             return Response::error('Permission could not be updated.', 400);
         }
@@ -85,6 +89,7 @@ class PermissionController
      */
     public function destroy(int $id): array
     {
+        // Guard this block so it only runs when the required condition is met.
         if (!$this->permissions->delete($id)) {
             return Response::error('Permission could not be deleted.', 400);
         }

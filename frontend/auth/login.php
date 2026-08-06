@@ -3,6 +3,7 @@ require_once __DIR__ . '/auth_bootstrap.php';
 
 $existingUser = afrisense_current_user();
 
+// Guard this block so it only runs when the required condition is met.
 if ($existingUser !== null) {
     header('Location: ' . afrisense_dashboard_url($existingUser));
     exit;
@@ -10,9 +11,11 @@ if ($existingUser !== null) {
 
 $authMessage = afrisense_flash_get();
 
+// Handle submitted form actions before rendering the page.
 if (($_SERVER['REQUEST_METHOD'] ?? 'GET') === 'POST') {
     $response = afrisense_auth()->login((string) ($_POST['email'] ?? ''), (string) ($_POST['password'] ?? ''));
 
+    // Guard this block so it only runs when the required condition is met.
     if (($response['success'] ?? false) === true) {
         $user = afrisense_current_user();
         header('Location: ' . afrisense_dashboard_url($user));
@@ -33,6 +36,7 @@ if (($_SERVER['REQUEST_METHOD'] ?? 'GET') === 'POST') {
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
 </head>
 <body>
+    <!-- Header block for this interface section. -->
     <header class="site-header">
         <a class="brand" href="../landing/index.php" aria-label="AfriSense home">
             <span class="brand-icon" aria-hidden="true"><i class="bi bi-cup-hot"></i></span>
@@ -42,6 +46,7 @@ if (($_SERVER['REQUEST_METHOD'] ?? 'GET') === 'POST') {
             </span>
         </a>
 
+        <!-- Navigation links for this interface. -->
         <nav class="site-nav" aria-label="Primary navigation">
             <ul>
                 <li><a href="../landing/index.php">Home</a></li>
@@ -62,7 +67,9 @@ if (($_SERVER['REQUEST_METHOD'] ?? 'GET') === 'POST') {
         </div>
     </header>
 
+    <!-- Main content area for this page. -->
     <main>
+        <!-- Page section for this part of the AfriSense interface. -->
         <section class="login-hero" aria-labelledby="login-page-title">
             <div class="hero-panel">
                 <div class="hero-overlay"></div>
@@ -102,6 +109,7 @@ if (($_SERVER['REQUEST_METHOD'] ?? 'GET') === 'POST') {
             </div>
 
             <div class="login-panel">
+                <!-- Page section for this part of the AfriSense interface. -->
                 <section class="login-card" aria-labelledby="login-form-title">
                     <div class="card-header">
                         <span class="card-icon" aria-hidden="true"><i class="bi bi-person"></i></span>
@@ -110,12 +118,14 @@ if (($_SERVER['REQUEST_METHOD'] ?? 'GET') === 'POST') {
                         <span class="gold-line" aria-hidden="true"></span>
                     </div>
 
+                    <?php // Render this conditional/dynamic template block. ?>
                     <?php if ($authMessage !== null): ?>
                         <p class="auth-message <?php echo htmlspecialchars((string) $authMessage['type'], ENT_QUOTES, 'UTF-8'); ?>">
                             <?php echo htmlspecialchars((string) $authMessage['message'], ENT_QUOTES, 'UTF-8'); ?>
                         </p>
                     <?php endif; ?>
 
+                    <!-- Form block that submits this page workflow. -->
                     <form class="login-form" action="login.php" method="post">
                         <div class="form-group">
                             <label for="email">Email Address</label>
@@ -169,6 +179,7 @@ if (($_SERVER['REQUEST_METHOD'] ?? 'GET') === 'POST') {
         </section>
     </main>
 
+    <!-- Footer block for this interface section. -->
     <footer class="login-footer">
         <div class="trust-items" aria-label="AfriSense service guarantees">
             <article class="trust-item">

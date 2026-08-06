@@ -14,14 +14,17 @@ $publicSettings = afrisense_public_settings();
 $primaryPhone = (string) ($publicSettings['company']['phone_number_1'] ?? '+233 24 123 4567');
 $enquiryMessage = null;
 
+// Handle submitted form actions before rendering the page.
 if (($_SERVER['REQUEST_METHOD'] ?? 'GET') === 'POST') {
     $enquiryMessage = afrisense_submit_public_enquiry($_POST, 'General Enquiry');
 }
 
 ob_start();
 ?>
+<!-- Page section for this part of the AfriSense interface. -->
 <section class="af-enquiry-hero">
     <div class="af-enquiry-hero-inner">
+        <!-- Navigation links for this interface. -->
         <nav class="af-breadcrumb" aria-label="Breadcrumb">
             <a href="index.php"><i class="bi bi-house-door" aria-hidden="true"></i> Home</a>
             <i class="bi bi-chevron-right" aria-hidden="true"></i>
@@ -40,9 +43,12 @@ ob_start();
     </div>
 </section>
 
+<!-- Page section for this part of the AfriSense interface. -->
 <section class="af-enquiry-section">
     <div class="af-enquiry-grid">
+        <!-- Page section for this part of the AfriSense interface. -->
         <section class="af-enquiry-card af-form-card" aria-labelledby="enquiry_form_title">
+            <!-- Header block for this interface section. -->
             <header class="af-section-heading">
                 <span><i class="bi bi-envelope-paper" aria-hidden="true"></i></span>
                 <div>
@@ -51,7 +57,9 @@ ob_start();
                 </div>
             </header>
 
+            <!-- Form block that submits this page workflow. -->
             <form class="af-enquiry-form" action="enquiries.php" method="post">
+                <?php // Render this conditional/dynamic template block. ?>
                 <?php if ($enquiryMessage !== null): ?>
                     <p class="af-form-status <?php echo $enquiryMessage['success'] ? 'is-success' : 'is-error'; ?>" aria-live="polite">
                         <?php echo htmlspecialchars((string) $enquiryMessage['message'], ENT_QUOTES, 'UTF-8'); ?>
@@ -95,6 +103,7 @@ ob_start();
                                     'Customer Support',
                                 ];
                                 ?>
+                                <?php // Render this conditional/dynamic template block. ?>
                                 <?php foreach ($subjectOptions as $subjectOption): ?>
                                     <option value="<?php echo htmlspecialchars($subjectOption, ENT_QUOTES, 'UTF-8'); ?>" <?php echo (string) ($_POST['subject'] ?? '') === $subjectOption ? 'selected' : ''; ?>>
                                         <?php echo htmlspecialchars($subjectOption, ENT_QUOTES, 'UTF-8'); ?>
@@ -155,6 +164,7 @@ ob_start();
             </form>
         </section>
 
+        <!-- Side panel with supporting information and actions. -->
         <aside class="af-enquiry-card af-help-card" aria-labelledby="help_title">
             <h2 id="help_title">We're Here to Help</h2>
             <span class="af-help-line" aria-hidden="true"></span>
@@ -189,7 +199,9 @@ ob_start();
                     <span><i class="bi bi-people" aria-hidden="true"></i></span>
                     <div>
                         <h3>Follow Us</h3>
+                        <!-- Navigation links for this interface. -->
                         <nav class="af-help-socials" aria-label="Social links">
+                            <?php // Render this conditional/dynamic template block. ?>
                             <?php foreach (afrisense_public_social_links() as $social): ?>
                                 <a href="<?php echo htmlspecialchars($social['url'], ENT_QUOTES, 'UTF-8'); ?>" aria-label="<?php echo htmlspecialchars($social['label'], ENT_QUOTES, 'UTF-8'); ?>"><i class="bi <?php echo htmlspecialchars($social['icon'], ENT_QUOTES, 'UTF-8'); ?>" aria-hidden="true"></i></a>
                             <?php endforeach; ?>
@@ -199,6 +211,7 @@ ob_start();
                 </article>
             </div>
 
+            <!-- Page section for this part of the AfriSense interface. -->
             <section class="af-response-card">
                 <span><i class="bi bi-cup-hot" aria-hidden="true"></i></span>
                 <div>

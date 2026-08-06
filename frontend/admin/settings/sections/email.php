@@ -1,3 +1,4 @@
+        <!-- Page section for this part of the AfriSense interface. -->
         <section class="af-settings-card" id="email-settings">
             <h2>Email Settings</h2>
             <p>Configure SMTP values used by system emails and verification messages.</p>

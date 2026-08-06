@@ -1,3 +1,4 @@
+        <!-- Page section for this part of the AfriSense interface. -->
         <section class="af-settings-card" id="maintenance-mode">
             <h2>Maintenance Mode</h2>
             <p>Control high-level public website availability and admin listing defaults.</p>

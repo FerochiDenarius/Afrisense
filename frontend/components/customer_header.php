@@ -11,7 +11,9 @@ $customerSiteTagline = (string) ($publicSettings['website']['site_tagline'] ?? '
 $customerUnreadNotifications = 0;
 $customerCartCount = 0;
 
+// Run database/action work inside a guarded block so the page can fail gracefully.
 try {
+    // Guard this block so it only runs when the required condition is met.
     if (isset($authUser['id'])) {
         $notificationStatement = afrisense_pdo()->prepare(
             'SELECT COUNT(*) AS count_value
@@ -28,6 +30,7 @@ try {
 $customerCart = $_SESSION['afrisense_customer_cart'] ?? [];
 $customerCartCount = is_array($customerCart) ? array_sum(array_map('intval', $customerCart)) : 0;
 ?>
+<!-- Header block for this interface section. -->
 <header class="af-dashboard-header af-customer-header">
     <a class="af-header-brand" href="<?php echo htmlspecialchars($frontendBase . '/customer/dashboard.php', ENT_QUOTES, 'UTF-8'); ?>" aria-label="AfriSense customer dashboard">
         <span class="af-brand-icon" aria-hidden="true"><?php echo afrisense_public_brand_icon_html($frontendBase); ?></span>
@@ -53,6 +56,7 @@ $customerCartCount = is_array($customerCart) ? array_sum(array_map('intval', $cu
         <a class="af-header-action" href="<?php echo htmlspecialchars($frontendBase . '/customer/notifications.php', ENT_QUOTES, 'UTF-8'); ?>" aria-label="Notifications">
             <span class="af-action-icon">
                 <i class="bi bi-bell" aria-hidden="true"></i>
+                <?php // Render this conditional/dynamic template block. ?>
                 <?php if ($customerUnreadNotifications > 0): ?><em><?php echo htmlspecialchars((string) min(99, $customerUnreadNotifications), ENT_QUOTES, 'UTF-8'); ?></em><?php endif; ?>
             </span>
             <small>Notifications</small>
@@ -67,6 +71,7 @@ $customerCartCount = is_array($customerCart) ? array_sum(array_map('intval', $cu
         <a class="af-header-action" href="<?php echo htmlspecialchars($frontendBase . '/customer/cart.php', ENT_QUOTES, 'UTF-8'); ?>" aria-label="Cart">
             <span class="af-action-icon">
                 <i class="bi bi-cart3" aria-hidden="true"></i>
+                <?php // Render this conditional/dynamic template block. ?>
                 <?php if ($customerCartCount > 0): ?><em class="is-green"><?php echo htmlspecialchars((string) min(99, $customerCartCount), ENT_QUOTES, 'UTF-8'); ?></em><?php endif; ?>
             </span>
             <small>Cart</small>

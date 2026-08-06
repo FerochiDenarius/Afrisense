@@ -1,4 +1,5 @@
 .af-menu-hero,
+/* Navigation and menu styling for .af-menu-hero, .af-services-hero. */
 .af-services-hero {
     min-height: 340px;
     background:
@@ -13,12 +14,14 @@
 .af-menu-hero-inner,
 .af-services-hero-inner,
 .af-menu-page,
+/* Navigation and menu styling for .af-menu-hero-inner, .af-services-hero-inner, .af-menu-page, .af-services-page. */
 .af-services-page {
     width: min(1240px, 100%);
     margin: 0 auto;
 }
 
 .af-menu-hero nav,
+/* Navigation and menu styling for .af-menu-hero nav, .af-services-hero nav. */
 .af-services-hero nav {
     display: flex;
     align-items: center;
@@ -30,10 +33,12 @@
 }
 
 .af-menu-hero nav a,
+/* Navigation and menu styling for .af-menu-hero nav a, .af-services-hero nav a. */
 .af-services-hero nav a {
     text-decoration: none;
 }
 
+/* Styling rules for .af-kicker. */
 .af-kicker {
     color: var(--af-gold-2);
     font-size: 13px;
@@ -44,6 +49,7 @@
 }
 
 .af-menu-hero h1,
+/* Navigation and menu styling for .af-menu-hero h1, .af-services-hero h1. */
 .af-services-hero h1 {
     font-family: Georgia, "Times New Roman", serif;
     font-size: clamp(42px, 5vw, 66px);
@@ -53,11 +59,13 @@
 }
 
 .af-menu-hero h1 span,
+/* Navigation and menu styling for .af-menu-hero h1 span, .af-services-hero h1 span. */
 .af-services-hero h1 span {
     color: var(--af-gold-2);
 }
 
 .af-menu-hero p:not(.af-kicker),
+/* Navigation and menu styling for .af-menu-hero p:not(.af-kicker), .af-services-hero p:not(.af-kicker). */
 .af-services-hero p:not(.af-kicker) {
     font-size: 17px;
     line-height: 1.65;
@@ -65,15 +73,18 @@
 }
 
 .af-menu-page,
+/* Navigation and menu styling for .af-menu-page, .af-services-page. */
 .af-services-page {
     padding: 42px 24px 50px;
 }
 
+/* Styling rules for .af-page-heading. */
 .af-page-heading {
     text-align: center;
     margin-bottom: 32px;
 }
 
+/* Styling rules for .af-page-heading p. */
 .af-page-heading p {
     color: var(--af-gold);
     font-size: 12px;
@@ -83,6 +94,7 @@
     text-transform: uppercase;
 }
 
+/* Styling rules for .af-page-heading h2. */
 .af-page-heading h2 {
     color: #111827;
     font-family: Georgia, "Times New Roman", serif;
@@ -90,6 +102,7 @@
     line-height: 1.1;
 }
 
+/* Styling rules for .af-page-heading small. */
 .af-page-heading small {
     color: #667085;
     display: block;
@@ -99,6 +112,7 @@
     max-width: 680px;
 }
 
+/* Navigation and menu styling for .af-menu-toolbar. */
 .af-menu-toolbar {
     border: 1px solid #e5e7eb;
     border-radius: 8px;
@@ -111,6 +125,7 @@
     padding: 16px;
 }
 
+/* Navigation and menu styling for .af-menu-toolbar label. */
 .af-menu-toolbar label {
     height: 48px;
     border: 1px solid #d9dee6;
@@ -120,20 +135,24 @@
     background: #fff;
 }
 
+/* Navigation and menu styling for .af-menu-toolbar .search. */
 .af-menu-toolbar .search {
     grid-template-columns: 44px 1fr;
 }
 
+/* Form control styling for .af-menu-toolbar .select. */
 .af-menu-toolbar .select {
     grid-template-columns: 1fr 42px;
 }
 
+/* Navigation and menu styling for .af-menu-toolbar i. */
 .af-menu-toolbar i {
     color: #667085;
     justify-self: center;
 }
 
 .af-menu-toolbar input,
+/* Form control styling for .af-menu-toolbar input, .af-menu-toolbar select. */
 .af-menu-toolbar select {
     width: 100%;
     min-width: 0;
@@ -145,12 +164,14 @@
     font-size: 14px;
 }
 
+/* Form control styling for .af-menu-toolbar select. */
 .af-menu-toolbar select {
     appearance: none;
     cursor: pointer;
     padding-left: 14px;
 }
 
+/* Navigation and menu styling for .af-menu-category-tabs. */
 .af-menu-category-tabs {
     display: flex;
     flex-wrap: wrap;
@@ -159,6 +180,7 @@
     margin-bottom: 30px;
 }
 
+/* Navigation and menu styling for .af-menu-category-tabs a. */
 .af-menu-category-tabs a {
     min-height: 42px;
     border: 1px solid #e4e7ec;
@@ -175,6 +197,7 @@
 }
 
 .af-menu-category-tabs a.is-active,
+/* Navigation and menu styling for .af-menu-category-tabs a.is-active, .af-menu-category-tabs a:hover. */
 .af-menu-category-tabs a:hover {
     border-color: var(--af-gold-2);
     background: #fff7e8;
@@ -182,6 +205,7 @@
 }
 
 .af-public-menu-grid,
+/* Card and panel styling for .af-public-menu-grid, .af-service-card-grid. */
 .af-service-card-grid {
     display: grid;
     grid-template-columns: repeat(3, minmax(0, 1fr));
@@ -189,6 +213,7 @@
 }
 
 .af-public-menu-card,
+/* Card and panel styling for .af-public-menu-card, .af-public-service-card. */
 .af-public-service-card {
     border: 1px solid #e4e7ec;
     border-radius: 8px;
@@ -198,6 +223,7 @@
 }
 
 .af-menu-image,
+/* Navigation and menu styling for .af-menu-image, .af-service-image. */
 .af-service-image {
     height: 190px;
     position: relative;
@@ -205,6 +231,7 @@
 }
 
 .af-menu-image img,
+/* Navigation and menu styling for .af-menu-image img, .af-service-image img. */
 .af-service-image img {
     width: 100%;
     height: 100%;
@@ -212,6 +239,7 @@
 }
 
 .af-menu-image span,
+/* Navigation and menu styling for .af-menu-image span, .af-service-icon. */
 .af-service-icon {
     position: absolute;
     left: 22px;
@@ -229,11 +257,13 @@
 }
 
 .af-public-menu-card-body,
+/* Card and panel styling for .af-public-menu-card-body, .af-public-service-card-body. */
 .af-public-service-card-body {
     padding: 46px 22px 24px;
 }
 
 .af-public-menu-card h3,
+/* Card and panel styling for .af-public-menu-card h3, .af-public-service-card h3. */
 .af-public-service-card h3 {
     color: #111827;
     font-family: Georgia, "Times New Roman", serif;
@@ -243,6 +273,7 @@
 }
 
 .af-public-menu-card p,
+/* Card and panel styling for .af-public-menu-card p, .af-public-service-card p. */
 .af-public-service-card p {
     color: #4b5563;
     font-size: 14px;
@@ -250,6 +281,7 @@
     min-height: 68px;
 }
 
+/* Card and panel styling for .af-menu-card-footer. */
 .af-menu-card-footer {
     border-top: 1px solid #eef1f4;
     display: flex;
@@ -260,6 +292,7 @@
     padding-top: 18px;
 }
 
+/* Navigation and menu styling for .af-menu-price. */
 .af-menu-price {
     color: var(--af-gold);
     font-size: 20px;
@@ -270,6 +303,7 @@
 .af-public-service-card a,
 .af-services-cta a,
 .af-catering-band a,
+/* Ordering and cart interface styling for .af-menu-order-btn, .af-public-service-card a, .af-services-cta a, .af-catering-band a, .af-services-final a. */
 .af-services-final a {
     min-height: 42px;
     border-radius: 6px;
@@ -285,6 +319,7 @@
     text-decoration: none;
 }
 
+/* Card and panel styling for .af-public-service-card a. */
 .af-public-service-card a {
     background: transparent;
     color: var(--af-gold);
@@ -294,6 +329,7 @@
 }
 
 .af-menu-strip,
+/* Navigation and menu styling for .af-menu-strip, .af-why-band. */
 .af-why-band {
     border-radius: 8px;
     background:
@@ -304,6 +340,7 @@
     padding: 34px;
 }
 
+/* Navigation and menu styling for .af-menu-strip. */
 .af-menu-strip {
     display: grid;
     grid-template-columns: 1fr auto;
@@ -314,6 +351,7 @@
 .af-menu-strip h2,
 .af-why-band h2,
 .af-catering-band h2,
+/* Navigation and menu styling for .af-menu-strip h2, .af-why-band h2, .af-catering-band h2, .af-services-final h2. */
 .af-services-final h2 {
     font-family: Georgia, "Times New Roman", serif;
     font-size: 34px;
@@ -322,6 +360,7 @@
 
 .af-menu-strip p,
 .af-catering-band p,
+/* Navigation and menu styling for .af-menu-strip p, .af-catering-band p, .af-services-final p. */
 .af-services-final p {
     color: rgba(255, 255, 255, 0.86);
     line-height: 1.65;
@@ -329,46 +368,55 @@
     max-width: 620px;
 }
 
+/* Styling rules for .af-why-band. */
 .af-why-band {
     text-align: center;
 }
 
+/* Styling rules for .af-why-band h2. */
 .af-why-band h2 {
     margin-bottom: 30px;
 }
 
+/* Styling rules for .af-why-grid. */
 .af-why-grid {
     display: grid;
     grid-template-columns: repeat(4, minmax(0, 1fr));
     gap: 20px;
 }
 
+/* Styling rules for .af-why-grid article. */
 .af-why-grid article {
     border-right: 1px solid rgba(255, 255, 255, 0.28);
     padding: 0 22px;
 }
 
+/* Styling rules for .af-why-grid article:last-child. */
 .af-why-grid article:last-child {
     border-right: 0;
 }
 
+/* Styling rules for .af-why-grid i. */
 .af-why-grid i {
     color: var(--af-gold-2);
     font-size: 34px;
     margin-bottom: 14px;
 }
 
+/* Styling rules for .af-why-grid h3. */
 .af-why-grid h3 {
     font-size: 16px;
     margin-bottom: 8px;
 }
 
+/* Styling rules for .af-why-grid p. */
 .af-why-grid p {
     color: rgba(255, 255, 255, 0.86);
     font-size: 13px;
     line-height: 1.55;
 }
 
+/* Styling rules for .af-catering-band. */
 .af-catering-band {
     border-radius: 8px;
     background:
@@ -379,19 +427,23 @@
     padding: 46px 56px;
 }
 
+/* Styling rules for .af-catering-band p. */
 .af-catering-band p {
     color: #344054;
 }
 
+/* Styling rules for .af-catering-band h2. */
 .af-catering-band h2 {
     color: #111827;
     max-width: 480px;
 }
 
+/* Styling rules for .af-catering-band h2 span. */
 .af-catering-band h2 span {
     color: var(--af-gold);
 }
 
+/* Styling rules for .af-services-final. */
 .af-services-final {
     background:
         linear-gradient(145deg, rgba(13, 36, 30, 0.96), rgba(13, 36, 30, 0.88)),
@@ -402,6 +454,7 @@
     text-align: center;
 }
 
+/* Styling rules for .af-services-final div. */
 .af-services-final div {
     display: flex;
     flex-wrap: wrap;
@@ -410,33 +463,40 @@
     margin-top: 22px;
 }
 
+/* Styling rules for .af-services-final a + a. */
 .af-services-final a + a {
     border: 1px solid var(--af-gold-2);
     background: rgba(0, 0, 0, 0.12);
 }
 
+/* Responsive styling rules for @media (max-width: 1080px). */
 @media (max-width: 1080px) {
     .af-public-menu-grid,
     .af-service-card-grid,
+    /* Card and panel styling for .af-public-menu-grid, .af-service-card-grid, .af-why-grid. */
     .af-why-grid {
         grid-template-columns: repeat(2, minmax(0, 1fr));
     }
 
     .af-menu-toolbar,
+    /* Navigation and menu styling for .af-menu-toolbar, .af-menu-strip. */
     .af-menu-strip {
         grid-template-columns: 1fr;
     }
 
+    /* Styling rules for .af-why-grid article. */
     .af-why-grid article {
         border-right: 0;
     }
 }
 
+/* Responsive styling rules for @media (max-width: 700px). */
 @media (max-width: 700px) {
     .af-menu-hero,
     .af-services-hero,
     .af-menu-page,
     .af-services-page,
+    /* Navigation and menu styling for .af-menu-hero, .af-services-hero, .af-menu-page, .af-services-page, .af-catering-band. */
     .af-catering-band {
         padding-left: 16px;
         padding-right: 16px;
@@ -444,6 +504,7 @@
 
     .af-public-menu-grid,
     .af-service-card-grid,
+    /* Card and panel styling for .af-public-menu-grid, .af-service-card-grid, .af-why-grid. */
     .af-why-grid {
         grid-template-columns: 1fr;
     }
@@ -452,6 +513,7 @@
     .af-menu-strip h2,
     .af-why-band h2,
     .af-catering-band h2,
+    /* Navigation and menu styling for .af-page-heading h2, .af-menu-strip h2, .af-why-band h2, .af-catering-band h2, .af-services-final h2. */
     .af-services-final h2 {
         font-size: 30px;
     }
@@ -459,6 +521,7 @@
 
 /* Compact public-page scale to match the landing home header and fit more detail onscreen. */
 .af-menu-hero,
+/* Navigation and menu styling for .af-menu-hero, .af-services-hero. */
 .af-services-hero {
     min-height: 280px;
     padding-top: 38px;
@@ -466,18 +529,21 @@
 }
 
 .af-menu-hero nav,
+/* Navigation and menu styling for .af-menu-hero nav, .af-services-hero nav. */
 .af-services-hero nav {
     font-size: 11px;
     gap: 8px;
     margin-bottom: 16px;
 }
 
+/* Styling rules for .af-kicker. */
 .af-kicker {
     font-size: 11px;
     margin-bottom: 8px;
 }
 
 .af-menu-hero h1,
+/* Navigation and menu styling for .af-menu-hero h1, .af-services-hero h1. */
 .af-services-hero h1 {
     font-size: clamp(32px, 4vw, 46px);
     margin-bottom: 12px;
@@ -485,6 +551,7 @@
 }
 
 .af-menu-hero p:not(.af-kicker),
+/* Navigation and menu styling for .af-menu-hero p:not(.af-kicker), .af-services-hero p:not(.af-kicker). */
 .af-services-hero p:not(.af-kicker) {
     font-size: 13px;
     line-height: 1.55;
@@ -492,30 +559,36 @@
 }
 
 .af-menu-page,
+/* Navigation and menu styling for .af-menu-page, .af-services-page. */
 .af-services-page {
     padding-top: 30px;
     padding-bottom: 40px;
 }
 
+/* Styling rules for .af-page-heading. */
 .af-page-heading {
     margin-bottom: 24px;
 }
 
+/* Styling rules for .af-page-heading p. */
 .af-page-heading p {
     font-size: 11px;
     margin-bottom: 6px;
 }
 
+/* Styling rules for .af-page-heading h2. */
 .af-page-heading h2 {
     font-size: 30px;
 }
 
+/* Styling rules for .af-page-heading small. */
 .af-page-heading small {
     font-size: 12px;
     line-height: 1.55;
     margin-top: 9px;
 }
 
+/* Navigation and menu styling for .af-menu-toolbar. */
 .af-menu-toolbar {
     grid-template-columns: minmax(220px, 1fr) 180px 150px;
     gap: 10px;
@@ -523,28 +596,34 @@
     padding: 12px;
 }
 
+/* Navigation and menu styling for .af-menu-toolbar label. */
 .af-menu-toolbar label {
     height: 40px;
 }
 
+/* Navigation and menu styling for .af-menu-toolbar .search. */
 .af-menu-toolbar .search {
     grid-template-columns: 36px 1fr;
 }
 
+/* Form control styling for .af-menu-toolbar .select. */
 .af-menu-toolbar .select {
     grid-template-columns: 1fr 34px;
 }
 
 .af-menu-toolbar input,
+/* Form control styling for .af-menu-toolbar input, .af-menu-toolbar select. */
 .af-menu-toolbar select {
     font-size: 12px;
 }
 
+/* Navigation and menu styling for .af-menu-category-tabs. */
 .af-menu-category-tabs {
     gap: 8px;
     margin-bottom: 22px;
 }
 
+/* Navigation and menu styling for .af-menu-category-tabs a. */
 .af-menu-category-tabs a {
     min-height: 34px;
     gap: 6px;
@@ -553,16 +632,19 @@
 }
 
 .af-public-menu-grid,
+/* Card and panel styling for .af-public-menu-grid, .af-service-card-grid. */
 .af-service-card-grid {
     gap: 16px;
 }
 
 .af-menu-image,
+/* Navigation and menu styling for .af-menu-image, .af-service-image. */
 .af-service-image {
     height: 160px;
 }
 
 .af-menu-image span,
+/* Navigation and menu styling for .af-menu-image span, .af-service-icon. */
 .af-service-icon {
     left: 16px;
     bottom: -24px;
@@ -572,28 +654,33 @@
 }
 
 .af-public-menu-card-body,
+/* Card and panel styling for .af-public-menu-card-body, .af-public-service-card-body. */
 .af-public-service-card-body {
     padding: 34px 16px 18px;
 }
 
 .af-public-menu-card h3,
+/* Card and panel styling for .af-public-menu-card h3, .af-public-service-card h3. */
 .af-public-service-card h3 {
     font-size: 17px;
     margin-bottom: 6px;
 }
 
 .af-public-menu-card p,
+/* Card and panel styling for .af-public-menu-card p, .af-public-service-card p. */
 .af-public-service-card p {
     font-size: 12px;
     line-height: 1.55;
     min-height: 56px;
 }
 
+/* Card and panel styling for .af-menu-card-footer. */
 .af-menu-card-footer {
     margin-top: 14px;
     padding-top: 14px;
 }
 
+/* Navigation and menu styling for .af-menu-price. */
 .af-menu-price {
     font-size: 16px;
 }
@@ -602,6 +689,7 @@
 .af-public-service-card a,
 .af-services-cta a,
 .af-catering-band a,
+/* Ordering and cart interface styling for .af-menu-order-btn, .af-public-service-card a, .af-services-cta a, .af-catering-band a, .af-services-final a. */
 .af-services-final a {
     min-height: 34px;
     gap: 7px;
@@ -609,11 +697,13 @@
     font-size: 11px;
 }
 
+/* Card and panel styling for .af-public-service-card a. */
 .af-public-service-card a {
     margin-top: 13px;
 }
 
 .af-menu-strip,
+/* Navigation and menu styling for .af-menu-strip, .af-why-band. */
 .af-why-band {
     margin-top: 26px;
     padding: 26px;
@@ -622,43 +712,52 @@
 .af-menu-strip h2,
 .af-why-band h2,
 .af-catering-band h2,
+/* Navigation and menu styling for .af-menu-strip h2, .af-why-band h2, .af-catering-band h2, .af-services-final h2. */
 .af-services-final h2 {
     font-size: 26px;
 }
 
 .af-menu-strip p,
 .af-catering-band p,
+/* Navigation and menu styling for .af-menu-strip p, .af-catering-band p, .af-services-final p. */
 .af-services-final p {
     font-size: 12.5px;
     line-height: 1.55;
 }
 
+/* Styling rules for .af-why-band h2. */
 .af-why-band h2 {
     margin-bottom: 22px;
 }
 
+/* Styling rules for .af-why-grid. */
 .af-why-grid {
     gap: 14px;
 }
 
+/* Styling rules for .af-why-grid i. */
 .af-why-grid i {
     font-size: 26px;
     margin-bottom: 10px;
 }
 
+/* Styling rules for .af-why-grid h3. */
 .af-why-grid h3 {
     font-size: 13px;
 }
 
+/* Styling rules for .af-why-grid p. */
 .af-why-grid p {
     font-size: 11.5px;
 }
 
+/* Styling rules for .af-catering-band. */
 .af-catering-band {
     min-height: 210px;
     padding: 34px 42px;
 }
 
+/* Styling rules for .af-services-final. */
 .af-services-final {
     margin-top: 34px;
     padding: 34px 20px;

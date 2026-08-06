@@ -1,5 +1,7 @@
 <?php
+// Guard this block so it only runs when the required condition is met.
 if (!function_exists('afrisense_alert')) {
+    // Defines the afrisense_alert helper used by this module.
     function afrisense_alert(string $type, string $message, bool $dismissible = true): void
     {
         $allowedTypes = ['success', 'error', 'warning', 'info'];
@@ -8,6 +10,7 @@ if (!function_exists('afrisense_alert')) {
         <div class="af-alert af-alert-<?php echo htmlspecialchars($safeType, ENT_QUOTES, 'UTF-8'); ?>" role="alert" data-alert>
             <i class="bi <?php echo afrisense_alert_icon($safeType); ?>" aria-hidden="true"></i>
             <p><?php echo htmlspecialchars($message, ENT_QUOTES, 'UTF-8'); ?></p>
+            <?php // Render this conditional/dynamic template block. ?>
             <?php if ($dismissible): ?>
                 <button type="button" aria-label="Dismiss alert" data-alert-dismiss>
                     <i class="bi bi-x-lg" aria-hidden="true"></i>
@@ -18,7 +21,9 @@ if (!function_exists('afrisense_alert')) {
     }
 }
 
+// Guard this block so it only runs when the required condition is met.
 if (!function_exists('afrisense_alert_icon')) {
+    // Defines the afrisense_alert_icon helper used by this module.
     function afrisense_alert_icon(string $type): string
     {
         return match ($type) {

@@ -8,6 +8,7 @@
         $deliveryInstructions = (string) ($system['delivery_instructions'] ?? 'Please ensure someone is available to receive the order at the delivery address. We will contact you when we are on our way.');
         $deliveryZones = afrisense_delivery_zones($system);
         ?>
+        <!-- Page section for this part of the AfriSense interface. -->
         <section class="af-settings-card af-settings-card-wide" id="delivery-settings">
             <h2>Delivery Settings</h2>
             <p>Configure the delivery rules used by carts, checkout, payment pages and order totals.</p>
@@ -20,6 +21,7 @@
                     </div>
                     <div class="af-delivery-zone-table" data-delivery-zone-table>
                         <div><strong>Zone Name</strong><strong>Areas / Locations</strong><strong>Delivery Fee</strong><strong>Min. Order</strong><strong>Status</strong><strong>Action</strong></div>
+                        <?php // Render this conditional/dynamic template block. ?>
                         <?php foreach ($deliveryZones as $zone): ?>
                             <div data-delivery-zone-row>
                                 <span><input name="delivery_zones[name][]" type="text" value="<?php echo htmlspecialchars((string) $zone['name'], ENT_QUOTES, 'UTF-8'); ?>" placeholder="Zone name"></span>
@@ -68,6 +70,7 @@
             </div>
 
             <div class="af-settings-two">
+                <!-- Page section for this part of the AfriSense interface. -->
                 <section class="af-delivery-mini-card">
                     <h3>Delivery Settings</h3>
                     <div class="af-settings-two">
@@ -105,6 +108,7 @@
                     <label class="af-toggle-row"><input type="checkbox" name="real_time_tracking" value="1" <?php echo (int) ($system['real_time_tracking'] ?? 1) === 1 ? 'checked' : ''; ?>><span class="af-switch" aria-hidden="true"></span><strong>Real-time Tracking</strong><small>Enable order tracking for customers.</small></label>
                 </section>
 
+                <!-- Page section for this part of the AfriSense interface. -->
                 <section class="af-delivery-mini-card">
                     <h3>Delivery Instructions</h3>
                     <textarea name="delivery_instructions" rows="5"><?php echo htmlspecialchars($deliveryInstructions, ENT_QUOTES, 'UTF-8'); ?></textarea>

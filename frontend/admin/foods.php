@@ -1,4 +1,6 @@
 <?php
+// Admin food-management page: manages food categories, menu items, prices,
+// availability, preparation time, and food images used by ordering pages.
 $frontendBase = '/Afrisense/frontend';
 $pageTitle = 'Foods Sold | AfriSense';
 $adminTitle = 'Foods';
@@ -10,16 +12,21 @@ $extraStyles = [
 
 require_once __DIR__ . '/../auth/auth_bootstrap.php';
 
+// Only administrators should create, update, hide, or delete food items.
 afrisense_require_admin();
 $itemsPerPage = afrisense_admin_items_per_page();
 
+// Defines the afrisense_post_string helper used by this module.
 function afrisense_post_string(string $key, string $fallback = ''): string
 {
+    // Normalize text input before validation or database writes.
     return trim((string) ($_POST[$key] ?? $fallback));
 }
 
+// Defines the afrisense_food_tag_class helper used by this module.
 function afrisense_food_tag_class(string $category): string
 {
+    // Map category names to the small visual tag classes used by the admin UI.
     $category = strtolower($category);
 
     return match (true) {
@@ -31,10 +38,14 @@ function afrisense_food_tag_class(string $category): string
     };
 }
 
+// Defines the afrisense_food_image helper used by this module.
 function afrisense_food_image(string $frontendBase, ?string $image): string
 {
+    // Food images may be bundled demo assets, current uploads, or older upload
+    // paths. Resolve all supported locations before falling back.
     $image = trim((string) $image);
 
+    // Guard this block so it only runs when the required condition is met.
     if ($image === '') {
         return $frontendBase . '/assets/images/foods/jollof-rice.png';
     }
@@ -45,14 +56,17 @@ function afrisense_food_image(string $frontendBase, ?string $image): string
     $uploadCandidate = __DIR__ . '/../uploads/' . $relativeImage;
     $legacyUploadCandidate = __DIR__ . '/../uploads/' . $filename;
 
+    // Guard this block so it only runs when the required condition is met.
     if (is_file($assetCandidate)) {
         return $frontendBase . '/assets/images/foods/' . $filename;
     }
 
+    // Guard this block so it only runs when the required condition is met.
     if (is_file($uploadCandidate)) {
         return $frontendBase . '/uploads/' . $relativeImage;
     }
 
+    // Guard this block so it only runs when the required condition is met.
     if (is_file($legacyUploadCandidate)) {
         return $frontendBase . '/uploads/' . $filename;
     }
@@ -60,11 +74,15 @@ function afrisense_food_image(string $frontendBase, ?string $image): string
     return $frontendBase . '/assets/images/foods/jollof-rice.png';
 }
 
+// Defines the afrisense_food_url helper used by this module.
 function afrisense_food_url(array $overrides = [], string $anchor = ''): string
 {
+    // Build pagination/edit URLs while preserving the current query string.
     $params = $_GET;
 
+    // Iterate through the data needed for this block.
     foreach ($overrides as $key => $value) {
+        // Guard this block so it only runs when the required condition is met.
         if ($value === null || $value === '') {
             unset($params[$key]);
         } else {
@@ -77,18 +95,24 @@ function afrisense_food_url(array $overrides = [], string $anchor = ''): string
     return 'foods.php' . ($query !== '' ? '?' . $query : '') . $anchor;
 }
 
+// Defines the afrisense_food_upload_image helper used by this module.
 function afrisense_food_upload_image(): ?string
 {
+    // Image upload is optional for add/update. A null return means "keep the
+    // existing image" for updates or use the default image for new foods.
     $file = $_FILES['food_image'] ?? null;
 
+    // Guard this block so it only runs when the required condition is met.
     if (!is_array($file) || (int) ($file['error'] ?? UPLOAD_ERR_NO_FILE) === UPLOAD_ERR_NO_FILE) {
         return null;
     }
 
+    // Guard this block so it only runs when the required condition is met.
     if ((int) ($file['error'] ?? UPLOAD_ERR_OK) !== UPLOAD_ERR_OK) {
         throw new RuntimeException('Food image could not be uploaded.');
     }
 
+    // Guard this block so it only runs when the required condition is met.
     if ((int) ($file['size'] ?? 0) > 5 * 1024 * 1024) {
         throw new RuntimeException('Food image must be 5MB or smaller.');
     }
@@ -97,6 +121,7 @@ function afrisense_food_upload_image(): ?string
     $finfo = finfo_open(FILEINFO_MIME_TYPE);
     $mimeType = $finfo !== false ? (string) finfo_file($finfo, $temporaryName) : '';
 
+    // Guard this block so it only runs when the required condition is met.
     if ($finfo !== false) {
         finfo_close($finfo);
     }
@@ -107,6 +132,8 @@ function afrisense_food_upload_image(): ?string
         'image/gif' => 'gif',
     ];
 
+    // Validate by MIME type from the temporary file, not by extension provided
+    // by the browser.
     if (!isset($allowedMimeTypes[$mimeType])) {
         throw new RuntimeException('Food image must be JPG, PNG, WebP or GIF.');
     }
@@ -114,11 +141,14 @@ function afrisense_food_upload_image(): ?string
     $uploadRoot = __DIR__ . '/../uploads';
     $uploadDirectory = $uploadRoot . '/foods';
 
+    // Iterate through the data needed for this block.
     foreach ([$uploadRoot, $uploadDirectory] as $directory) {
+        // Guard this block so it only runs when the required condition is met.
         if (!is_dir($directory) && !mkdir($directory, 0775, true)) {
             throw new RuntimeException('Food image upload folder could not be created.');
         }
 
+        // Guard this block so it only runs when the required condition is met.
         if (!is_writable($directory)) {
             throw new RuntimeException('Food image upload folder is not writable by XAMPP.');
         }
@@ -127,6 +157,8 @@ function afrisense_food_upload_image(): ?string
     $filename = 'food-' . bin2hex(random_bytes(12)) . '.' . $allowedMimeTypes[$mimeType];
     $destination = $uploadDirectory . DIRECTORY_SEPARATOR . $filename;
 
+    // Store only the relative upload path in the database so public and admin
+    // pages can build their own URLs.
     if (!move_uploaded_file($temporaryName, $destination)) {
         throw new RuntimeException('Food image could not be saved.');
     }
@@ -137,19 +169,27 @@ function afrisense_food_upload_image(): ?string
 $flashMessage = '';
 $flashType = 'success';
 
+// Run database/action work inside a guarded block so the page can fail gracefully.
 try {
     $pdo = afrisense_pdo();
     $editFoodId = max(0, (int) ($_GET['edit'] ?? 0));
     $page = max(1, (int) ($_GET['page'] ?? 1));
     $offset = ($page - 1) * $itemsPerPage;
 
+    // Handle submitted form actions before rendering the page.
     if (($_SERVER['REQUEST_METHOD'] ?? 'GET') === 'POST') {
+        // All mutations post back to this page and branch by action so the
+        // food-management screen remains a single admin workflow.
         $action = afrisense_post_string('action');
 
+        // Guard this block so it only runs when the required condition is met.
         if ($action === 'add_category') {
+            // Category names are unique because foods use them for filters and
+            // admin overview grouping.
             $categoryName = afrisense_post_string('category_name');
             $categoryDescription = afrisense_post_string('category_description');
 
+            // Guard this block so it only runs when the required condition is met.
             if ($categoryName === '') {
                 $flashType = 'error';
                 $flashMessage = 'Category name is required.';
@@ -162,6 +202,7 @@ try {
                 $duplicate->execute(['category_name' => $categoryName]);
                 $duplicateRow = $duplicate->fetch(PDO::FETCH_ASSOC);
 
+                // Guard this block so it only runs when the required condition is met.
                 if ((int) ($duplicateRow['count_value'] ?? 0) > 0) {
                     $flashType = 'error';
                     $flashMessage = 'This food category already exists.';
@@ -179,17 +220,21 @@ try {
             }
         }
 
+        // Guard this block so it only runs when the required condition is met.
         if ($action === 'add_food') {
+            // Add a new food row, optionally with an uploaded image.
             $foodName = afrisense_post_string('food_name');
             $categoryId = (int) ($_POST['category_id'] ?? 0);
             $price = (float) ($_POST['price'] ?? 0);
             $preparationTime = max(1, (int) ($_POST['preparation_time'] ?? 15));
             $availability = afrisense_post_string('availability', 'Available');
 
+            // Guard this block so it only runs when the required condition is met.
             if ($foodName === '' || $categoryId <= 0 || $price <= 0) {
                 $flashType = 'error';
                 $flashMessage = 'Food name, category and valid price are required.';
             } else {
+                // Run database/action work inside a guarded block so the page can fail gracefully.
                 try {
                     $imagePath = afrisense_food_upload_image();
                     $statement = $pdo->prepare(
@@ -215,7 +260,9 @@ try {
             }
         }
 
+        // Guard this block so it only runs when the required condition is met.
         if ($action === 'update_food') {
+            // Update keeps the current image unless a replacement was uploaded.
             $foodId = (int) ($_POST['food_id'] ?? 0);
             $foodName = afrisense_post_string('food_name');
             $categoryId = (int) ($_POST['category_id'] ?? 0);
@@ -223,14 +270,17 @@ try {
             $preparationTime = max(1, (int) ($_POST['preparation_time'] ?? 15));
             $availability = afrisense_post_string('availability', 'Available');
 
+            // Guard this block so it only runs when the required condition is met.
             if ($foodId <= 0 || $foodName === '' || $categoryId <= 0 || $price <= 0) {
                 $flashType = 'error';
                 $flashMessage = 'Food name, category and valid price are required.';
                 $editFoodId = $foodId;
             } else {
+                // Run database/action work inside a guarded block so the page can fail gracefully.
                 try {
                     $imagePath = afrisense_food_upload_image();
 
+                    // Guard this block so it only runs when the required condition is met.
                     if ($imagePath !== null) {
                         $statement = $pdo->prepare(
                             'UPDATE `foods`
@@ -287,9 +337,12 @@ try {
             }
         }
 
+        // Guard this block so it only runs when the required condition is met.
         if ($action === 'toggle_availability') {
+            // Availability controls whether ordering pages can sell this item.
             $foodId = (int) ($_POST['food_id'] ?? 0);
 
+            // Guard this block so it only runs when the required condition is met.
             if ($foodId > 0) {
                 $statement = $pdo->prepare(
                     'UPDATE `foods`
@@ -302,9 +355,13 @@ try {
             }
         }
 
+        // Guard this block so it only runs when the required condition is met.
         if ($action === 'delete_food') {
+            // Delete removes the menu item row. Existing orders should be
+            // protected by database constraints if they still reference it.
             $foodId = (int) ($_POST['food_id'] ?? 0);
 
+            // Guard this block so it only runs when the required condition is met.
             if ($foodId > 0) {
                 $statement = $pdo->prepare('DELETE FROM `foods` WHERE `id` = :id');
                 $statement->execute(['id' => $foodId]);
@@ -314,6 +371,8 @@ try {
         }
     }
 
+    // Load the current page of foods after any mutation so the UI reflects the
+    // latest state immediately.
     $totalFoods = (int) $pdo->query('SELECT COUNT(*) FROM `foods`')->fetchColumn();
     $totalPages = max(1, (int) ceil($totalFoods / max(1, $itemsPerPage)));
     $page = min($page, $totalPages);
@@ -353,7 +412,9 @@ try {
 
     $selectedFood = null;
 
+    // Guard this block so it only runs when the required condition is met.
     if ($editFoodId > 0) {
+        // The side edit panel is populated only when an edit id is present.
         $editStatement = $pdo->prepare(
             'SELECT
                 f.`id`,
@@ -376,6 +437,7 @@ try {
 
     $loadError = '';
 } catch (Throwable $exception) {
+    // Keep the admin layout renderable if the database is unavailable.
     $foods = [];
     $categories = [];
     $selectedFood = null;
@@ -387,6 +449,8 @@ try {
     $loadError = 'Foods could not be loaded. Check that MySQL is running.';
 }
 
+// Metrics are based on the visible page of foods, matching what the admin is
+// currently reviewing in the table.
 $availableFoods = count(array_filter($foods, static fn (array $food): bool => (string) ($food['availability'] ?? '') === 'Available'));
 $unavailableFoods = count(array_filter($foods, static fn (array $food): bool => (string) ($food['availability'] ?? '') !== 'Available'));
 $fastPrepFoods = count(array_filter($foods, static fn (array $food): bool => (int) ($food['preparation_time'] ?? 0) <= 15));
@@ -394,7 +458,9 @@ $longPrepFoods = count(array_filter($foods, static fn (array $food): bool => (in
 
 ob_start();
 ?>
+<!-- Page section for this part of the AfriSense interface. -->
 <section class="af-admin-menu-page af-foods-page">
+    <!-- Page heading and global add button. -->
     <header class="af-admin-page-heading">
         <div>
             <h1>Foods Sold</h1>
@@ -406,16 +472,19 @@ ob_start();
         </button>
     </header>
 
+    <?php // Render this conditional/dynamic template block. ?>
     <?php if ($flashMessage !== ''): ?>
         <div class="af-admin-alert <?php echo htmlspecialchars($flashType, ENT_QUOTES, 'UTF-8'); ?>">
             <?php echo htmlspecialchars($flashMessage, ENT_QUOTES, 'UTF-8'); ?>
         </div>
     <?php endif; ?>
 
+    <?php // Render this conditional/dynamic template block. ?>
     <?php if ($loadError !== ''): ?>
         <div class="af-admin-alert error"><?php echo htmlspecialchars($loadError, ENT_QUOTES, 'UTF-8'); ?></div>
     <?php endif; ?>
 
+    <!-- Food summary cards for the current listing. -->
     <section class="af-menu-metrics af-food-metrics" aria-label="Food summary">
         <article class="green">
             <span><i class="bi bi-fork-knife" aria-hidden="true"></i></span>
@@ -439,8 +508,11 @@ ob_start();
         </article>
     </section>
 
+    <!-- Page section for this part of the AfriSense interface. -->
     <section class="af-foods-workspace">
+        <!-- Main food table: filters, current food rows, row actions, pagination. -->
         <section class="af-menu-table-card" id="foods-table">
+            <!-- Form block that submits this page workflow. -->
             <form class="af-menu-filters af-foods-filters" action="foods.php" method="get">
                 <label class="af-menu-search" for="food_search">
                     <i class="bi bi-search" aria-hidden="true"></i>
@@ -449,6 +521,7 @@ ob_start();
                 <label class="af-menu-select" for="food_category_filter">
                     <select id="food_category_filter" name="category">
                         <option>All Categories</option>
+                        <?php // Render this conditional/dynamic template block. ?>
                         <?php foreach ($categories as $category): ?>
                             <option><?php echo htmlspecialchars((string) $category['category_name'], ENT_QUOTES, 'UTF-8'); ?></option>
                         <?php endforeach; ?>
@@ -476,6 +549,7 @@ ob_start();
             </form>
 
             <div class="af-menu-table af-foods-table">
+                <!-- Table block for displaying structured records. -->
                 <table>
                     <thead>
                         <tr>
@@ -489,11 +563,13 @@ ob_start();
                         </tr>
                     </thead>
                     <tbody>
+                        <?php // Render this conditional/dynamic template block. ?>
                         <?php if ($foods === []): ?>
                             <tr>
                                 <td colspan="7"><div class="af-empty-state">No foods found yet.</div></td>
                             </tr>
                         <?php endif; ?>
+                        <?php // Render this conditional/dynamic template block. ?>
                         <?php foreach ($foods as $food): ?>
                             <?php
                             $foodName = (string) ($food['food_name'] ?? 'Food item');
@@ -518,6 +594,7 @@ ob_start();
                                 <td>
                                     <div class="af-row-actions">
                                         <a href="foods.php?edit=<?php echo htmlspecialchars((string) ($food['id'] ?? 0), ENT_QUOTES, 'UTF-8'); ?>#edit_food_form" title="Edit food" aria-label="Edit <?php echo htmlspecialchars($foodName, ENT_QUOTES, 'UTF-8'); ?>"><i class="bi bi-pencil-square" aria-hidden="true"></i></a>
+                                        <!-- Form block that submits this page workflow. -->
                                         <form action="foods.php" method="post">
                                             <input type="hidden" name="action" value="toggle_availability">
                                             <input type="hidden" name="food_id" value="<?php echo htmlspecialchars((string) ($food['id'] ?? 0), ENT_QUOTES, 'UTF-8'); ?>">
@@ -525,6 +602,7 @@ ob_start();
                                                 <i class="bi <?php echo $isAvailable ? 'bi-slash-circle' : 'bi-check2-circle'; ?>" aria-hidden="true"></i>
                                             </button>
                                         </form>
+                                        <!-- Form block that submits this page workflow. -->
                                         <form action="foods.php" method="post">
                                             <input type="hidden" name="action" value="delete_food">
                                             <input type="hidden" name="food_id" value="<?php echo htmlspecialchars((string) ($food['id'] ?? 0), ENT_QUOTES, 'UTF-8'); ?>">
@@ -538,13 +616,17 @@ ob_start();
                 </table>
             </div>
 
+            <!-- Footer block for this interface section. -->
             <footer class="af-menu-pagination">
                 <p>Showing <?php echo htmlspecialchars((string) ($totalFoods > 0 ? $offset + 1 : 0), ENT_QUOTES, 'UTF-8'); ?> to <?php echo htmlspecialchars((string) min($offset + count($foods), $totalFoods), ENT_QUOTES, 'UTF-8'); ?> of <?php echo htmlspecialchars((string) $totalFoods, ENT_QUOTES, 'UTF-8'); ?> foods</p>
+                <!-- Navigation links for this interface. -->
                 <nav aria-label="Food pagination">
                     <a class="<?php echo $page <= 1 ? 'is-disabled' : ''; ?>" href="<?php echo htmlspecialchars($page <= 1 ? '#' : afrisense_food_url(['page' => (string) ($page - 1), 'edit' => null], '#foods-table'), ENT_QUOTES, 'UTF-8'); ?>" aria-label="Previous page" title="Previous page"><i class="bi bi-chevron-left" aria-hidden="true"></i></a>
+                    <?php // Render this conditional/dynamic template block. ?>
                     <?php for ($number = max(1, $page - 1); $number <= min($totalPages, $page + 1); $number++): ?>
                         <a class="<?php echo $number === $page ? 'active' : ''; ?>" href="<?php echo htmlspecialchars(afrisense_food_url(['page' => (string) $number, 'edit' => null], '#foods-table'), ENT_QUOTES, 'UTF-8'); ?>"><?php echo htmlspecialchars((string) $number, ENT_QUOTES, 'UTF-8'); ?></a>
                     <?php endfor; ?>
+                    <?php // Render this conditional/dynamic template block. ?>
                     <?php if ($totalPages > $page + 1): ?>
                         <span>...</span>
                         <a href="<?php echo htmlspecialchars(afrisense_food_url(['page' => (string) $totalPages, 'edit' => null], '#foods-table'), ENT_QUOTES, 'UTF-8'); ?>"><?php echo htmlspecialchars((string) $totalPages, ENT_QUOTES, 'UTF-8'); ?></a>
@@ -554,7 +636,9 @@ ob_start();
             </footer>
         </section>
 
+        <!-- Side panel with supporting information and actions. -->
         <aside class="af-foods-side">
+            <!-- Side summary used to keep availability visible while editing. -->
             <section class="af-menu-panel af-stock-panel">
                 <h2>Availability Overview</h2>
                 <div class="af-stock-donut">
@@ -569,7 +653,9 @@ ob_start();
                 </ul>
             </section>
 
+            <?php // Render this conditional/dynamic template block. ?>
             <?php if ($selectedFood !== null): ?>
+                <!-- Edit form appears only after clicking a row edit action. -->
                 <section class="af-menu-panel af-food-edit-panel" id="edit_food_form">
                     <h2>Edit Food / Drink</h2>
                     <div class="af-food-edit-preview">
@@ -579,6 +665,7 @@ ob_start();
                             <small><?php echo htmlspecialchars((string) ($selectedFood['category_name'] ?? 'Category'), ENT_QUOTES, 'UTF-8'); ?></small>
                         </span>
                     </div>
+                    <!-- Form block that submits this page workflow. -->
                     <form class="af-food-management-form" action="foods.php?edit=<?php echo htmlspecialchars((string) ($selectedFood['id'] ?? 0), ENT_QUOTES, 'UTF-8'); ?>#edit_food_form" method="post" enctype="multipart/form-data">
                         <input type="hidden" name="action" value="update_food">
                         <input type="hidden" name="food_id" value="<?php echo htmlspecialchars((string) ($selectedFood['id'] ?? 0), ENT_QUOTES, 'UTF-8'); ?>">
@@ -595,6 +682,7 @@ ob_start();
                         <label>
                             <span>Category</span>
                             <select name="category_id" required>
+                                <?php // Render this conditional/dynamic template block. ?>
                                 <?php foreach ($categories as $category): ?>
                                     <option value="<?php echo htmlspecialchars((string) ($category['id'] ?? ''), ENT_QUOTES, 'UTF-8'); ?>" <?php echo (int) ($selectedFood['category_id'] ?? 0) === (int) ($category['id'] ?? 0) ? 'selected' : ''; ?>>
                                         <?php echo htmlspecialchars((string) $category['category_name'], ENT_QUOTES, 'UTF-8'); ?>
@@ -626,8 +714,10 @@ ob_start();
                 </section>
             <?php endif; ?>
 
+            <!-- Create form for new menu foods and drinks. -->
             <section class="af-menu-panel">
                 <h2>Add Food</h2>
+                <!-- Form block that submits this page workflow. -->
                 <form id="add_food_form" class="af-food-management-form" action="foods.php" method="post" enctype="multipart/form-data">
                     <input type="hidden" name="action" value="add_food">
                     <label class="af-food-image-upload">
@@ -644,6 +734,7 @@ ob_start();
                         <span>Category</span>
                         <select name="category_id" required>
                             <option value="">Select category</option>
+                            <?php // Render this conditional/dynamic template block. ?>
                             <?php foreach ($categories as $category): ?>
                                 <option value="<?php echo htmlspecialchars((string) ($category['id'] ?? ''), ENT_QUOTES, 'UTF-8'); ?>">
                                     <?php echo htmlspecialchars((string) $category['category_name'], ENT_QUOTES, 'UTF-8'); ?>
@@ -674,9 +765,11 @@ ob_start();
                 </form>
             </section>
 
+            <!-- Category management panel for grouping foods in menu/order filters. -->
             <section class="af-menu-panel">
                 <h2>Food Categories</h2>
                 <ul class="af-food-category-list">
+                    <?php // Render this conditional/dynamic template block. ?>
                     <?php foreach ($categories as $category): ?>
                         <li>
                             <span>
@@ -688,6 +781,7 @@ ob_start();
                     <?php endforeach; ?>
                 </ul>
 
+                <!-- Form block that submits this page workflow. -->
                 <form class="af-food-management-form compact" action="foods.php" method="post">
                     <input type="hidden" name="action" value="add_category">
                     <label>
@@ -702,6 +796,7 @@ ob_start();
                 </form>
             </section>
 
+            <!-- Static help card for the admin operator. -->
             <section class="af-menu-panel af-food-help">
                 <h2><i class="bi bi-question-circle" aria-hidden="true"></i> Help</h2>
                 <p>This is now the single admin page for foods sold by AfriSense and their categories.</p>

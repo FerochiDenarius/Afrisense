@@ -13,6 +13,7 @@ require_once __DIR__ . '/../includes/remarks_helpers.php';
 afrisense_enforce_public_site_status($frontendBase);
 
 $currentUser = null;
+// Run database/action work inside a guarded block so the page can fail gracefully.
 try {
     $currentUser = afrisense_current_user();
 } catch (Throwable) {
@@ -23,11 +24,13 @@ $remarks = [];
 $foodOptions = array_map(static fn (array $remark): string => (string) $remark['food_service'], afrisense_remarks_samples());
 $loadError = '';
 
+// Run database/action work inside a guarded block so the page can fail gracefully.
 try {
     $pdo = afrisense_pdo();
     afrisense_remarks_seed_samples($pdo);
     $foodOptions = afrisense_remarks_food_options($pdo);
 
+    // Handle submitted form actions before rendering the page.
     if (($_SERVER['REQUEST_METHOD'] ?? 'GET') === 'POST' && ($_POST['action'] ?? '') === 'submit_remark') {
         $remarkMessage = afrisense_remarks_submit($pdo, $_POST, $currentUser, $currentUser !== null ? 'Customer' : 'Guest');
     }
@@ -44,8 +47,10 @@ $averageRating = $remarks !== []
 
 ob_start();
 ?>
+<!-- Page section for this part of the AfriSense interface. -->
 <section class="af-remarks-hero">
     <div>
+        <!-- Navigation links for this interface. -->
         <nav class="af-breadcrumb" aria-label="Breadcrumb">
             <a href="index.php"><i class="bi bi-house-door" aria-hidden="true"></i> Home</a>
             <i class="bi bi-chevron-right" aria-hidden="true"></i>
@@ -61,19 +66,25 @@ ob_start();
     </div>
 </section>
 
+<!-- Page section for this part of the AfriSense interface. -->
 <section class="af-public-remarks-page">
+    <?php // Render this conditional/dynamic template block. ?>
     <?php if ($loadError !== ''): ?>
         <div class="af-remark-alert error"><?php echo htmlspecialchars($loadError, ENT_QUOTES, 'UTF-8'); ?></div>
     <?php endif; ?>
 
+    <!-- Page section for this part of the AfriSense interface. -->
     <section class="af-public-remark-metrics" aria-label="Reviews summary">
         <article><span><i class="bi bi-chat-square-text" aria-hidden="true"></i></span><div><small>Published Remarks</small><strong><?php echo htmlspecialchars((string) $publishedCount, ENT_QUOTES, 'UTF-8'); ?></strong><p>Customer voices</p></div></article>
         <article><span><i class="bi bi-star" aria-hidden="true"></i></span><div><small>Average Rating</small><strong><?php echo htmlspecialchars(number_format($averageRating, 1), ENT_QUOTES, 'UTF-8'); ?></strong><?php echo afrisense_remarks_stars($averageRating); ?></div></article>
         <article><span><i class="bi bi-shield-check" aria-hidden="true"></i></span><div><small>Public Submission</small><strong>Live</strong><p>Remarks appear publicly</p></div></article>
     </section>
 
+    <!-- Page section for this part of the AfriSense interface. -->
     <section class="af-public-remarks-grid">
+        <!-- Main content area for this page. -->
         <main class="af-public-remarks-list" id="customer-reviews">
+            <!-- Header block for this interface section. -->
             <header>
                 <div>
                     <h2>Customer Reviews</h2>
@@ -83,6 +94,7 @@ ob_start();
             </header>
 
             <div class="af-review-card-grid">
+                <?php // Render this conditional/dynamic template block. ?>
                 <?php if ($remarks === []): ?>
                     <article class="af-empty-remarks">
                         <i class="bi bi-chat-square-text" aria-hidden="true"></i>
@@ -90,10 +102,12 @@ ob_start();
                         <p>Be the first to leave a remark. New remarks appear after review.</p>
                     </article>
                 <?php endif; ?>
+                <?php // Render this conditional/dynamic template block. ?>
                 <?php foreach ($remarks as $remark): ?>
                     <article class="af-review-card">
                         <img src="<?php echo htmlspecialchars(afrisense_remarks_image($frontendBase, (string) ($remark['image'] ?? '')), ENT_QUOTES, 'UTF-8'); ?>" alt="">
                         <div>
+                            <!-- Header block for this interface section. -->
                             <header>
                                 <span>
                                     <strong><?php echo htmlspecialchars((string) ($remark['customer_name'] ?? 'Customer'), ENT_QUOTES, 'UTF-8'); ?></strong>
@@ -102,6 +116,7 @@ ob_start();
                                 <?php echo afrisense_remarks_stars((float) ($remark['rating'] ?? 0)); ?>
                             </header>
                             <p><?php echo htmlspecialchars(afrisense_remarks_excerpt((string) ($remark['remark'] ?? ''), 150), ENT_QUOTES, 'UTF-8'); ?></p>
+                            <!-- Footer block for this interface section. -->
                             <footer>
                                 <span><?php echo htmlspecialchars(date('d M Y', strtotime((string) ($remark['created_at'] ?? '')) ?: time()), ENT_QUOTES, 'UTF-8'); ?></span>
                                 <em><?php echo htmlspecialchars((string) ($remark['source'] ?? 'Guest'), ENT_QUOTES, 'UTF-8'); ?></em>
@@ -112,16 +127,19 @@ ob_start();
             </div>
         </main>
 
+        <!-- Side panel with supporting information and actions. -->
         <aside class="af-give-remark-card" id="give-remark">
             <h2>Give a Remark</h2>
             <p>Guests and customers can rate any meal or service. New remarks appear publicly after submission.</p>
 
+            <?php // Render this conditional/dynamic template block. ?>
             <?php if ($remarkMessage !== null): ?>
                 <div class="af-remark-alert <?php echo $remarkMessage['success'] ? 'success' : 'error'; ?>">
                     <?php echo htmlspecialchars($remarkMessage['message'], ENT_QUOTES, 'UTF-8'); ?>
                 </div>
             <?php endif; ?>
 
+            <!-- Form block that submits this page workflow. -->
             <form action="remarks.php#give-remark" method="post">
                 <input type="hidden" name="action" value="submit_remark">
                 <label>
@@ -140,6 +158,7 @@ ob_start();
                     <span>Food / Service</span>
                     <select name="food_service" required>
                         <option value="">Select food or service</option>
+                        <?php // Render this conditional/dynamic template block. ?>
                         <?php foreach ($foodOptions as $option): ?>
                             <option value="<?php echo htmlspecialchars($option, ENT_QUOTES, 'UTF-8'); ?>" <?php echo (string) ($_POST['food_service'] ?? '') === $option ? 'selected' : ''; ?>><?php echo htmlspecialchars($option, ENT_QUOTES, 'UTF-8'); ?></option>
                         <?php endforeach; ?>
@@ -148,6 +167,7 @@ ob_start();
                 <label>
                     <span>Rating</span>
                     <select name="rating" required>
+                        <?php // Render this conditional/dynamic template block. ?>
                         <?php for ($rating = 5; $rating >= 1; $rating--): ?>
                             <option value="<?php echo $rating; ?>" <?php echo (string) ($_POST['rating'] ?? '5') === (string) $rating ? 'selected' : ''; ?>><?php echo $rating; ?> Stars</option>
                         <?php endfor; ?>
@@ -160,14 +180,18 @@ ob_start();
                 <button type="submit"><i class="bi bi-send" aria-hidden="true"></i> Submit Remark</button>
             </form>
 
+            <!-- Page section for this part of the AfriSense interface. -->
             <section class="af-form-recent-reviews" aria-label="Recent public reviews">
+                <!-- Header block for this interface section. -->
                 <header>
                     <strong>Recent Public Reviews</strong>
                     <a href="#customer-reviews">View All</a>
                 </header>
+                <?php // Render this conditional/dynamic template block. ?>
                 <?php if ($remarks === []): ?>
                     <p>No published remarks yet.</p>
                 <?php endif; ?>
+                <?php // Render this conditional/dynamic template block. ?>
                 <?php foreach (array_slice($remarks, 0, 4) as $remark): ?>
                     <article>
                         <span>

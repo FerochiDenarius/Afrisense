@@ -7,20 +7,24 @@ $foodImageBase = $frontendBase . '/assets/images/foods';
 
 require_once __DIR__ . '/../includes/public_settings.php';
 
+// Defines the afrisense_menu_food_image helper used by this module.
 function afrisense_menu_food_image(string $frontendBase, ?string $image): string
 {
     $image = trim((string) $image);
     $relativeImage = ltrim(str_replace('\\', '/', $image), '/');
     $filename = basename($relativeImage);
 
+    // Guard this block so it only runs when the required condition is met.
     if ($image !== '' && is_file(__DIR__ . '/../assets/images/foods/' . $filename)) {
         return $frontendBase . '/assets/images/foods/' . $filename;
     }
 
+    // Guard this block so it only runs when the required condition is met.
     if ($relativeImage !== '' && is_file(__DIR__ . '/../uploads/' . $relativeImage)) {
         return $frontendBase . '/uploads/' . $relativeImage;
     }
 
+    // Guard this block so it only runs when the required condition is met.
     if ($filename !== '' && is_file(__DIR__ . '/../uploads/' . $filename)) {
         return $frontendBase . '/uploads/' . $filename;
     }
@@ -28,6 +32,7 @@ function afrisense_menu_food_image(string $frontendBase, ?string $image): string
     return $frontendBase . '/assets/images/foods/jollof-rice.png';
 }
 
+// Defines the afrisense_menu_icon helper used by this module.
 function afrisense_menu_icon(string $category): string
 {
     $category = strtolower($category);
@@ -51,6 +56,7 @@ $menuMessage = '';
 $menuOrderHref = afrisense_public_order_url($frontendBase);
 $menuBookingHref = afrisense_public_booking_url($frontendBase);
 
+// Run database/action work inside a guarded block so the page can fail gracefully.
 try {
     $pdo = afrisense_pdo();
 
@@ -67,11 +73,13 @@ try {
     $where = ['f.`availability` = :availability'];
     $params = ['availability' => 'Available'];
 
+    // Guard this block so it only runs when the required condition is met.
     if ($search !== '') {
         $where[] = '(f.`food_name` LIKE :search OR f.`description` LIKE :search OR c.`category_name` LIKE :search)';
         $params['search'] = '%' . $search . '%';
     }
 
+    // Guard this block so it only runs when the required condition is met.
     if ($categoryFilter !== '') {
         $where[] = 'c.`category_name` = :category';
         $params['category'] = $categoryFilter;
@@ -105,8 +113,10 @@ try {
 
 ob_start();
 ?>
+<!-- Page section for this part of the AfriSense interface. -->
 <section class="af-menu-hero">
     <div class="af-menu-hero-inner">
+        <!-- Navigation links for this interface. -->
         <nav aria-label="Breadcrumb">
             <a href="index.php">Home</a>
             <i class="bi bi-chevron-right" aria-hidden="true"></i>
@@ -118,13 +128,16 @@ ob_start();
     </div>
 </section>
 
+<!-- Page section for this part of the AfriSense interface. -->
 <section class="af-menu-page">
+    <!-- Header block for this interface section. -->
     <header class="af-page-heading">
         <p>Our Food Selection</p>
         <h2>Popular Menu Items</h2>
         <small>Browse customer favourites and order meals for dine-in, delivery, or private events.</small>
     </header>
 
+    <!-- Form block that submits this page workflow. -->
     <form class="af-menu-toolbar" action="menu.php" method="get">
         <label class="search" for="public_menu_search">
             <i class="bi bi-search" aria-hidden="true"></i>
@@ -133,6 +146,7 @@ ob_start();
         <label class="select" for="public_menu_category">
             <select id="public_menu_category" name="category">
                 <option value="">All Categories</option>
+                <?php // Render this conditional/dynamic template block. ?>
                 <?php foreach ($categories as $category): ?>
                     <?php $categoryName = (string) $category['category_name']; ?>
                     <option value="<?php echo htmlspecialchars($categoryName, ENT_QUOTES, 'UTF-8'); ?>" <?php echo $categoryFilter === $categoryName ? 'selected' : ''; ?>>
@@ -153,11 +167,13 @@ ob_start();
         </label>
     </form>
 
+    <!-- Navigation links for this interface. -->
     <nav class="af-menu-category-tabs" aria-label="Menu categories">
         <a class="<?php echo $categoryFilter === '' ? 'is-active' : ''; ?>" href="menu.php">
             <i class="bi bi-grid" aria-hidden="true"></i>
             All Menu
         </a>
+        <?php // Render this conditional/dynamic template block. ?>
         <?php foreach ($categories as $category): ?>
             <?php $categoryName = (string) $category['category_name']; ?>
             <a class="<?php echo $categoryFilter === $categoryName ? 'is-active' : ''; ?>" href="menu.php?category=<?php echo urlencode($categoryName); ?>">
@@ -167,14 +183,17 @@ ob_start();
         <?php endforeach; ?>
     </nav>
 
+    <?php // Render this conditional/dynamic template block. ?>
     <?php if ($menuMessage !== ''): ?>
         <div class="af-menu-empty"><?php echo htmlspecialchars($menuMessage, ENT_QUOTES, 'UTF-8'); ?></div>
     <?php endif; ?>
 
     <div class="af-public-menu-grid">
+        <?php // Render this conditional/dynamic template block. ?>
         <?php if ($menuItems === [] && $menuMessage === ''): ?>
             <div class="af-menu-empty">No menu items match your filters.</div>
         <?php endif; ?>
+        <?php // Render this conditional/dynamic template block. ?>
         <?php foreach ($menuItems as $item): ?>
             <?php
             $itemName = (string) ($item['food_name'] ?? 'Food item');
@@ -188,6 +207,7 @@ ob_start();
                 <div class="af-public-menu-card-body">
                     <h3><?php echo htmlspecialchars($itemName, ENT_QUOTES, 'UTF-8'); ?></h3>
                     <p><?php echo htmlspecialchars((string) ($item['description'] ?? 'Freshly prepared AfriSense meal.'), ENT_QUOTES, 'UTF-8'); ?></p>
+                    <!-- Footer block for this interface section. -->
                     <footer class="af-menu-card-footer">
                         <strong class="af-menu-price">GHC <?php echo htmlspecialchars(number_format((float) ($item['price'] ?? 0), 2), ENT_QUOTES, 'UTF-8'); ?></strong>
                         <a class="af-menu-order-btn" href="<?php echo htmlspecialchars($menuOrderHref, ENT_QUOTES, 'UTF-8'); ?>">Order Now <i class="bi bi-arrow-right" aria-hidden="true"></i></a>
@@ -197,6 +217,7 @@ ob_start();
         <?php endforeach; ?>
     </div>
 
+    <!-- Page section for this part of the AfriSense interface. -->
     <section class="af-menu-strip">
         <div>
             <h2>Need Catering for a Group?</h2>

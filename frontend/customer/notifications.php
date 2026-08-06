@@ -13,6 +13,7 @@ require_once __DIR__ . '/../auth/auth_bootstrap.php';
 $authUser = afrisense_require_customer();
 $authUserId = (int) ($authUser['id'] ?? 0);
 
+// Defines the afrisense_customer_notification_icon helper used by this module.
 function afrisense_customer_notification_icon(string $type): string
 {
     return match (strtolower($type)) {
@@ -24,6 +25,7 @@ function afrisense_customer_notification_icon(string $type): string
     };
 }
 
+// Defines the afrisense_customer_notification_tone helper used by this module.
 function afrisense_customer_notification_tone(string $type): string
 {
     return match (strtolower($type)) {
@@ -35,24 +37,29 @@ function afrisense_customer_notification_tone(string $type): string
     };
 }
 
+// Defines the afrisense_customer_time_ago helper used by this module.
 function afrisense_customer_time_ago(string $dateTime): string
 {
     $timestamp = strtotime($dateTime);
 
+    // Guard this block so it only runs when the required condition is met.
     if ($timestamp === false) {
         return '';
     }
 
     $diff = max(0, time() - $timestamp);
 
+    // Guard this block so it only runs when the required condition is met.
     if ($diff < 60) {
         return 'Just now';
     }
 
+    // Guard this block so it only runs when the required condition is met.
     if ($diff < 3600) {
         return (string) floor($diff / 60) . ' mins ago';
     }
 
+    // Guard this block so it only runs when the required condition is met.
     if ($diff < 86400) {
         return (string) floor($diff / 3600) . ' hours ago';
     }
@@ -60,16 +67,19 @@ function afrisense_customer_time_ago(string $dateTime): string
     return (string) floor($diff / 86400) . ' days ago';
 }
 
+// Defines the afrisense_customer_notification_count helper used by this module.
 function afrisense_customer_notification_count(PDO $pdo, int $userId, ?string $type = null, ?int $read = null): int
 {
     $where = ['`user_id` = :user_id'];
     $params = ['user_id' => $userId];
 
+    // Guard this block so it only runs when the required condition is met.
     if ($type !== null) {
         $where[] = '`notification_type` = :type';
         $params['type'] = $type;
     }
 
+    // Guard this block so it only runs when the required condition is met.
     if ($read !== null) {
         $where[] = '`is_read` = :is_read';
         $params['is_read'] = $read;
@@ -86,25 +96,31 @@ function afrisense_customer_notification_count(PDO $pdo, int $userId, ?string $t
     return (int) ($row['count_value'] ?? 0);
 }
 
+// Defines the afrisense_customer_notification_url helper used by this module.
 function afrisense_customer_notification_url(string $url): string
 {
     $url = trim($url);
 
+    // Guard this block so it only runs when the required condition is met.
     if ($url === '' || str_starts_with($url, '/Afrisense/frontend/admin/')) {
         return '#';
     }
 
+    // Guard this block so it only runs when the required condition is met.
     if (str_contains($url, '/customer/my-orders.php?view=') && !str_contains($url, '#')) {
         $url .= '#order-details';
     }
 
+    // Guard this block so it only runs when the required condition is met.
     if (str_starts_with($url, '/Afrisense/frontend/')) {
         return $url;
     }
 
+    // Guard this block so it only runs when the required condition is met.
     if (str_starts_with($url, 'customer/') || str_starts_with($url, 'landing/')) {
         $url = '/Afrisense/frontend/' . $url;
 
+        // Guard this block so it only runs when the required condition is met.
         if (str_contains($url, '/customer/my-orders.php?view=') && !str_contains($url, '#')) {
             $url .= '#order-details';
         }
@@ -115,14 +131,17 @@ function afrisense_customer_notification_url(string $url): string
     return '#';
 }
 
+// Defines the afrisense_redirect_customer_notifications helper used by this module.
 function afrisense_redirect_customer_notifications(string $typeFilter, string $statusFilter): never
 {
     $params = [];
 
+    // Guard this block so it only runs when the required condition is met.
     if ($typeFilter !== '') {
         $params['type'] = $typeFilter;
     }
 
+    // Guard this block so it only runs when the required condition is met.
     if ($statusFilter !== '') {
         $params['status'] = $statusFilter;
     }
@@ -137,13 +156,16 @@ $statusFilter = (string) ($_GET['status'] ?? '');
 $flashMessage = '';
 $flashType = 'success';
 
+// Run database/action work inside a guarded block so the page can fail gracefully.
 try {
     $pdo = afrisense_pdo();
 
+    // Handle submitted form actions before rendering the page.
     if (($_SERVER['REQUEST_METHOD'] ?? 'GET') === 'POST') {
         $action = (string) ($_POST['action'] ?? '');
         $notificationId = (int) ($_POST['notification_id'] ?? 0);
 
+        // Guard this block so it only runs when the required condition is met.
         if ($action === 'mark_all_read') {
             $statement = $pdo->prepare(
                 'UPDATE `notifications`
@@ -155,6 +177,7 @@ try {
             afrisense_redirect_customer_notifications($typeFilter, $statusFilter);
         }
 
+        // Guard this block so it only runs when the required condition is met.
         if ($notificationId > 0 && in_array($action, ['mark_read', 'delete', 'open'], true)) {
             $notificationStatement = $pdo->prepare(
                 'SELECT `action_url`
@@ -168,11 +191,13 @@ try {
             ]);
             $notification = $notificationStatement->fetch(PDO::FETCH_ASSOC);
 
+            // Guard this block so it only runs when the required condition is met.
             if ($notification === false) {
                 afrisense_flash_set('error', 'Notification could not be found.');
                 afrisense_redirect_customer_notifications($typeFilter, $statusFilter);
             }
 
+            // Guard this block so it only runs when the required condition is met.
             if ($action === 'delete') {
                 $statement = $pdo->prepare(
                     'DELETE FROM `notifications`
@@ -196,9 +221,11 @@ try {
                 'user_id' => $authUserId,
             ]);
 
+            // Guard this block so it only runs when the required condition is met.
             if ($action === 'open') {
                 $actionUrl = afrisense_customer_notification_url((string) ($notification['action_url'] ?? ''));
 
+                // Guard this block so it only runs when the required condition is met.
                 if ($actionUrl !== '#') {
                     header('Location: ' . $actionUrl);
                     exit;
@@ -217,15 +244,18 @@ try {
     $where = ['n.`user_id` = :user_id'];
     $params = ['user_id' => $authUserId];
 
+    // Guard this block so it only runs when the required condition is met.
     if (in_array($typeFilter, $validTypes, true)) {
         $where[] = 'n.`notification_type` = :type';
         $params['type'] = $typeFilter;
     }
 
+    // Guard this block so it only runs when the required condition is met.
     if ($statusFilter === 'read') {
         $where[] = 'n.`is_read` = 1';
     }
 
+    // Guard this block so it only runs when the required condition is met.
     if ($statusFilter === 'unread') {
         $where[] = 'n.`is_read` = 0';
     }
@@ -251,6 +281,7 @@ try {
     $unreadNotifications = afrisense_customer_notification_count($pdo, $authUserId, null, 0);
     $typeCounts = [];
 
+    // Iterate through the data needed for this block.
     foreach ($validTypes as $type) {
         $typeCounts[$type] = afrisense_customer_notification_count($pdo, $authUserId, $type);
     }
@@ -266,12 +297,15 @@ try {
 
 ob_start();
 ?>
+<!-- Page section for this part of the AfriSense interface. -->
 <section class="af-admin-menu-page af-notifications-page">
+    <!-- Header block for this interface section. -->
     <header class="af-admin-page-heading">
         <div>
             <h1>Notifications</h1>
             <p>Track order updates, booking confirmations, account alerts, and AfriSense messages.</p>
         </div>
+        <!-- Form block that submits this page workflow. -->
         <form action="notifications.php" method="post">
             <input type="hidden" name="action" value="mark_all_read">
             <button class="af-notification-read-btn" type="submit" <?php echo $unreadNotifications === 0 ? 'disabled' : ''; ?>>
@@ -281,21 +315,27 @@ ob_start();
         </form>
     </header>
 
+    <?php // Render this conditional/dynamic template block. ?>
     <?php if ($flashMessage !== ''): ?>
         <div class="af-admin-alert <?php echo htmlspecialchars($flashType, ENT_QUOTES, 'UTF-8'); ?>">
             <?php echo htmlspecialchars($flashMessage, ENT_QUOTES, 'UTF-8'); ?>
         </div>
     <?php endif; ?>
 
+    <?php // Render this conditional/dynamic template block. ?>
     <?php if ($loadError !== ''): ?>
         <div class="af-admin-alert error"><?php echo htmlspecialchars($loadError, ENT_QUOTES, 'UTF-8'); ?></div>
     <?php endif; ?>
 
+    <!-- Page section for this part of the AfriSense interface. -->
     <section class="af-notifications-workspace">
+        <!-- Page section for this part of the AfriSense interface. -->
         <section class="af-menu-table-card af-notifications-card">
+            <!-- Navigation links for this interface. -->
             <nav class="af-notification-tabs" aria-label="Notification filters">
                 <a class="<?php echo $typeFilter === '' && $statusFilter === '' ? 'active' : ''; ?>" href="notifications.php">All <span><?php echo htmlspecialchars((string) $totalNotifications, ENT_QUOTES, 'UTF-8'); ?></span></a>
                 <a class="<?php echo $statusFilter === 'unread' ? 'active' : ''; ?>" href="notifications.php?status=unread">Unread <span><?php echo htmlspecialchars((string) $unreadNotifications, ENT_QUOTES, 'UTF-8'); ?></span></a>
+                <?php // Render this conditional/dynamic template block. ?>
                 <?php foreach (['Order', 'Booking', 'Enquiry', 'System', 'Security'] as $type): ?>
                     <a class="<?php echo $typeFilter === $type ? 'active' : ''; ?>" href="notifications.php?type=<?php echo urlencode($type); ?>">
                         <?php echo htmlspecialchars($type === 'Enquiry' ? 'Enquiries' : $type . 's', ENT_QUOTES, 'UTF-8'); ?>
@@ -305,10 +345,12 @@ ob_start();
             </nav>
 
             <div class="af-notification-list">
+                <?php // Render this conditional/dynamic template block. ?>
                 <?php if ($notifications === []): ?>
                     <div class="af-empty-state">No notifications found.</div>
                 <?php endif; ?>
 
+                <?php // Render this conditional/dynamic template block. ?>
                 <?php foreach ($notifications as $notification): ?>
                     <?php
                     $type = (string) ($notification['notification_type'] ?? 'System');
@@ -331,20 +373,25 @@ ob_start();
                             <?php echo htmlspecialchars(afrisense_customer_time_ago((string) ($notification['created_at'] ?? '')), ENT_QUOTES, 'UTF-8'); ?>
                         </time>
                         <div class="af-customer-notification-actions">
+                            <?php // Render this conditional/dynamic template block. ?>
                             <?php if ($actionUrl !== '#'): ?>
+                                <!-- Form block that submits this page workflow. -->
                                 <form action="notifications.php" method="post">
                                     <input type="hidden" name="action" value="open">
                                     <input type="hidden" name="notification_id" value="<?php echo htmlspecialchars((string) ($notification['id'] ?? 0), ENT_QUOTES, 'UTF-8'); ?>">
                                     <button type="submit" title="Open notification" aria-label="Open notification"><i class="bi bi-arrow-up-right" aria-hidden="true"></i></button>
                                 </form>
                             <?php endif; ?>
+                            <?php // Render this conditional/dynamic template block. ?>
                             <?php if ($isUnread): ?>
+                                <!-- Form block that submits this page workflow. -->
                                 <form action="notifications.php" method="post">
                                     <input type="hidden" name="action" value="mark_read">
                                     <input type="hidden" name="notification_id" value="<?php echo htmlspecialchars((string) ($notification['id'] ?? 0), ENT_QUOTES, 'UTF-8'); ?>">
                                     <button type="submit" aria-label="Mark as read"><i class="bi bi-check2" aria-hidden="true"></i></button>
                                 </form>
                             <?php endif; ?>
+                            <!-- Form block that submits this page workflow. -->
                             <form action="notifications.php" method="post">
                                 <input type="hidden" name="action" value="delete">
                                 <input type="hidden" name="notification_id" value="<?php echo htmlspecialchars((string) ($notification['id'] ?? 0), ENT_QUOTES, 'UTF-8'); ?>">
@@ -356,14 +403,18 @@ ob_start();
             </div>
         </section>
 
+        <!-- Side panel with supporting information and actions. -->
         <aside class="af-notifications-side">
+            <!-- Page section for this part of the AfriSense interface. -->
             <section class="af-menu-panel">
                 <h2><i class="bi bi-funnel" aria-hidden="true"></i> Filter Notifications</h2>
+                <!-- Form block that submits this page workflow. -->
                 <form class="af-food-management-form" action="notifications.php" method="get">
                     <label>
                         <span>Type</span>
                         <select name="type">
                             <option value="">All Types</option>
+                            <?php // Render this conditional/dynamic template block. ?>
                             <?php foreach ($validTypes as $type): ?>
                                 <option value="<?php echo htmlspecialchars($type, ENT_QUOTES, 'UTF-8'); ?>" <?php echo $typeFilter === $type ? 'selected' : ''; ?>>
                                     <?php echo htmlspecialchars($type, ENT_QUOTES, 'UTF-8'); ?>
@@ -384,6 +435,7 @@ ob_start();
                 </form>
             </section>
 
+            <!-- Page section for this part of the AfriSense interface. -->
             <section class="af-menu-panel">
                 <h2>Notification Summary</h2>
                 <div class="af-notification-donut">

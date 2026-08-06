@@ -23,6 +23,7 @@ $customerItems = [
     ['key' => 'settings', 'label' => 'Settings', 'icon' => 'bi-gear', 'href' => $frontendBase . '/customer/settings.php'],
 ];
 ?>
+<!-- Side panel with supporting information and actions. -->
 <aside class="af-dashboard-sidebar af-customer-sidebar" data-sidebar>
     <a class="af-brand" href="<?php echo htmlspecialchars($frontendBase . '/customer/dashboard.php', ENT_QUOTES, 'UTF-8'); ?>" aria-label="AfriSense customer dashboard">
         <span class="af-brand-icon" aria-hidden="true"><?php echo afrisense_public_brand_icon_html($frontendBase); ?></span>
@@ -32,8 +33,10 @@ $customerItems = [
         </span>
     </a>
 
+    <!-- Navigation links for this interface. -->
     <nav class="af-side-nav" aria-label="Customer navigation">
         <p>Account</p>
+        <?php // Render this conditional/dynamic template block. ?>
         <?php foreach ($customerItems as $item): ?>
             <a class="<?php echo $activeCustomerPage === $item['key'] ? 'is-active' : ''; ?>" href="<?php echo htmlspecialchars($item['href'], ENT_QUOTES, 'UTF-8'); ?>">
                 <i class="bi <?php echo htmlspecialchars($item['icon'], ENT_QUOTES, 'UTF-8'); ?>" aria-hidden="true"></i>
