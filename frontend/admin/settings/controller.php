@@ -51,6 +51,8 @@ function afrisense_ensure_settings_rows(PDO $pdo): void
     $websiteColumns = [
         'logo' => 'VARCHAR(255) NULL AFTER `site_tagline`',
         'favicon' => 'VARCHAR(255) NULL AFTER `logo`',
+        'forest_green' => "VARCHAR(20) NULL DEFAULT '#0d241e' AFTER `secondary_color`",
+        'forest_green_2' => "VARCHAR(20) NULL DEFAULT '#0c231d' AFTER `forest_green`",
         'hero_image' => 'VARCHAR(255) NULL AFTER `hero_subtitle`',
     ];
 
@@ -131,15 +133,17 @@ function afrisense_ensure_settings_rows(PDO $pdo): void
     if (afrisense_fetch_first_row($pdo, 'website_settings') === []) {
         $statement = $pdo->prepare(
             'INSERT INTO `website_settings`
-                (`site_name`, `site_tagline`, `primary_color`, `secondary_color`, `hero_title`, `hero_subtitle`, `footer_text`)
+                (`site_name`, `site_tagline`, `primary_color`, `secondary_color`, `forest_green`, `forest_green_2`, `hero_title`, `hero_subtitle`, `footer_text`)
              VALUES
-                (:site_name, :site_tagline, :primary_color, :secondary_color, :hero_title, :hero_subtitle, :footer_text)'
+                (:site_name, :site_tagline, :primary_color, :secondary_color, :forest_green, :forest_green_2, :hero_title, :hero_subtitle, :footer_text)'
         );
         $statement->execute([
             'site_name' => 'AfriSense Food Services',
             'site_tagline' => 'Delicious meals, delivered with love.',
             'primary_color' => '#b77b1a',
             'secondary_color' => '#cc8f25',
+            'forest_green' => '#0d241e',
+            'forest_green_2' => '#0c231d',
             'hero_title' => 'Exceptional Food Memorable Moments',
             'hero_subtitle' => 'We provide delicious meals and professional catering services for all occasions.',
             'footer_text' => '(c) 2026 AfriSense Food Services. All rights reserved.',
@@ -194,6 +198,14 @@ function afrisense_ensure_settings_rows(PDO $pdo): void
 function afrisense_post_value(array $source, string $key, string $fallback = ''): string
 {
     return trim((string) ($source[$key] ?? $fallback));
+}
+
+// Normalise editable theme colors before saving them to the website settings table.
+function afrisense_settings_color_value(array $source, string $key, string $fallback): string
+{
+    $value = afrisense_post_value($source, $key, $fallback);
+
+    return preg_match('/^#[0-9a-fA-F]{6}$/', $value) === 1 ? strtolower($value) : $fallback;
 }
 
 // Defines the afrisense_social_post_value helper used by this module.
@@ -540,6 +552,8 @@ try {
                  `favicon` = :favicon,
                  `primary_color` = :primary_color,
                  `secondary_color` = :secondary_color,
+                 `forest_green` = :forest_green,
+                 `forest_green_2` = :forest_green_2,
                  `hero_title` = :hero_title,
                  `hero_subtitle` = :hero_subtitle,
                  `footer_text` = :footer_text,
@@ -552,8 +566,10 @@ try {
             'site_tagline' => afrisense_post_value($_POST, 'site_tagline', (string) ($website['site_tagline'] ?? '')),
             'logo' => $logoValue,
             'favicon' => $faviconValue,
-            'primary_color' => afrisense_post_value($_POST, 'primary_color', (string) ($website['primary_color'] ?? '#b77b1a')),
-            'secondary_color' => afrisense_post_value($_POST, 'secondary_color', (string) ($website['secondary_color'] ?? '#cc8f25')),
+            'primary_color' => afrisense_settings_color_value($_POST, 'primary_color', (string) ($website['primary_color'] ?? '#b77b1a')),
+            'secondary_color' => afrisense_settings_color_value($_POST, 'secondary_color', (string) ($website['secondary_color'] ?? '#cc8f25')),
+            'forest_green' => afrisense_settings_color_value($_POST, 'forest_green', (string) ($website['forest_green'] ?? '#0d241e')),
+            'forest_green_2' => afrisense_settings_color_value($_POST, 'forest_green_2', (string) ($website['forest_green_2'] ?? '#0c231d')),
             'hero_title' => afrisense_post_value($_POST, 'hero_title', (string) ($website['hero_title'] ?? 'Exceptional Food Memorable Moments')),
             'hero_subtitle' => afrisense_post_value($_POST, 'hero_subtitle', (string) ($website['hero_subtitle'] ?? '')),
             'footer_text' => afrisense_post_value($_POST, 'footer_text', (string) ($website['footer_text'] ?? '')),

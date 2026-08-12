@@ -1,0 +1,742 @@
+AFRISENSE FOOD SERVICES WEB APPLICATION REPORT
+
+Project Title:
+AfriSense Food Services Web Application
+
+Prepared For:
+CPS 218 - Web Development Technology II
+
+System Type:
+PHP and MySQL web application for food ordering, catering bookings, delivery management, customer support, and admin operations.
+
+================================================================================
+1. INTRODUCTION
+================================================================================
+
+AfriSense Food Services is a web-based food service management system developed to support online food ordering, catering service booking, customer enquiries, customer reviews, delivery assignment, notifications, live support, and administrative business control. The system supports both guest users and registered customers, while administrators manage the operational side of the platform from a secured admin dashboard.
+
+The application is built with PHP, MySQL, HTML, CSS, and JavaScript. It is designed to run in a XAMPP environment and includes first-run database setup support so the database can be created automatically when the project is copied to another machine and opened.
+
+The system separates public, customer, and administrator workflows. Public users can browse menus, place guest orders, book services, submit enquiries, and chat with support. Registered customers can manage orders, bookings, enquiries, support conversations, notifications, and account settings. Administrators can manage orders, bookings, foods, services, customers, users, roles, permissions, delivery, reports, settings, notifications, enquiries, remarks, gallery content, and support conversations.
+
+================================================================================
+2. PROBLEM STATEMENT
+================================================================================
+
+Many food service businesses still manage orders, bookings, customer complaints, delivery assignments, and notifications through manual methods such as phone calls, paper records, WhatsApp messages, or disconnected spreadsheets. These methods can cause lost orders, delayed responses, poor delivery tracking, difficulty confirming customer payments, weak record keeping, and limited visibility into business performance.
+
+AfriSense addresses this problem by providing one integrated system where customers and guests can place orders or bookings online, while administrators can manage the entire workflow from one dashboard. The system improves accuracy, speed, traceability, customer communication, and reporting.
+
+================================================================================
+3. PROJECT OBJECTIVES
+================================================================================
+
+Main Objective:
+To develop a complete food services web application that allows AfriSense to manage customer orders, bookings, support, delivery, and business administration from one centralized platform.
+
+Specific Objectives:
+1. To allow guests and registered customers to place food orders online.
+2. To allow customers to book catering or food service packages.
+3. To allow administrators to manage foods, services, orders, bookings, users, customers, delivery riders, permissions, and reports.
+4. To support Cash on Delivery, Mobile Money, Card Payment, Bank Transfer, and other configurable payment methods.
+5. To notify customers and admins through in-app notifications and email messages.
+6. To allow guests and customers to contact support agents through a support chat page.
+7. To support attachments, image/video previews, emoji input, live polling, and notification sounds in support conversations.
+8. To allow administrators to configure website settings such as colors, company details, payment settings, delivery settings, SMTP email settings, social links, and maintenance mode.
+9. To generate reports that help the business understand revenue, orders, bookings, customers, payment methods, and food performance.
+10. To provide role-based access control through roles and permissions.
+
+================================================================================
+4. SCOPE OF THE SYSTEM
+================================================================================
+
+The system covers the following functional areas:
+
+Public/Guest Area:
+- Homepage
+- Menu browsing
+- Guest cart
+- Guest checkout
+- Guest order placement
+- Guest payment page
+- Guest support chat
+- Public service booking
+- Public enquiries
+- Public remarks/reviews
+- Gallery
+- Contact page
+- Services page
+
+Customer Area:
+- Customer dashboard
+- Customer order placement
+- Customer cart
+- Customer payment
+- My orders
+- My bookings
+- Customer enquiries
+- Customer remarks
+- Customer support
+- Customer notifications
+- Customer profile/settings
+
+Admin Area:
+- Dashboard
+- Orders management
+- Bookings management
+- Delivery management
+- Delivery riders
+- Foods/menu management
+- Services/packages management
+- Customers management
+- Staff/users management
+- Roles management
+- Permissions management
+- Enquiries management
+- Reviews/remarks management
+- Gallery management
+- Reports
+- Notifications
+- Support inbox
+- Website/system settings
+
+Technical Scope:
+- PHP backend logic
+- MySQL database
+- Session-based authentication
+- SMTP email notifications
+- Dynamic settings from database
+- Reusable layouts/components
+- JavaScript enhancements for support, forms, modals, fullscreen, scroll preservation, and UI controls
+
+================================================================================
+5. SYSTEM USERS AND ACTORS
+================================================================================
+
+Guest User:
+A visitor who has not logged in. Guests can browse the website, place guest orders when enabled, make bookings, send enquiries, submit remarks, and use support chat.
+
+Customer:
+A registered user who can log in, place orders, pay, track order history, manage bookings, submit enquiries, receive notifications, and use customer support.
+
+Administrator:
+An admin user who can access the admin dashboard and manage all operational modules.
+
+Support Agent:
+A staff user or administrator assigned to respond to customer and guest support conversations.
+
+Delivery Rider:
+A user role assigned to handle deliveries, pickup, and delivery status updates.
+
+Manager/Staff:
+Internal users who may be given selected permissions depending on their role.
+
+================================================================================
+6. BUSINESS RULES
+================================================================================
+
+Authentication and Access Rules:
+1. Only authenticated users can access customer and admin dashboards.
+2. Customer accounts are redirected to customer pages.
+3. Admin/staff accounts are redirected to admin pages.
+4. Admin pages require an administrator or staff-type account.
+5. Roles and permissions determine which admin functions a staff user may access.
+6. Email verification is required for account verification workflows.
+
+Ordering Rules:
+1. Guests can place orders only when guest checkout is enabled in settings.
+2. Ordering is blocked when delivery/order settings make ordering unavailable.
+3. A cart must contain at least one food item before checkout.
+4. A valid customer name, email, phone number, delivery address, and payment method are required for guest orders.
+5. Logged-in customer orders are linked to the customer user account.
+6. Each food item in the cart creates an order row, allowing item-level tracking.
+7. Delivery fee is calculated from configured delivery settings, subtotal, and optional zone/address rules.
+8. Free delivery applies when subtotal reaches the configured free-delivery threshold.
+9. Cash on Delivery orders do not require online payment before moving to the next phase.
+10. Online payment methods such as Mobile Money, Card Payment, Bank Transfer, or configured gateways require the user to proceed through the payment flow.
+11. Paid/online orders can be auto-confirmed when the setting is enabled.
+12. Admin order status updates notify the customer through in-app notification and email when enabled.
+
+Payment Rules:
+1. Only payment methods enabled in settings are shown to customers.
+2. Disabled payment methods cannot be submitted successfully.
+3. Cash on Delivery is treated differently from online payment methods.
+4. Payment instructions are loaded from system settings.
+5. Payment status can be updated by admin actions.
+6. Email notification failures should not crash order placement.
+
+Booking Rules:
+1. Bookings require customer contact details, a selected service, event date/time, guest count, and location.
+2. New bookings are created with Pending status.
+3. Admins can update booking status to Pending, Confirmed, Completed, or Cancelled.
+4. Booking status updates notify the linked customer account when one exists.
+5. Cancelled bookings are excluded from booking revenue totals.
+
+Delivery Rules:
+1. Delivery assignment is connected to an order.
+2. Only users with delivery rider role should be assigned as riders.
+3. Delivery status can update the related order status.
+4. Payment-on-delivery amount and change can be recorded.
+5. Customers and riders can receive notifications about delivery updates.
+6. Delivery management uses assignment status when available and falls back to order status otherwise.
+
+Support Rules:
+1. Guests can open support conversations using a session guest token.
+2. Logged-in customers use their account identity for support conversations.
+3. Admin is the default support agent when no agent has been created.
+4. Support agent roles can handle support conversations.
+5. A message must contain text or an attachment before it is saved.
+6. Attachments are validated and stored with support messages.
+7. Image and video attachments show previews for sender and receiver.
+8. Support chat uses live polling so users do not need to refresh manually.
+9. Sent and received message sounds are supported.
+
+Notification Rules:
+1. Important actions create notifications for users, admins, customers, or riders.
+2. Notifications can be marked as read, opened, deleted, or marked all as read.
+3. Notification action URLs must be internal/safe before redirecting.
+4. Notification counters show unread activity in admin and customer interfaces.
+
+Settings Rules:
+1. Website settings control branding, colors, company information, social links, delivery settings, payment settings, SMTP settings, and maintenance mode.
+2. Theme colors are saved in the database and printed as CSS variables.
+3. Only valid hex color values are accepted for configurable colors.
+4. SMTP settings control email delivery.
+5. Maintenance mode can block public pages.
+6. Items per page controls pagination size in admin tables.
+7. Settings migration logic adds missing columns without destroying existing data.
+
+Security Rules:
+1. SQL queries use prepared statements for user input.
+2. Output is escaped with htmlspecialchars in page rendering.
+3. Passwords are hashed before storage.
+4. Reset and verification tokens are stored and validated.
+5. Uploads are validated before being moved into public upload folders.
+6. Role checks protect admin pages.
+
+================================================================================
+7. DATABASE DESIGN
+================================================================================
+
+Database Name:
+afrisense_db
+
+Main Tables:
+- users
+- roles
+- permissions
+- role_permissions
+- customers
+- food_categories
+- foods
+- orders
+- service_categories
+- services
+- bookings
+- delivery_assignments
+- enquiries
+- customer_remarks
+- testimonials
+- gallery
+- notifications
+- audit_logs
+- support_conversations
+- support_messages
+- support_attachments
+- website_settings
+- company_information
+- system_settings
+- about_us
+- newsletter_subscribers
+
+Important Relationships:
+1. roles.id -> users.role_id
+2. roles.id -> role_permissions.role_id
+3. permissions.id -> role_permissions.permission_id
+4. customers.id -> orders.customer_id
+5. foods.id -> orders.food_id
+6. food_categories.id -> foods.category_id
+7. customers.id -> bookings.customer_id
+8. services.id -> bookings.service_id
+9. service_categories.id -> services.category_id
+10. customers.id -> enquiries.customer_id
+11. orders.id -> delivery_assignments.order_id
+12. users.id -> notifications.user_id
+13. users.id -> notifications.created_by
+14. users.id -> audit_logs.user_id
+15. users.id -> gallery.uploaded_by
+16. support_conversations.id -> support_messages.conversation_id
+17. support_messages.id -> support_attachments.message_id
+18. customers.id -> testimonials.customer_id
+
+Design Notes:
+- The database separates users from customers. A user is an authentication account, while a customer stores customer profile/contact data used by orders, bookings, enquiries, and remarks.
+- Orders are item-level records, meaning one cart with multiple foods can create multiple order rows.
+- Role-based access is handled with roles, permissions, and role_permissions.
+- Support conversations are separated from support messages and attachments to support long-running chat history.
+- Settings are stored in separate website, company, and system settings tables so administrators can modify behavior without editing code.
+
+================================================================================
+8. SYSTEM WORKFLOWS
+================================================================================
+
+8.1 Guest Order Workflow
+1. Guest opens public order/menu page.
+2. Guest selects foods and adds them to session cart.
+3. Guest enters name, email, phone, delivery address, and payment method.
+4. System validates cart and customer details.
+5. System finds or creates a customer record.
+6. System calculates subtotal, delivery fee, and total.
+7. System inserts one order row for each cart item.
+8. System creates admin notifications.
+9. System sends customer email when email notifications are enabled.
+10. If Cash on Delivery is selected, the user is taken to order confirmation.
+11. If an online payment method is selected, the user proceeds through the payment flow.
+
+8.2 Registered Customer Order Workflow
+1. Customer logs in.
+2. Customer opens customer order page.
+3. Customer adds foods to cart.
+4. Customer provides delivery/payment details.
+5. System links order to the logged-in customer.
+6. System creates order rows.
+7. System notifies admins and customer.
+8. Customer can view the order in My Orders.
+
+8.3 Booking Workflow
+1. Guest or customer opens booking page.
+2. User selects service/package and enters event details.
+3. System validates contact, service, date, time, guest count, and location.
+4. System finds or creates a customer record.
+5. System inserts booking with Pending status.
+6. System notifies administrators.
+7. Admin reviews the booking.
+8. Admin updates status to Confirmed, Completed, or Cancelled.
+9. System notifies the linked customer account when available.
+
+8.4 Admin Order Management Workflow
+1. Admin opens Orders page.
+2. System loads order metrics, filters, paginated orders, and selected order details.
+3. Admin searches, filters, views, or scrolls the order list.
+4. Admin changes order status or payment status.
+5. System updates the order record.
+6. System creates customer notification.
+7. System sends customer email if enabled.
+
+8.5 Delivery Management Workflow
+1. Admin opens Delivery Management page.
+2. System loads orders with customer, payment, rider, and delivery assignment data.
+3. Admin selects/clicks an order.
+4. Admin assigns a delivery rider.
+5. System creates or updates delivery assignment.
+6. Admin updates delivery status.
+7. System updates order status according to delivery status.
+8. System notifies customer and rider.
+
+8.6 Support Chat Workflow
+1. Guest or customer opens support page.
+2. System loads existing conversation or creates a new one.
+3. System assigns default admin/agent.
+4. User sends text, emoji, image, video, or file attachment.
+5. System stores message and attachment.
+6. Agent receives conversation in admin support page.
+7. JavaScript polling fetches new messages automatically.
+8. Notification sounds play for sent and received messages.
+
+8.7 Settings Workflow
+1. Admin opens Web Settings.
+2. Admin changes branding, theme colors, delivery, payment, email, social, or maintenance values.
+3. System validates and saves settings.
+4. Theme helper prints saved colors as CSS variables.
+5. Public, customer, and admin pages reflect new settings.
+
+================================================================================
+9. SYSTEM ARCHITECTURE
+================================================================================
+
+Architecture Style:
+The system uses a PHP server-rendered architecture with reusable helpers, page controllers, backend models/controllers, MySQL database, and JavaScript enhancements.
+
+Layers:
+1. Presentation Layer:
+   - HTML/PHP pages in frontend/admin, frontend/customer, and frontend/landing.
+   - CSS files in frontend/assets/css.
+   - JavaScript files in frontend/assets/js.
+
+2. Application Logic Layer:
+   - frontend/auth/auth_bootstrap.php
+   - frontend/includes/public_settings.php
+   - frontend/includes/support_helpers.php
+   - frontend/includes/remarks_helpers.php
+   - frontend/admin page logic
+   - frontend/customer page logic
+   - frontend/landing page logic
+
+3. Backend/API Layer:
+   - backend/controllers
+   - backend/models
+   - backend/routes
+   - backend/middleware
+   - backend/helpers
+
+4. Data Layer:
+   - MySQL database afrisense_db
+   - sql/afrisense_db_schema.sql
+   - backend/config/database.php
+
+5. External Services:
+   - SMTP email server
+   - Browser File Upload API
+   - Browser Fullscreen API
+   - XAMPP Apache/MySQL runtime
+
+Architecture Notes:
+- Most user-facing pages are server-rendered PHP pages.
+- JavaScript improves interactivity but core workflows still submit to PHP.
+- Database settings control key behavior such as payments, delivery, theme colors, SMTP, and maintenance mode.
+- The database bootstrap supports first-run installation in XAMPP.
+
+================================================================================
+10. PLANTUML ER DIAGRAM CODE
+================================================================================
+
+Paste the following into a PlantUML editor:
+
+
+================================================================================
+11. PLANTUML USE CASE UML CODE
+================================================================================
+
+Paste the following into a PlantUML editor:
+
+@startuml
+title AfriSense Use Case Diagram
+left to right direction
+
+actor Guest
+actor Customer
+actor Administrator
+actor "Support Agent" as Agent
+actor "Delivery Rider" as Rider
+actor "SMTP Mail Server" as SMTP
+
+rectangle "AfriSense Web Application" {
+  usecase "Browse Homepage/Menu" as UC1
+  usecase "Place Guest Order" as UC2
+  usecase "Register Account" as UC3
+  usecase "Login" as UC4
+  usecase "Place Customer Order" as UC5
+  usecase "Make Booking" as UC6
+  usecase "Submit Enquiry" as UC7
+  usecase "Submit Remark/Review" as UC8
+  usecase "Open Support Chat" as UC9
+  usecase "Send Attachment/Emoji" as UC10
+  usecase "View Notifications" as UC11
+  usecase "Manage Orders" as UC12
+  usecase "Manage Bookings" as UC13
+  usecase "Manage Foods and Services" as UC14
+  usecase "Assign Delivery Rider" as UC15
+  usecase "Manage Users/Roles/Permissions" as UC16
+  usecase "Manage Settings" as UC17
+  usecase "View Reports" as UC18
+  usecase "Reply Support Chat" as UC19
+  usecase "Update Delivery Status" as UC20
+  usecase "Send Email Notification" as UC21
+}
+
+Guest --> UC1
+Guest --> UC2
+Guest --> UC3
+Guest --> UC6
+Guest --> UC7
+Guest --> UC8
+Guest --> UC9
+Guest --> UC10
+
+Customer --> UC4
+Customer --> UC5
+Customer --> UC6
+Customer --> UC7
+Customer --> UC8
+Customer --> UC9
+Customer --> UC10
+Customer --> UC11
+
+Administrator --> UC12
+Administrator --> UC13
+Administrator --> UC14
+Administrator --> UC15
+Administrator --> UC16
+Administrator --> UC17
+Administrator --> UC18
+Administrator --> UC19
+
+Agent --> UC19
+Rider --> UC20
+SMTP --> UC21
+
+UC2 ..> UC21 : triggers
+UC5 ..> UC21 : triggers
+UC12 ..> UC21 : status email
+UC13 ..> UC11 : status notification
+UC15 ..> UC11 : assignment notification
+@enduml
+
+================================================================================
+12. PLANTUML SYSTEM ARCHITECTURE CODE
+================================================================================
+
+Paste the following into a PlantUML editor:
+
+@startuml
+title AfriSense System Architecture
+skinparam componentStyle rectangle
+
+actor Guest
+actor Customer
+actor Admin
+actor "Support Agent" as Agent
+actor "Delivery Rider" as Rider
+
+node "Client Browser" {
+  component "HTML/CSS UI" as UI
+  component "JavaScript\nsupport.js, main.js,\nsettings.js, order.js" as JS
+}
+
+node "XAMPP Apache / PHP Runtime" {
+  component "Public Pages\nfrontend/landing" as PublicPages
+  component "Customer Pages\nfrontend/customer" as CustomerPages
+  component "Admin Pages\nfrontend/admin" as AdminPages
+  component "Auth Bootstrap\nfrontend/auth" as Auth
+  component "Shared Helpers\npublic_settings.php\ntheme.php\nsupport_helpers.php" as Helpers
+  component "Backend Controllers\nbackend/controllers" as Controllers
+  component "Backend Models\nbackend/models" as Models
+  component "Middleware\nbackend/middleware" as Middleware
+  component "Database Bootstrap\nbackend/config/database.php" as DBBootstrap
+}
+
+database "MySQL Database\nafrisense_db" as DB
+cloud "SMTP Mail Server" as Mail
+folder "Uploads\nimages, support files,\nsettings assets" as Uploads
+
+Guest --> UI
+Customer --> UI
+Admin --> UI
+Agent --> UI
+Rider --> UI
+
+UI --> JS
+UI --> PublicPages
+UI --> CustomerPages
+UI --> AdminPages
+
+PublicPages --> Auth
+CustomerPages --> Auth
+AdminPages --> Auth
+
+Auth --> Middleware
+PublicPages --> Helpers
+CustomerPages --> Helpers
+AdminPages --> Helpers
+
+AdminPages --> Controllers
+Controllers --> Models
+Middleware --> Models
+Models --> DB
+Helpers --> DB
+DBBootstrap --> DB
+
+Helpers --> Mail
+Auth --> Mail
+PublicPages --> Uploads
+CustomerPages --> Uploads
+AdminPages --> Uploads
+Helpers --> Uploads
+@enduml
+
+================================================================================
+13. PLANTUML CLASS/LOGIC UML CODE
+================================================================================
+
+Paste the following into a PlantUML editor:
+
+@startuml
+title AfriSense Main Backend Class Diagram
+
+class Database {
+  - host : string
+  - database : string
+  - username : string
+  - password : string
+  - connection : PDO
+  + getConnection() : PDO
+  - installDatabase(PDO) : void
+  - seedStarterData(PDO) : void
+}
+
+class BaseModel {
+  # pdo : PDO
+  + __construct(PDO)
+}
+
+class Auth {
+  + login(email, password) : array
+  + logout() : array
+  + isLoggedIn() : bool
+  + getCurrentUser() : array
+  + requireLogin() : array
+}
+
+class User {
+  + findById(id) : array
+  + findByEmail(email) : array
+  + all() : array
+  + create(data) : int
+  + update(id, data) : bool
+  + delete(id) : bool
+  + hasPermission(userId, permission) : bool
+  + getRole(userId) : array
+}
+
+class Role {
+  + all() : array
+  + create(data) : int
+  + update(id, data) : bool
+  + delete(id) : bool
+  + assignPermission(roleId, permissionId) : bool
+}
+
+class Permission {
+  + all() : array
+  + findByName(name) : array
+  + create(data) : int
+  + update(id, data) : bool
+  + delete(id) : bool
+}
+
+class Notification {
+  + allForUser(userId) : array
+  + create(data) : int
+  + markAsRead(id, userId) : bool
+  + markAllAsRead(userId) : int
+  + delete(id, userId) : bool
+  + unreadCount(userId) : int
+}
+
+class SystemSettings {
+  + all() : array
+  + get(key, default) : mixed
+  + set(key, value) : bool
+  + delete(key) : bool
+}
+
+class Dashboard {
+  + summary(userId) : array
+  + countTable(table) : int
+}
+
+class Validator {
+  + validate(data, rules) : bool
+  + getErrors() : array
+}
+
+class Upload {
+  + moveUploadedFile(file, directory, allowed) : string
+  + delete(path) : bool
+}
+
+class Response {
+  + success(message, data) : array
+  + error(message, status) : array
+}
+
+Database --> BaseModel : provides PDO
+BaseModel <|-- User
+BaseModel <|-- Role
+BaseModel <|-- Permission
+BaseModel <|-- Notification
+BaseModel <|-- SystemSettings
+BaseModel <|-- Dashboard
+Auth --> User
+User --> Role
+Role --> Permission
+Notification --> User
+Dashboard --> Notification
+@enduml
+
+================================================================================
+14. KEY MODULE EXPLANATION
+================================================================================
+
+Authentication Module:
+The authentication module manages login, logout, session user retrieval, role detection, customer registration, email verification, password reset, and role-based redirects.
+
+Ordering Module:
+The ordering module manages food browsing, cart storage, delivery fee calculation, guest/customer order validation, order insertion, payment method handling, notifications, and customer email updates.
+
+Booking Module:
+The booking module manages service selection, event details, booking submission, admin approval, booking status tracking, and customer notification.
+
+Delivery Module:
+The delivery module manages assigning riders to orders, updating delivery statuses, collecting Cash on Delivery amounts, synchronizing delivery and order statuses, and notifying customers/riders.
+
+Support Module:
+The support module manages guest/customer conversations, default agent assignment, message storage, attachments, image/video previews, polling, and message sounds.
+
+Settings Module:
+The settings module lets admins configure website identity, colors, company details, payment methods, delivery rules, email SMTP, social links, maintenance mode, and pagination settings.
+
+Notification Module:
+The notification module records system events for users and allows viewing, opening, marking read, marking all read, and deleting notifications.
+
+Roles and Permissions Module:
+The roles and permissions module controls access by connecting users to roles and roles to permissions.
+
+Reports Module:
+The reports module summarizes revenue, orders, bookings, customers, food performance, payment methods, and recent report activity.
+
+================================================================================
+15. NON-FUNCTIONAL REQUIREMENTS
+================================================================================
+
+Security:
+- Passwords must be hashed.
+- Admin pages require access control.
+- SQL queries should use prepared statements.
+- User output should be escaped before rendering.
+- Uploads should be validated.
+
+Usability:
+- The interface should be responsive and readable.
+- Buttons and actions should provide hover and cursor feedback.
+- Admin pages should show visible actions and support horizontal scrolling where tables are wide.
+- Support chat should update without full manual page refresh.
+
+Reliability:
+- The database should auto-install for fresh XAMPP copies.
+- Email failures should not crash core order workflows.
+- Missing images should fall back to default images.
+- Settings should have fallbacks if database values are missing.
+
+Maintainability:
+- Reusable layouts and components should be used.
+- Shared helpers should centralize repeated business rules.
+- Settings should control behavior instead of hardcoding values.
+- Comments and documentation should explain code blocks clearly.
+
+Performance:
+- Pagination should limit large admin lists.
+- Search filters should use targeted SQL conditions.
+- Support polling should be lightweight and return only needed updates.
+
+================================================================================
+16. CONCLUSION
+================================================================================
+
+AfriSense Food Services is a complete web-based food service management system that solves practical operational problems around food ordering, bookings, support, delivery, notifications, and administration. The system supports both guests and registered customers, while giving administrators a central dashboard to manage the business.
+
+The database design supports role-based access, customer records, item-level orders, service bookings, delivery assignments, support conversations, notifications, reports, and dynamic settings. The system architecture uses PHP, MySQL, reusable helpers, server-rendered pages, and JavaScript enhancements to provide a functional and maintainable web application suitable for a food services business.
+
+================================================================================
+END OF AFRISENSE REPORT
+================================================================================

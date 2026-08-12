@@ -1,0 +1,68 @@
+flowchart LR
+    Guest[Guest]
+    Customer[Customer]
+    Administrator[Administrator]
+    Agent[Support Agent]
+    Rider[Delivery Rider]
+    SMTP[SMTP Mail Server]
+
+    subgraph App[AfriSense Web Application]
+        UC1([Browse Homepage/Menu])
+        UC2([Place Guest Order])
+        UC3([Register Account])
+        UC4([Login])
+        UC5([Place Customer Order])
+        UC6([Make Booking])
+        UC7([Submit Enquiry])
+        UC8([Submit Remark/Review])
+        UC9([Open Support Chat])
+        UC10([Send Attachment/Emoji])
+        UC11([View Notifications])
+        UC12([Manage Orders])
+        UC13([Manage Bookings])
+        UC14([Manage Foods and Services])
+        UC15([Assign Delivery Rider])
+        UC16([Manage Users/Roles/Permissions])
+        UC17([Manage Settings])
+        UC18([View Reports])
+        UC19([Reply Support Chat])
+        UC20([Update Delivery Status])
+        UC21([Send Email Notification])
+    end
+
+    Guest --> UC1
+    Guest --> UC2
+    Guest --> UC3
+    Guest --> UC6
+    Guest --> UC7
+    Guest --> UC8
+    Guest --> UC9
+    Guest --> UC10
+
+    Customer --> UC4
+    Customer --> UC5
+    Customer --> UC6
+    Customer --> UC7
+    Customer --> UC8
+    Customer --> UC9
+    Customer --> UC10
+    Customer --> UC11
+
+    Administrator --> UC12
+    Administrator --> UC13
+    Administrator --> UC14
+    Administrator --> UC15
+    Administrator --> UC16
+    Administrator --> UC17
+    Administrator --> UC18
+    Administrator --> UC19
+
+    Agent --> UC19
+    Rider --> UC20
+    SMTP --> UC21
+
+    UC2 -. triggers .-> UC21
+    UC5 -. triggers .-> UC21
+    UC12 -. status email .-> UC21
+    UC13 -. status notification .-> UC11
+    UC15 -. assignment notification .-> UC11

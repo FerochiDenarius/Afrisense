@@ -203,7 +203,7 @@
     height: 58px;
     border: 0;
     border-radius: 6px;
-    background: linear-gradient(135deg, var(--af-green), #062f26);
+    background: linear-gradient(135deg, var(--af-green), var(--af-green-2));
     color: #fff;
     display: grid;
     grid-template-columns: 1fr 32px;

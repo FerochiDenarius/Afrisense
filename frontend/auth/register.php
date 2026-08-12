@@ -1,5 +1,6 @@
 <?php
 require_once __DIR__ . '/auth_bootstrap.php';
+require_once __DIR__ . '/../includes/theme.php';
 
 $authMessage = null;
 
@@ -32,6 +33,7 @@ if (($_SERVER['REQUEST_METHOD'] ?? 'GET') === 'POST') {
 
     <link rel="stylesheet" href="../assets/css/register.css">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+    <?php afrisense_print_theme_style(); ?>
 </head>
 <body>
     <!-- Header block for this interface section. -->

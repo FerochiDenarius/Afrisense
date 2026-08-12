@@ -1,7 +1,7 @@
 <?php
 require_once __DIR__ . '/../includes/public_settings.php';
 
-$frontendBase = $frontendBase ?? '/Afrisense/frontend';
+$frontendBase = $frontendBase ?? afrisense_frontend_url();
 $activePage = $activePage ?? '';
 $publicHeaderMode = $publicHeaderMode ?? 'default';
 $customerName = $customerName ?? 'Guest User';
@@ -23,7 +23,7 @@ $publicProfileName = $publicUser === null
     : trim((string) ($publicUser['fullname'] ?? $publicUser['name'] ?? $customerName));
 $publicProfileHref = $publicUser !== null && function_exists('afrisense_dashboard_url')
     ? afrisense_dashboard_url($publicUser)
-    : $frontendBase . '/auth/login.php';
+    : afrisense_auth_url('login.php');
 $publicCartCount = max(0, (int) ($cartCount ?? 0));
 $publicOrderHref = afrisense_public_order_url($frontendBase);
 $publicCartHref = afrisense_public_cart_url($frontendBase);
@@ -31,22 +31,22 @@ $publicBookingHref = afrisense_public_booking_url($frontendBase);
 $publicSupportHref = afrisense_public_support_url($frontendBase);
 
 $navItems = [
-    'home' => ['label' => 'Home', 'href' => $frontendBase . '/landing/index.php'],
-    'menu' => ['label' => 'Menu', 'href' => $frontendBase . '/landing/menu.php'],
-    'gallery' => ['label' => 'Gallery', 'href' => $frontendBase . '/landing/gallery.php'],
-    'catering' => ['label' => 'Catering Packages', 'href' => $frontendBase . '/landing/services.php'],
+    'home' => ['label' => 'Home', 'href' => afrisense_landing_url('index.php')],
+    'menu' => ['label' => 'Menu', 'href' => afrisense_landing_url('menu.php')],
+    'gallery' => ['label' => 'Gallery', 'href' => afrisense_landing_url('gallery.php')],
+    'catering' => ['label' => 'Catering Packages', 'href' => afrisense_landing_url('services.php')],
     'booking' => ['label' => 'Book a Service', 'href' => $publicBookingHref],
-    'remarks' => ['label' => 'Reviews', 'href' => $frontendBase . '/landing/remarks.php'],
-    'about' => ['label' => 'About Us', 'href' => $frontendBase . '/landing/about.php'],
+    'remarks' => ['label' => 'Reviews', 'href' => afrisense_landing_url('remarks.php')],
+    'about' => ['label' => 'About Us', 'href' => afrisense_landing_url('about.php')],
     'support' => ['label' => 'Support', 'href' => $publicSupportHref],
-    'contact' => ['label' => 'Contact Us', 'href' => $frontendBase . '/landing/contact.php'],
+    'contact' => ['label' => 'Contact Us', 'href' => afrisense_landing_url('contact.php')],
 ];
 ?>
 <!-- Header block for this interface section. -->
 <header class="af-public-header" data-navbar>
     <!-- Navigation links for this interface. -->
     <nav class="af-navbar" aria-label="Primary navigation">
-        <a class="af-header-brand" href="<?php echo htmlspecialchars($frontendBase . '/landing/index.php', ENT_QUOTES, 'UTF-8'); ?>" aria-label="AfriSense home">
+        <a class="af-header-brand" href="<?php echo htmlspecialchars(afrisense_landing_url('index.php'), ENT_QUOTES, 'UTF-8'); ?>" aria-label="AfriSense home">
             <span class="af-brand-icon" aria-hidden="true"><?php echo afrisense_public_brand_icon_html($frontendBase); ?></span>
             <span>
                 <strong><?php echo htmlspecialchars(str_replace(' Food Services', '', $siteName), ENT_QUOTES, 'UTF-8'); ?></strong>
@@ -86,7 +86,7 @@ $navItems = [
                         <span><?php echo htmlspecialchars((string) $publicCartCount, ENT_QUOTES, 'UTF-8'); ?></span>
                     </a>
                     <a class="af-public-profile" href="<?php echo htmlspecialchars($publicProfileHref, ENT_QUOTES, 'UTF-8'); ?>" aria-label="Customer profile">
-                        <img src="<?php echo htmlspecialchars($frontendBase . '/assets/images/foodimage.jpeg', ENT_QUOTES, 'UTF-8'); ?>" alt="">
+                        <img src="<?php echo htmlspecialchars(afrisense_asset_url('images/foodimage.jpeg'), ENT_QUOTES, 'UTF-8'); ?>" alt="">
                         <strong><?php echo htmlspecialchars($publicProfileName !== '' ? $publicProfileName : 'My Account', ENT_QUOTES, 'UTF-8'); ?></strong>
                         <i class="bi bi-chevron-down" aria-hidden="true"></i>
                     </a>
@@ -94,8 +94,8 @@ $navItems = [
                     <a class="af-order-btn" href="<?php echo htmlspecialchars($publicOrderHref, ENT_QUOTES, 'UTF-8'); ?>">Order Now</a>
                     <?php // Render this conditional/dynamic template block. ?>
                     <?php if ($publicUser === null): ?>
-                        <a class="af-auth-btn" href="<?php echo htmlspecialchars($frontendBase . '/auth/login.php', ENT_QUOTES, 'UTF-8'); ?>">Login</a>
-                        <a class="af-auth-btn is-register" href="<?php echo htmlspecialchars($frontendBase . '/auth/register.php', ENT_QUOTES, 'UTF-8'); ?>">Register</a>
+                        <a class="af-auth-btn" href="<?php echo htmlspecialchars(afrisense_auth_url('login.php'), ENT_QUOTES, 'UTF-8'); ?>">Login</a>
+                        <a class="af-auth-btn is-register" href="<?php echo htmlspecialchars(afrisense_auth_url('register.php'), ENT_QUOTES, 'UTF-8'); ?>">Register</a>
                     <?php else: ?>
                         <a class="af-auth-btn is-register" href="<?php echo htmlspecialchars($publicProfileHref, ENT_QUOTES, 'UTF-8'); ?>">Account</a>
                     <?php endif; ?>

@@ -1,0 +1,1259 @@
+AFRISENSE LOGIC CODE DOCUMENTATION
+Generated for: AfriSense Food Services web application
+Scope: PHP backend, frontend PHP pages, shared helpers, customer/admin/guest workflows, support live chat, settings, notifications, and JavaScript behavior.
+
+================================================================================
+1. SYSTEM OVERVIEW
+================================================================================
+
+AfriSense is a PHP/MySQL food services system that supports guest ordering, customer accounts, admin management, bookings, enquiries, reviews, delivery assignment, notifications, configurable web settings, and live support conversations.
+
+The application is split into these main areas:
+- backend/: reusable API-style controllers, models, helpers, middleware, database bootstrap, and routes.
+- frontend/auth/: login, registration, email verification, password reset, role redirects, email sending, and shared auth helpers.
+- frontend/includes/: public settings, theme variables, support helpers, remarks helpers, and shared public business rules.
+- frontend/admin/: admin dashboard and management pages for orders, bookings, delivery, foods, users, roles, permissions, support, reports, settings, gallery, enquiries, and remarks.
+- frontend/customer/: logged-in customer pages for ordering, payment, cart, bookings, enquiries, remarks, notifications, profile, settings, and support.
+- frontend/landing/: public guest pages for homepage, menu, cart, checkout, order, payment, booking, support, gallery, remarks, services, enquiries, and contact.
+- frontend/layouts and frontend/components/: reusable page shells, sidebars, headers, footer, navbar, alerts, modals, and loaders.
+- frontend/assets/js/: client-side behavior such as support polling, form validation, cart animation, fullscreen controls, modal behavior, scroll restoration, and settings UI helpers.
+
+================================================================================
+2. MAIN REQUEST LIFECYCLE
+================================================================================
+
+Most PHP pages follow this sequence:
+1. Page metadata is set, such as title, active menu item, CSS files, and script files.
+2. Required shared helpers are loaded with require_once.
+3. The user role is checked, for example afrisense_require_admin() or afrisense_require_customer().
+4. Helper functions are declared for page-specific formatting, query generation, image lookup, or status mapping.
+5. Request values are read from GET or POST and normalized.
+6. POST actions are handled before the page renders.
+7. Database queries load the records, metrics, counts, and detail panels needed for the page.
+8. Data is rendered into HTML using htmlspecialchars to reduce XSS risk.
+9. A shared layout file is required, or the page renders its own full HTML shell if it is standalone.
+
+The repeated "Guard this block" comments mean the block only runs when a required condition is true, such as a valid status, a valid user id, a non-empty search term, or a valid POST action.
+
+The repeated "Iterate through the data needed for this block" comments mean the code loops through an array of records, options, uploaded files, filters, settings, or database rows and applies the same logic to each item.
+
+================================================================================
+3. DATABASE BOOTSTRAP AND INSTALL LOGIC
+================================================================================
+
+File: backend/config/database.php
+
+Class Database centralizes all PDO connection logic for the app.
+
+__construct() stores database connection settings from constructor arguments or environment defaults, with afrisense_db as the default database name.
+
+getConnection() returns the existing PDO connection when one has already been created, otherwise it connects to MySQL and installs the database if needed.
+
+The first try block attempts the normal database connection for an already-installed system.
+
+The unknown-database catch block connects to MySQL without selecting a database, imports sql/afrisense_db_schema.sql, and reconnects to the created database.
+
+databaseIsEmpty() checks information_schema to detect a database that exists but has no tables.
+
+installDatabase() loads the SQL schema, rewrites the bundled database name to the configured database name, executes the schema, and runs starter data seeds.
+
+seedStarterData() inserts roles, the default admin user, website/system settings, foods, and services.
+
+seedRoles() creates the default roles such as Administrator, Manager, Kitchen Staff, Cashier, Delivery Rider, Customer Support, Customer, and Corporate Customer.
+
+seedAdminUser() creates the first administrator account for first-run testing.
+
+seedSettings() creates default website_settings, company_information, and system_settings records so pages can render before manual setup.
+
+seedFoodCatalog() and seedServiceCatalog() insert starter foods and services for a fresh XAMPP copy.
+
+File: sql/afrisense_db_schema.sql
+
+The SQL schema defines the database tables used by the whole system, including users, roles, role_permissions, permissions, customers, foods, food_categories, orders, bookings, services, enquiries, notifications, audit_logs, support_conversations, support_messages, support_attachments, website_settings, company_information, and system_settings.
+
+================================================================================
+4. AUTHENTICATION, ROLES, EMAIL, AND SESSION LOGIC
+================================================================================
+
+File: frontend/auth/auth_bootstrap.php
+
+afrisense_pdo() creates and caches the PDO database connection by using backend/config/database.php.
+
+afrisense_auth() creates and caches the Auth model so every page uses the same login service.
+
+afrisense_current_user() returns the logged-in user stored in the session.
+
+afrisense_role_name() resolves a user's current role from the database instead of trusting stale session data.
+
+afrisense_is_customer(), afrisense_is_administrator(), and afrisense_is_support_staff() classify the current user for role-based routing.
+
+afrisense_dashboard_url() sends customers to the customer dashboard and admin/staff users to the admin dashboard.
+
+afrisense_require_user() redirects unauthenticated visitors to login.
+
+afrisense_require_customer() ensures the current user is a customer before customer pages continue.
+
+afrisense_require_admin() ensures the current user is not a customer before admin pages continue.
+
+afrisense_ensure_role() creates a role if it does not exist and returns its id.
+
+afrisense_customer_role_id() and afrisense_delivery_rider_role_id() locate or create the roles used during registration and rider creation.
+
+afrisense_unique_username() generates a username from the email/name and appends a number when the base username already exists.
+
+afrisense_register_customer() validates registration form values, creates the customer role if needed, creates the user, stores email verification data, and sends the verification email.
+
+afrisense_flash_set() and afrisense_flash_get() store one-time success/error messages in the session.
+
+afrisense_app_url() builds the base URL used in generated email links.
+
+afrisense_admin_items_per_page() reads the configured pagination size from settings and falls back to a safe default.
+
+afrisense_mail_database_settings() loads SMTP and company email values from the database.
+
+afrisense_smtp_response() reads SMTP server responses until the full response is received.
+
+afrisense_smtp_command() sends one SMTP command and checks that the response code is accepted.
+
+afrisense_smtp_message() builds the MIME email payload.
+
+afrisense_send_smtp_email() opens the SMTP connection, handles TLS/authentication when configured, and sends the email.
+
+afrisense_send_email() is the main email wrapper used by verification, password reset, and order notification flows.
+
+afrisense_send_verification_email() sends a verification link to a new customer account.
+
+afrisense_verify_email_token() validates a verification token and marks the user email as verified.
+
+afrisense_request_password_reset() creates a password reset token and emails the reset link.
+
+afrisense_reset_password() validates a reset token, checks password confirmation, hashes the new password, and clears the reset token.
+
+File: backend/models/Auth.php
+
+Auth::login() verifies credentials, stores the user in session, and updates last login time.
+
+Auth::logout() clears the session user.
+
+Auth::isLoggedIn() checks whether the current session contains an authenticated user.
+
+Auth::getCurrentUser() returns the current session user.
+
+Auth::requireLogin() redirects or blocks access when a user is not authenticated.
+
+================================================================================
+5. BACKEND CONTROLLERS, MODELS, HELPERS, AND MIDDLEWARE
+================================================================================
+
+File: backend/models/BaseModel.php
+
+BaseModel stores the PDO connection and provides shared query/execute behavior used by model classes.
+
+File: backend/models/User.php
+
+User::findById(), findByEmail(), and getUserByEmail() load users by id or email.
+
+User::all() returns all users for administrative listing.
+
+User::create() inserts a user after normalizing fields and password values.
+
+User::update() changes existing user fields.
+
+User::delete() removes a user record.
+
+User::updateLastLogin() stores the latest login timestamp.
+
+User::hasPermission() checks whether the user's role grants a named permission.
+
+User::getRole() loads the role record connected to the user.
+
+File: backend/models/Role.php
+
+Role manages role CRUD and links roles to permissions.
+
+File: backend/models/Permission.php
+
+Permission manages permission CRUD and lookup by name/id.
+
+File: backend/models/Notification.php
+
+Notification loads, creates, marks read, marks all read, deletes, and counts unread notifications for a user.
+
+File: backend/models/SystemSettings.php
+
+SystemSettings reads, writes, and deletes general system settings while adapting to the actual key/value column names in the table.
+
+File: backend/models/Dashboard.php
+
+Dashboard returns summary counts for dashboard metrics and guards table-count queries by allowing only approved table names.
+
+File: backend/controllers/AuthController.php
+
+AuthController wraps login, logout, and current-user responses for API-style routes.
+
+File: backend/controllers/UserController.php
+
+UserController validates request data and calls the User model to list, show, create, update, or delete users.
+
+File: backend/controllers/RoleController.php
+
+RoleController lists roles, creates/updates/deletes roles, and assigns or removes permissions from roles.
+
+File: backend/controllers/PermissionController.php
+
+PermissionController lists, creates, updates, and deletes permission records.
+
+File: backend/controllers/NotificationController.php
+
+NotificationController creates notifications and handles read/delete actions for a user.
+
+File: backend/controllers/SettingsController.php
+
+SettingsController loads, updates, and deletes system setting values.
+
+File: backend/controllers/DashboardController.php
+
+DashboardController returns dashboard summaries through the Dashboard model.
+
+File: backend/helpers/Response.php
+
+Response formats success/error arrays consistently for controller and route output.
+
+File: backend/helpers/Validator.php
+
+Validator applies rules such as required, email, password, phone, min length, and max length, then stores field-specific errors.
+
+File: backend/helpers/Upload.php
+
+Upload validates uploaded files, moves accepted files into the target directory, and deletes old files when needed.
+
+File: backend/helpers/Session.php
+
+Session starts sessions and provides helper methods for setting, getting, and removing session values.
+
+File: backend/helpers/Security.php
+
+Security contains security helpers such as escaping, hashing, token generation, or similar reusable security operations.
+
+File: backend/middleware/AuthMiddleware.php
+
+AuthMiddleware blocks unauthenticated requests and returns the authenticated user when access is allowed.
+
+File: backend/middleware/AdminMiddleware.php
+
+AdminMiddleware blocks non-admin users from admin-only backend routes.
+
+File: backend/middleware/PermissionMiddleware.php
+
+PermissionMiddleware checks a named permission before allowing a protected route to continue.
+
+File: backend/routes/api.php
+
+api.php maps HTTP paths and methods to controller actions for auth, dashboard, users, roles, permissions, notifications, and settings.
+
+File: backend/routes/web.php
+
+web.php provides simple web-route handling and fallback responses for backend route access.
+
+================================================================================
+6. PUBLIC SETTINGS, THEME, PAYMENT, DELIVERY, AND NOTIFICATION HELPERS
+================================================================================
+
+File: frontend/includes/public_settings.php
+
+afrisense_public_settings() loads website, company, and system settings once and caches them for the request.
+
+afrisense_public_setting() returns one setting value from a selected settings group with a fallback.
+
+afrisense_public_upload_url() converts stored upload paths into browser URLs.
+
+afrisense_public_logo_url() and afrisense_public_favicon_url() resolve uploaded branding assets.
+
+afrisense_public_brand_icon_html() renders the uploaded logo when available, otherwise renders a Bootstrap icon fallback.
+
+afrisense_public_safe_map_embed() sanitizes Google map iframe HTML before output.
+
+afrisense_public_site_in_maintenance() checks whether public pages should be hidden.
+
+afrisense_enforce_public_site_status() stops public page access and renders a maintenance screen when the site is offline.
+
+afrisense_public_currency() returns the selected currency.
+
+afrisense_public_money() formats money values consistently.
+
+afrisense_public_setting_bool() and afrisense_public_setting_float() normalize system settings to bool/float values.
+
+afrisense_public_delivery_zones() decodes configured delivery zones and returns defaults when the saved value is invalid.
+
+afrisense_public_delivery_fee() calculates the delivery fee from subtotal, address, free-delivery threshold, and zone rules.
+
+afrisense_public_service_fee() returns the configured service fee.
+
+afrisense_public_free_delivery_over() returns the configured free-delivery threshold.
+
+afrisense_public_delivery_time() returns the default delivery time label shown to customers.
+
+afrisense_public_delivery_instructions() returns delivery instruction text from settings.
+
+afrisense_public_delivery_block_reason() explains why delivery is unavailable.
+
+afrisense_public_delivery_available() checks whether delivery, pickup, or other delivery modes are enabled.
+
+afrisense_enforce_public_delivery_available() stops order/payment pages when delivery is unavailable.
+
+afrisense_public_payment_methods() returns enabled payment choices such as Mobile Money, Card Payment, Bank Transfer, and Cash on Delivery.
+
+afrisense_public_payment_method_allowed() validates that a submitted payment method is enabled.
+
+afrisense_public_paid_order_status() returns Pending for cash-on-delivery orders and a paid/confirmed flow for online payment methods.
+
+afrisense_public_payment_instruction() returns the payment instruction message shown to customers.
+
+afrisense_public_guest_checkout_enabled() checks whether guests can place orders without logging in.
+
+afrisense_public_order_url(), afrisense_public_cart_url(), afrisense_public_booking_url(), and afrisense_public_support_url() choose guest or customer URLs based on login state and settings.
+
+afrisense_enforce_guest_checkout_enabled() redirects guests to login when guest checkout is disabled.
+
+afrisense_public_payment_method_icon(), label(), and hint() translate payment method values into display content.
+
+afrisense_public_mobile_money_networks() returns enabled mobile money networks.
+
+afrisense_public_create_admin_notifications() creates notifications for admin users about new customer activity.
+
+afrisense_public_order_customer_contact() loads the email/name/phone contact tied to an order.
+
+afrisense_public_send_order_customer_email() sends an order-status email to a customer contact.
+
+afrisense_public_send_order_customer_email_for_order() loads the order contact and sends the status email.
+
+afrisense_public_tel_href() converts phone numbers into tel: links.
+
+afrisense_public_social_links() returns enabled social media links for the footer and public pages.
+
+File: frontend/includes/theme.php
+
+afrisense_theme_color() accepts only full hex colors and falls back when a saved value is invalid.
+
+afrisense_theme_style_block() reads colors from website settings and prints CSS variables used by public, admin, customer, order, and auth pages.
+
+afrisense_print_theme_style() echoes the dynamic theme style block in layouts or standalone pages.
+
+================================================================================
+7. ADMIN BOOKINGS PAGE LOGIC
+================================================================================
+
+File: frontend/admin/bookings.php
+
+The first block sets page metadata, loads admin CSS, loads auth helpers, requires admin access, stores the admin user id, and reads the configured items-per-page value.
+
+afrisense_booking_status_class() converts booking statuses into CSS-safe status classes such as confirmed, delivered, cancelled, or pending.
+
+afrisense_count_bookings() counts all bookings when no status is provided and counts only one booking status when a status filter is provided.
+
+afrisense_booking_url() starts from the current query string, applies new filter or pagination overrides, removes empty values, rebuilds the query string, and returns a bookings.php URL with an optional anchor.
+
+Detailed explanation of the example block:
+- $params = $_GET copies the current URL filters so existing search/status/page values are preserved.
+- foreach ($overrides as $key => $value) loops through only the values the page wants to change.
+- if ($value === null || $value === '') removes a parameter when the new value is empty, which prevents stale filters from staying in the URL.
+- else $params[$key] = (string) $value stores the override as a query parameter when it has a value.
+- http_build_query($params) safely converts the final filter array into a URL query string.
+- The return line builds the final bookings.php link and attaches the anchor when one is provided.
+
+afrisense_booking_customer_user_id() joins bookings, customers, and users to find the logged-in account that matches the booking customer by email or phone.
+
+afrisense_booking_notify_customer() creates an in-app notification for the customer when an admin changes a booking status.
+
+The valid status block defines the allowed booking statuses so invalid form submissions cannot set unsupported values.
+
+The filter setup block reads status, search, page, offset, flash message, and flash type values before database work starts.
+
+The try block opens the database connection and prepares arrays for WHERE clauses and query parameters.
+
+The POST update_status block validates the booking id and next status, updates the booking_status field, sets a flash message, and notifies the customer only when the update changes a row.
+
+The status filter block adds a WHERE condition only when the selected status is one of the allowed statuses.
+
+The search filter block adds a multi-column LIKE condition for booking id, customer name, phone, email, and service name.
+
+The fromSql block centralizes the bookings/customers/services joins so the count query and list query use the same filtering structure.
+
+The count query calculates how many filtered rows exist, then totalPages, page, and offset are recalculated to keep pagination valid.
+
+The bookings SELECT query loads booking rows with customer details, service name, service price, event date/time, location, guests, and status.
+
+The metric queries count total, pending, confirmed, completed, and cancelled bookings.
+
+The booking revenue query sums service prices for all non-cancelled bookings.
+
+The top services query ranks services by booking count for the side panel.
+
+The catch block resets all page variables to safe empty values and shows a MySQL-related load error instead of crashing the page.
+
+The render block displays header actions, flash messages, metric cards, filters, status tabs, booking table rows, row status forms, pagination, and top services.
+
+================================================================================
+8. ADMIN ORDERS PAGE LOGIC
+================================================================================
+
+File: frontend/admin/orders.php
+
+The setup block loads admin styles, auth helpers, public settings, and the admin user context.
+
+afrisense_order_status_class() maps order statuses into UI classes.
+
+afrisense_payment_status_class() maps payment statuses into UI classes.
+
+afrisense_order_image() resolves a food image path and falls back to a default food image when the stored image is missing.
+
+afrisense_count_orders() counts all orders or orders with one status.
+
+afrisense_order_url() preserves current filters while changing specific query parameters such as page, status, or selected order.
+
+afrisense_order_status_actions() returns the allowed next order actions based on the current order status.
+
+afrisense_order_payment_actions() returns the allowed payment actions based on the current payment status.
+
+afrisense_order_action_form() renders a small action form for a status/payment button.
+
+afrisense_order_customer_user_id() finds the user account connected to the order customer.
+
+afrisense_order_customer_contact() loads the customer's name, email, and phone for notification delivery.
+
+afrisense_order_email_customer() sends an email notification about the order update.
+
+afrisense_order_notify_customer() creates an in-app notification and attempts email delivery for the customer.
+
+The POST action block handles order status changes and payment status changes, then redirects or refreshes the list with a flash message.
+
+The filter/query block searches order id, customer, phone, email, food, payment, and status fields.
+
+The detail block loads a selected order row so the admin can view details without leaving the list page.
+
+The render block displays metrics, filters, horizontally scrollable order table, row actions, pagination, and detail panel.
+
+================================================================================
+9. ADMIN DELIVERY MANAGEMENT LOGIC
+================================================================================
+
+File: frontend/admin/delivery-management.php
+
+afrisense_delivery_tables() ensures the delivery assignment table exists before the page uses it.
+
+afrisense_delivery_status_class() maps delivery statuses such as Assigned, Picked Up, In Transit, Delivered, Returned, or Cancelled into UI classes.
+
+afrisense_delivery_payment_class() maps payment method labels into display classes.
+
+afrisense_delivery_money() formats delivery money amounts.
+
+afrisense_delivery_effective_status_sql() returns SQL that prefers delivery assignment status when present and falls back to the order status.
+
+afrisense_delivery_url() preserves delivery filters and changes selected query parameters.
+
+afrisense_delivery_notify() inserts notifications for customers or riders.
+
+afrisense_delivery_customer_user_id() finds the customer account connected to an order.
+
+afrisense_delivery_assignment() inserts or updates rider assignment data for an order.
+
+afrisense_delivery_order_status_for_delivery() maps delivery status changes back to the order status workflow.
+
+The POST action block assigns riders, updates delivery status, payment-on-delivery amounts, notes, and notification records.
+
+The filter block searches order id, customer, phone, address, rider, payment method, status, and date range.
+
+The list query joins orders, customers, riders, and delivery_assignments to build the delivery table.
+
+The details query loads one selected delivery/order record for the right side panel.
+
+The render block shows metrics, filters, delivery rows, clickable orders, assignment controls, pagination, and delivery details.
+
+================================================================================
+10. ADMIN SUPPORT LOGIC
+================================================================================
+
+File: frontend/admin/support.php
+
+The setup block requires an admin or support staff user, creates support tables if missing, and loads the selected support conversation.
+
+afrisense_admin_support_notify_customer() sends an in-app notification to the customer when the admin replies.
+
+The POST reply block validates the conversation, saves the message, saves optional attachments, and notifies the customer.
+
+The conversation query loads support conversations assigned to the current agent or visible to administrators.
+
+The render block displays conversation list, chat messages, attachment previews, emoji controls, composer input, and send button.
+
+File: frontend/support/live.php
+
+afrisense_support_live_json() returns JSON and ends the request.
+
+afrisense_support_live_user() returns the logged-in user or null for guests.
+
+afrisense_support_live_response() returns conversation HTML, latest message id, incoming message id, and sent-message metadata.
+
+afrisense_support_live_latest_admin_conversation() finds the latest admin conversation when no conversation id is provided.
+
+The poll action block returns updated chat messages for customer, guest, admin, or agent contexts.
+
+The send action block validates the sender context, creates or loads the conversation, stores the message and attachment, and returns updated HTML.
+
+================================================================================
+11. SHARED SUPPORT HELPER LOGIC
+================================================================================
+
+File: frontend/includes/support_helpers.php
+
+afrisense_support_tables() creates support_conversations, support_messages, and support_attachments if they are missing.
+
+afrisense_support_default_agent() chooses a support agent, falling back to an administrator when no agent user exists.
+
+afrisense_support_is_agent() checks whether the current user role is allowed to act as a support agent.
+
+afrisense_support_customer_for_user() finds or creates the customer record linked to a logged-in customer user.
+
+afrisense_support_guest_token() stores a stable guest support token in session.
+
+afrisense_support_unique_token() avoids token collision with another conversation.
+
+afrisense_support_find_conversation() finds an existing conversation for a logged-in user or guest token.
+
+afrisense_support_create_conversation() creates a new conversation, assigns a default agent, stores guest/customer metadata, and inserts a starter message.
+
+afrisense_support_get_conversation() loads one support conversation by id.
+
+afrisense_support_add_message() inserts a support message and updates the parent conversation timestamp/status.
+
+afrisense_support_upload_attachment() validates and stores uploaded image/video/file attachments, then inserts attachment metadata.
+
+afrisense_support_attachment_kind() classifies an attachment as image, video, or file.
+
+afrisense_support_attachment_html() renders the correct HTML preview for an attachment.
+
+afrisense_support_message_html() renders one chat bubble with sender, time, text, and attachments.
+
+afrisense_support_messages_html() renders the whole message stream for a conversation.
+
+afrisense_support_last_message_id() returns the latest message id for polling.
+
+afrisense_support_last_incoming_message_id() returns the latest message id from another sender for notification sounds.
+
+afrisense_support_notify_customer_reply() notifies the customer about admin replies.
+
+afrisense_support_notify_agent() notifies the assigned agent/admin about customer or guest messages.
+
+afrisense_support_messages() loads messages and their attachments for a conversation.
+
+afrisense_support_conversation_label() creates a friendly label for the conversation date.
+
+afrisense_support_time() formats support message timestamps.
+
+================================================================================
+12. ADMIN SETTINGS LOGIC
+================================================================================
+
+File: frontend/admin/settings/controller.php
+
+afrisense_fetch_first_row() returns the first row from a settings table.
+
+afrisense_column_exists() checks information_schema to see whether a settings column exists.
+
+afrisense_ensure_column() adds a missing settings column without touching existing columns.
+
+afrisense_ensure_settings_rows() ensures website, company, and system settings columns and starter rows exist.
+
+afrisense_post_value() trims a text input value.
+
+afrisense_settings_color_value() accepts only valid hex colors before saving theme values.
+
+afrisense_social_post_value() preserves existing social values when the active settings section is not social.
+
+afrisense_post_bool_setting() preserves a boolean setting unless its section is being saved.
+
+afrisense_post_text_setting() preserves a text setting unless its section is being saved.
+
+afrisense_post_decimal_setting() preserves a decimal setting unless its section is being saved.
+
+afrisense_default_delivery_zones() creates default delivery-zone rows.
+
+afrisense_delivery_zones() decodes saved delivery zones and falls back to defaults.
+
+afrisense_post_delivery_zones() converts posted delivery-zone rows into JSON for storage.
+
+afrisense_upload_settings_asset() validates logo/favicon uploads and moves them into the settings upload directory.
+
+afrisense_settings_asset_url() converts a stored settings image path into a public URL.
+
+The save block updates website settings, company information, system settings, email settings, payment settings, delivery settings, and maintenance settings in one transaction.
+
+File: frontend/admin/settings/index.php
+
+The index page chooses the active settings section, renders the settings navigation tabs, and includes the correct section file.
+
+Files under frontend/admin/settings/sections/
+
+general.php renders website text and color fields including gold and forest-green theme values.
+
+company.php renders company identity, contact, location, logo, favicon, and miscellaneous company fields.
+
+payment.php renders gateway/payment method switches and refund/cancellation settings.
+
+delivery.php renders delivery fees, delivery times, enabled delivery modes, and delivery zones.
+
+email.php renders SMTP configuration and email notification switches.
+
+social.php renders social links and live preview behavior.
+
+seo.php maps SEO fields to existing website settings values.
+
+maintenance.php renders site status, timezone, items-per-page, and notification options.
+
+================================================================================
+13. ADMIN USERS, ROLES, AND PERMISSIONS LOGIC
+================================================================================
+
+File: frontend/admin/users.php
+
+afrisense_count_users() counts users for dashboard metrics and filters.
+
+afrisense_user_role_class() maps roles into UI badge classes.
+
+afrisense_admin_user_form_value() safely returns a submitted form value after validation errors.
+
+afrisense_admin_user_url() preserves current user filters and applies overrides.
+
+The POST block creates, edits, deletes, activates, or deactivates users and assigns roles.
+
+File: frontend/admin/roles.php
+
+afrisense_role_icon() chooses an icon for a role.
+
+afrisense_role_tone() chooses a color tone for a role.
+
+afrisense_role_permission_count() estimates how many permissions belong to a role category.
+
+afrisense_role_permission_level() turns a permission count into a low/medium/high access label.
+
+afrisense_role_description() returns a useful role description when the database description is missing.
+
+The page lists roles, role counts, role summaries, and quick actions.
+
+File: frontend/admin/permissions.php
+
+The setup block defines every supported permission grouped by module.
+
+The role seed block ensures standard roles exist, including Delivery Rider and Customer Support.
+
+The permission seed block ensures every named permission exists in the permissions table.
+
+The role-permission sync block grants default permission sets to each role.
+
+The POST block saves permission changes for the selected role.
+
+The render block displays roles, selected role information, permission modules, permission summary, quick actions, and legend.
+
+================================================================================
+14. ADMIN FOODS, SERVICES, GALLERY, CUSTOMERS, ENQUIRIES, REMARKS, REPORTS
+================================================================================
+
+File: frontend/admin/foods.php
+
+The setup block loads admin styles, requires admin access, and prepares form/filter state.
+
+Image upload logic validates uploaded food images and stores accepted files.
+
+The POST create/update/delete blocks maintain food records, categories, images, prices, availability, and status.
+
+The query block loads foods with categories, metrics, and filtered table rows.
+
+The render block displays food metrics, filters, food table, create/edit form, category controls, and actions.
+
+File: frontend/admin/services.php
+
+The services page manages service/package records used by public booking flows.
+
+The page loads services, handles add/edit/delete actions, and displays status/availability controls.
+
+File: frontend/admin/gallery.php
+
+afrisense_gallery_post() reads sanitized POST values.
+
+afrisense_gallery_category_class() maps gallery categories to UI classes.
+
+afrisense_gallery_image_info() resolves image paths and missing-image status.
+
+afrisense_gallery_upload_image() validates and moves uploaded gallery images.
+
+afrisense_gallery_uploaded_files() normalizes single and multiple uploaded files into one iterable array.
+
+afrisense_gallery_format_size() displays file sizes in human-readable units.
+
+afrisense_gallery_url() builds URLs that preserve filters.
+
+The page handles upload, update, delete, bulk selection, filtering, and gallery metrics.
+
+File: frontend/admin/customers.php
+
+afrisense_customer_stage_label() and afrisense_customer_stage_class() convert customer activity into readable stage labels and classes.
+
+afrisense_customer_count() runs filtered customer count queries.
+
+The page loads customer profiles, order/booking totals, contact details, and customer-stage metrics.
+
+File: frontend/admin/enquiries.php
+
+afrisense_enquiry_statuses() returns allowed enquiry statuses.
+
+afrisense_enquiry_status_class() and status_label() normalize status display.
+
+afrisense_enquiry_type() derives an enquiry type from subject text.
+
+afrisense_enquiry_type_class() maps enquiry type to UI color.
+
+afrisense_enquiry_filters() reads filters from the query string.
+
+afrisense_enquiry_url() preserves filters while changing page/view/action values.
+
+afrisense_enquiry_where_sql() builds the SQL WHERE clause for filters.
+
+afrisense_count_enquiries() counts enquiries by status.
+
+afrisense_find_enquiry() loads one enquiry for the detail panel.
+
+afrisense_redirect_enquiries() redirects back to the same filtered enquiry page.
+
+The POST block marks enquiries read, updates status, replies, deletes, or opens selected rows.
+
+File: frontend/admin/remarks.php
+
+afrisense_remark_image() resolves a remark image.
+
+afrisense_remark_status_class() maps review status to a UI class.
+
+afrisense_remark_url() builds filtered review URLs.
+
+afrisense_remark_stars() renders rating stars.
+
+The page reviews, approves, rejects, filters, and displays customer remarks/testimonials.
+
+File: frontend/admin/reports.php
+
+afrisense_report_money() formats report currency values.
+
+afrisense_report_count() counts rows in allowed report tables.
+
+afrisense_report_metric_delta() formats growth percentages.
+
+afrisense_report_food_image() resolves report food images.
+
+The report page loads metrics for revenue, orders, bookings, customers, top foods, payment methods, and recent reports.
+
+================================================================================
+15. ADMIN DASHBOARD AND NOTIFICATIONS LOGIC
+================================================================================
+
+File: frontend/admin/dashboard.php
+
+The setup block requires admin access, loads support helpers, and identifies the admin name/role.
+
+afrisense_dashboard_count() counts records from approved dashboard tables only.
+
+afrisense_dashboard_order_status_count() counts orders by one status.
+
+afrisense_dashboard_percent() calculates status percentages for the chart.
+
+afrisense_dashboard_food_image() resolves food images for recent/top sections.
+
+The query block loads total orders, bookings, customers, enquiries, unread notifications, pending support conversations, revenue, order status counts, recent orders, and top services.
+
+The render block displays metrics, charts, recent orders, available services, quick actions, topbar icons, and sidebar navigation.
+
+File: frontend/admin/notifications.php
+
+afrisense_notification_icon() chooses an icon for notification type.
+
+afrisense_notification_tone() chooses a visual tone for notification type.
+
+afrisense_time_ago() formats timestamps into relative labels.
+
+afrisense_count_notifications() counts all/unread/type-specific notifications.
+
+afrisense_admin_notification_url() validates internal notification action URLs.
+
+afrisense_admin_notification_open_url() marks a notification as read and returns the safe action URL.
+
+afrisense_redirect_admin_notifications() redirects back to the filtered notification page.
+
+afrisense_admin_notification_page_url() preserves filters while changing page/action values.
+
+The POST block handles mark-all-read, mark-read, delete, and open notification actions.
+
+================================================================================
+16. PUBLIC GUEST ORDER, CART, CHECKOUT, AND PAYMENT LOGIC
+================================================================================
+
+File: frontend/landing/order.php
+
+afrisense_guest_food_image() resolves food images for menu cards and cart rows.
+
+afrisense_guest_cart() reads the guest cart from session.
+
+afrisense_save_guest_cart() stores the guest cart back into session after cleanup.
+
+afrisense_guest_cart_count() totals item quantities.
+
+afrisense_guest_post() reads trimmed POST values.
+
+afrisense_guest_category_filter() builds a category filter SQL clause.
+
+afrisense_guest_customer_id() finds or creates a customer record for the guest using email/phone.
+
+afrisense_guest_order_notifications() creates admin notifications for new guest orders.
+
+The cart POST blocks add items, increase/decrease quantities, remove items, clear cart, and save notes.
+
+The place-order block validates customer details, payment method, cart contents, and delivery address.
+
+The order creation loop creates one order row per cart food item, calculates subtotal/delivery/total, and sets status based on payment method.
+
+Cash on Delivery orders continue directly to order success without forcing online payment.
+
+Online payment methods route through the payment flow and show payment instructions.
+
+File: frontend/landing/cart.php
+
+afrisense_guest_cart_image() resolves cart item images.
+
+The page displays guest cart items, totals, delivery fee, and links into checkout/payment flow.
+
+File: frontend/landing/checkout.php
+
+The checkout page gathers guest contact, delivery address, and payment selection before order placement.
+
+File: frontend/landing/payment.php
+
+afrisense_guest_payment_image() resolves payment summary images.
+
+afrisense_guest_payment_customer_id() finds or creates the guest customer record.
+
+afrisense_guest_payment_notify_admins() notifies admins after payment/order submission.
+
+The POST block validates checkout data and payment method, creates order rows, sends customer email, and clears checkout/cart session values.
+
+================================================================================
+17. PUBLIC BOOKING, ENQUIRY, SUPPORT, REMARKS, MENU, AND GALLERY LOGIC
+================================================================================
+
+File: frontend/landing/booking.php
+
+afrisense_booking_post() reads trimmed booking form values.
+
+afrisense_booking_customer_id() finds or creates a customer from the booking contact information.
+
+The POST block validates name, email, phone, selected service, event date/time, guest count, and location.
+
+The insert block creates a booking with Pending status and notifies admins.
+
+The render block shows booking form, service options, event summary, and validation messages.
+
+File: frontend/landing/enquiry_helpers.php
+
+afrisense_public_enquiry_customer_id() finds or creates a customer for an enquiry.
+
+afrisense_submit_public_enquiry() validates public enquiry form data, inserts the enquiry, and notifies admins.
+
+File: frontend/landing/support.php
+
+The page creates or loads a guest support conversation using the guest session token.
+
+The POST block validates guest contact/message data, creates the conversation if needed, saves the message and attachment, and notifies the agent.
+
+The render block displays support information, messages, attachment preview, emoji controls, and composer.
+
+File: frontend/landing/remarks.php
+
+The page uses remarks helpers to submit public customer reviews and display approved remarks.
+
+File: frontend/landing/menu.php
+
+afrisense_menu_food_image() resolves menu food images.
+
+afrisense_menu_icon() chooses an icon for each food category.
+
+The page loads menu categories and food records for public browsing.
+
+File: frontend/landing/gallery.php
+
+afrisense_public_gallery_image() resolves public gallery images.
+
+afrisense_public_gallery_tag_class() maps gallery categories into tag classes.
+
+The page displays approved gallery items.
+
+File: frontend/landing/index.php
+
+The homepage loads public settings, company contact information, service/food previews, support links, and theme variables.
+
+================================================================================
+18. CUSTOMER ORDERING, PAYMENT, CART, BOOKINGS, ENQUIRIES, REMARKS, NOTIFICATIONS
+================================================================================
+
+File: frontend/customer/orders.php
+
+afrisense_customer_order_image() resolves food images.
+
+afrisense_customer_cart() reads the logged-in customer's cart from session.
+
+afrisense_save_customer_cart() stores the logged-in customer's cart after cleanup.
+
+afrisense_customer_cart_count() totals cart quantities.
+
+afrisense_customer_filter_sql() builds food category filter SQL.
+
+afrisense_customer_id_for_order() finds or creates the customer row linked to the logged-in user.
+
+afrisense_customer_admin_notifications() notifies admins when a customer places an order.
+
+The POST action block updates cart state or places an order.
+
+The order creation block creates orders from cart items and sends customer/admin notifications.
+
+File: frontend/customer/payment.php
+
+afrisense_customer_payment_image() resolves payment summary images.
+
+afrisense_customer_payment_customer_id() finds or creates the customer row for the logged-in user.
+
+afrisense_customer_payment_notify_admins() notifies admins when payment/order placement completes.
+
+The payment POST block validates cart and payment details, creates order rows, sends email, and clears checkout state.
+
+File: frontend/customer/cart.php
+
+afrisense_customer_cart_image() resolves cart item images.
+
+afrisense_customer_cart_customer() loads the customer row linked to the logged-in user.
+
+The page displays cart items, delivery fee, subtotal, and checkout actions.
+
+File: frontend/customer/my-orders.php
+
+afrisense_my_orders_customer() loads the customer record linked to the user.
+
+afrisense_my_orders_status_class() maps order status into a class.
+
+afrisense_my_orders_payment_class() maps payment status into a class.
+
+afrisense_my_orders_image() resolves order item images.
+
+afrisense_my_orders_fetch_items() loads grouped order items for the customer's order history.
+
+File: frontend/customer/my-bookings.php
+
+afrisense_customer_booking_post() reads booking form values.
+
+afrisense_customer_booking_customer() loads the customer row linked to the user.
+
+afrisense_customer_booking_customer_id() finds or creates the customer row for a booking.
+
+afrisense_customer_booking_status_class() maps booking status into a class.
+
+The POST block creates customer bookings and notifies admins.
+
+File: frontend/customer/enquiries.php
+
+afrisense_customer_enquiry_customer() loads the customer row for the user.
+
+afrisense_customer_enquiry_customer_id() creates a customer row when needed.
+
+afrisense_customer_enquiry_status_class() and label() normalize enquiry status output.
+
+afrisense_customer_enquiry_excerpt() shortens long enquiry text.
+
+afrisense_customer_enquiry_filters() reads enquiry filter values.
+
+afrisense_customer_enquiry_url() preserves filters while changing selected parameters.
+
+afrisense_customer_notify_admins() notifies admins when the customer submits an enquiry.
+
+afrisense_customer_enquiry_where() builds SQL filters for the customer's enquiry list.
+
+File: frontend/customer/remarks.php
+
+The customer remarks page uses remarks helpers to submit and list customer feedback.
+
+File: frontend/customer/notifications.php
+
+afrisense_customer_notification_icon() chooses a notification icon.
+
+afrisense_customer_notification_tone() chooses notification color/tone.
+
+afrisense_customer_time_ago() formats notification timestamps.
+
+afrisense_customer_notification_count() counts filtered notifications.
+
+afrisense_customer_notification_url() validates action URLs.
+
+afrisense_redirect_customer_notifications() redirects back to the filtered notification page.
+
+The POST block marks read, marks all read, deletes, or opens notifications.
+
+File: frontend/customer/settings.php
+
+The settings page lets customers update profile data, password, email verification, and notification preferences.
+
+File: frontend/customer/support.php
+
+The customer support page loads or creates a support conversation for the logged-in customer and uses the shared support view.
+
+================================================================================
+19. REMARKS AND REVIEWS SHARED LOGIC
+================================================================================
+
+File: frontend/includes/remarks_helpers.php
+
+afrisense_remarks_samples() returns sample remarks used when the database has no records.
+
+afrisense_remarks_ensure_table() creates the remarks table if it is missing.
+
+afrisense_remarks_seed_samples() inserts sample remarks only when needed.
+
+afrisense_remarks_customer_for_user() finds the customer row linked to the user.
+
+afrisense_remarks_image() resolves uploaded customer remark images.
+
+afrisense_remarks_status_class() maps remark status into UI classes.
+
+afrisense_remarks_excerpt() shortens long text.
+
+afrisense_remarks_stars() renders rating stars.
+
+afrisense_remarks_food_options() returns food/service names for review filters.
+
+afrisense_remarks_fetch() loads remarks with filters and optionally includes samples.
+
+afrisense_remarks_submit() validates, inserts, and notifies admins about a new remark.
+
+================================================================================
+20. LAYOUTS AND COMPONENTS
+================================================================================
+
+File: frontend/layouts/admin_layout.php
+
+The admin layout prints meta tags, CSS links, dynamic theme variables, admin sidebar, admin header, page content, and scripts.
+
+File: frontend/layouts/customer_layout.php
+
+The customer layout prints customer shell UI, customer sidebar, header, page content, dynamic theme variables, and scripts.
+
+File: frontend/layouts/public_layout.php
+
+The public layout prints public meta tags, canonical/favicon tags, navbar, page content, footer, dynamic theme variables, and scripts.
+
+File: frontend/components/admin_sidebar.php
+
+The admin sidebar renders navigation links and marks the active admin page.
+
+File: frontend/components/customer_sidebar.php
+
+The customer sidebar renders account navigation links and marks the active customer page.
+
+File: frontend/components/admin_header.php
+
+The admin header renders search, notification badges, fullscreen control, and admin profile information.
+
+File: frontend/components/customer_header.php
+
+The customer header renders search, order tracking, notifications, and customer profile information.
+
+File: frontend/components/navbar.php
+
+The public navbar renders brand/logo, public navigation, phone link, support link, and mobile menu controls.
+
+File: frontend/components/footer.php
+
+The footer renders company information, social links, contact details, and footer navigation from settings.
+
+File: frontend/components/alerts.php
+
+Alerts render flash success/error/status messages consistently.
+
+File: frontend/components/modal.php
+
+Modal markup is used by shared JavaScript to open and close dialogs.
+
+================================================================================
+21. JAVASCRIPT LOGIC
+================================================================================
+
+File: frontend/assets/js/main.js
+
+The footer accordion block opens and closes footer groups on small screens.
+
+The scroll restoration block preserves page position after POST action forms so action buttons do not jump the page to anchors.
+
+The hash stripping block removes anchors from POST targets before submit to stop browser jump behavior.
+
+The fullscreen block connects buttons with data-fullscreen-toggle to the browser Fullscreen API.
+
+The pageshow block restores scroll position when navigating back from browser cache.
+
+File: frontend/assets/js/support.js
+
+insertAtCursor() inserts an emoji into the active message input without replacing the full message.
+
+attachmentKind() classifies selected files as image, video, or file.
+
+tone(), sentSound(), and receivedSound() play message sent/received sounds with audio fallbacks.
+
+activeInput() finds the active chat input for the current support page.
+
+messageIds(), lastMessageId(), and lastIncomingMessageId() track message ids for polling and notification sounds.
+
+liveUrl() builds the support live endpoint URL for poll/send actions.
+
+The emoji block opens the emoji picker and inserts clicked emoji into the composer.
+
+The attachment block opens the file picker, generates image/video/file previews, and allows removing a selected file.
+
+The submit block sends messages and attachments through fetch without a full page refresh.
+
+The poll block repeatedly fetches new messages and plays a notification sound when a new incoming message appears.
+
+File: frontend/assets/js/payment-method.js
+
+updatePaymentFlow() shows only the selected payment panel, disables hidden payment inputs, and changes guidance for cash versus online payments.
+
+The change listener updates the payment form whenever the user selects another payment method.
+
+File: frontend/assets/js/order.js
+
+The cart panel block opens and closes the cart/checkout panel.
+
+The add-to-cart animation block gives add-to-cart buttons hover/click feedback and resets animation state after it ends.
+
+The category select block reloads the menu with the selected category filter.
+
+File: frontend/assets/js/orders.js
+
+The admin/customer orders script opens order panels, closes panels, and submits sort changes.
+
+File: frontend/assets/js/settings.js
+
+The social preview block updates enabled social accounts in the settings preview.
+
+The delivery-zone block adds and removes delivery zone rows in the settings form.
+
+File: frontend/assets/js/booking-contact.js
+
+The date/time helpers format booking inputs.
+
+The character counter block updates text counters for textarea fields.
+
+The booking summary block mirrors selected service, date, time, and guests into the booking summary panel.
+
+The validation block marks invalid fields and prevents submit until required booking fields are valid.
+
+File: frontend/assets/js/modal.js
+
+The modal script opens modals from trigger buttons, closes them from close controls, and supports Escape-key closing.
+
+File: frontend/assets/js/alerts.js
+
+The alerts script dismisses alerts manually or automatically after a timeout.
+
+File: frontend/assets/js/sidebar.js and navbar.js
+
+These scripts open and close sidebar/mobile navigation controls.
+
+File: frontend/assets/js/gallery.js
+
+The gallery script tracks selected gallery checkboxes and updates the selected count.
+
+File: frontend/assets/js/admin-enquiries.js
+
+The admin enquiries script handles select-all checkboxes, selected counts, mark-read submit, and sort changes.
+
+File: frontend/assets/js/auth-recovery.js
+
+The auth recovery script toggles password visibility and shows password strength feedback.
+
+File: frontend/assets/js/login.js and register.js
+
+These scripts toggle password visibility and handle auth-card selection UI.
+
+================================================================================
+22. CROSS-CUTTING DATA FLOW SUMMARY
+================================================================================
+
+Guest order flow:
+Guest selects food -> cart is stored in session -> checkout/order validates guest details -> customer row is found or created -> order rows are inserted -> admins are notified -> customer email is sent when enabled -> cash orders stop at confirmation while online methods show payment steps.
+
+Customer order flow:
+Customer logs in -> cart is stored in customer session -> customer row is linked to user -> orders are inserted -> admins and customer are notified -> customer sees orders in My Orders.
+
+Booking flow:
+Guest/customer submits booking -> customer row is found or created -> booking is inserted as Pending -> admins receive notification -> admin changes status -> customer receives notification.
+
+Delivery flow:
+Admin opens delivery management -> order is selected -> rider is assigned -> delivery assignment is inserted/updated -> order status follows delivery status -> customer/rider notifications are created.
+
+Support flow:
+Guest/customer opens support -> conversation is created or loaded -> default agent is assigned -> messages and attachments are saved -> live endpoint polls for changes -> sender and receiver see image/video/file previews.
+
+Settings/theme flow:
+Admin changes Web Settings -> settings controller validates and saves colors/settings -> public_settings loads saved values -> theme helper prints CSS variables -> layouts and standalone pages apply updated colors.
+
+Notification flow:
+Business event happens -> helper inserts notification rows for admins/customers/riders -> notification pages count unread rows -> open/read/delete actions update notification state.
+
+Email flow:
+Event requests email -> database SMTP settings are loaded -> SMTP message is built -> SMTP connection sends email -> failures return a structured result and should not crash order/booking pages.
+
+================================================================================
+23. IMPORTANT TABLE RELATIONSHIPS
+================================================================================
+
+roles -> users: each user has one role.
+
+roles -> role_permissions -> permissions: roles receive permission access through role_permissions.
+
+customers -> orders: orders belong to customers.
+
+foods -> orders: each order row references a food item.
+
+customers -> bookings: bookings belong to customers.
+
+services -> bookings: bookings reference a service/package.
+
+customers -> enquiries: enquiries are attached to customer contact records.
+
+customers -> remarks: remarks/reviews are attached to customers when possible.
+
+orders -> delivery_assignments: delivery assignments connect riders to orders.
+
+users -> delivery_assignments: delivery rider users are assigned to deliveries.
+
+users -> notifications: notifications target users.
+
+users -> audit_logs: user actions may create audit log records.
+
+support_conversations -> support_messages -> support_attachments: support conversations contain messages and optional attachments.
+
+================================================================================
+24. DOCUMENTATION RULE FOR FUTURE CODE BLOCKS
+================================================================================
+
+For future documentation, describe each block with one sentence that says what the block does and why it exists.
+
+Example format:
+- Function block: "This helper builds booking-page URLs while preserving existing filters and applying only the requested overrides."
+- Guard block: "This guard prevents invalid booking ids or unsupported statuses from updating the database."
+- Loop block: "This loop applies each URL override, removing empty filters and keeping non-empty values."
+- Query block: "This query loads bookings with customer and service data so the admin table can render complete booking rows."
+- Render block: "This render block displays the booking list, filter controls, status actions, and pagination."
+
+================================================================================
+END OF DOCUMENT
+================================================================================

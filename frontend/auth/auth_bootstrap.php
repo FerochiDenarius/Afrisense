@@ -7,6 +7,7 @@ use AfriSense\Backend\Helpers\Session;
 use AfriSense\Backend\Models\Auth;
 use AfriSense\Backend\Models\User;
 
+require_once __DIR__ . '/../includes/app_urls.php';
 require_once __DIR__ . '/../../backend/config/database.php';
 require_once __DIR__ . '/../../backend/helpers/Session.php';
 require_once __DIR__ . '/../../backend/models/Auth.php';
@@ -92,15 +93,15 @@ function afrisense_dashboard_url(?array $user): string
     // Keep post-login redirects centralized so new roles do not scatter
     // special cases across login/register pages.
     if (afrisense_is_administrator($user)) {
-        return '/Afrisense/frontend/admin/dashboard.php';
+        return afrisense_admin_url('dashboard.php');
     }
 
     // Guard this block so it only runs when the required condition is met.
     if (afrisense_is_support_staff($user)) {
-        return '/Afrisense/frontend/admin/support.php';
+        return afrisense_admin_url('support.php');
     }
 
-    return '/Afrisense/frontend/customer/dashboard.php';
+    return afrisense_customer_url('dashboard.php');
 }
 
 // Defines the afrisense_require_user helper used by this module.
@@ -112,7 +113,7 @@ function afrisense_require_user(): array
     if ($user === null) {
         // Page-level guards redirect instead of returning errors because these
         // scripts render browser pages, not API responses.
-        header('Location: /Afrisense/frontend/auth/login.php');
+        header('Location: ' . afrisense_auth_url('login.php'));
         exit;
     }
 
@@ -140,7 +141,7 @@ function afrisense_require_admin(): array
 
     // Guard this block so it only runs when the required condition is met.
     if (!afrisense_is_administrator($user)) {
-        header('Location: /Afrisense/frontend/customer/dashboard.php');
+        header('Location: ' . afrisense_customer_url('dashboard.php'));
         exit;
     }
 

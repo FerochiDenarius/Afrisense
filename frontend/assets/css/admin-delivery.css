@@ -470,7 +470,7 @@
     border: 1px solid #e4e7ec;
     border-radius: 6px;
     background: #fff;
-    color: #0d241e;
+    color: var(--af-green);
     display: grid;
     place-items: center;
     cursor: pointer;

@@ -441,7 +441,7 @@
     background:
         radial-gradient(circle at 96% 24%, rgba(204, 143, 37, 0.12), transparent 20%),
         radial-gradient(circle at 12% 16%, rgba(0, 0, 0, 0.16), transparent 28%),
-        linear-gradient(160deg, var(--af-green), #06251f 52%, var(--af-green-2));
+        linear-gradient(160deg, var(--af-green), var(--af-green-2) 52%, var(--af-green-2));
     border-radius: 14px;
     box-shadow: var(--af-shadow);
     color: #fff;
@@ -611,7 +611,7 @@
     background:
         radial-gradient(circle at 82% 88%, rgba(204, 143, 37, 0.12), transparent 26%),
         radial-gradient(circle at 14% 18%, rgba(0, 0, 0, 0.22), transparent 34%),
-        linear-gradient(165deg, var(--af-green), #05221c 48%, var(--af-green-2));
+        linear-gradient(165deg, var(--af-green), var(--af-green-2) 48%, var(--af-green-2));
     color: #fff;
     padding: 28px 22px;
     display: flex;

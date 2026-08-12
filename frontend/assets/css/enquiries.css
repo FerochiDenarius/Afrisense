@@ -383,7 +383,7 @@
     height: 54px;
     border: 0;
     border-radius: 6px;
-    background: linear-gradient(135deg, var(--af-green), #062f26);
+    background: linear-gradient(135deg, var(--af-green), var(--af-green-2));
     color: #fff;
     display: inline-flex;
     align-items: center;

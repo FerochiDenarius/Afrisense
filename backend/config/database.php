@@ -217,8 +217,8 @@ class Database
         // brand-new database without requiring manual admin setup first.
         $pdo->exec(
             "INSERT INTO `website_settings`
-                (`site_name`, `site_tagline`, `primary_color`, `secondary_color`, `hero_title`, `hero_subtitle`, `footer_text`)
-             SELECT 'AfriSense Food Services', 'Delicious meals, delivered with care.', '#b77b1a', '#cc8f25',
+                (`site_name`, `site_tagline`, `primary_color`, `secondary_color`, `forest_green`, `forest_green_2`, `hero_title`, `hero_subtitle`, `footer_text`)
+             SELECT 'AfriSense Food Services', 'Delicious meals, delivered with care.', '#b77b1a', '#cc8f25', '#0d241e', '#0c231d',
                 'Exceptional Food Memorable Moments',
                 'We provide delicious meals and professional catering services for all occasions.',
                 '(c) 2026 AfriSense Food Services. All rights reserved.'

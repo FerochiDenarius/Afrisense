@@ -111,7 +111,7 @@
 /* Button and action control styling for .af-gallery-actions .af-add-menu-btn, .af-customer-date-actions .af-add-menu-btn. */
 .af-customer-date-actions .af-add-menu-btn {
     border-color: #082c22;
-    background: linear-gradient(135deg, #06281f, #0d3b2f);
+    background: linear-gradient(135deg, var(--af-green-2), var(--af-green-2));
     color: #fff;
 }
 
@@ -161,7 +161,7 @@
 
 /* Styling rules for .af-gallery-file-picker strong. */
 .af-gallery-file-picker strong {
-    color: #0d241e;
+    color: var(--af-green);
     display: inline-flex;
     align-items: center;
     gap: 8px;
@@ -379,7 +379,7 @@
 
 /* Styling rules for .af-customer-date-summary strong. */
 .af-customer-date-summary strong {
-    color: #0d241e;
+    color: var(--af-green);
     display: block;
     margin-top: 4px;
     font-family: Georgia, "Times New Roman", serif;
@@ -917,7 +917,7 @@
 
 /* Styling rules for .af-logo-preview strong. */
 .af-logo-preview strong {
-    color: #0d241e;
+    color: var(--af-green);
     font-size: 28px;
     line-height: 1;
 }
@@ -1894,7 +1894,7 @@
     width: 64px;
     height: 64px;
     border-radius: 10px;
-    background: #0d241e;
+    background: var(--af-green);
     display: grid;
     place-items: center;
 }
@@ -2552,7 +2552,7 @@
     min-height: 40px;
     border: 0;
     border-radius: 7px;
-    background: #0d3b2f;
+    background: var(--af-green-2);
     color: #fff;
     display: inline-flex;
     align-items: center;
@@ -2637,7 +2637,7 @@
     min-height: 82px;
     border-radius: 7px;
     background: #fff;
-    color: #0d241e;
+    color: var(--af-green);
     display: grid;
     place-items: center;
     gap: 6px;
@@ -2795,7 +2795,7 @@
 
 /* Ordering and cart interface styling for .af-order-id. */
 .af-order-id {
-    color: #0d3b2f;
+    color: var(--af-green-2);
     font-size: 13px;
 }
 
@@ -2957,7 +2957,7 @@
 
 /* Ordering and cart interface styling for .af-selected-order-panel > strong. */
 .af-selected-order-panel > strong {
-    color: #0d3b2f;
+    color: var(--af-green-2);
     font-size: 18px;
 }
 
@@ -3103,8 +3103,8 @@
 
 /* Button and action control styling for .af-bookings-filters button. */
 .af-bookings-filters button {
-    border-color: #0d3b2f;
-    background: #0d3b2f;
+    border-color: var(--af-green-2);
+    background: var(--af-green-2);
     color: #fff;
 }
 
@@ -3545,8 +3545,8 @@
 
 /* Button and action control styling for .af-enquiries-filters button. */
 .af-enquiries-filters button {
-    border-color: #0d3b2f;
-    background: #0d3b2f;
+    border-color: var(--af-green-2);
+    background: var(--af-green-2);
     color: #fff;
 }
 
@@ -3680,7 +3680,7 @@
 
 /* Form control styling for .af-selected-enquiry-panel > strong. */
 .af-selected-enquiry-panel > strong {
-    color: #0d3b2f;
+    color: var(--af-green-2);
     font-size: 18px;
 }
 
@@ -3918,7 +3918,7 @@
 /* Button and action control styling for .af-enquiries-filter-actions button. */
 .af-enquiries-filter-actions button {
     border-color: #082c22;
-    background: linear-gradient(135deg, #06281f, #0d3b2f);
+    background: linear-gradient(135deg, var(--af-green-2), var(--af-green-2));
     color: #fff;
 }
 
@@ -4296,7 +4296,7 @@
 
 /* Card and panel styling for .af-enquiry-detail-card h2. */
 .af-enquiry-detail-card h2 {
-    color: #0d241e;
+    color: var(--af-green);
     margin: 4px 0 0;
     font-family: Georgia, "Times New Roman", serif;
     font-size: 24px;
@@ -4362,7 +4362,7 @@
 /* Button and action control styling for .af-enquiry-detail-actions button, .af-enquiry-reply-card button. */
 .af-enquiry-reply-card button {
     border-color: #082c22;
-    background: linear-gradient(135deg, #06281f, #0d3b2f);
+    background: linear-gradient(135deg, var(--af-green-2), var(--af-green-2));
     color: #fff;
 }
 
@@ -4584,7 +4584,7 @@
 /* Button and action control styling for .af-customer-enquiry-filters button. */
 .af-customer-enquiry-filters button {
     border-color: #082c22;
-    background: linear-gradient(135deg, #06281f, #0d3b2f);
+    background: linear-gradient(135deg, var(--af-green-2), var(--af-green-2));
     color: #fff;
 }
 

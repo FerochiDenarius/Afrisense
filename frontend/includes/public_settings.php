@@ -2,6 +2,7 @@
 
 declare(strict_types=1);
 
+require_once __DIR__ . '/app_urls.php';
 require_once __DIR__ . '/../auth/auth_bootstrap.php';
 
 /**
@@ -25,6 +26,8 @@ function afrisense_public_settings(): array
             'hero_image' => '',
             'primary_color' => '#b77b1a',
             'secondary_color' => '#cc8f25',
+            'forest_green' => '#0d241e',
+            'forest_green_2' => '#0c231d',
             'hero_title' => 'Exceptional Food Memorable Moments',
             'hero_subtitle' => 'We provide delicious meals and professional catering services for all occasions.',
             'footer_text' => '(c) 2026 AfriSense Food Services. All rights reserved.',
@@ -212,7 +215,7 @@ function afrisense_public_site_in_maintenance(): bool
 }
 
 // Defines the afrisense_enforce_public_site_status helper used by this module.
-function afrisense_enforce_public_site_status(string $frontendBase = '/Afrisense/frontend'): void
+function afrisense_enforce_public_site_status(string $frontendBase = AFRISENSE_FRONTEND_URL): void
 {
     // Guard this block so it only runs when the required condition is met.
     if (!afrisense_public_site_in_maintenance()) {
@@ -414,7 +417,7 @@ function afrisense_enforce_public_delivery_available(): void
         http_response_code(503);
     }
 
-    echo '<!DOCTYPE html><html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><title>Ordering Unavailable | AfriSense</title><style>body{margin:0;min-height:100vh;display:grid;place-items:center;font-family:Arial,sans-serif;background:#f7f5ef;color:#17231d}.box{width:min(560px,calc(100% - 32px));text-align:center}.box h1{margin:0 0 10px;font-size:clamp(30px,6vw,48px)}.box p{margin:0 0 20px;color:#506157;line-height:1.6}.box a{display:inline-flex;align-items:center;min-height:44px;padding:0 18px;border-radius:8px;background:#17231d;color:#fff;text-decoration:none;font-weight:800}</style></head><body><main class="box"><h1>Ordering is unavailable.</h1><p>' . htmlspecialchars($reason, ENT_QUOTES, 'UTF-8') . '</p><a href="/Afrisense/frontend/landing/contact.php">Contact Us</a></main></body></html>';
+    echo '<!DOCTYPE html><html lang="en"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0"><title>Ordering Unavailable | AfriSense</title><style>body{margin:0;min-height:100vh;display:grid;place-items:center;font-family:Arial,sans-serif;background:#f7f5ef;color:#17231d}.box{width:min(560px,calc(100% - 32px));text-align:center}.box h1{margin:0 0 10px;font-size:clamp(30px,6vw,48px)}.box p{margin:0 0 20px;color:#506157;line-height:1.6}.box a{display:inline-flex;align-items:center;min-height:44px;padding:0 18px;border-radius:8px;background:#17231d;color:#fff;text-decoration:none;font-weight:800}</style></head><body><main class="box"><h1>Ordering is unavailable.</h1><p>' . htmlspecialchars($reason, ENT_QUOTES, 'UTF-8') . '</p><a href="' . htmlspecialchars(afrisense_landing_url('contact.php'), ENT_QUOTES, 'UTF-8') . '">Contact Us</a></main></body></html>';
     exit;
 }
 
@@ -476,7 +479,7 @@ function afrisense_public_guest_checkout_enabled(): bool
 }
 
 // Defines the afrisense_public_order_url helper used by this module.
-function afrisense_public_order_url(string $frontendBase = '/Afrisense/frontend'): string
+function afrisense_public_order_url(string $frontendBase = AFRISENSE_FRONTEND_URL): string
 {
     $base = rtrim($frontendBase, '/');
     $user = null;
@@ -500,7 +503,7 @@ function afrisense_public_order_url(string $frontendBase = '/Afrisense/frontend'
 }
 
 // Defines the afrisense_public_cart_url helper used by this module.
-function afrisense_public_cart_url(string $frontendBase = '/Afrisense/frontend'): string
+function afrisense_public_cart_url(string $frontendBase = AFRISENSE_FRONTEND_URL): string
 {
     $base = rtrim($frontendBase, '/');
     $user = null;
@@ -524,7 +527,7 @@ function afrisense_public_cart_url(string $frontendBase = '/Afrisense/frontend')
 }
 
 // Defines the afrisense_public_booking_url helper used by this module.
-function afrisense_public_booking_url(string $frontendBase = '/Afrisense/frontend'): string
+function afrisense_public_booking_url(string $frontendBase = AFRISENSE_FRONTEND_URL): string
 {
     $base = rtrim($frontendBase, '/');
     $user = null;
@@ -548,7 +551,7 @@ function afrisense_public_booking_url(string $frontendBase = '/Afrisense/fronten
 }
 
 // Defines the afrisense_public_support_url helper used by this module.
-function afrisense_public_support_url(string $frontendBase = '/Afrisense/frontend'): string
+function afrisense_public_support_url(string $frontendBase = AFRISENSE_FRONTEND_URL): string
 {
     $base = rtrim($frontendBase, '/');
     $user = null;
@@ -572,7 +575,7 @@ function afrisense_public_support_url(string $frontendBase = '/Afrisense/fronten
 }
 
 // Defines the afrisense_enforce_guest_checkout_enabled helper used by this module.
-function afrisense_enforce_guest_checkout_enabled(string $frontendBase = '/Afrisense/frontend'): void
+function afrisense_enforce_guest_checkout_enabled(string $frontendBase = AFRISENSE_FRONTEND_URL): void
 {
     // Guard this block so it only runs when the required condition is met.
     if (afrisense_public_guest_checkout_enabled()) {
@@ -581,7 +584,7 @@ function afrisense_enforce_guest_checkout_enabled(string $frontendBase = '/Afris
 
     // Guard this block so it only runs when the required condition is met.
     if (!headers_sent()) {
-        header('Location: ' . rtrim($frontendBase, '/') . '/auth/login.php?next=' . rawurlencode($_SERVER['REQUEST_URI'] ?? '/Afrisense/frontend/landing/order.php'));
+        header('Location: ' . afrisense_auth_url('login.php') . '?next=' . rawurlencode($_SERVER['REQUEST_URI'] ?? afrisense_landing_url('order.php')));
         exit;
     }
 }

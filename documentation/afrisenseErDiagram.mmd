@@ -1,0 +1,184 @@
+erDiagram
+    ROLES {
+        int id PK
+        string rolename
+        string description
+    }
+
+    USERS {
+        int id PK
+        string fullname
+        string username
+        string email
+        string phonenumber
+        string password
+        int role_id FK
+        boolean email_verified
+    }
+
+    PERMISSIONS {
+        int id PK
+        string name
+        string description
+    }
+
+    ROLE_PERMISSIONS {
+        int id PK
+        int role_id FK
+        int permission_id FK
+    }
+
+    CUSTOMERS {
+        int id PK
+        string fullname
+        string email
+        string phone_number
+        string address
+    }
+
+    FOOD_CATEGORIES {
+        int id PK
+        string category_name
+    }
+
+    FOODS {
+        int id PK
+        int category_id FK
+        string food_name
+        decimal price
+        string availability
+    }
+
+    ORDERS {
+        int id PK
+        int customer_id FK
+        int food_id FK
+        int quantity
+        decimal total_price
+        string order_status
+        string payment_method
+        string payment_status
+    }
+
+    SERVICE_CATEGORIES {
+        int id PK
+        string category_name
+    }
+
+    SERVICES {
+        int id PK
+        int category_id FK
+        string service_name
+        decimal price
+        string availability
+    }
+
+    BOOKINGS {
+        int id PK
+        int customer_id FK
+        int service_id FK
+        date event_date
+        time event_time
+        int number_of_guests
+        string booking_status
+    }
+
+    DELIVERY_ASSIGNMENTS {
+        int id PK
+        int order_id FK
+        int rider_user_id FK
+        string delivery_status
+        decimal amount_collected
+    }
+
+    ENQUIRIES {
+        int id PK
+        int customer_id FK
+        string subject
+        string message
+        string status
+    }
+
+    CUSTOMER_REMARKS {
+        int id PK
+        int customer_id FK
+        decimal rating
+        string remark
+        string status
+    }
+
+    NOTIFICATIONS {
+        int id PK
+        int user_id FK
+        string title
+        string message
+        string notification_type
+        boolean is_read
+        int created_by FK
+    }
+
+    SUPPORT_CONVERSATIONS {
+        int id PK
+        int customer_user_id FK
+        int agent_user_id FK
+        string guest_token
+        string status
+    }
+
+    SUPPORT_MESSAGES {
+        int id PK
+        int conversation_id FK
+        string sender_type
+        int sender_user_id FK
+        string body
+    }
+
+    SUPPORT_ATTACHMENTS {
+        int id PK
+        int message_id FK
+        string file_name
+        string file_path
+        string mime_type
+    }
+
+    GALLERY {
+        int id PK
+        int uploaded_by FK
+        string title
+        string image
+    }
+
+    AUDIT_LOGS {
+        int id PK
+        int user_id FK
+        string action
+        string description
+    }
+
+    ROLES ||--o{ USERS : has
+    ROLES ||--o{ ROLE_PERMISSIONS : grants
+    PERMISSIONS ||--o{ ROLE_PERMISSIONS : assigned
+
+    CUSTOMERS ||--o{ ORDERS : places
+    FOODS ||--o{ ORDERS : ordered_as
+    FOOD_CATEGORIES ||--o{ FOODS : contains
+
+    CUSTOMERS ||--o{ BOOKINGS : makes
+    SERVICES ||--o{ BOOKINGS : booked_for
+    SERVICE_CATEGORIES ||--o{ SERVICES : contains
+
+    CUSTOMERS ||--o{ ENQUIRIES : submits
+    CUSTOMERS ||--o{ CUSTOMER_REMARKS : writes
+
+    ORDERS ||--o| DELIVERY_ASSIGNMENTS : assigned_for
+    USERS ||--o{ DELIVERY_ASSIGNMENTS : rider
+
+    USERS ||--o{ NOTIFICATIONS : receives
+    USERS ||--o{ NOTIFICATIONS : creates
+    USERS ||--o{ AUDIT_LOGS : performs
+    USERS ||--o{ GALLERY : uploads
+
+    USERS ||--o{ SUPPORT_CONVERSATIONS : customer_account
+    USERS ||--o{ SUPPORT_CONVERSATIONS : agent_account
+    SUPPORT_CONVERSATIONS ||--o{ SUPPORT_MESSAGES : contains
+    SUPPORT_MESSAGES ||--o{ SUPPORT_ATTACHMENTS : includes

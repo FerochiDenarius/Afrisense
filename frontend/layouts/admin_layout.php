@@ -13,14 +13,14 @@ if ($allowSupportStaff) {
 
     // Guard this block so it only runs when the required condition is met.
     if (!$isSupportStaff) {
-        header('Location: /Afrisense/frontend/customer/dashboard.php');
+        header('Location: ' . afrisense_customer_url('dashboard.php'));
         exit;
     }
 } else {
     $authUser = afrisense_require_admin();
 }
 
-$frontendBase = $frontendBase ?? '/Afrisense/frontend';
+$frontendBase = $frontendBase ?? afrisense_frontend_url();
 $pageTitle = $pageTitle ?? 'Admin | AfriSense';
 $adminTitle = $adminTitle ?? 'Dashboard';
 $activeAdminPage = $activeAdminPage ?? '';
@@ -44,8 +44,8 @@ $faviconUrl = afrisense_public_favicon_url($frontendBase);
         <link rel="icon" href="<?php echo htmlspecialchars($faviconUrl, ENT_QUOTES, 'UTF-8'); ?>">
     <?php endif; ?>
     <title><?php echo htmlspecialchars($pageTitle, ENT_QUOTES, 'UTF-8'); ?></title>
-    <link rel="stylesheet" href="<?php echo htmlspecialchars($frontendBase . '/assets/css/main.css', ENT_QUOTES, 'UTF-8'); ?>">
-    <link rel="stylesheet" href="<?php echo htmlspecialchars($frontendBase . '/assets/css/dashboard.css', ENT_QUOTES, 'UTF-8'); ?>">
+    <link rel="stylesheet" href="<?php echo htmlspecialchars(afrisense_asset_url('css/main.css'), ENT_QUOTES, 'UTF-8'); ?>">
+    <link rel="stylesheet" href="<?php echo htmlspecialchars(afrisense_asset_url('css/dashboard.css'), ENT_QUOTES, 'UTF-8'); ?>">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
     <?php // Render this conditional/dynamic template block. ?>
     <?php foreach ($extraStyles as $style): ?>
@@ -75,10 +75,10 @@ $faviconUrl = afrisense_public_favicon_url($frontendBase);
     <?php require __DIR__ . '/../components/modal.php'; afrisense_modal(); ?>
     <?php require __DIR__ . '/../components/loader.php'; ?>
 
-    <script src="<?php echo htmlspecialchars($frontendBase . '/assets/js/sidebar.js', ENT_QUOTES, 'UTF-8'); ?>" defer></script>
-    <script src="<?php echo htmlspecialchars($frontendBase . '/assets/js/alerts.js', ENT_QUOTES, 'UTF-8'); ?>" defer></script>
-    <script src="<?php echo htmlspecialchars($frontendBase . '/assets/js/modal.js', ENT_QUOTES, 'UTF-8'); ?>" defer></script>
-    <script src="<?php echo htmlspecialchars($frontendBase . '/assets/js/main.js?v=' . $mainScriptVersion, ENT_QUOTES, 'UTF-8'); ?>" defer></script>
+    <script src="<?php echo htmlspecialchars(afrisense_asset_url('js/sidebar.js'), ENT_QUOTES, 'UTF-8'); ?>" defer></script>
+    <script src="<?php echo htmlspecialchars(afrisense_asset_url('js/alerts.js'), ENT_QUOTES, 'UTF-8'); ?>" defer></script>
+    <script src="<?php echo htmlspecialchars(afrisense_asset_url('js/modal.js'), ENT_QUOTES, 'UTF-8'); ?>" defer></script>
+    <script src="<?php echo htmlspecialchars(afrisense_asset_url('js/main.js') . '?v=' . $mainScriptVersion, ENT_QUOTES, 'UTF-8'); ?>" defer></script>
     <?php // Render this conditional/dynamic template block. ?>
     <?php foreach ($extraScripts as $script): ?>
         <script src="<?php echo htmlspecialchars($script, ENT_QUOTES, 'UTF-8'); ?>" defer></script>

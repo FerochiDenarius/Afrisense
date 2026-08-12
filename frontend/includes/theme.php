@@ -19,6 +19,8 @@ function afrisense_theme_style_block(): string
     $website = $settings['website'] ?? [];
     $primaryGold = afrisense_theme_color((string) ($website['primary_color'] ?? ''), '#b77b1a');
     $secondaryGold = afrisense_theme_color((string) ($website['secondary_color'] ?? ''), '#cc8f25');
+    $forestGreen = afrisense_theme_color((string) ($website['forest_green'] ?? ''), '#0d241e');
+    $forestGreen2 = afrisense_theme_color((string) ($website['forest_green_2'] ?? ''), '#0c231d');
 
     return sprintf(
         '<style id="afrisense-dynamic-theme">
@@ -31,10 +33,22 @@ function afrisense_theme_style_block(): string
                 --gold-2: %2$s;
                 --af-order-gold: %1$s;
                 --af-order-gold-2: %2$s;
+                --af-green: %3$s;
+                --af-green-2: %4$s;
+                --af-forest-green: %3$s;
+                --af-forest-green-2: %4$s;
+                --primary-green: %3$s;
+                --secondary-green: %4$s;
+                --green: %3$s;
+                --green-2: %4$s;
+                --af-order-green: %3$s;
+                --af-order-green-2: %4$s;
             }
         </style>',
         htmlspecialchars($primaryGold, ENT_QUOTES, 'UTF-8'),
-        htmlspecialchars($secondaryGold, ENT_QUOTES, 'UTF-8')
+        htmlspecialchars($secondaryGold, ENT_QUOTES, 'UTF-8'),
+        htmlspecialchars($forestGreen, ENT_QUOTES, 'UTF-8'),
+        htmlspecialchars($forestGreen2, ENT_QUOTES, 'UTF-8')
     );
 }
 

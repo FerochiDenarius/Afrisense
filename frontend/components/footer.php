@@ -1,7 +1,7 @@
 <?php
 require_once __DIR__ . '/../includes/public_settings.php';
 
-$frontendBase = $frontendBase ?? '/Afrisense/frontend';
+$frontendBase = $frontendBase ?? afrisense_frontend_url();
 $publicSettings = afrisense_public_settings();
 $websiteSettings = $publicSettings['website'];
 $companySettings = $publicSettings['company'];
@@ -22,7 +22,7 @@ $footerSupportHref = afrisense_public_support_url($frontendBase);
     <div class="af-footer-grid">
         <!-- Page section for this part of the AfriSense interface. -->
         <section class="af-footer-brand">
-            <a class="af-brand" href="<?php echo htmlspecialchars($frontendBase . '/landing/index.php', ENT_QUOTES, 'UTF-8'); ?>" aria-label="AfriSense home">
+            <a class="af-brand" href="<?php echo htmlspecialchars(afrisense_landing_url('index.php'), ENT_QUOTES, 'UTF-8'); ?>" aria-label="AfriSense home">
                 <span class="af-brand-icon" aria-hidden="true"><?php echo afrisense_public_brand_icon_html($frontendBase); ?></span>
                 <span>
                     <strong><?php echo htmlspecialchars(str_replace(' Food Services', '', $siteName), ENT_QUOTES, 'UTF-8'); ?></strong>
@@ -46,15 +46,15 @@ $footerSupportHref = afrisense_public_support_url($frontendBase);
                 <i class="bi bi-chevron-down" aria-hidden="true"></i>
             </button>
             <ul>
-                <li><a href="<?php echo htmlspecialchars($frontendBase . '/landing/index.php', ENT_QUOTES, 'UTF-8'); ?>">Home</a></li>
-                <li><a href="<?php echo htmlspecialchars($frontendBase . '/landing/about.php', ENT_QUOTES, 'UTF-8'); ?>">About Us</a></li>
-                <li><a href="<?php echo htmlspecialchars($frontendBase . '/landing/menu.php', ENT_QUOTES, 'UTF-8'); ?>">Our Menu</a></li>
-                <li><a href="<?php echo htmlspecialchars($frontendBase . '/landing/gallery.php', ENT_QUOTES, 'UTF-8'); ?>">Gallery</a></li>
-                <li><a href="<?php echo htmlspecialchars($frontendBase . '/landing/services.php', ENT_QUOTES, 'UTF-8'); ?>">Catering Packages</a></li>
+                <li><a href="<?php echo htmlspecialchars(afrisense_landing_url('index.php'), ENT_QUOTES, 'UTF-8'); ?>">Home</a></li>
+                <li><a href="<?php echo htmlspecialchars(afrisense_landing_url('about.php'), ENT_QUOTES, 'UTF-8'); ?>">About Us</a></li>
+                <li><a href="<?php echo htmlspecialchars(afrisense_landing_url('menu.php'), ENT_QUOTES, 'UTF-8'); ?>">Our Menu</a></li>
+                <li><a href="<?php echo htmlspecialchars(afrisense_landing_url('gallery.php'), ENT_QUOTES, 'UTF-8'); ?>">Gallery</a></li>
+                <li><a href="<?php echo htmlspecialchars(afrisense_landing_url('services.php'), ENT_QUOTES, 'UTF-8'); ?>">Catering Packages</a></li>
                 <li><a href="<?php echo htmlspecialchars($footerBookingHref, ENT_QUOTES, 'UTF-8'); ?>">Book a Service</a></li>
-                <li><a href="<?php echo htmlspecialchars($frontendBase . '/landing/remarks.php', ENT_QUOTES, 'UTF-8'); ?>">Reviews &amp; Remarks</a></li>
+                <li><a href="<?php echo htmlspecialchars(afrisense_landing_url('remarks.php'), ENT_QUOTES, 'UTF-8'); ?>">Reviews &amp; Remarks</a></li>
                 <li><a href="<?php echo htmlspecialchars($footerSupportHref, ENT_QUOTES, 'UTF-8'); ?>">Support</a></li>
-                <li><a href="<?php echo htmlspecialchars($frontendBase . '/landing/contact.php', ENT_QUOTES, 'UTF-8'); ?>">Contact Us</a></li>
+                <li><a href="<?php echo htmlspecialchars(afrisense_landing_url('contact.php'), ENT_QUOTES, 'UTF-8'); ?>">Contact Us</a></li>
             </ul>
         </section>
 
@@ -65,11 +65,11 @@ $footerSupportHref = afrisense_public_support_url($frontendBase);
                 <i class="bi bi-chevron-down" aria-hidden="true"></i>
             </button>
             <ul>
-                <li><a href="<?php echo htmlspecialchars($frontendBase . '/landing/menu.php', ENT_QUOTES, 'UTF-8'); ?>">Food Ordering</a></li>
+                <li><a href="<?php echo htmlspecialchars(afrisense_landing_url('menu.php'), ENT_QUOTES, 'UTF-8'); ?>">Food Ordering</a></li>
                 <li><a href="<?php echo htmlspecialchars($footerBookingHref, ENT_QUOTES, 'UTF-8'); ?>">Service Booking</a></li>
-                <li><a href="<?php echo htmlspecialchars($frontendBase . '/landing/services.php', ENT_QUOTES, 'UTF-8'); ?>">Event Catering</a></li>
-                <li><a href="<?php echo htmlspecialchars($frontendBase . '/landing/services.php', ENT_QUOTES, 'UTF-8'); ?>">Custom Menus</a></li>
-                <li><a href="<?php echo htmlspecialchars($frontendBase . '/landing/services.php', ENT_QUOTES, 'UTF-8'); ?>">Corporate Meals</a></li>
+                <li><a href="<?php echo htmlspecialchars(afrisense_landing_url('services.php'), ENT_QUOTES, 'UTF-8'); ?>">Event Catering</a></li>
+                <li><a href="<?php echo htmlspecialchars(afrisense_landing_url('services.php'), ENT_QUOTES, 'UTF-8'); ?>">Custom Menus</a></li>
+                <li><a href="<?php echo htmlspecialchars(afrisense_landing_url('services.php'), ENT_QUOTES, 'UTF-8'); ?>">Corporate Meals</a></li>
                 <li><a href="<?php echo htmlspecialchars($footerOrderHref, ENT_QUOTES, 'UTF-8'); ?>">Fast Delivery</a></li>
             </ul>
         </section>
@@ -96,7 +96,7 @@ $footerSupportHref = afrisense_public_support_url($frontendBase);
             </button>
             <p>Subscribe to get the latest updates, offers and news.</p>
             <!-- Form block that submits this page workflow. -->
-            <form class="af-newsletter" action="<?php echo htmlspecialchars($frontendBase . '/landing/contact.php', ENT_QUOTES, 'UTF-8'); ?>" method="post">
+            <form class="af-newsletter" action="<?php echo htmlspecialchars(afrisense_landing_url('contact.php'), ENT_QUOTES, 'UTF-8'); ?>" method="post">
                 <label class="sr-only" for="footer_newsletter_email">Email address</label>
                 <input type="email" id="footer_newsletter_email" name="email" placeholder="Enter your email">
                 <button type="submit" aria-label="Subscribe"><i class="bi bi-send-fill" aria-hidden="true"></i></button>
@@ -109,8 +109,8 @@ $footerSupportHref = afrisense_public_support_url($frontendBase);
         <p><?php echo htmlspecialchars($footerText, ENT_QUOTES, 'UTF-8'); ?></p>
         <!-- Navigation links for this interface. -->
         <nav aria-label="Footer links">
-            <a href="<?php echo htmlspecialchars($frontendBase . '/landing/privacy.php', ENT_QUOTES, 'UTF-8'); ?>">Privacy Policy</a>
-            <a href="<?php echo htmlspecialchars($frontendBase . '/landing/terms.php', ENT_QUOTES, 'UTF-8'); ?>">Terms &amp; Conditions</a>
+            <a href="<?php echo htmlspecialchars(afrisense_landing_url('privacy.php'), ENT_QUOTES, 'UTF-8'); ?>">Privacy Policy</a>
+            <a href="<?php echo htmlspecialchars(afrisense_landing_url('terms.php'), ENT_QUOTES, 'UTF-8'); ?>">Terms &amp; Conditions</a>
         </nav>
     </div>
 </footer>

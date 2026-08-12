@@ -68,7 +68,7 @@
 
 /* Styling rules for .af-public-gallery-heading h2. */
 .af-public-gallery-heading h2 {
-    color: #0d241e;
+    color: var(--af-green);
     margin: 8px 0;
     font-family: Georgia, "Times New Roman", serif;
     font-size: clamp(32px, 4vw, 48px);
@@ -147,8 +147,8 @@
 
 /* Button and action control styling for .af-public-gallery-toolbar button. */
 .af-public-gallery-toolbar button {
-    border-color: #0d241e;
-    background: linear-gradient(135deg, #06281f, #0d3b2f);
+    border-color: var(--af-green);
+    background: linear-gradient(135deg, var(--af-green-2), var(--af-green-2));
     color: #fff;
 }
 

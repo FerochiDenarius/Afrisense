@@ -1,0 +1,61 @@
+flowchart LR
+    Guest[Guest]
+    Customer[Customer]
+    Admin[Admin]
+    Agent[Support Agent]
+    Rider[Delivery Rider]
+
+    subgraph Browser[Client Browser]
+        UI[HTML/CSS UI]
+        JS[JavaScript<br/>support.js, main.js,<br/>settings.js, order.js]
+    end
+
+    subgraph Runtime[XAMPP Apache / PHP Runtime]
+        PublicPages[Public Pages<br/>frontend/landing]
+        CustomerPages[Customer Pages<br/>frontend/customer]
+        AdminPages[Admin Pages<br/>frontend/admin]
+        Auth[Auth Bootstrap<br/>frontend/auth]
+        Helpers[Shared Helpers<br/>public_settings.php<br/>theme.php<br/>support_helpers.php]
+        Controllers[Backend Controllers<br/>backend/controllers]
+        Models[Backend Models<br/>backend/models]
+        Middleware[Middleware<br/>backend/middleware]
+        DBBootstrap[Database Bootstrap<br/>backend/config/database.php]
+    end
+
+    DB[(MySQL Database<br/>afrisense_db)]
+    Mail[[SMTP Mail Server]]
+    Uploads[(Uploads<br/>images, support files,<br/>settings assets)]
+
+    Guest --> UI
+    Customer --> UI
+    Admin --> UI
+    Agent --> UI
+    Rider --> UI
+
+    UI --> JS
+    UI --> PublicPages
+    UI --> CustomerPages
+    UI --> AdminPages
+
+    PublicPages --> Auth
+    CustomerPages --> Auth
+    AdminPages --> Auth
+
+    Auth --> Middleware
+    PublicPages --> Helpers
+    CustomerPages --> Helpers
+    AdminPages --> Helpers
+
+    AdminPages --> Controllers
+    Controllers --> Models
+    Middleware --> Models
+    Models --> DB
+    Helpers --> DB
+    DBBootstrap --> DB
+
+    Helpers --> Mail
+    Auth --> Mail
+    PublicPages --> Uploads
+    CustomerPages --> Uploads
+    AdminPages --> Uploads
+    Helpers --> Uploads

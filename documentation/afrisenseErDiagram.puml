@@ -1,0 +1,209 @@
+@startuml
+title AfriSense ER Diagram
+hide circle
+skinparam linetype ortho
+
+entity "roles" as roles {
+  * id : int
+  --
+  rolename : varchar
+  description : text
+}
+
+entity "users" as users {
+  * id : int
+  --
+  fullname : varchar
+  username : varchar
+  email : varchar
+  phonenumber : varchar
+  password : varchar
+  role_id : int
+  email_verified : boolean
+}
+
+entity "permissions" as permissions {
+  * id : int
+  --
+  name : varchar
+  description : text
+}
+
+entity "role_permissions" as role_permissions {
+  * id : int
+  --
+  role_id : int
+  permission_id : int
+}
+
+entity "customers" as customers {
+  * id : int
+  --
+  fullname : varchar
+  email : varchar
+  phone_number : varchar
+  address : text
+}
+
+entity "food_categories" as food_categories {
+  * id : int
+  --
+  category_name : varchar
+}
+
+entity "foods" as foods {
+  * id : int
+  --
+  category_id : int
+  food_name : varchar
+  price : decimal
+  availability : varchar
+}
+
+entity "orders" as orders {
+  * id : int
+  --
+  customer_id : int
+  food_id : int
+  quantity : int
+  total_price : decimal
+  order_status : varchar
+  payment_method : varchar
+  payment_status : varchar
+}
+
+entity "service_categories" as service_categories {
+  * id : int
+  --
+  category_name : varchar
+}
+
+entity "services" as services {
+  * id : int
+  --
+  category_id : int
+  service_name : varchar
+  price : decimal
+  availability : varchar
+}
+
+entity "bookings" as bookings {
+  * id : int
+  --
+  customer_id : int
+  service_id : int
+  event_date : date
+  event_time : time
+  number_of_guests : int
+  booking_status : varchar
+}
+
+entity "delivery_assignments" as delivery_assignments {
+  * id : int
+  --
+  order_id : int
+  rider_user_id : int
+  delivery_status : varchar
+  amount_collected : decimal
+}
+
+entity "enquiries" as enquiries {
+  * id : int
+  --
+  customer_id : int
+  subject : varchar
+  message : text
+  status : varchar
+}
+
+entity "customer_remarks" as customer_remarks {
+  * id : int
+  --
+  customer_id : int
+  rating : decimal
+  remark : text
+  status : varchar
+}
+
+entity "notifications" as notifications {
+  * id : int
+  --
+  user_id : int
+  title : varchar
+  message : text
+  notification_type : varchar
+  is_read : boolean
+  created_by : int
+}
+
+entity "support_conversations" as support_conversations {
+  * id : int
+  --
+  customer_user_id : int
+  agent_user_id : int
+  guest_token : varchar
+  status : varchar
+}
+
+entity "support_messages" as support_messages {
+  * id : int
+  --
+  conversation_id : int
+  sender_type : varchar
+  sender_user_id : int
+  body : text
+}
+
+entity "support_attachments" as support_attachments {
+  * id : int
+  --
+  message_id : int
+  file_name : varchar
+  file_path : varchar
+  mime_type : varchar
+}
+
+entity "gallery" as gallery {
+  * id : int
+  --
+  uploaded_by : int
+  title : varchar
+  image : varchar
+}
+
+entity "audit_logs" as audit_logs {
+  * id : int
+  --
+  user_id : int
+  action : varchar
+  description : text
+}
+
+roles ||--o{ users : has
+roles ||--o{ role_permissions : grants
+permissions ||--o{ role_permissions : assigned
+
+customers ||--o{ orders : places
+foods ||--o{ orders : ordered_as
+food_categories ||--o{ foods : contains
+
+customers ||--o{ bookings : makes
+services ||--o{ bookings : booked_for
+service_categories ||--o{ services : contains
+
+customers ||--o{ enquiries : submits
+customers ||--o{ customer_remarks : writes
+
+orders ||--o| delivery_assignments : assigned_for
+users ||--o{ delivery_assignments : rider
+
+users ||--o{ notifications : receives
+users ||--o{ notifications : creates
+users ||--o{ audit_logs : performs
+users ||--o{ gallery : uploads
+
+users ||--o{ support_conversations : customer_account
+users ||--o{ support_conversations : agent_account
+support_conversations ||--o{ support_messages : contains
+support_messages ||--o{ support_attachments : includes
+@enduml

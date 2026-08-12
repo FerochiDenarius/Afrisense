@@ -1,5 +1,6 @@
 <?php
 require_once __DIR__ . '/../auth/auth_bootstrap.php';
+require_once __DIR__ . '/../includes/theme.php';
 require_once __DIR__ . '/../includes/support_helpers.php';
 
 $authUser = afrisense_require_admin();
@@ -167,6 +168,7 @@ $mainScriptVersion = filemtime(__DIR__ . '/../assets/js/main.js') ?: time();
 
     <link rel="stylesheet" href="../assets/css/dashboard.css">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+    <?php afrisense_print_theme_style(); ?>
 </head>
 <body>
     <!-- Side panel with supporting information and actions. -->

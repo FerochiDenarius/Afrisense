@@ -671,6 +671,8 @@ CREATE TABLE `website_settings` (
   `favicon` varchar(255) DEFAULT NULL,
   `primary_color` varchar(20) DEFAULT NULL,
   `secondary_color` varchar(20) DEFAULT NULL,
+  `forest_green` varchar(20) DEFAULT '#0d241e',
+  `forest_green_2` varchar(20) DEFAULT '#0c231d',
   `hero_title` varchar(255) DEFAULT NULL,
   `hero_subtitle` text DEFAULT NULL,
   `hero_image` varchar(255) DEFAULT NULL,

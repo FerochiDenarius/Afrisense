@@ -631,7 +631,7 @@ td img {
     width: 172px;
     aspect-ratio: 1;
     border-radius: 50%;
-    background: conic-gradient(#e4a914 0 15.3%, #0d241e 15.3% 60.5%, #2f78d4 60.5% 83.9%, #38a852 83.9% 96.8%, #ef2b2d 96.8% 100%);
+    background: conic-gradient(#e4a914 0 15.3%, var(--af-green) 15.3% 60.5%, #2f78d4 60.5% 83.9%, #38a852 83.9% 96.8%, #ef2b2d 96.8% 100%);
     display: grid;
     place-items: center;
     position: relative;

@@ -1,7 +1,7 @@
 <?php
 require_once __DIR__ . '/../includes/theme.php';
 
-$frontendBase = $frontendBase ?? '/Afrisense/frontend';
+$frontendBase = $frontendBase ?? afrisense_frontend_url();
 $pageTitle = $pageTitle ?? 'AfriSense Food Services';
 $activePage = $activePage ?? '';
 $extraStyles = $extraStyles ?? [];
@@ -39,7 +39,7 @@ if ($enforcePublicStatus) {
         <link rel="icon" href="<?php echo htmlspecialchars($faviconUrl, ENT_QUOTES, 'UTF-8'); ?>">
     <?php endif; ?>
     <title><?php echo htmlspecialchars($pageTitle, ENT_QUOTES, 'UTF-8'); ?></title>
-    <link rel="stylesheet" href="<?php echo htmlspecialchars($frontendBase . '/assets/css/main.css', ENT_QUOTES, 'UTF-8'); ?>">
+    <link rel="stylesheet" href="<?php echo htmlspecialchars(afrisense_asset_url('css/main.css'), ENT_QUOTES, 'UTF-8'); ?>">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
     <?php // Render this conditional/dynamic template block. ?>
     <?php foreach ($extraStyles as $style): ?>
@@ -67,10 +67,10 @@ if ($enforcePublicStatus) {
     <?php require __DIR__ . '/../components/modal.php'; afrisense_modal(); ?>
     <?php require __DIR__ . '/../components/loader.php'; ?>
 
-    <script src="<?php echo htmlspecialchars($frontendBase . '/assets/js/navbar.js', ENT_QUOTES, 'UTF-8'); ?>" defer></script>
-    <script src="<?php echo htmlspecialchars($frontendBase . '/assets/js/alerts.js', ENT_QUOTES, 'UTF-8'); ?>" defer></script>
-    <script src="<?php echo htmlspecialchars($frontendBase . '/assets/js/modal.js', ENT_QUOTES, 'UTF-8'); ?>" defer></script>
-    <script src="<?php echo htmlspecialchars($frontendBase . '/assets/js/main.js?v=' . $mainScriptVersion, ENT_QUOTES, 'UTF-8'); ?>" defer></script>
+    <script src="<?php echo htmlspecialchars(afrisense_asset_url('js/navbar.js'), ENT_QUOTES, 'UTF-8'); ?>" defer></script>
+    <script src="<?php echo htmlspecialchars(afrisense_asset_url('js/alerts.js'), ENT_QUOTES, 'UTF-8'); ?>" defer></script>
+    <script src="<?php echo htmlspecialchars(afrisense_asset_url('js/modal.js'), ENT_QUOTES, 'UTF-8'); ?>" defer></script>
+    <script src="<?php echo htmlspecialchars(afrisense_asset_url('js/main.js') . '?v=' . $mainScriptVersion, ENT_QUOTES, 'UTF-8'); ?>" defer></script>
     <?php // Render this conditional/dynamic template block. ?>
     <?php foreach ($extraScripts as $script): ?>
         <script src="<?php echo htmlspecialchars($script, ENT_QUOTES, 'UTF-8'); ?>" defer></script>

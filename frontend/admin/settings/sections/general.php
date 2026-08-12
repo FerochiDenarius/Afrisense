@@ -26,11 +26,19 @@
             <div class="af-settings-color-grid">
                 <label class="af-settings-field" for="primary_color">
                     <span>Primary Gold</span>
-                    <input id="primary_color" name="primary_color" type="color" value="<?php echo htmlspecialchars((string) ($website['primary_color'] ?? '#b77b1a'), ENT_QUOTES, 'UTF-8'); ?>">
+                    <input id="primary_color" name="primary_color" type="color" value="<?php echo htmlspecialchars(afrisense_settings_color_value($website, 'primary_color', '#b77b1a'), ENT_QUOTES, 'UTF-8'); ?>">
                 </label>
                 <label class="af-settings-field" for="secondary_color">
                     <span>Secondary Gold</span>
-                    <input id="secondary_color" name="secondary_color" type="color" value="<?php echo htmlspecialchars((string) ($website['secondary_color'] ?? '#cc8f25'), ENT_QUOTES, 'UTF-8'); ?>">
+                    <input id="secondary_color" name="secondary_color" type="color" value="<?php echo htmlspecialchars(afrisense_settings_color_value($website, 'secondary_color', '#cc8f25'), ENT_QUOTES, 'UTF-8'); ?>">
+                </label>
+                <label class="af-settings-field" for="forest_green">
+                    <span>Forest Green</span>
+                    <input id="forest_green" name="forest_green" type="color" value="<?php echo htmlspecialchars(afrisense_settings_color_value($website, 'forest_green', '#0d241e'), ENT_QUOTES, 'UTF-8'); ?>">
+                </label>
+                <label class="af-settings-field" for="forest_green_2">
+                    <span>Deep Forest Green</span>
+                    <input id="forest_green_2" name="forest_green_2" type="color" value="<?php echo htmlspecialchars(afrisense_settings_color_value($website, 'forest_green_2', '#0c231d'), ENT_QUOTES, 'UTF-8'); ?>">
                 </label>
             </div>
         </section>

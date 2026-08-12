@@ -1,0 +1,100 @@
+classDiagram
+    class Database {
+        -string host
+        -string database
+        -string username
+        -string password
+        -PDO connection
+        +getConnection() PDO
+        -installDatabase(PDO) void
+        -seedStarterData(PDO) void
+    }
+
+    class BaseModel {
+        #PDO pdo
+        +__construct(PDO)
+    }
+
+    class Auth {
+        +login(email, password) array
+        +logout() array
+        +isLoggedIn() bool
+        +getCurrentUser() array
+        +requireLogin() array
+    }
+
+    class User {
+        +findById(id) array
+        +findByEmail(email) array
+        +all() array
+        +create(data) int
+        +update(id, data) bool
+        +delete(id) bool
+        +hasPermission(userId, permission) bool
+        +getRole(userId) array
+    }
+
+    class Role {
+        +all() array
+        +create(data) int
+        +update(id, data) bool
+        +delete(id) bool
+        +assignPermission(roleId, permissionId) bool
+    }
+
+    class Permission {
+        +all() array
+        +findByName(name) array
+        +create(data) int
+        +update(id, data) bool
+        +delete(id) bool
+    }
+
+    class Notification {
+        +allForUser(userId) array
+        +create(data) int
+        +markAsRead(id, userId) bool
+        +markAllAsRead(userId) int
+        +delete(id, userId) bool
+        +unreadCount(userId) int
+    }
+
+    class SystemSettings {
+        +all() array
+        +get(key, default) mixed
+        +set(key, value) bool
+        +delete(key) bool
+    }
+
+    class Dashboard {
+        +summary(userId) array
+        +countTable(table) int
+    }
+
+    class Validator {
+        +validate(data, rules) bool
+        +getErrors() array
+    }
+
+    class Upload {
+        +moveUploadedFile(file, directory, allowed) string
+        +delete(path) bool
+    }
+
+    class Response {
+        +success(message, data) array
+        +error(message, status) array
+    }
+
+    Database --> BaseModel : provides PDO
+    BaseModel <|-- User
+    BaseModel <|-- Role
+    BaseModel <|-- Permission
+    BaseModel <|-- Notification
+    BaseModel <|-- SystemSettings
+    BaseModel <|-- Dashboard
+    Auth --> User
+    User --> Role
+    Role --> Permission
+    Notification --> User
+    Dashboard --> Notification

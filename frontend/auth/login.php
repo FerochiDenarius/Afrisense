@@ -1,5 +1,6 @@
 <?php
 require_once __DIR__ . '/auth_bootstrap.php';
+require_once __DIR__ . '/../includes/theme.php';
 
 $existingUser = afrisense_current_user();
 
@@ -34,6 +35,7 @@ if (($_SERVER['REQUEST_METHOD'] ?? 'GET') === 'POST') {
 
     <link rel="stylesheet" href="../assets/css/login.css">
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+    <?php afrisense_print_theme_style(); ?>
 </head>
 <body>
     <!-- Header block for this interface section. -->
@@ -59,9 +61,9 @@ if (($_SERVER['REQUEST_METHOD'] ?? 'GET') === 'POST') {
         </nav>
 
         <div class="header-actions">
-            <a class="phone-link" href="tel:+233241234567">
+            <a class="phone-link" href="tel:+233537044801">
                 <span aria-hidden="true"><i class="bi bi-telephone"></i></span>
-                +233 24 123 4567
+                +233 53 704 4801
             </a>
             <a class="order-button-link" href="../landing/order.php">Order Now</a>
         </div>

@@ -1,0 +1,118 @@
+AFRISENSE DEPLOYMENT NOTE
+
+- Recommended platform: Railway. Railway is the better option for this project because it can host a PHP application and provision a MySQL database inside the same project. Render can also work, but Render requires more manual setup for PHP plus MySQL.
+
+- Before deployment, push the full AfriSense project to GitHub. Do not commit the real `.env` file because it may contain database passwords, SMTP passwords, or API keys. Commit `.env.example` only, then add real values through Railway or Render environment variables.
+
+- The current AfriSense codebase was developed inside XAMPP and uses many hardcoded paths like `/Afrisense/frontend/...`. Because of this, the easiest cloud deployment should preserve the `/Afrisense` folder name on the server. This avoids breaking public links, admin links, image paths, support upload paths, and notification action URLs.
+
+- The main public homepage will be:
+  `https://your-domain/Afrisense/frontend/landing/index.php`
+
+- The login page will be:
+  `https://your-domain/Afrisense/frontend/auth/login.php`
+
+- The admin dashboard will be:
+  `https://your-domain/Afrisense/frontend/admin/dashboard.php`
+
+- Add a MySQL database on Railway. Railway provides database variables such as `MYSQLHOST`, `MYSQLDATABASE`, `MYSQLUSER`, `MYSQLPASSWORD`, and `MYSQLPORT`. The current AfriSense database connection reads `DB_HOST`, `DB_NAME`, `DB_USER`, and `DB_PASS`, so map Railway's MySQL values to those variable names.
+
+- Add the AfriSense app as a Railway service from GitHub. Use Docker so the app can be copied into `/var/www/html/Afrisense`, preserving the expected `/Afrisense` URL prefix.
+
+- Recommended `Dockerfile`:
+
+  FROM php:8.3-apache
+  RUN docker-php-ext-install pdo pdo_mysql mysqli
+  WORKDIR /var/www/html/Afrisense
+  COPY . /var/www/html/Afrisense
+  RUN chown -R www-data:www-data /var/www/html/Afrisense/frontend/uploads /var/www/html/Afrisense/uploads || true
+  EXPOSE 80
+  CMD ["apache2-foreground"]
+
+- Railway environment variables:
+  `APP_NAME=AfriSense`
+  `APP_ENV=production`
+  `APP_URL=https://your-domain`
+  `DB_HOST=MYSQLHOST`
+  `DB_NAME=MYSQLDATABASE`
+  `DB_USER=MYSQLUSER`
+  `DB_PASS=MYSQLPASSWORD`
+  `PASSWORD_RESET_URL=https://your-domain/Afrisense/frontend/auth/reset-password.php`
+  `PASSWORD_RESET_EXPIRY_MINUTES=15`
+
+- If Railway requires a custom MySQL port, add `DB_PORT` support in `backend/config/database.php`. The current connection does not read `DB_PORT`, so this should be improved before final production use if the database connection fails.
+
+- On the first successful database connection, AfriSense should automatically import `sql/afrisense_db_schema.sql` when the database is empty. It also seeds default roles, settings, foods, services, and a default admin account.
+
+- If automatic database creation does not run, manually import the schema into the Railway or Render MySQL database. Export from local XAMPP only if you need existing test data. For a clean deployment, use the bundled `sql/afrisense_db_schema.sql` file and allow the app to seed fresh default records. If importing manually, confirm that tables such as `users`, `roles`, `customers`, `orders`, `bookings`, `foods`, `services`, `notifications`, and `website_settings` exist before testing the app.
+
+- Default admin account after first seed:
+  `admin@afrisense.com`
+  `Admin@123`
+
+- Change the default admin password immediately after deployment. This is important because the seeded password is only for first-run testing.
+
+- After deploying on Railway, test these core pages:
+  `landing/index.php`
+  `auth/login.php`
+  `auth/register.php`
+  `admin/dashboard.php`
+  `admin/orders.php`
+  `admin/bookings.php`
+  `admin/support.php`
+  `admin/settings/index.php`
+  `landing/order.php`
+  `landing/support.php`
+
+- If any page shows a blank screen, check the Railway or Render deployment logs first. Common causes are missing PHP extensions, wrong database credentials, database host not reachable, missing MySQL tables, upload folder permission issues, or hardcoded path problems. The Dockerfile installs `pdo_mysql` and `mysqli`, which are required for this project to communicate with MySQL.
+
+- Test these workflows before submitting or demonstrating the system:
+  customer registration, email verification, login, guest order, customer order, Cash on Delivery flow, Mobile Money/online payment flow, booking creation, admin booking confirmation, admin order confirmation, order denial/cancellation, delivered status, delivery rider assignment, support chat, emoji, attachment preview, notifications, and settings color changes.
+
+- For order testing, confirm both customer-facing and admin-facing behavior. A Cash on Delivery order should move forward without forcing online payment. Mobile Money or card-related methods should show the payment flow. After an admin confirms, denies, cancels, or marks an order delivered, the customer should receive an in-app notification and, when SMTP is working, an email notification.
+
+- For support testing, open the guest support page in one browser and the admin support page in another browser. Send a text message, emoji, image attachment, and video attachment. Confirm that both sides see the message preview without needing a manual page refresh. Also confirm that the send button is visible and that notification sounds work.
+
+- Configure email from Admin Settings. Use a real SMTP provider and verified sender email. After setting SMTP values, test account verification, password reset, order placement email, confirmed order email, denied/cancelled order email, and delivered order email. If messages enter spam, configure SPF, DKIM, and DMARC records for the sender domain.
+
+- For email testing, do not rely on one message only. Test with at least two different email providers, such as Gmail and Outlook, because spam filtering differs by provider. If messages go to spam, the app may still be sending correctly, but the sender domain reputation or DNS authentication needs improvement.
+
+- File uploads are stored inside project folders such as `frontend/uploads/` and `uploads/`. Cloud containers may lose uploaded files after redeployment unless persistent storage is configured. For a school demo this may be acceptable, but for production you should attach persistent storage or move uploads to cloud storage such as S3-compatible storage or Cloudinary.
+
+- If persistent upload storage is not configured, explain during documentation or presentation that uploaded support attachments and images may not survive redeployment. The database records may remain, but files stored inside a temporary container can disappear after rebuilds.
+
+- Render deployment is possible but less direct. On Render, create a Docker Web Service for the PHP app and a separate MySQL private service with persistent disk. Use the same Dockerfile and the same environment variables. Set `DB_HOST` to the internal Render MySQL host, `DB_NAME` to the MySQL database name, `DB_USER` to the MySQL username, and `DB_PASS` to the password.
+
+- Render MySQL requires a persistent disk mounted at MySQL's data directory. Without a persistent disk, database data may be lost. Render also needs careful network configuration so the web service can reach the private MySQL service.
+
+- Railway is still preferred for this project because it reduces setup steps. Render is acceptable when the developer is comfortable managing Docker services, private networking, persistent disks, and database backups manually.
+
+- Before final deployment, recommended improvements are:
+  add `DB_PORT` support;
+  replace hardcoded `/Afrisense/frontend` paths with an environment-based base URL helper;
+  protect uploaded files with stricter MIME and size checks;
+  use production SMTP;
+  change default admin credentials;
+  enable HTTPS-only URLs;
+  configure backups;
+  avoid committing real secrets;
+  and test all customer/admin workflows.
+
+- Final recommendation: use Railway with Docker for the fastest stable deployment of the current AfriSense codebase. It keeps the existing folder structure working and reduces the amount of code that must be changed before deployment.
+
+- Final deployment checklist:
+  GitHub repository pushed;
+  Dockerfile added;
+  Railway MySQL created;
+  environment variables configured;
+  database tables created;
+  admin login tested;
+  default password changed;
+  SMTP configured;
+  guest order tested;
+  customer order tested;
+  booking tested;
+  delivery assignment tested;
+  support chat tested;
+  settings page tested;
+  and final public URL copied for submission.

@@ -27,7 +27,7 @@
     height: 34px;
     min-width: 110px;
     border-radius: 7px;
-    background: #06281f;
+    background: var(--af-green-2);
     gap: 8px;
     padding: 0 13px;
     font-size: 12px;
